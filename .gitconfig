@@ -1,0 +1,13 @@
+[user]
+	name = {{ Name }}
+	email = {{ Email }}
+	signingkey = {{ signingkey }}
+[commit]
+    gpgsign = true
+[help]
+    autocorrect = 10
+[core]
+    editor = vim
+    autocrlf = input
+    hideDotFiles = true
+    ignoreCase = true
