@@ -1,9 +1,9 @@
 #!/usr/local/bin/fish
 # Set PROFILE variable for powershell-like referencing of this file
-set -U profile (status fish-path)
+set -U profile ~/.config/fish/config.fish
 
-# Create Alias for ls
-alias ls="ls -A -l"
+# Create Alias for dir
+alias dir="la"
 
 # Edit path
 for each in ~/.cargo/bin
