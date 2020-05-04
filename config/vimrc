@@ -1,7 +1,4 @@
-" .vimrc
-"
-" Author: David Houston (houstdav000/SleepCoder64)
-"
+" This file will need to be renamed to ".vimrc" before use
 
 " Disable vi support
 set nocompatible

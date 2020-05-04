@@ -1,3 +1,4 @@
+# This file will need to be renamed to ".gitconfig" before use
 [user]
 	name = {{ Name }}
 	email = {{ Email }}
