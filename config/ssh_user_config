@@ -7,7 +7,4 @@ Host *
   PasswordAuthentication yes
   PubkeyAuthentication yes
   HashKnownHosts yes
-  IdentityFile ~/.ssh/id_ecdsa
   IdentityFile ~/.ssh/id_ed25519
-  Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes-128-gcm@openssh.com,aes256-ctr,aes256-cbc
-  MACs umac-128-etm@openssh.com,umac-128@openssh.com,hmac-sha2-512
