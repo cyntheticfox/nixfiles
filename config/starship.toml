@@ -8,8 +8,8 @@ disabled = false
 
 [hostname]
 ssh_only = false
-prefix = "<<"
-suffix = ">>"
+prefix = "⟨"
+suffix = "⟩"
 disabled = false
 
 [directory]
