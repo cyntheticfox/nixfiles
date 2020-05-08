@@ -1,0 +1,17 @@
+# Don't print new line at start of prompt
+add_newline = false
+scan_timeout = 10
+
+[username]
+show_always = true
+disabled = false
+
+[hostname]
+ssh_only = false
+prefix = "<<"
+suffix = ">>"
+disabled = false
+
+[directory]
+truncation_length = 3
+fish_style_pwd_dir_length = 1
