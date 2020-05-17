@@ -6,7 +6,7 @@ set -U profile ~/.config/fish/config.fish
 alias dir="la"
 
 # Edit path
-for each in ~/.cargo/bin
+for each in ~/.cargo/bin ~/.nix-profile/bin
     if test -d $each
         and not contains $each $PATH
         set -a PATH $each
