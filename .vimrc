@@ -92,4 +92,4 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#alt_sep = 1
 
-execute pathogen#infect()
+execute vim-pathogen#autoload#pathogen#infect()
