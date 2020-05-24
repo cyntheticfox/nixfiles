@@ -19,9 +19,6 @@
 [submodule ".vim/bundle/vim-nix"]
 	path = .vim/bundle/vim-nix
 	url = git://github.com/LnL7/vim-nix
-[submodule ".vim/bundle/tmuxline.vim"]
-	path = .vim/bundle/tmuxline.vim
-	url = git://github.com/edkolev/tmuxline.vim
 [submodule ".vim/bundle/vim-gitgutter"]
 	path = .vim/bundle/vim-gitgutter
 	url = git://github.com/airblade/vim-gitgutter
