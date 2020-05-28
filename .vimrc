@@ -34,6 +34,7 @@ set foldcolumn=1
 set encoding=utf8
 set ffs=unix,dos,mac
 set showtabline=2
+set ttyfast
 
 " turn off sounds on errors
 set noerrorbells
@@ -101,13 +102,22 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'LnL7/vim-nix'
+Plug 'NovaDev94/vim-fish'
+Plug 'airblade/vim-gitgutter'
+Plug 'fidian/hexmode'
+Plug 'fkmclane/vim-resolve'
+Plug 'fkmclane/vim-spl'
+Plug 'gisraptor/vim-lilypond-integrator'
+Plug 'glts/vim-radical'
+Plug 'junegunn/vim-plug'
+Plug 'mattn/emmet-vim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'ryanoasis/vim-devicons'
-Plug 'airblade/vim-gitgutter'
-Plug 'mattn/emmet-vim'
 Plug 'vim-syntastic/syntastic'
 
 call plug#end()
