@@ -12,7 +12,7 @@ if not functions -q fisher
 end
 
 # Edit path
-for each in ~/.cargo/bin ~/.nix-profile/bin
+for each in ~/.cargo/bin ~/.nix-profile/bin ~/.local/bin
     if test -d $each
         and not contains $each $PATH
         set -a PATH $each
