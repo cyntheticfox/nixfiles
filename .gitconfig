@@ -1,8 +1,8 @@
 # This file will need to be renamed to ".gitconfig" before use
 [user]
-	name = {{ Name }}
-	email = {{ Email }}
-	signingkey = {{ signingkey }}
+    name = David Houston
+    email = houstdav000@gmail.com
+    signingkey = 70D7A6B5979CE408
 [commit]
     gpgsign = true
 [help]
@@ -12,3 +12,13 @@
     autocrlf = input
     hideDotFiles = true
     ignoreCase = true
+[gitflow "branch"]
+    master = master
+    develop = dev
+[gitflow "prefix"]
+    feature = feature-
+    bugfix = bugfix-
+    release = release-
+    hotfix = hotfix-
+    support = support-
+    versiontag = v
