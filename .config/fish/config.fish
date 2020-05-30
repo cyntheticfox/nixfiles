@@ -23,3 +23,12 @@ end
 if test -x ~/.cargo/bin/starship
     starship init fish | source
 end
+
+# Set up exa
+if test -x ~/.cargo/bin/exa
+    alias exa='exa -F'
+    alias ls=exa
+    alias la='exa -a'
+    alias ll='exa -al'
+    alias dir='exa -al'
+end
