@@ -32,3 +32,8 @@ if test -x ~/.cargo/bin/exa
     alias ll='exa -al'
     alias dir='exa -al'
 end
+
+# Set up bat
+if test -x ~/.cargo/bin/bat
+    alias cat=bat
+end
