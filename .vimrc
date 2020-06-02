@@ -27,7 +27,7 @@ set ruler
 set nostartofline
 set laststatus=2
 set mouse=a
-set lazyredraw
+set nolazyredraw
 set magic
 set showmatch
 set foldcolumn=1
@@ -58,10 +58,6 @@ set hlsearch
 set ignorecase
 set smartcase
 
-" Set Color scheme
-colorscheme industry
-set background=dark
-
 set history=2000
 
 " Backup options (just use vcs instead)
@@ -88,11 +84,6 @@ nmap <M-k> mz:m-2<cr>`z
 vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
-" Enable Tabline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#alt_sep = 1
-
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -111,7 +102,10 @@ Plug 'gisraptor/vim-lilypond-integrator'
 Plug 'glts/vim-radical'
 Plug 'junegunn/vim-plug'
 Plug 'mattn/emmet-vim'
+Plug 'pearofducks/ansible-vim'
+Plug 'PProvost/vim-ps1'
 Plug 'ryanoasis/vim-devicons'
+Plug 'tomasiser/vim-code-dark'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
@@ -122,3 +116,13 @@ Plug 'vim-crystal/vim-crystal'
 Plug 'vim-syntastic/syntastic'
 
 call plug#end()
+
+" Set colorschemes
+colorscheme codedark
+
+" Enable Tabline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#alt_sep = 1
+
+let g:airline_theme = 'codedark'
