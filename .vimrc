@@ -95,6 +95,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'LnL7/vim-nix'
 Plug 'NovaDev94/vim-fish'
 Plug 'airblade/vim-gitgutter'
+Plug 'farmergreg/vim-lastplace'
 Plug 'fidian/hexmode'
 Plug 'fkmclane/vim-resolve'
 Plug 'fkmclane/vim-spl'
@@ -102,6 +103,7 @@ Plug 'gisraptor/vim-lilypond-integrator'
 Plug 'glts/vim-radical'
 Plug 'junegunn/vim-plug'
 Plug 'mattn/emmet-vim'
+Plug 'mhinz/vim-startify'
 Plug 'pearofducks/ansible-vim'
 Plug 'PProvost/vim-ps1'
 Plug 'ryanoasis/vim-devicons'
@@ -118,6 +120,9 @@ Plug 'vim-syntastic/syntastic'
 call plug#end()
 
 " Set colorschemes
+set background=dark
+set guifont="FiraCode NF":h11
+set renderoptions=type:directx,gamma:1.5,contrast:0.5,geom:1,renmode:5,taamode:1,level:0.5
 colorscheme codedark
 
 " Enable Tabline
