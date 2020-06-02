@@ -1,4 +1,3 @@
-
 // To view the default settings, hold "alt" while clicking on the "Settings" button.
 // For documentation on these settings, see: https://aka.ms/terminal-documentation
 
@@ -13,8 +12,7 @@
             "acrylicOpacity": 1.0,
             "useAcrylic": true,
             "fontFace": "FiraCode NF",
-            "fontSize": 10,
-            "colorScheme": "Gruvbox Dark"
+            "fontSize": 10
         },
         "list": [
             {
@@ -59,29 +57,7 @@
     },
 
     // Add custom color schemes to this array
-    "schemes": [
-        {
-            "name": "Gruvbox Dark",
-            "foreground": "#e5d3a2",
-            "background": "#1d1d1d",
-            "black": "#1d1d1d",
-            "blue": "#377274",
-            "green": "#868715",
-            "cyan": "#568D57",
-            "red": "#be0e17",
-            "purple": "#9F4B73",
-            "yellow": "#cc871a",
-            "white": "#978771",
-            "brightBlack": "#7F7060",
-            "brightBlue": "#709585",
-            "brightGreen": "#a9b01d",
-            "brightCyan": "#7db568",
-            "brightRed": "#f63028",
-            "brightPurple": "#C76F89",
-            "brightYellow": "#F7B024",
-            "brightWhite": "#e5d3a2"
-        }
-    ],
+    "schemes": [],
 
     // Add any keybinding overrides to this array.
     // To unbind a default keybinding, set the command to "unbound"
