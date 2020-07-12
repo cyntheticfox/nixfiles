@@ -2,6 +2,11 @@
 # Set PROFILE variable for powershell-like referencing of this file
 set -U profile ~/.config/fish/config.fish
 
+# Set NIXOS_CONFIG variable for quick config changes in nixos
+if test -e /etc/nixos/configuration.nix
+    set -U NIXOS_CONFIG /etc/nixos/configuration.nix
+end
+
 # Create Alias for dir
 alias dir="la"
 
@@ -15,7 +20,9 @@ if not functions -q fisher
 end
 
 # Edit path
-for each in ~/.cargo/bin ~/.nix-profile/bin ~/.local/bin
+for each in ~/.cargo/bin \
+        ~/.nix-profile/bin \
+        ~/.local/bin
     if test -d $each
         and not contains $each $PATH
         set -a PATH $each
@@ -23,20 +30,26 @@ for each in ~/.cargo/bin ~/.nix-profile/bin ~/.local/bin
 end
 
 # Set up starship
-if test -x ~/.cargo/bin/starship
+if test -x ~/.cargo/bin/starship \
+        -o -x /etc/profiles/per-user/$USER/bin/starship \
+        -o -x ~/.nix-profile/bin/starship
     starship init fish | source
 end
 
 # Set up exa
-if test -x ~/.cargo/bin/exa
+if test -x ~/.cargo/bin/exa \
+        -o -x /etc/profiles/per-user/$USER/bin/exa \
+        -o -x ~/.nix-profile/bin/exa
     alias exa='exa -F'
     alias ls=exa
-    alias la='exa -a'
-    alias ll='exa -al'
+    alias la='exa -al'
+    alias ll='exa -alt'
     alias dir='exa -al'
 end
 
 # Set up bat
-if test -x ~/.cargo/bin/bat
+if test -x ~/.cargo/bin/bat \
+        -o -x /etc/profiles/per-user/$USER/bin/bat \
+        -o -x ~/.nix-profile/bin/bat
     alias cat=bat
 end
