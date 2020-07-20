@@ -7,6 +7,9 @@ if test -e /etc/nixos/configuration.nix
     set -U NIXOS_CONFIG /etc/nixos/configuration.nix
 end
 
+# Create Alias for vim
+alias vim="nvim"
+
 # Create Alias for dir
 alias dir="la"
 
