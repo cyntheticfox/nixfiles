@@ -45,8 +45,8 @@ if test -x ~/.cargo/bin/exa \
         -o -x ~/.nix-profile/bin/exa
     alias exa='exa -F'
     alias ls=exa
-    alias la='exa -abghHliS'
-    alias dir='exa -abghHliS'
+    alias la='exa -abghl'
+    alias dir='exa -abghl'
 end
 
 # Set up bat
