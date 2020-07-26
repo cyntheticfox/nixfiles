@@ -8,7 +8,7 @@
 [help]
     autocorrect = 10
 [core]
-    editor = vim
+    editor = nvim
     autocrlf = input
     hideDotFiles = true
     ignoreCase = true
