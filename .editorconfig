@@ -1,4 +1,17 @@
+# .editorconfig
+#
+# Source for controlling tabulation and formatting of files by name
+#
+# https://editorconfig.org
+#
+# Plugins required for...
+#
+# Vim: https://github.com/editorconfig/editorconfig-vim
+# VSCode/VSCodium: https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig
+
 root = true
+
+# Set file defaults
 [*]
 end_of_line = lf
 insert_final_newline = false
@@ -13,6 +26,7 @@ trim_trailing_whitespace = false
 [Makefile]
 indent_style = tab
 
-[*.{yml,yaml,nix,html,xml}]
+# Default to two spaces for data languages
+[*.{yml,yaml,nix,html,xml,json}]
 indent_style = space
 indent_size = 2
