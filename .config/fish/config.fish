@@ -7,6 +7,9 @@ if test -e /etc/nixos/configuration.nix
     set -U NIXOS_CONFIG /etc/nixos/configuration.nix
 end
 
+# Turn off greeting message
+set -U fish_greeting ""
+
 # Create Alias for vim
 alias vim="nvim"
 
