@@ -353,8 +353,8 @@ cursor:
 # And optionally:
 #
 # - `mods` (see key bindings)
-mouse_bindings:
-  - { mouse: Right, action: PasteSelection }
+#mouse_bindings:
+#  - { mouse: Right, action: PasteSelection }
 
 # Key bindings
 #
