@@ -27,6 +27,6 @@ trim_trailing_whitespace = false
 indent_style = tab
 
 # Default to two spaces for data languages
-[*.{yml,yaml,nix,html,xml,json}]
+[*.{css,html,htm,js,json,nix,yml,yaml,xml}]
 indent_style = space
 indent_size = 2
