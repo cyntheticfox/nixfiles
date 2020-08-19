@@ -105,6 +105,7 @@ Plug 'gisraptor/vim-lilypond-integrator'
 Plug 'glts/vim-radical'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/vim-plug'
+Plug 'lervag/vimtex'
 Plug 'mattn/emmet-vim'
 Plug 'mhinz/vim-startify'
 Plug 'pearofducks/ansible-vim'
@@ -135,3 +136,6 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#alt_sep = 1
 
 let g:airline_theme = 'codedark'
+
+" Set default TeX style
+let g:tex_flavor = "latex"
