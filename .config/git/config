@@ -12,8 +12,10 @@
     autocrlf = input
     hideDotFiles = true
     ignoreCase = true
+[init]
+    defaultBranch = main
 [gitflow "branch"]
-    master = master
+    master = main
     develop = dev
 [gitflow "prefix"]
     feature = feature-
