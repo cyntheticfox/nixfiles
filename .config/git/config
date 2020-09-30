@@ -14,6 +14,9 @@
     ignoreCase = true
 [init]
     defaultBranch = main
+[alias]
+    state = 'status -s --'
+    unstage = 'reset HEAD --'
 [gitflow "branch"]
     master = main
     develop = dev
