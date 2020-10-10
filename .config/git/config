@@ -3,6 +3,8 @@
     name = David Houston
     email = houstdav000@gmail.com
     signingkey = 70D7A6B5979CE408
+[credential]
+    helper = cache --timeout 600
 [commit]
     gpgsign = true
 [help]
