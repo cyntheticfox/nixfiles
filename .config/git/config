@@ -17,8 +17,10 @@
 [init]
     defaultBranch = main
 [alias]
-    state = 'status -s --'
-    unstage = 'reset HEAD --'
+    l = log --abbrev-commit --pretty=oneline
+    lg = log --pretty=format:'%h %s' --graph
+    state = status -s --
+    unstage = reset HEAD --
 [gitflow "branch"]
     master = main
     develop = dev
