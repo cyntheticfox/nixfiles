@@ -8,8 +8,7 @@ disabled = false
 
 [hostname]
 ssh_only = false
-prefix = "⟨"
-suffix = "⟩"
+format = "⟨[$hostname](bold green)⟩"
 disabled = false
 
 [directory]
