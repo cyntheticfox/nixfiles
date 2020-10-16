@@ -1,3 +1,4 @@
+# Pull in basics from .inputrc
 set bell-style visible
 set completion-query-items 120
 set colored-completion-prefix on
