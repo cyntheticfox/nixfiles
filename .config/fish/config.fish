@@ -1,6 +1,7 @@
 #!/usr/local/bin/fish
 # Set PROFILE variable for powershell-like referencing of this file
 set -U profile ~/.config/fish/config.fish
+set -U SH "fish"
 
 # Set NIXOS_CONFIG variable for quick config changes in nixos
 if test -e /etc/nixos/configuration.nix

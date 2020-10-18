@@ -1,3 +1,8 @@
+#!/bin/bash
+
+# Set prompt-specific environment variables
+export SH="bash"
+
 # Pull in basics from .inputrc
 set bell-style visible
 set completion-query-items 120
@@ -8,3 +13,6 @@ set mark-modified-lines on
 set mark-symlinked-directories on
 set show-mode-in-prompt on
 set visible-stats on
+
+# Run starship prompt
+eval "$(starship init bash)"
