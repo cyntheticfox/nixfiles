@@ -11,9 +11,6 @@ filetype indent on
 set autoread
 au Focusgained,BufEnter * checktime
 
-" Add handler for Capital W to be sudo save
-command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
-
 " Allow line delete
 set backspace=indent,eol,start
 set whichwrap+=<,>,h,l
