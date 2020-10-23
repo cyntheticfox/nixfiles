@@ -15,12 +15,14 @@ set -U fish_greeting ""
 if command -s nvim &> /dev/null
     alias vim="nvim"
     alias vi="nvim"
-else if command -s vim &> /dev/null
-    alias nvim="vim"
-    alias vi="vim"
 else
-    alias nvim="vi"
-    alias vim="vi"
+    if command -s vim &> /dev/null
+        alias nvim="vim"
+        alias vi="vim"
+    else
+        alias nvim="vi"
+        alias vim="vi"
+    end
 end
 
 # Create Alias for cls
