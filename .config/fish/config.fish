@@ -3,7 +3,7 @@
 set -U profile ~/.config/fish/config.fish
 set -U -x SH "fish"
 
-# Set NIXOS_CONFIG variable for quick config changes in nixos
+# Set NIXOS_CONFIG variable for quick config changes in NixOS
 if test -e /etc/nixos/configuration.nix
     set -U NIXOS_CONFIG /etc/nixos/configuration.nix
 end
@@ -12,10 +12,16 @@ end
 set -U fish_greeting ""
 
 # Create Alias for vim
-alias vim="nvim"
-
-# Create Alias for dir
-alias dir="la"
+if command -s nvim &> /dev/null
+    alias vim="nvim"
+    alias vi="nvim"
+else if command -s vim &> /dev/null
+    alias nvim="vim"
+    alias vi="vim"
+else
+    alias nvim="vi"
+    alias vim="vi"
+end
 
 # Create Alias for cls
 alias cls="clear"
@@ -37,25 +43,36 @@ for each in ~/.cargo/bin \
 end
 
 # Set up starship
-if test -x ~/.cargo/bin/starship \
-        -o -x /etc/profiles/per-user/$USER/bin/starship \
-        -o -x ~/.nix-profile/bin/starship
+if command -s starship &> /dev/null
     starship init fish | source
 end
 
 # Set up exa
-if test -x ~/.cargo/bin/exa \
-        -o -x /etc/profiles/per-user/$USER/bin/exa \
-        -o -x ~/.nix-profile/bin/exa
+if command -s exa &> /dev/null
     alias exa='exa -F'
-    alias ls=exa
+    alias ls='exa -F'
     alias la='exa -abghl'
-    alias dir='exa -abghl'
+    alias dir='exa -abFghl'
+else
+    alias exa='ls -F'
+    alias ls='ls -F'
+    alias la='ls -abFghl'
+    alias dir='ls -abFghl'
 end
 
 # Set up bat
-if test -x ~/.cargo/bin/bat \
-        -o -x /etc/profiles/per-user/$USER/bin/bat \
-        -o -x ~/.nix-profile/bin/bat
-    alias cat=bat
+if command -s bat &> /dev/null
+    alias cat='bat'
+end
+
+# Alias ripgrep for grep
+if command -s rg &> /dev/null
+    alias grep='rg'
+    alias egrep='rg'
+    alias pgrep='rg'
+end
+
+# Alias fd for find
+if command -s fd &> /dev/null
+    alias find='fd'
 end
