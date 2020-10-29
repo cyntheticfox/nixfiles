@@ -12,17 +12,28 @@ end
 set -U fish_greeting ""
 
 # Create Alias for vim
-if command -s nvim &> /dev/null
-    alias vim="nvim"
-    alias vi="nvim"
-else
-    if command -s vim &> /dev/null
+switch $EDITOR
+    case "nvim"
+        alias edit="nvim"
+        alias vim="nvim"
+        alias vi="nvim"
+    case "vim"
+        alias edit="vim"
         alias nvim="vim"
         alias vi="vim"
-    else
+    case '*'
+        alias edit="vi"
         alias nvim="vi"
         alias vim="vi"
-    end
+end
+
+switch $VISUAL
+    case "nvim -R"
+        alias view="nvim -R"
+    case "vim -R"
+        alias view="vim -R"
+    case '*'
+        alias view="vi -R"
 end
 
 # Create Alias for cls

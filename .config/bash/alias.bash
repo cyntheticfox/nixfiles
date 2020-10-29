@@ -19,6 +19,18 @@ case $EDITOR in
         ;;
 esac
 
+case $VISUAL in
+    "nvim -R")
+        alias view="nvim -R"
+        ;;
+    "vim")
+        alias view="vim -R"
+        ;;
+    *)
+        alias view="vi -R"
+        ;;
+esac
+
 # alias ls if exa is available
 if command -v exa &>/dev/null; then
     alias ls="exa -F --color=always"
