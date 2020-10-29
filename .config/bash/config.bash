@@ -15,4 +15,6 @@ set show-mode-in-prompt on
 set visible-stats on
 
 # Run starship prompt
-eval "$(starship init bash)"
+if command -v starship &>/dev/null; then
+    eval "$(starship init bash)"
+fi
