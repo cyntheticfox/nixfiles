@@ -14,7 +14,7 @@ else
     echo "Neither fish nor zsh exist"
     # Run bash startup files in .config
     if [ -d "$XDG_CONFIG_HOME/bash" ]; then
-        source "$XDG_CONFIG_HOME/bash/config.sh"
-        source "$XDG_CONFIG_HOME/bash/alias.sh"
+        source "$XDG_CONFIG_HOME/bash/config.bash"
+        source "$XDG_CONFIG_HOME/bash/alias.bash"
     fi
 fi
