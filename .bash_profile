@@ -5,6 +5,11 @@ if [ -f "$HOME/.profile" ]; then
     . $HOME/.profile
 fi
 
+# Turn on lesspipe if available
+if command -v lesspipe &> /dev/null; then
+    eval "$(SHELL=/bin/sh lesspipe)"
+fi
+
 # Run other shells if available
 if command -v fish &> /dev/null; then
     exec fish

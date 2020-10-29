@@ -17,4 +17,6 @@ set visible-stats on
 # Run starship prompt
 if command -v starship &>/dev/null; then
     eval "$(starship init bash)"
+else
+    PS1="\u on <\H> in \w\n$SH > "
 fi

@@ -9,8 +9,8 @@
 #umask 022
 
 # Added by Nix installer
-if [ -e /home/david/.nix-profile/etc/profile.d/nix.sh ]; then
-    . /home/david/.nix-profile/etc/profile.d/nix.sh;
+if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+    . "$HOME.nix-profile/etc/profile.d/nix.sh";
 fi
 
 # Export XDG variables
@@ -55,8 +55,13 @@ if [ -d "$HOME/bin" ]; then
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
+if [ -d "$HOME/.local/bin" ]; then
     PATH="$HOME/.local/bin:$PATH"
+fi
+
+# set PATH to include cargo bin if it exists
+if [ -d "$HOME/.cargo/bin" ]; then
+    PATH="$HOME/.cargo/bin:$PATH"
 fi
 
 #=============================================================================#

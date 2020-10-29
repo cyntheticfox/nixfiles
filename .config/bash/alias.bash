@@ -32,7 +32,7 @@ case $VISUAL in
 esac
 
 # alias ls if exa is available
-if command -v exa &>/dev/null; then
+if command -v exa &> /dev/null; then
     alias ls="exa -F --color=always"
 else
     alias ls="ls -F --color=always"
@@ -44,3 +44,12 @@ alias dir="la"
 
 # Set clearing alias
 alias cls="clear"
+
+# Set coloring for gcc and clang
+if command -v gcc &> /dev/null; then
+    alias gcc="gcc -fdiagnostics-color"
+fi
+
+if command -v clang &> /dev/null; then
+    alias clang="clang -fcolor-diagnostics"
+fi
