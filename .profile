@@ -8,6 +8,11 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
+# Added by Nix installer
+if [ -e /home/david/.nix-profile/etc/profile.d/nix.sh ]; then
+    . /home/david/.nix-profile/etc/profile.d/nix.sh;
+fi
+
 # Export XDG variables
 if [ -n $XDG_CONFIG_HOME ]; then
     export XDG_CONFIG_HOME="$HOME/.config"
@@ -89,8 +94,3 @@ export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[01;32m'
 
 #=============================================================================#
-
-# Added by Nix installer
-if [ -e /home/david/.nix-profile/etc/profile.d/nix.sh ]; then
-    . /home/david/.nix-profile/etc/profile.d/nix.sh;
-fi
