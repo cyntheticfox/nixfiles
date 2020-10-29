@@ -23,7 +23,7 @@ case $VISUAL in
     "nvim -R")
         alias view="nvim -R"
         ;;
-    "vim")
+    "vim -R")
         alias view="vim -R"
         ;;
     *)
