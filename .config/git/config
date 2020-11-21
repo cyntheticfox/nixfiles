@@ -16,6 +16,8 @@
     ignoreCase = true
 [init]
     defaultBranch = main
+[pull]
+    ff = only
 [alias]
     l = log --abbrev-commit --pretty=oneline
     lg = log --pretty=format:'%h %s' --graph
