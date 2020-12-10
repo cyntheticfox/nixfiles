@@ -6,63 +6,105 @@
 
 # the default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.
-#umask 022
 
-# Added by Nix installer
-if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
-    . "$HOME/.nix-profile/etc/profile.d/nix.sh";
+umask 022
+
+# Helper functions
+create_dir_if_nonexistent() {
+    if [[ ! -d "$1" ]]; then
+        mkdir -p "$1"
+        return 0
+    else
+        return 1
+    fi
+}
+
+test_set_var() {
+    if [[ -z "${!1}" ]]; then
+        create_dir_if_nonexistent "$2"
+        export "$1"="$2"
+        return 0
+    else
+        return 1
+    fi
+}
+
+append_var() {
+    if [[ -d "$2" && ":${!1}:" != *":$2:"* ]]; then
+        export "$1"="${!1}:$2"
+        return 0
+    else
+        return 1
+    fi
+}
+
+append_path() {
+    return append_var "PATH" "$1"
+}
+
+test_append_var() {
+    if [[ -z "${!1}" ]]; then
+        create_dir_if_nonexistent "$3"
+        export "$1"="$3"
+        return 0
+    elif [[ -z "${!2}" ]]; then
+        create_dir_if_nonexistent "$3"
+        append_var "$2" "$3"
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Apply variable functions
+if [[ -n "$HOME" ]]; then
+    # Export XDG variables
+    test_append_var "XDG_CONFIG_HOME" "XDG_CONFIG_DIRS" "$HOME/.config"
+
+    test_append_var "XDG_DATA_HOME" "XDG_DATA_DIRS" "$HOME/.local/share"
+
+    test_set_var "XDG_CACHE_DIR" "$HOME/.cache"
+
+    test_set_var "XDG_RUNTIME_DIR" "$HOME/tmp"
+
+    # set PATH so it includes user's private bin if it exists
+    if [ -d "$HOME/bin" ]; then
+        append_path "$HOME/bin"
+    fi
+
+    # set PATH so it includes user's private bin if it exists
+    if [ -d "$HOME/.local/bin" ]; then
+        append_path "$HOME/.local/bin"
+    fi
+
+    # set PATH to include cargo bin if it exists
+    if [ -d "$HOME/.cargo/bin" ]; then
+        append_path "$HOME/.cargo/bin"
+    fi
 fi
 
-# Export XDG variables
-if [ -n $XDG_CONFIG_HOME ]; then
-    export XDG_CONFIG_HOME="$HOME/.config"
-elif [ -n $XDG_CONFIG_DIRS ]; then
-    export XDG_CONFIG_DIRS="$HOME/.config:$XDG_CONFIG_DIRS"
-fi
-
-if [ -n $XDG_DATA_HOME ]; then
-    export XDG_DATA_HOME="$HOME/.local/share"
-elif [ -n $XDG_DATA_DIRS ]; then
-    export XDG_DATA_DIRS="$HOME/.local/share:$XDG_DATA_DIRS"
-fi
-
-if [ -n $XDG_CACHE_DIR ]; then
-    export XDG_CACHE_DIR="$HOME/.cache"
-fi
-
-if [ -n $XDG_RUNTIME_DIR ]; then
-    export XDG_RUNTIME_DIR="$HOME/tmp"
+# Set TERMINFO_DIRS if not set
+if [[ -z "$TERMINFO_DIRS" && -d "/lib/terminfo" ]]; then
+    export TERMINFO_DIRS="/lib/terminfo"
 fi
 
 # Set editor
-if command -v nvim &>/dev/null; then
+if command -v nvim &> /dev/null; then
     export EDITOR="nvim"
     export VISUAL="nvim -R"
-elif command -v vim &>/dev/null; then
+elif command -v vim &> /dev/null; then
     export EDITOR="vim"
     export VISUAL="vim -R"
-else
+elif command -v vi &> /dev/null; then
     export EDITOR="vi"
     export VISUAL="vi -R"
+else
+    echo "VI family not found"
 fi
 
 # Set email
-export EMAIL="houstdav000@gmail.com"
+export "EMAIL"="houstdav000@gmail.com"
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ]; then
-    PATH="$HOME/bin:$PATH"
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ]; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-
-# set PATH to include cargo bin if it exists
-if [ -d "$HOME/.cargo/bin" ]; then
-    PATH="$HOME/.cargo/bin:$PATH"
-fi
 
 #=============================================================================#
 # Steal man page highlighting from
