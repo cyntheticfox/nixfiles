@@ -1,9 +1,4 @@
-if [[ $- == *i* ]]; then
-
-    # Added by Nix installer
-    if [[ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]]; then
-        . "$HOME/.nix-profile/etc/profile.d/nix.sh";
-    fi
+if [[ $- == *i* && -z "$out" ]]; then
 
     # Run other shells if available
     if command -v fish &> /dev/null; then
@@ -14,8 +9,12 @@ if [[ $- == *i* ]]; then
         echo "Neither fish nor zsh exist"
 
         # Run bash startup files in .config
-        if [ -d "$XDG_CONFIG_HOME/bash" ]; then
+        if [[ -d "$XDG_CONFIG_HOME/bash" ]]; then
             source "$XDG_CONFIG_HOME/bash/config.bash"
         fi
+    fi
+elif [[ $- == *i* ]]; then
+    if [[ -d "$XDG_CONFIG_HOME/bash" ]]; then
+        source "$XDG_CONFIG_HOME/bash/config.bash"
     fi
 fi

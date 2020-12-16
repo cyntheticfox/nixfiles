@@ -58,6 +58,11 @@ test_append_var() {
 
 # Apply variable functions
 if [[ -n "$HOME" ]]; then
+    # Added by Nix installer
+    if [[ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]]; then
+        . "$HOME/.nix-profile/etc/profile.d/nix.sh";
+    fi
+
     # Export XDG variables
     test_append_var "XDG_CONFIG_HOME" "XDG_CONFIG_DIRS" "$HOME/.config"
 
@@ -88,6 +93,15 @@ if [[ -z "$TERMINFO_DIRS" && -d "/lib/terminfo" ]]; then
     export TERMINFO_DIRS="/lib/terminfo"
 fi
 
+# Set terminal
+if command -v termite &> /dev/null; then
+    export TERM="xterm-termite"
+elif command -v alacritty &> /dev/null; then
+    export TERM="alacritty"
+else
+    echo "No known terminal found"
+fi
+
 # Set editor
 if command -v nvim &> /dev/null; then
     export EDITOR="nvim"
@@ -102,9 +116,23 @@ else
     echo "VI family not found"
 fi
 
-# Set email
-export "EMAIL"="houstdav000@gmail.com"
+# Set browser
+if command -v firefox &> /dev/null; then
+    export BROWSER="firefox"
+elif command -v chromium &> /dev/null; then
+    export BROWSER="chromium"
+elif command -v w3m &> /dev/null; then
+    export BROWSER="w3m"
+else
+    echo "Firefox, Chromium, and W3M not available"
+fi
 
+# Set email
+export EMAIL="houstdav000@gmail.com"
+
+# Set language variables
+export LANG="en_US.UTF-8"
+export LC_ALL="C"
 
 #=============================================================================#
 # Steal man page highlighting from
