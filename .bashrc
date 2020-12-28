@@ -1,4 +1,4 @@
-if [[ $- == *i* && -z "$out" ]]; then
+if [[ $- == *i* && "$SHLVL" == "1" ]]; then
 
     # Run other shells if available
     if command -v fish &> /dev/null; then
