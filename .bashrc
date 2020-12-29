@@ -1,10 +1,10 @@
 if [[ $- == *i* && "$SHLVL" == "1" ]]; then
 
     # Run other shells if available
-    if command -v fish &> /dev/null; then
-        exec fish
-    elif command -v zsh &> /dev/null; then
+    if command -v zsh &> /dev/null; then
         exec zsh
+    elif command -v fish &> /dev/null; then
+        exec fish
     else
         echo "Neither fish nor zsh exist"
 

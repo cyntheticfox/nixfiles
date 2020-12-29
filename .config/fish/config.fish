@@ -55,10 +55,6 @@ for each in ~/.cargo/bin \
     end
 end
 
-# Set up starship
-if command -s starship &> /dev/null
-    starship init fish | source
-end
 
 # Set up exa
 if command -s exa &> /dev/null
@@ -88,4 +84,13 @@ end
 # Alias fd for find
 if command -s fd &> /dev/null
     alias find='fd'
+end
+
+# Set up starship
+if command -s starship &> /dev/null
+    starship init fish | source
+end
+
+if command -s direnv &> /dev/null
+    eval (direnv hook fish)
 end

@@ -26,3 +26,8 @@ if command -v starship &>/dev/null; then
 else
     PS1="\u on <\H> in \w\n$SH > "
 fi
+
+# hook direnv
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook bash)"
+fi
