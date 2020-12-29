@@ -1,6 +1,6 @@
 # Global Prompt Variables
 add_newline = true
-scan_timeout = 10
+scan_timeout = 100
 format = """
 $username\
 $hostname\
@@ -70,5 +70,5 @@ fish_style_pwd_dir_length = 1
 [env_var]
 style = "white bold"
 format = "[$env_value]($style) "
-variable = "SH"
+variable = "STARSHIP_SHELL"
 default = "?"

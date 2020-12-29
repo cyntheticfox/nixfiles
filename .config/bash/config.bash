@@ -1,16 +1,13 @@
 #!/bin/bash
 
 # Run other scripts
-if [ -f "$XDG_CONFIG_HOME/bash/alias.bash" ]; then
+if [[ -f "$XDG_CONFIG_HOME/bash/alias.bash" ]]; then
     source "$XDG_CONFIG_HOME/bash/alias.bash"
 fi
 
-if [ -f "$XDG_CONFIG_HOME/bash/functions.bash" ]; then
+if [[ -f "$XDG_CONFIG_HOME/bash/functions.bash" ]]; then
     source "$XDG_CONFIG_HOME/bash/functions.bash"
 fi
-
-# Set prompt-specific environment variables
-export SH="bash"
 
 # Pull in basics from .inputrc
 set bell-style visible

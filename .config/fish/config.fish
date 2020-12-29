@@ -1,7 +1,6 @@
 #!/usr/local/bin/fish
 # Set PROFILE variable for powershell-like referencing of this file
 set -U profile ~/.config/fish/config.fish
-set -U -x SH "fish"
 
 # Set NIXOS_CONFIG variable for quick config changes in NixOS
 if test -e /etc/nixos/configuration.nix
@@ -70,8 +69,8 @@ if command -s exa &> /dev/null
 else
     alias exa='ls -F'
     alias ls='ls -F'
-    alias la='ls -abFghl'
-    alias dir='ls -abFghl'
+    alias la='ls -abghl'
+    alias dir='ls -abghl'
 end
 
 # Set up bat
