@@ -38,6 +38,11 @@ else
     alias ls="ls -F --color=always"
 fi
 
+# alias bat for cat if available
+if command -v bat &> /dev/null; then
+    alias cat="bat"
+fi
+
 # Set additional aliases for ls
 alias la="ls -abghl"
 alias dir="la"
