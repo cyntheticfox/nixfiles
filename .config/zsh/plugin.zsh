@@ -1,18 +1,30 @@
-# Install antigen if not present
-if [[ ! -f "$XDG_CONFIG_HOME/zsh/antigen.zsh" ]]; then
-    curl -L git.io/antigen > "$XDG_CONFIG_HOME/zsh/antigen.zsh"
+# install Zplug if not present
+if ! command -v git &> /dev/null; then
+    echo "git not found"
+    exit 1
 fi
 
-# Source installed antigen
-source "$XDG_CONFIG_HOME/zsh/antigen.zsh"
+export ZPLUG_HOME="$XDG_CONFIG_HOME/zsh/zplug"
 
-# Configure Oh-My-Zsh
-antigen use oh-my-zsh
+if [[ ! -d $ZPLUG_HOME ]]; then
+    git clone https://github.com/zplug/zplug $ZPLUG_HOME
+fi
 
-# Oh-My-Zsh plugins
-antigen bundle git
-antigen bundle command-not-found
-antigen bundle rust
+source $ZPLUG_HOME/init.zsh
 
-# Apply antigen config
-antigen apply
+# Source omz plugins
+zplug "plugins/git", from:oh-my-zsh
+zplug "plugins/command-not-found", from:oh-my-zsh
+zplug "plugins/rust", from:oh-my-zsh
+
+# Load zsh-users plugins
+zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-autosuggestions"
+zplug "zsh-users/zsh-history-substring-search"
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
+
+if ! zplug check; then
+    zplug install
+fi
+
+zplug load
