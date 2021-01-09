@@ -58,16 +58,13 @@ end
 
 # Set up exa
 if command -s exa &> /dev/null
-    alias exa='exa -F'
-    alias ls='exa -F'
-    alias la='exa -abghl'
-    alias dir='exa -abFghl'
+    alias ls='exa -F --icons'
 else
-    alias exa='ls -F'
     alias ls='ls -F'
-    alias la='ls -abghl'
-    alias dir='ls -abghl'
 end
+
+alias la='ls -abghl'
+alias dir='ls -abghl'
 
 # Set up bat
 if command -s bat &> /dev/null

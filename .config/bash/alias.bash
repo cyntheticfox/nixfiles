@@ -33,7 +33,7 @@ esac
 
 # alias ls if exa is available
 if command -v exa &> /dev/null; then
-    alias ls="exa -F --color=always"
+    alias ls="exa -F --color=always --icons"
 else
     alias ls="ls -F --color=always"
 fi
