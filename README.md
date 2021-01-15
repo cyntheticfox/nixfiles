@@ -16,7 +16,6 @@ Here are a few tools I use:
 
 - [alacritty](https://github.com/alacritty/alacritty)
 - [FiraCode Font](https://github.com/tonsky/FiraCode)
-- [fish](https://github.com/fish-shell/fish-shell)
 - [git](https://github.com/git/git)
 - [gitflow](https://github.com/nvie/gitflow)
 - [gnupg](https://gnupg.org/)
@@ -26,6 +25,7 @@ Here are a few tools I use:
 - [qemu](https://www.qemu.org)
 - [starship](https://github.com/starship/starship)
 - [Visual Studio Code](https://github.com/microsoft/vscode)
+- [Zsh](https://www.zsh.org/)
 
 ## Other
 
