@@ -130,10 +130,6 @@ fi
 # Set email
 export EMAIL="houstdav000@gmail.com"
 
-# Set language variables
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
-
 #=============================================================================#
 # Steal man page highlighting from
 #  https://github.com/lilyinstarlight/dotfiles/blob/master/.profile
