@@ -17,7 +17,7 @@ for line in $(find . -name '.git*' -prune \
     -o -name 'README.md' -prune \
     -o -name 'LICENSE' -prune \
     -o -type f -print); do
-    if [ -e "$HOME/$line"]; then
+    if [[ -e "$HOME/$line" ]]; then
         echo "$HOME/$line exists, not replacing"
     else
         cp $line "$HOME/$line"
