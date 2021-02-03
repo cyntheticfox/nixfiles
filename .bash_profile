@@ -14,3 +14,8 @@ fi
 if command -v gnome-keyring-daemon &> /dev/null; then
     export $(gnome-keyring-daemon --start --components=pkcs11\,secrets\,ssh)
 fi
+
+# Run .bashrc if interactive
+if [[ $- == *i* && -f "$HOME/.bashrc" ]]; then
+    . "$HOME/.bashrc"
+fi

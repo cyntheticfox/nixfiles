@@ -1,4 +1,4 @@
-if [[ $- == *i* && "$SHLVL" == "1" ]]; then
+if [[ "$SHLVL" == "1" ]]; then
 
     # Run other shells if available
     if command -v zsh &> /dev/null; then
@@ -13,7 +13,7 @@ if [[ $- == *i* && "$SHLVL" == "1" ]]; then
             source "$XDG_CONFIG_HOME/bash/config.bash"
         fi
     fi
-elif [[ $- == *i* ]]; then
+else
     if [[ -d "$XDG_CONFIG_HOME/bash" ]]; then
         source "$XDG_CONFIG_HOME/bash/config.bash"
     fi
