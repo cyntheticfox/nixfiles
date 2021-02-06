@@ -108,9 +108,9 @@ Plug 'mhinz/vim-startify'
 Plug 'pearofducks/ansible-vim'
 Plug 'PProvost/vim-ps1'
 Plug 'ryanoasis/vim-devicons'
+Plug 'romainl/Apprentice', { 'branch': 'fancylines-and-neovim' }
 Plug 'rust-lang/rust.vim'
 Plug 'tmux-plugins/vim-tmux'
-Plug 'tomasiser/vim-code-dark'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
@@ -123,16 +123,14 @@ Plug 'vim-syntastic/syntastic'
 call plug#end()
 
 " Set colorschemes
-set background=dark
-set guifont="FiraCode NF":h11
-colorscheme codedark
+colorscheme apprentice
 
 " Enable Tabline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#alt_sep = 1
 
-let g:airline_theme = 'codedark'
+let g:airline_theme = 'apprentice'
 
 " Set default TeX style
 let g:tex_flavor = "latex"
