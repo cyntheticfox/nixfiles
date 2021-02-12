@@ -14,6 +14,7 @@ source $ZPLUG_HOME/init.zsh
 
 # Source omz plugins
 zplug "plugins/archlinux", from:oh-my-zsh
+zplug "plugins/aws", from:oh-my-zsh
 zplug "plugins/command-not-found", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/rust", from:oh-my-zsh
@@ -23,6 +24,9 @@ zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
+
+# Add local zsh plugins
+zplug "~/.zsh", from:local
 
 if ! zplug check; then
     zplug install
