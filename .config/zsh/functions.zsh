@@ -22,6 +22,10 @@ function switch() {
     git switch $@
 }
 
+function stash() {
+    git stash $@
+}
+
 function stage() {
     git add .
 }
