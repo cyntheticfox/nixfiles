@@ -18,8 +18,20 @@ function commit-all() {
     git commit -a $@
 }
 
+function switch() {
+    git switch $@
+}
+
+function stash() {
+    git stash $@
+}
+
 function stage() {
     git add .
+}
+
+function unstage() {
+    git unstage
 }
 
 function github() {
