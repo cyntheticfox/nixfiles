@@ -1,4 +1,4 @@
-if [[ "$SHLVL" == "1" ]]; then
+if [[ "$SHLVL" == "1" || ( "$SHLVL" == 2 && -n "$TMUX" ) ]]; then
 
     # Run other shells if available
     if command -v zsh &> /dev/null; then
