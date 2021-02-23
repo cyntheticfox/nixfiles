@@ -39,7 +39,8 @@ append_var() {
 }
 
 append_path() {
-    return append_var "PATH" "$1"
+    append_var "PATH" "$1"
+    return 0
 }
 
 test_append_var() {
