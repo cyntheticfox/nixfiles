@@ -26,6 +26,10 @@ function stash() {
     git stash $@
 }
 
+function rebase() {
+    git rebase $@
+}
+
 function stage() {
     git add .
 }
