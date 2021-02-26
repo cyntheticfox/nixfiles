@@ -99,6 +99,7 @@ Plug 'farmergreg/vim-lastplace'
 Plug 'fidian/hexmode'
 Plug 'gisraptor/vim-lilypond-integrator'
 Plug 'glts/vim-radical'
+Plug 'hashivim/vim-terraform'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/vim-plug'
 Plug 'leafgarland/typescript-vim'
@@ -133,6 +134,9 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#alt_sep = 1
 
 let g:airline_theme = 'apprentice'
+
+" Enable vim-terraform options
+let g:terraform_fmt_on_save=1
 
 " Set default TeX style
 let g:tex_flavor = "latex"
