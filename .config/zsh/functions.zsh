@@ -61,3 +61,16 @@ function gitlab() {
         echo "Usage: gitlab <user> <repo>"
     fi
 }
+
+# Create Functions for nixos
+function nixupd() {
+    nix-channel --update $@
+}
+
+function nixsw() {
+    if command -v nixos-rebuild &> /dev/null; then
+        sudo nixos-rebuild switch $@
+    else
+        home-manager switch $@
+    fi
+}
