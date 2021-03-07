@@ -1,4 +1,4 @@
-if [[ "$SHLVL" == "1" || ( "$SHLVL" == 2 && -n "$TMUX" ) ]]; then
+if [[ "$SHLVL" == "1" || ( "$SHLVL" == 2 && -n "$TMUX" ) || ( "$XDG_SESSION_DESKTOP" == "gnome" && ( "$SHLVL == 2" || ( "$SHLVL" == 3 && -n "$TMUX" ) ) ) ]]; then
 
     # Run other shells if available
     if command -v zsh &> /dev/null; then
