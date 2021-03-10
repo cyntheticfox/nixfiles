@@ -64,7 +64,11 @@ function gitlab() {
 
 # Create Functions for nixos
 function nixupd() {
-    nix-channel --update $@
+    if command -v nixos-rebuild &> /dev/null; then
+        sudo nix-channel --update $@
+    else
+        nix-channel --update $@
+    fi
 }
 
 function nixsw() {
