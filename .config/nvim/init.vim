@@ -164,7 +164,7 @@ let g:ale_fix_on_save = 1
 let g:ale_history_enabled = 1
 let g:ale_hover_to_preview = 1
 let g:ale_linters = {
-\    '*': ['proselint'],
+\    '*': ['proselint', 'vale'],
 \    'ansible': ['ansible-lint'],
 \    'c': ['cc', 'ccls', 'clangtidy'],
 \    'cpp': ['cc', 'ccls', 'clangtidy'],
