@@ -58,10 +58,11 @@ test_append_var() {
 }
 
 # Apply variable functions
-if [[ -n "$HOME" ]]; then
+if [[ -n "${HOME}" ]]; then
     # Added by Nix installer
-    if [[ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]]; then
-        . "$HOME/.nix-profile/etc/profile.d/nix.sh";
+    if [[ -f "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]]; then
+        # shellcheck source=~/.nix-profile/etc/profile.d/nix.sh
+        . "${HOME}/.nix-profile/etc/profile.d/nix.sh"
     fi
 
     # Export XDG variables
@@ -74,43 +75,43 @@ if [[ -n "$HOME" ]]; then
     test_set_var "XDG_RUNTIME_DIR" "$HOME/tmp"
 
     # set PATH so it includes user's private bin if it exists
-    if [ -d "$HOME/bin" ]; then
-        append_path "$HOME/bin"
+    if [[ -d "${HOME}/bin" ]]; then
+        append_path "${HOME}/bin"
     fi
 
     # set PATH so it includes user's private bin if it exists
-    if [ -d "$HOME/.local/bin" ]; then
-        append_path "$HOME/.local/bin"
+    if [[ -d "${HOME}/.local/bin" ]]; then
+        append_path "${HOME}/.local/bin"
     fi
 
     # set PATH to include cargo bin if it exists
-    if [ -d "$HOME/.cargo/bin" ]; then
-        append_path "$HOME/.cargo/bin"
+    if [[ -d "${HOME}/.cargo/bin" ]]; then
+        append_path "${HOME}/.cargo/bin"
     fi
 fi
 
 # Set TERMINFO_DIRS if not set
-if [[ -z "$TERMINFO_DIRS" && -d "/lib/terminfo" ]]; then
+if [[ -z "${TERMINFO_DIRS}" && -d "/lib/terminfo" ]]; then
     export TERMINFO_DIRS="/lib/terminfo"
 fi
 
 # Set terminal
-if command -v termite &> /dev/null; then
+if command -v termite &>/dev/null; then
     export TERM="xterm-termite"
-elif command -v alacritty &> /dev/null; then
+elif command -v alacritty &>/dev/null; then
     export TERM="alacritty"
 else
     echo "No known terminal found"
 fi
 
 # Set editor
-if command -v nvim &> /dev/null; then
+if command -v nvim &>/dev/null; then
     export EDITOR="nvim"
     export VISUAL="nvim -R"
-elif command -v vim &> /dev/null; then
+elif command -v vim &>/dev/null; then
     export EDITOR="vim"
     export VISUAL="vim -R"
-elif command -v vi &> /dev/null; then
+elif command -v vi &>/dev/null; then
     export EDITOR="vi"
     export VISUAL="vi -R"
 else
@@ -118,11 +119,11 @@ else
 fi
 
 # Set browser
-if command -v firefox &> /dev/null; then
+if command -v firefox &>/dev/null; then
     export BROWSER="firefox"
-elif command -v chromium &> /dev/null; then
+elif command -v chromium &>/dev/null; then
     export BROWSER="chromium"
-elif command -v w3m &> /dev/null; then
+elif command -v w3m &>/dev/null; then
     export BROWSER="w3m"
 else
     echo "Firefox, Chromium, and W3M not available"

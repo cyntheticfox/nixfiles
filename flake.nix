@@ -16,6 +16,7 @@
                 fish
                 nixpkgs-fmt
                 rnix-lsp
+                proselint
                 shfmt
                 shellcheck
                 vim-vint

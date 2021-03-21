@@ -1,12 +1,14 @@
 #!/bin/bash
 
 # Run other scripts
-if [[ -f "$XDG_CONFIG_HOME/bash/alias.bash" ]]; then
-    source "$XDG_CONFIG_HOME/bash/alias.bash"
+if [[ -f "${XDG_CONFIG_HOME}/bash/alias.bash" ]]; then
+    # shellcheck source=./alias.bash
+    source "${XDG_CONFIG_HOME}/bash/alias.bash"
 fi
 
-if [[ -f "$XDG_CONFIG_HOME/bash/functions.bash" ]]; then
-    source "$XDG_CONFIG_HOME/bash/functions.bash"
+if [[ -f "${XDG_CONFIG_HOME}/bash/functions.bash" ]]; then
+    # shellcheck source=./functions.bash
+    source "${XDG_CONFIG_HOME}/bash/functions.bash"
 fi
 
 # Pull in basics from .inputrc
@@ -28,6 +30,6 @@ else
 fi
 
 # hook direnv
-if command -v direnv &> /dev/null; then
+if command -v direnv &>/dev/null; then
     eval "$(direnv hook bash)"
 fi

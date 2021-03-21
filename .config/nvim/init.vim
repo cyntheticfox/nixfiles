@@ -1,8 +1,5 @@
 " This file will need to be renamed to ".vimrc" before use
 
-" Disable vi support
-set nocompatible
-
 " Enable filetype plugins
 filetype plugin on
 filetype indent on
@@ -16,7 +13,7 @@ set backspace=indent,eol,start
 set whichwrap+=<,>,h,l
 
 " Set Editor information
-set so=7
+set scrolloff=7
 set number
 syntax on
 set cursorline
@@ -29,7 +26,7 @@ set magic
 set showmatch
 set foldcolumn=1
 set encoding=utf8
-set ffs=unix,dos,mac
+set fileformats=unix,dos,mac
 set showtabline=2
 set ttyfast
 
@@ -37,7 +34,7 @@ set ttyfast
 set noerrorbells
 set novisualbell
 set t_vb=
-set tm=500
+set timeoutlen=500
 
 " Set Tab information
 set autoindent
@@ -46,8 +43,8 @@ set wrap
 set expandtab
 set softtabstop=4
 set shiftwidth=4
-set lbr
-set tw=500
+set linebreak
+set textwidth=500
 
 " Set Search Options
 set incsearch
@@ -59,7 +56,7 @@ set history=2000
 
 " Backup options (just use vcs instead)
 set nobackup
-set nowb
+set nowritebackup
 set noswapfile
 
 " Improve command-line completion
@@ -167,6 +164,7 @@ let g:ale_fix_on_save = 1
 let g:ale_history_enabled = 1
 let g:ale_hover_to_preview = 1
 let g:ale_linters = {
+\    '*': ['proselint'],
 \    'ansible': ['ansible-lint'],
 \    'c': ['cc', 'ccls', 'clangtidy'],
 \    'cpp': ['cc', 'ccls', 'clangtidy'],

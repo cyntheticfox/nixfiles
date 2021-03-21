@@ -1,223 +1,221 @@
 # shellcheck shell=bash
 
 if [[ -z ${NIX_BIN_PREFIX:-} ]]; then
-  NIX_BIN_PREFIX=$(command -v nix-shell)
-  NIX_BIN_PREFIX="${NIX_BIN_PREFIX%/*}/"
+    NIX_BIN_PREFIX=$(command -v nix-shell)
+    NIX_BIN_PREFIX="${NIX_BIN_PREFIX%/*}/"
 fi
 
 _nix_export_or_unset() {
-  local key=$1 value=$2
-  if [[ "$value" == __UNSET__ ]]; then
-    unset "$key"
-  else
-    export "$key=$value"
-  fi
+    local key=$1 value=$2
+    if [[ "$value" == __UNSET__ ]]; then
+        unset "$key"
+    else
+        export "$key=$value"
+    fi
 }
 
 _nix_import_env() {
-  local env=$1
+    local env=$1
 
-  local old_path=${PATH:-}
-  local old_term=${TERM:-__UNSET__}
-  local old_shell=${SHELL:-__UNSET__}
-  local old_tmpdir=${TMPDIR:-__UNSET__}
-  local old_ssl_cert_file=${SSL_CERT_FILE:-__UNSET__}
-  local old_nix_ssl_cert_file=${NIX_SSL_CERT_FILE:-__UNSET__}
-  local old_xdg_data_dirs=${XDG_DATA_DIRS:-}
+    local old_path=${PATH:-}
+    local old_term=${TERM:-__UNSET__}
+    local old_shell=${SHELL:-__UNSET__}
+    local old_tmpdir=${TMPDIR:-__UNSET__}
+    local old_ssl_cert_file=${SSL_CERT_FILE:-__UNSET__}
+    local old_nix_ssl_cert_file=${NIX_SSL_CERT_FILE:-__UNSET__}
+    local old_xdg_data_dirs=${XDG_DATA_DIRS:-}
 
-  eval "$env"
+    eval "$env"
 
-  # `nix-shell --pure` sets invalid ssl certificate paths
-  if [[ "${SSL_CERT_FILE:-}" = /no-cert-file.crt ]]; then
-    _nix_export_or_unset SSL_CERT_FILE "$old_ssl_cert_file"
-  fi
+    # `nix-shell --pure` sets invalid ssl certificate paths
+    if [[ "${SSL_CERT_FILE:-}" = /no-cert-file.crt ]]; then
+        _nix_export_or_unset SSL_CERT_FILE "$old_ssl_cert_file"
+    fi
 
-  if [[ "${NIX_SSL_CERT_FILE:-}" = /no-cert-file.crt ]]; then
-    _nix_export_or_unset NIX_SSL_CERT_FILE "$old_nix_ssl_cert_file"
-  fi
+    if [[ "${NIX_SSL_CERT_FILE:-}" = /no-cert-file.crt ]]; then
+        _nix_export_or_unset NIX_SSL_CERT_FILE "$old_nix_ssl_cert_file"
+    fi
 
-  export PATH=$PATH${old_path:+":"}$old_path
-  _nix_export_or_unset TERM "$old_term"
-  _nix_export_or_unset SHELL "$old_shell"
-  _nix_export_or_unset TEMPDIR "$old_tmpdir"
-  export XDG_DATA_DIRS=$XDG_DATA_DIRS${old_xdg_data_dirs:+":"}$old_xdg_data_dirs
+    export PATH=$PATH${old_path:+":"}$old_path
+    _nix_export_or_unset TERM "$old_term"
+    _nix_export_or_unset SHELL "$old_shell"
+    _nix_export_or_unset TEMPDIR "$old_tmpdir"
+    export XDG_DATA_DIRS=$XDG_DATA_DIRS${old_xdg_data_dirs:+":"}$old_xdg_data_dirs
 
-  # misleading since we are in an impure shell now
-  export IN_NIX_SHELL=impure
+    # misleading since we are in an impure shell now
+    export IN_NIX_SHELL=impure
 }
 
 _nix_add_gcroot() {
-  local storepath=$1
-  local symlink=$2
+    local storepath=$1
+    local symlink=$2
 
-  local stripped_pwd=${2/\//}
-  local escaped_pwd=${stripped_pwd//-/--}
-  local escaped_pwd=${escaped_pwd//\//-}
-  ln -fsn "$storepath" "$symlink"
-  ln -fsn "$symlink" "/nix/var/nix/gcroots/per-user/$USER/$escaped_pwd"
+    local stripped_pwd=${2/\//}
+    local escaped_pwd=${stripped_pwd//-/--}
+    local escaped_pwd=${escaped_pwd//\//-}
+    ln -fsn "$storepath" "$symlink"
+    ln -fsn "$symlink" "/nix/var/nix/gcroots/per-user/$USER/$escaped_pwd"
 }
 
 use_flake() {
-  watch_file flake.nix
-  watch_file flake.lock
+    watch_file flake.nix
+    watch_file flake.lock
 
-  local layout_dir
-  layout_dir=$(direnv_layout_dir)
-  local profile="${layout_dir}/flake-profile"
-  local flake_inputs="${layout_dir}/flake-inputs/"
-  local profile_rc="${profile}.rc"
+    local layout_dir
+    layout_dir=$(direnv_layout_dir)
+    local profile="${layout_dir}/flake-profile"
+    local flake_inputs="${layout_dir}/flake-inputs/"
+    local profile_rc="${profile}.rc"
 
-  if [[ ! -e "$profile"
-     || ! -e "$profile_rc"
-     || "$HOME/.direnvrc" -nt "$profile_rc"
-     || .envrc -nt "$profile_rc"
-     || flake.nix -nt "$profile_rc"
-     || flake.lock -nt "$profile_rc"
-     ]];
-  then
-    local tmp_profile="${layout_dir}/flake-profile.$$"
-    [[ -d "$layout_dir" ]] || mkdir -p "$layout_dir"
-    local tmp_profile_rc
-    tmp_profile_rc=$("${NIX_BIN_PREFIX}nix" print-dev-env \
-      --experimental-features "nix-command flakes" \
-      --profile "$tmp_profile")
-    # macos does not have realpath
-    if command -v realpath >/dev/null; then
-      drv=$(realpath "$tmp_profile")
+    if [[ ! -e "$profile" || ! -e \
+        "$profile_rc" || \
+        "$HOME/.direnvrc" -nt "$profile_rc" || \
+        .envrc -nt "$profile_rc" || \
+        flake.nix -nt "$profile_rc" || \
+        flake.lock -nt "$profile_rc" ]] \
+            ; then
+        local tmp_profile="${layout_dir}/flake-profile.$$"
+        [[ -d "$layout_dir" ]] || mkdir -p "$layout_dir"
+        local tmp_profile_rc
+        tmp_profile_rc=$("${NIX_BIN_PREFIX}nix" print-dev-env \
+            --experimental-features "nix-command flakes" \
+            --profile "$tmp_profile")
+        # macos does not have realpath
+        if command -v realpath >/dev/null; then
+            drv=$(realpath "$tmp_profile")
+        else
+            drv=$(perl -e 'use Cwd "abs_path";print abs_path(shift)' "$tmp_profile")
+        fi
+        echo "$tmp_profile_rc" >"$profile_rc"
+        rm -f "$tmp_profile" "$tmp_profile"*
+        _nix_add_gcroot "$drv" "$profile"
+
+        # also add garbage collection root for source
+        local flake_input_paths
+        rm -rf "$flake_inputs"
+        mkdir "$flake_inputs"
+        flake_input_paths=$("${NIX_BIN_PREFIX}nix" flake archive --json \
+            --experimental-features "nix-command flakes" |
+            grep -E -o '/nix/store/[^"]+')
+        for path in $flake_input_paths; do
+            _nix_add_gcroot "$path" "${flake_inputs}/${path##*/}"
+        done
+
+        log_status renewed cache
     else
-      drv=$(perl -e 'use Cwd "abs_path";print abs_path(shift)' "$tmp_profile")
+        log_status using cached dev shell
     fi
-    echo "$tmp_profile_rc" > "$profile_rc"
-    rm -f "$tmp_profile" "$tmp_profile"*
-    _nix_add_gcroot "$drv" "$profile"
 
-    # also add garbage collection root for source
-    local flake_input_paths
-    rm -rf "$flake_inputs"
-    mkdir "$flake_inputs"
-    flake_input_paths=$("${NIX_BIN_PREFIX}nix" flake archive --json \
-      --experimental-features "nix-command flakes" \
-      | grep -E -o '/nix/store/[^"]+')
-    for path in $flake_input_paths; do
-      _nix_add_gcroot "$path" "${flake_inputs}/${path##*/}"
-    done
+    local old_nix_build_top=${NIX_BUILD_TOP:-__UNSET__}
+    local old_tmp=${TMP:-__UNSET__}
+    local old_tmpdir=${TMPDIR:-__UNSET__}
+    local old_temp=${TEMP:-__UNSET__}
+    local old_tempdir=${TEMPDIR:-__UNSET__}
+    eval "$(<"$profile_rc")"
+    # nix print-env-dev will create a temporary directory and use it a TMPDIR,
+    # we cannot rely on this directory beeing not deleted at some point,
+    # hence we are just removing it right away.
+    if [[ "$NIX_BUILD_TOP" == */nix-shell.* && -d "$NIX_BUILD_TOP" ]]; then
+        rmdir "$NIX_BUILD_TOP"
+    fi
 
-    log_status renewed cache
-  else
-    log_status using cached dev shell
-  fi
-
-  local old_nix_build_top=${NIX_BUILD_TOP:-__UNSET__}
-  local old_tmp=${TMP:-__UNSET__}
-  local old_tmpdir=${TMPDIR:-__UNSET__}
-  local old_temp=${TEMP:-__UNSET__}
-  local old_tempdir=${TEMPDIR:-__UNSET__}
-  eval "$(< "$profile_rc")"
-  # nix print-env-dev will create a temporary directory and use it a TMPDIR,
-  # we cannot rely on this directory beeing not deleted at some point,
-  # hence we are just removing it right away.
-  if [[ "$NIX_BUILD_TOP" == */nix-shell.* && -d "$NIX_BUILD_TOP" ]]; then
-    rmdir "$NIX_BUILD_TOP"
-  fi
-
-  _nix_export_or_unset NIX_BUILD_TOP "$old_nix_build_top"
-  _nix_export_or_unset TMP "$old_tmp"
-  _nix_export_or_unset TMPDIR "$old_tmpdir"
-  _nix_export_or_unset TEMP "$old_temp"
-  _nix_export_or_unset TEMPDIR "$old_tempdir"
+    _nix_export_or_unset NIX_BUILD_TOP "$old_nix_build_top"
+    _nix_export_or_unset TMP "$old_tmp"
+    _nix_export_or_unset TMPDIR "$old_tmpdir"
+    _nix_export_or_unset TEMP "$old_temp"
+    _nix_export_or_unset TEMPDIR "$old_tempdir"
 }
 
 _nix_extract_direnv() {
-  local found_direnv
-  found_direnv=0
-  while read -r line; do
-    if [[ "$found_direnv" == "1" ]]; then
-      echo "$line"
-      break
-    elif [[ "$line" == "_____direnv_____" ]]; then
-      found_direnv=1
-    else
-      echo "$line" >&2
-    fi
-  done
+    local found_direnv
+    found_direnv=0
+    while read -r line; do
+        if [[ "$found_direnv" == "1" ]]; then
+            echo "$line"
+            break
+        elif [[ "$line" == "_____direnv_____" ]]; then
+            found_direnv=1
+        else
+            echo "$line" >&2
+        fi
+    done
 }
 
 use_nix() {
-  local path layout_dir
-  path=$("${NIX_BIN_PREFIX}nix-instantiate" --find-file nixpkgs)
-  layout_dir=$(direnv_layout_dir)
-  local experimental_flags=()
-  if "${NIX_BIN_PREFIX}nix-shell" --experimental-features '' --version 2>/dev/null >&2; then
-    experimental_flags+=('--experimental-features' 'nix-command flakes')
-  fi
-
-  if [[ "${direnv:-}" == "" ]]; then
-    log_status "\$direnv environment variable was not defined. Was this script run inside direnv?"
-  fi
-
-  local version
-  if [[ -f "${path}/.version-suffix" ]]; then
-    version=$(< "${path}/.version-suffix")
-  elif [[ -f "${path}/.git/HEAD" ]]; then
-    local head
-    read -r head < "${path}/.git/HEAD"
-    local regex="ref: (.*)"
-    if [[ "$head" =~  $regex ]]; then
-      read -r version < "${path}/.git/${BASH_REMATCH[1]}"
-    else
-      version="$head"
+    local path layout_dir
+    path=$("${NIX_BIN_PREFIX}nix-instantiate" --find-file nixpkgs)
+    layout_dir=$(direnv_layout_dir)
+    local experimental_flags=()
+    if "${NIX_BIN_PREFIX}nix-shell" --experimental-features '' --version 2>/dev/null >&2; then
+        experimental_flags+=('--experimental-features' 'nix-command flakes')
     fi
-  elif [[ -f "${path}/.version" && "${path}" == "/nix/store/"* ]]; then
-    # borrow some bits from the store path
-    local version_prefix
-    read -r version_prefix < "${path}/.version"
-    version="${version_prefix}-${path:11:16}"
-  fi
 
-  local cache="${layout_dir}/cache-${version:-unknown}"
+    if [[ "${direnv:-}" == "" ]]; then
+        log_status "\$direnv environment variable was not defined. Was this script run inside direnv?"
+    fi
 
-  local update_drv=0
-  if [[ ! -e "$cache"
-     || "$HOME/.direnvrc" -nt "$cache"
-     || .envrc -nt "$cache"
-     || default.nix -nt "$cache"
-     || shell.nix -nt "$cache"
-     ]];
-  then
-    [[ -d "$layout_dir" ]] || mkdir -p "$layout_dir"
-    local dump_cmd tmp
-    dump_cmd="echo _____direnv_____; \"$direnv\" dump bash"
-    tmp=$("${NIX_BIN_PREFIX}nix-shell" \
-      "${experimental_flags[@]}" \
-      --show-trace --pure "$@" --run "$dump_cmd")
-    # show original shell hook output
-    echo "$tmp" | _nix_extract_direnv >&2 > "$cache"
-    update_drv=1
-  else
-    log_status using cached derivation
-  fi
+    local version
+    if [[ -f "${path}/.version-suffix" ]]; then
+        version=$(<"${path}/.version-suffix")
+    elif [[ -f "${path}/.git/HEAD" ]]; then
+        local head
+        read -r head <"${path}/.git/HEAD"
+        local regex="ref: (.*)"
+        if [[ "$head" =~ $regex ]]; then
+            read -r version <"${path}/.git/${BASH_REMATCH[1]}"
+        else
+            version="$head"
+        fi
+    elif [[ -f "${path}/.version" && "${path}" == "/nix/store/"* ]]; then
+        # borrow some bits from the store path
+        local version_prefix
+        read -r version_prefix <"${path}/.version"
+        version="${version_prefix}-${path:11:16}"
+    fi
 
-  log_status eval "$cache"
-  read -r cache_content < "$cache"
-  _nix_import_env "$cache_content"
+    local cache="${layout_dir}/cache-${version:-unknown}"
 
-  # This part is based on https://discourse.nixos.org/t/what-is-the-best-dev-workflow-around-nix-shell/418/4
-  if [[ "${out:-}" != "" ]] && (( update_drv )); then
-    local drv_link="${layout_dir}/drv" drv
-    drv=$("${NIX_BIN_PREFIX}nix" show-derivation "$out" \
-      "${experimental_flags[@]}" \
-      | grep -E -o -m1 '/nix/store/.*.drv')
-    _nix_add_gcroot "$drv" "$drv_link"
-    log_status renewed cache and derivation link
-  fi
+    local update_drv=0
+    if [[ ! -e "$cache" || \
+        "$HOME/.direnvrc" -nt "$cache" || \
+        .envrc -nt "$cache" || \
+        default.nix -nt "$cache" || \
+        shell.nix -nt "$cache" ]] \
+            ; then
+        [[ -d "$layout_dir" ]] || mkdir -p "$layout_dir"
+        local dump_cmd tmp
+        dump_cmd="echo _____direnv_____; \"$direnv\" dump bash"
+        tmp=$("${NIX_BIN_PREFIX}nix-shell" \
+            "${experimental_flags[@]}" \
+            --show-trace --pure "$@" --run "$dump_cmd")
+        # show original shell hook output
+        echo "$tmp" | _nix_extract_direnv >&2 >"$cache"
+        update_drv=1
+    else
+        log_status using cached derivation
+    fi
 
-  if [[ "$#" == 0 ]]; then
-    watch_file default.nix
-    watch_file shell.nix
-  fi
+    log_status eval "$cache"
+    read -r cache_content <"$cache"
+    _nix_import_env "$cache_content"
+
+    # This part is based on https://discourse.nixos.org/t/what-is-the-best-dev-workflow-around-nix-shell/418/4
+    if [[ "${out:-}" != "" ]] && ((update_drv)); then
+        local drv_link="${layout_dir}/drv" drv
+        drv=$("${NIX_BIN_PREFIX}nix" show-derivation "$out" \
+            "${experimental_flags[@]}" |
+            grep -E -o -m1 '/nix/store/.*.drv')
+        _nix_add_gcroot "$drv" "$drv_link"
+        log_status renewed cache and derivation link
+    fi
+
+    if [[ "$#" == 0 ]]; then
+        watch_file default.nix
+        watch_file shell.nix
+    fi
 }
 
-: ${XDG_CACHE_HOME:=$HOME/.cache}
+: "${XDG_CACHE_HOME:=$HOME/.cache}"
 declare -A direnv_layout_dirs
 direnv_layout_dir() {
     echo "${direnv_layout_dirs[$PWD]:=$(
@@ -226,6 +224,7 @@ direnv_layout_dir() {
     )}"
 }
 
-if [[ -e "$HOME/.nix-profile/share/nix-direnv/direnvrc" ]]; then
+if [[ -f "$HOME/.nix-profile/share/nix-direnv/direnvrc" ]]; then
+    # shellcheck source=~/.nixprofile/share/nix-direnv/direnvrc
     source "$HOME/.nix-profile/share/nix-direnv/direnvrc"
 fi
