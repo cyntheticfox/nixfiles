@@ -136,7 +136,23 @@ let g:airline#extensions#tabline#alt_sep = 1
 let g:airline_theme = 'apprentice'
 
 " Enable vim-terraform options
-let g:terraform_fmt_on_save=1
+let g:terraform_fmt_on_save = 1
+
+let g:ale_fix_on_save = 1
+let g:ale_fixers = {
+\    '*': ['remove_trailing_lines', 'trim_whitespace'],
+\    'html': ['prettier'],
+\    'javascript': ['eslint', 'prettier'],
+\    'json': ['jq', 'prettier'],
+\    'latex': ['latexindent'],
+\    'markdown': ['prettier'],
+\    'nix': ['nixfmt'],
+\    'rust': ['rustfmt'],
+\    'sh': ['shfmt'],
+\    'terraform': ['terraform'],
+\    'typescript': ['tslint', 'prettier'],
+\    'vue': ['prettier'],
+\}
 
 " Set default TeX style
 let g:tex_flavor = "latex"
