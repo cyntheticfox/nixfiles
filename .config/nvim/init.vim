@@ -87,6 +87,10 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+" Required pre-set ALE options
+let g:ale_cursor_detail = 0
+let g:ale_echo_cursor = 1
+
 call plug#begin('~/.local/share/nvim/site/plugged')
 
 Plug 'LnL7/vim-nix'
@@ -132,13 +136,19 @@ colorscheme apprentice
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#alt_sep = 1
+let g:airline#extensions#ale#enabled = 1
 
 let g:airline_theme = 'apprentice'
 
 " Enable vim-terraform options
 let g:terraform_fmt_on_save = 1
 
-let g:ale_fix_on_save = 1
+" Enable ALE options
+let g:ale_cache_executable_check_failures = 1
+let g:ale_change_sing_column_color = 1
+let g:ale_close_preview_on_insert = 1
+let g:ale_completion_enabled = 1
+let g:ale_completion_autoimport = 1
 let g:ale_fixers = {
 \    '*': ['remove_trailing_lines', 'trim_whitespace'],
 \    'html': ['prettier'],
@@ -146,13 +156,57 @@ let g:ale_fixers = {
 \    'json': ['jq', 'prettier'],
 \    'latex': ['latexindent'],
 \    'markdown': ['prettier'],
-\    'nix': ['nixfmt'],
+\    'nix': ['nixpkgs-fmt'],
 \    'rust': ['rustfmt'],
 \    'sh': ['shfmt'],
 \    'terraform': ['terraform'],
 \    'typescript': ['tslint', 'prettier'],
 \    'vue': ['prettier'],
 \}
+let g:ale_fix_on_save = 1
+let g:ale_history_enabled = 1
+let g:ale_hover_to_preview = 1
+let g:ale_linters = {
+\    'ansible': ['ansible-lint'],
+\    'c': ['cc', 'ccls', 'clangtidy'],
+\    'cpp': ['cc', 'ccls', 'clangtidy'],
+\    'css': ['csslint'],
+\    'dockerfile': ['hadolint'],
+\    'fish': ['fish'],
+\    'gitcommit': ['gitlint'],
+\    'html': ['tidy', 'proselint'],
+\    'javascript': ['eslint', 'flow', 'flow-language-server'],
+\    'json': ['jq', 'jsonlint'],
+\    'make': ['checkmake'],
+\    'markdown': ['mdl', 'proselint', 'vale'],
+\    'nix': ['nix', 'rnix-lsp'],
+\    'powershell': ['powershell'],
+\    'python': ['pylint', 'flake8', 'pyre'],
+\    'rust': ['rustc', 'cargo', 'rls', 'analyzer'],
+\    'sh': ['shell', 'shellcheck'],
+\    'sql': ['sqlint'],
+\    'systemd': ['systemd-analyze'],
+\    'terraform': ['terraform', 'tflint', 'terraform_ls', 'terraform_lsp'],
+\    'tex': ['texlab', 'proselint', 'vale'],
+\    'vim': ['ale_custom_linting_rules', 'vint'],
+\    'yaml': ['yamllint'],
+\}
+let g:ale_linters_explicit = 1
+let g:ale_lsp_suggestions = 1
+let g:ale_max_buffer_history_size = 100
+let g:ale_maximum_file_size = 52428800 " 50MiB
+
+" Disable ale for minified files
+let g:ale_pattern_options = {
+\    '\.min.js$': {
+\        'ale_enabled': 0
+\    },
+\    '\.min.css$': {
+\        'ale_enabled': 0
+\    }
+\}
+let g:ale_sign_column_always = 1
+let g:ale_virtualtext_cursor = 1
 
 " Set default TeX style
-let g:tex_flavor = "latex"
+let g:tex_flavor = 'latex'
