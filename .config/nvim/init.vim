@@ -94,13 +94,14 @@ Plug 'LnL7/vim-nix'
 Plug 'NovaDev94/vim-fish'
 Plug 'airblade/vim-gitgutter'
 Plug 'cespare/vim-toml'
-Plug 'dense-analysis/ale'
+"Plug 'dense-analysis/ale'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'farmergreg/vim-lastplace'
 Plug 'fidian/hexmode'
 Plug 'gisraptor/vim-lilypond-integrator'
 Plug 'glts/vim-radical'
 Plug 'hashivim/vim-terraform'
+Plug 'houstdav000/ale', { 'branch': 'fixer_nixfmt' }
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/vim-plug'
 Plug 'leafgarland/typescript-vim'
@@ -153,7 +154,7 @@ let g:ale_fixers = {
 \    'json': ['jq', 'prettier'],
 \    'latex': ['latexindent'],
 \    'markdown': ['prettier'],
-\    'nix': ['nixpkgs-fmt'],
+\    'nix': ['nixfmt'],
 \    'rust': ['rustfmt'],
 \    'sh': ['shfmt'],
 \    'terraform': ['terraform'],
