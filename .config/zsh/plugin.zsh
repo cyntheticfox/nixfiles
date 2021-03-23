@@ -6,10 +6,11 @@ fi
 
 LS=""
 if ! command -v exa &>/dev/null; then
-    LS="ls -F --color=always"
+    LS="$(which ls) -F --color=always"
 else
-    LS="exa -F --color=always --icons"
+    LS="$(which exa) -F --color=always --icons"
 fi
+ECHO="$(which echo)"
 
 
 export ZPLUG_HOME="${XDG_CONFIG_HOME}/zsh/zplug"
@@ -52,7 +53,7 @@ zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 # Add extra plugins
-AUTO_LS_COMMANDS=('echo' "${LS}")
+AUTO_LS_COMMANDS=("${ECHO}" "${LS}")
 zplug "desyncr/auto-ls"
 zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
 zplug "MichaelAquilina/zsh-auto-notify"
