@@ -56,7 +56,7 @@ AUTO_LS_COMMANDS=('echo' "${LS}")
 zplug "desyncr/auto-ls"
 zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
 zplug "MichaelAquilina/zsh-auto-notify"
-zplug "MicahelAquilina/zsh-you-should-use"
+zplug "MichaelAquilina/zsh-you-should-use"
 
 
 # Add local zsh plugins
