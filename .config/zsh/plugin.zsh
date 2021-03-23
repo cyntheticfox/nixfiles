@@ -25,7 +25,7 @@ source ${ZPLUG_HOME}/init.zsh
 zplug "plugins/archlinux", from:"oh-my-zsh", if:"echo ${OS} | grep 'Arch|Manjaro'"
 zplug "plugins/cargo", from:"oh-my-zsh"
 zplug "plugins/command-not-found", from:"oh-my-zsh"
-zplug "plugins/dnf", from:"oh-my-zsh", if "echo ${OS} | grep 'Fedora'"
+zplug "plugins/dnf", from:"oh-my-zsh", if:"echo ${OS} | grep 'Fedora'"
 zplug "plugins/docker", from:"oh-my-zsh"
 zplug "plugins/git", from:"oh-my-zsh"
 zplug "plugins/git-flow", from:"oh-my-zsh"
@@ -38,7 +38,7 @@ zplug "plugins/systemadmin", from:"oh-my-zsh"
 zplug "plugins/systemd", from:"oh-my-zsh"
 zplug "plugins/terraform", from:"oh-my-zsh"
 zplug "plugins/ubuntu", from:"oh-my-zsh", if:"echo ${OS} | grep 'Ubuntu'"
-zplug "plugins/yum", from:"oh-my-zsh", if "echo ${OS} | grep 'Red Hat|CentOS'"
+zplug "plugins/yum", from:"oh-my-zsh", if:"echo ${OS} | grep 'Red Hat|CentOS'"
 
 # Load and set autosuggestion options
 zplug "zsh-users/zsh-autosuggestions"
