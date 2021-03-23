@@ -43,6 +43,11 @@ if command -v bat &>/dev/null; then
     alias cat="bat"
 fi
 
+# Alias for diff
+if command -v diff-so-fancy &>/dev/null; then
+    alias diff="diff-so-fancy"
+fi
+
 # Set additional aliases for ls
 alias la="ls -abghl"
 alias dir="la"
