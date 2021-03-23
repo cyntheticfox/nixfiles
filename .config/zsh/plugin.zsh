@@ -52,10 +52,8 @@ zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 # Add extra plugins
+AUTO_LS_COMMANDS=('echo' "${LS}")
 zplug "desyncr/auto-ls"
-AUTO_LS_COMMANDS=("echo" "${LS}")
-
-
 zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
 zplug "MichaelAquilina/zsh-auto-notify"
 zplug "MicahelAquilina/zsh-you-should-use"
