@@ -213,10 +213,11 @@ let g:ale_pattern_options = {
 \    },
 \    '\.min.css$': {
 \        'ale_enabled': 0
-\    }
+\    },
 \}
 let g:ale_sign_column_always = 1
 let g:ale_virtualtext_cursor = 1
+let g:ale_sh_shellcheck_options = '-x'
 
 " Set default TeX style
 let g:tex_flavor = 'latex'
