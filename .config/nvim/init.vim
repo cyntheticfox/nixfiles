@@ -147,6 +147,16 @@ let g:ale_change_sing_column_color = 1
 let g:ale_close_preview_on_insert = 1
 let g:ale_completion_enabled = 1
 let g:ale_completion_autoimport = 1
+let g:ale_linter_aliases = {
+\    'Dockerfile': 'dockerfile',
+\    'csh': 'sh',
+\    'javascriptreact': ['javascript', 'jsx'],
+\    'ps1': 'powershell',
+\    'systemverilog': 'verilog',
+\    'vimwiki': 'markdown',
+\    'vue': ['vue', 'javascript'],
+\    'zsh': 'sh',
+\}
 let g:ale_fixers = {
 \    '*': ['remove_trailing_lines', 'trim_whitespace'],
 \    'html': ['prettier'],

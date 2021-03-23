@@ -1,17 +1,28 @@
 # Configure ZSH Options
 # Cd options
-set AUTO_CD
-set PUSHD_IGNORE_DUPS
-set PUSHD_SILENT
+setopt AUTO_CD
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
 
 # History Options
-set APPEND_HISTORY
-set HIST_FIND_NO_DUPS
-set HIST_IGNORE_SPACE
-set HIST_IGNORE_ALL_DUPS
-set REDUCE_BLANKS
-set HIST_SAVE_NO_DUPS
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt APPEND_HISTORY
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
 
+# Completion options
+setopt ALWAYS_TO_END
+setopt AUTO_MENU
+setopt COMPLETE_IN_WORD
+setopt FLOW_CONTROL
+
+# Export History variables
+export HISTFILE="${HOME}/.zsh_history"
+export HISTSIZE=102400
+export SAVEHIST=10240
 
 # Load plugins
 if [[ -f "$XDG_CONFIG_HOME/zsh/plugin.zsh" ]]; then
