@@ -17,7 +17,6 @@ source ${ZPLUG_HOME}/init.zsh
 
 # Source omz plugins
 zplug "plugins/archlinux", from:"oh-my-zsh", if:"echo ${OS} | grep 'Arch|Manjaro'"
-zplug "plugins/aws", from:"oh-my-zsh"
 zplug "plugins/cargo", from:"oh-my-zsh"
 zplug "plugins/command-not-found", from:"oh-my-zsh"
 zplug "plugins/dnf", from:"oh-my-zsh", if "echo ${OS} | grep 'Fedora'"
