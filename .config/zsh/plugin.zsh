@@ -4,7 +4,13 @@ if ! command -v git &>/dev/null; then
     exit 1
 fi
 
-OS="$(cat /etc/*-release)"
+LS=""
+if ! command -v exa &>/dev/null; then
+    LS="ls -F --color=always"
+else
+    LS="exa -F --color=always --icons"
+fi
+
 
 export ZPLUG_HOME="${XDG_CONFIG_HOME}/zsh/zplug"
 
@@ -47,6 +53,9 @@ zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 # Add extra plugins
 zplug "desyncr/auto-ls"
+AUTO_LS_COMMANDS=("echo" "${LS}")
+
+
 zplug "djui/alias-tips", from:"github"
 zplug "mafredi/zsh-async", from:"github", use:"async.zsh"
 zplug "MichaelAquilina/zsh-auto-notify"
