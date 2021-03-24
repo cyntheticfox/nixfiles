@@ -177,8 +177,8 @@ let g:ale_hover_to_preview = 1
 let g:ale_linters = {
 \    '*': ['proselint', 'vale'],
 \    'ansible': ['ansible-lint'],
-\    'c': ['cc', 'ccls', 'clangtidy'],
-\    'cpp': ['cc', 'ccls', 'clangtidy'],
+\    'c': ['cc', 'ccls', 'clangtidy', 'flawfinder'],
+\    'cpp': ['cc', 'ccls', 'clangtidy', 'flawfinder'],
 \    'css': ['csslint'],
 \    'dockerfile': ['hadolint'],
 \    'fish': ['fish'],
