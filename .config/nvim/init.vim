@@ -223,6 +223,7 @@ let g:ale_pattern_options = {
 let g:ale_sign_column_always = 1
 let g:ale_virtualtext_cursor = 1
 let g:ale_sh_shellcheck_options = '-x'
+let g:ale_python_black_options = '-l 79'
 
 " Set default TeX style
 let g:tex_flavor = 'latex'
