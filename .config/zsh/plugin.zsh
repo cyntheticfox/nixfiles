@@ -54,7 +54,6 @@ zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 # Add extra plugins
 zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
-zplug "MichaelAquilina/zsh-auto-notify"
 zplug "MichaelAquilina/zsh-you-should-use"
 
 # Add local zsh plugins
