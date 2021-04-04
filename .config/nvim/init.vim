@@ -158,6 +158,8 @@ let g:ale_linter_aliases = {
 \}
 let g:ale_fixers = {
 \    '*': ['remove_trailing_lines', 'trim_whitespace'],
+\    'c': ['remove_trailing_lines', 'trim_whitespace', 'clang-format', 'asytle', 'uncrustify'],
+\    'cpp': ['remove_trailing_lines', 'trim_whitespace', 'clang-format', 'asytle', 'uncrustify'],
 \    'go': ['remove_trailing_lines', 'trim_whitespace', 'gofmt', 'goimports', 'gomod'],
 \    'html': ['remove_trailing_lines', 'trim_whitespace', 'prettier'],
 \    'javascript': ['remove_trailing_lines', 'trim_whitespace', 'eslint', 'prettier'],
@@ -179,7 +181,7 @@ let g:ale_linters = {
 \    '*': ['proselint', 'vale'],
 \    'ansible': ['ansible-lint'],
 \    'c': ['cc', 'ccls', 'clangtidy', 'flawfinder'],
-\    'cpp': ['cc', 'ccls', 'clangtidy', 'flawfinder'],
+\    'cpp': ['cc', 'ccls', 'clangcheck', 'clangtidy', 'flawfinder'],
 \    'css': ['csslint'],
 \    'elixir': ['dialyxir', 'dogma', 'elixir_ls', 'mix'],
 \    'elm': ['elm_ls'],
