@@ -181,7 +181,7 @@ let g:ale_linters = {
 \    '*': ['proselint', 'vale'],
 \    'ansible': ['ansible-lint'],
 \    'c': ['cc', 'ccls', 'clangtidy', 'flawfinder'],
-\    'cpp': ['cc', 'ccls', 'clangcheck', 'clangtidy', 'flawfinder'],
+\    'cpp': ['cc', 'ccls', 'clangtidy', 'flawfinder'],
 \    'css': ['csslint'],
 \    'elixir': ['dialyxir', 'dogma', 'elixir_ls', 'mix'],
 \    'elm': ['elm_ls'],
