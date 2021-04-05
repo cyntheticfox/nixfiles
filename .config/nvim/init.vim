@@ -158,8 +158,8 @@ let g:ale_linter_aliases = {
 \}
 let g:ale_fixers = {
 \    '*': ['remove_trailing_lines', 'trim_whitespace'],
-\    'c': ['remove_trailing_lines', 'trim_whitespace', 'clang-format', 'asytle', 'uncrustify'],
-\    'cpp': ['remove_trailing_lines', 'trim_whitespace', 'clang-format', 'asytle', 'uncrustify'],
+\    'c': ['remove_trailing_lines', 'trim_whitespace', 'clang-format', 'astyle', 'uncrustify'],
+\    'cpp': ['remove_trailing_lines', 'trim_whitespace', 'clang-format', 'astyle', 'uncrustify'],
 \    'go': ['remove_trailing_lines', 'trim_whitespace', 'gofmt', 'goimports', 'gomod'],
 \    'html': ['remove_trailing_lines', 'trim_whitespace', 'prettier'],
 \    'javascript': ['remove_trailing_lines', 'trim_whitespace', 'eslint', 'prettier'],
