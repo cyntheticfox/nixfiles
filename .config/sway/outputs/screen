@@ -10,4 +10,4 @@
 include $theme
 
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg $background fill
+output * bg $background solid_color
