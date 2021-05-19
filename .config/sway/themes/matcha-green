@@ -2,7 +2,7 @@
 # Author: Appelgriebsch
 
 # some global theme specific variables
-set $background /usr/share/wallpapers/manjaro-arm/generic/manjaro-pine64.png
+set $background #000000
 set $gtk-theme Matcha-dark-sea
 set $icon-theme Papirus-Dark-Maia
 set $cursor-theme xcursor-breeze
