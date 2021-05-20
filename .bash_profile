@@ -1,5 +1,7 @@
 # ~/.bash_profile
 
+export BASH_STARTED=1
+
 # Source environment variables from .profile
 if [[ -f "${HOME}/.profile" ]]; then
     # shellcheck source=./.profile
