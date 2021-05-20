@@ -28,9 +28,9 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+e exec $shutdown
 
 # Media key bindings
-bindsym XF86AudioLowerVolume exec pamixer -d 5
+bindsym XF86AudioLowerVolume exec pamixer -d 2
 bindsym XF86AudioMute exec pamixer -t
-bindsym XF86AudioRaiseVolume exec pamixer -i 5
+bindsym XF86AudioRaiseVolume exec pamixer -i 2
 
 # Screen brightness bindings
 bindsym XF86MonBrightnessDown exec light -U 5
@@ -82,6 +82,8 @@ bindsym $mod+0 workspace 10
 # Move workspaces with ctrl+mod
 bindsym $mod+Ctrl+$left workspace prev
 bindsym $mod+Ctrl+$right workspace next
+bindsym $mod+Ctrl+Left workspace prev
+bindsym $mod Ctrl+Right workspace next
 
 # Move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace 1
@@ -97,6 +99,9 @@ bindsym $mod+Shift+0 move container to workspace 10
 
 bindsym $mod+Ctrl+Shift+$left move container to workspace prev
 bindsym $mod+Ctrl+Shift+$right move container to workspace next
+bindsym $mod+Ctrl+Shift+Left move container to workspace prev
+bindsym $mod+Ctrl+Shift+Right move container to workspace next
+
 # Note: workspaces can have any name you want, not just numbers.
 # We just use 1-10 as the default.
 
