@@ -11,3 +11,5 @@ include $theme
 
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 output * bg $background solid_color
+
+bindsym $mod+p output eDP-1 toggle
