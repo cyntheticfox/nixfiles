@@ -83,7 +83,7 @@ bindsym $mod+0 workspace 10
 bindsym $mod+Ctrl+$left workspace prev
 bindsym $mod+Ctrl+$right workspace next
 bindsym $mod+Ctrl+Left workspace prev
-bindsym $mod Ctrl+Right workspace next
+bindsym $mod+Ctrl+Right workspace next
 
 # Move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace 1
