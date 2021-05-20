@@ -62,7 +62,8 @@
     "clock": {
       "interval": 60,
       "format": "  {:%e %b %Y %H:%M}", // Icon: calendar-alt
-      "tooltip": false
+      "tooltip": false,
+      "on-click": "wlogout"
     },
 
     "cpu": {
