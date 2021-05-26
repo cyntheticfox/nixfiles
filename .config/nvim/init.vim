@@ -123,6 +123,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-crystal/vim-crystal'
 Plug 'vim-syntastic/syntastic'
+Plug 'vimsence/vimsence'
 
 call plug#end()
 
@@ -226,6 +227,10 @@ let g:ale_sign_column_always = 1
 let g:ale_virtualtext_cursor = 1
 let g:ale_sh_shellcheck_options = '-x'
 let g:ale_python_black_options = '-l 79'
+
+" Setup VimSence for NeoVim
+let g:vimsence_small_text = 'NeoVim'
+let g:vimsence_small_image = 'neovim'
 
 " Set default TeX style
 let g:tex_flavor = 'latex'
