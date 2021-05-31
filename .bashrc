@@ -15,10 +15,18 @@ if [[ "${BASH_STARTED}" != "1" && -f "${HOME}/.bash_profile" ]]; then
         fi
     fi
 elif [[ "${SHLVL}" == "1" || (
-    "${SHLVL}" == "2" && -n "${TMUX}") || (
+    "${SHLVL}" == "2" && ( 
+        -n "${TMUX}" || -n "${ZELLIJ}" 
+    ) 
+) || (
     "${XDG_SESSION_DESKTOP}" == "gnome" && (
-    "${SHLVL}" == "2" || (
-    "${SHLVL}" == "3" && -n "${TMUX}"))) ]]; then
+        "${SHLVL}" == "2" || (
+            "${SHLVL}" == "3" && (
+	        -n "${TMUX}" || -n "${ZELLIJ}"
+	    )
+	) 
+    ) 
+) ]]; then
 
     # Run other shells if available
     if command -v zsh &>/dev/null; then
