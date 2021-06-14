@@ -11,6 +11,7 @@
     autocorrect = 10
 [core]
     editor = nvim
+    filemode = false
     autocrlf = input
     hideDotFiles = true
     ignoreCase = true
