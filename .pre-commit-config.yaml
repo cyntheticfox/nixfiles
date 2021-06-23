@@ -4,9 +4,15 @@ repos:
     rev: v2.3.0
     hooks:
       - id: check-yaml
+      - id: check-toml
+      - id: check-json
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/nix-community/nixpkgs-fmt
     rev: v1.2.0
     hooks:
       - id: nixpkgs-fmt
+  - repo: https://github.com/Vimjas/vint
+    rev: v0.4a4
+    hooks:
+      - id: vint
