@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # ~/.profile: executed by the command interpreter for login shells.
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
 # exists.
@@ -65,7 +66,7 @@ else
     if [[ -n "${HOME}" ]]; then
         # Added by Nix installer
         if [[ -f "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]]; then
-            # shellcheck source=~/.nix-profile/etc/profile.d/nix.sh
+            # shellcheck source=../../.nix-profile/etc/profile.d/nix.sh
             . "${HOME}/.nix-profile/etc/profile.d/nix.sh"
         fi
 

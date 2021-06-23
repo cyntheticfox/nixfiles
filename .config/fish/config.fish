@@ -1,4 +1,4 @@
-#!/usr/local/bin/fish
+#!/usr/bin/env fish
 # Set PROFILE variable for powershell-like referencing of this file
 set -U profile ~/.config/fish/config.fish
 

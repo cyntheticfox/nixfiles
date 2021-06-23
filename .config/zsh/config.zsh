@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 # Configure ZSH Options
 # Cd options
 setopt AUTO_CD
@@ -40,11 +41,11 @@ if [[ -f "$XDG_CONFIG_HOME/zsh/functions.zsh" ]]; then
 fi
 
 # Load Starship
-if command -v starship &> /dev/null; then
+if command -v starship &>/dev/null; then
     eval "$(starship init zsh)"
 fi
 
 # Hook direnv
-if command -v direnv &> /dev/null; then
+if command -v direnv &>/dev/null; then
     eval "$(direnv hook zsh)"
 fi

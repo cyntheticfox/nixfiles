@@ -1,4 +1,4 @@
-# ~/.bash_profile
+#!/usr/bin/env bash
 
 export BASH_STARTED=1
 

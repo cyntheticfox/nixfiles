@@ -1,33 +1,33 @@
-# functions.bash
+#!/usr/bin/env bash
 #
 # Bash functions for git and such
 
 function push() {
-    git push $@
+    git push "$@"
 }
 
 function pull() {
-    git pull $@
+    git pull "$@"
 }
 
 function commit() {
-    git commit $@
+    git commit "$@"
 }
 
 function commit-all() {
-    git commit -a $@
+    git commit -a "$@"
 }
 
 function rebase() {
-    git rebase $@
+    git rebase "$@"
 }
 
 function switch() {
-    git switch $@
+    git switch "$@"
 }
 
 function stash() {
-    git stash $@
+    git stash "$@"
 }
 
 function stage() {
@@ -43,9 +43,9 @@ function state() {
 }
 
 function github() {
-    if [ $# -eq 1 ]; then
+    if [[ $# -eq 1 ]]; then
         git clone "github:$1.git"
-    elif [ $# -eq 2 ]; then
+    elif [[ $# -eq 2 ]]; then
         git clone "github:$1/$2.git"
     else
         echo "Usage: github <user> <repo>"
@@ -53,9 +53,9 @@ function github() {
 }
 
 function gitlab() {
-    if [ $# -eq 1 ]; then
+    if [[ $# -eq 1 ]]; then
         git clone "gitlab:$1.git"
-    elif [ $# -eq 2 ]; then
+    elif [[ $# -eq 2 ]]; then
         git clone "gitlab:$1/$2.git"
     else
         echo "Usage: gitlab <user> <repo>"

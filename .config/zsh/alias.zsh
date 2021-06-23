@@ -1,6 +1,4 @@
-# alias.zsh
-#
-# A collection of bash aliases
+#!/usr/bin/env zsh
 
 # Set aliases depending on the editor
 case $EDITOR in

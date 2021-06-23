@@ -1,6 +1,4 @@
-# alias.sh
-#
-# A collection of bash aliases
+#!/usr/bin/env bash
 
 # Set aliases depending on the editor
 case $EDITOR in

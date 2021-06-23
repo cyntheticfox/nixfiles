@@ -1,33 +1,33 @@
-# functions.zsh
+#!/usr/bin/env zsh
 #
 # Zsh functions for git and such
 
 function push() {
-    git push $@
+    git push "$@"
 }
 
 function pull() {
-    git pull $@
+    git pull "$@"
 }
 
 function commit() {
-    git commit $@
+    git commit "$@"
 }
 
 function commit-all() {
-    git commit -a $@
+    git commit -a "$@"
 }
 
 function switch() {
-    git switch $@
+    git switch "$@"
 }
 
 function stash() {
-    git stash $@
+    git stash "$@"
 }
 
 function rebase() {
-    git rebase $@
+    git rebase '$@'
 }
 
 function stage() {
@@ -43,9 +43,9 @@ function state() {
 }
 
 function github() {
-    if [ $# -eq 1 ]; then
+    if [[ $# -eq 1 ]]; then
         git clone "github:$1.git"
-    elif [ $# -eq 2 ]; then
+    elif [[ $# -eq 2 ]]; then
         git clone "github:$1/$2.git"
     else
         echo "Usage: github <user> <repo>"
@@ -53,9 +53,9 @@ function github() {
 }
 
 function gitlab() {
-    if [ $# -eq 1 ]; then
+    if [[ $# -eq 1 ]]; then
         git clone "gitlab:$1.git"
-    elif [ $# -eq 2 ]; then
+    elif [[ $# -eq 2 ]]; then
         git clone "gitlab:$1/$2.git"
     else
         echo "Usage: gitlab <user> <repo>"
@@ -64,17 +64,17 @@ function gitlab() {
 
 # Create Functions for nixos
 function nixupd() {
-    if command -v nixos-rebuild &> /dev/null; then
-        sudo nix-channel --update $@
+    if command -v nixos-rebuild &>/dev/null; then
+        sudo nix-channel --update "$@"
     else
-        nix-channel --update $@
+        nix-channel --update "$@"
     fi
 }
 
 function nixsw() {
-    if command -v nixos-rebuild &> /dev/null; then
-        sudo nixos-rebuild switch $@
+    if command -v nixos-rebuild &>/dev/null; then
+        sudo nixos-rebuild switch "$@"
     else
-        home-manager switch $@
+        home-manager switch "$@"
     fi
 }

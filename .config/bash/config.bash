@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Run other scripts
 if [[ -f "${XDG_CONFIG_HOME}/bash/alias.bash" ]]; then

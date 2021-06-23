@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 # install Zplug if not present
 if ! command -v git &>/dev/null; then
     echo "git not found"
@@ -12,10 +13,9 @@ else
 fi
 ECHO="$(which echo)"
 
-
 export ZPLUG_HOME="${XDG_CONFIG_HOME}/zsh/zplug"
 
-if [[ ! -d $ZPLUG_HOME ]]; then
+if [[ ! -d "$ZPLUG_HOME" ]]; then
     git clone "https://github.com/zplug/zplug" "${ZPLUG_HOME}"
 fi
 
