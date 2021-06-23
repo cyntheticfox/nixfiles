@@ -43,6 +43,7 @@ find . \
     -not -name 'README.md' \
     -not -name 'LICENSE' \
     -not -name 'flake*' \
+    -not -name 'typos.toml' \
     -exec bash -c "copy_if_ne" "{}" \;
 
 # Create fonts dir if it does not exist

@@ -13,6 +13,7 @@
           devShell =
             pkgs.mkShell {
               nativeBuildInputs = with pkgs; [
+                cargo
                 fish
                 nixpkgs-fmt
                 rnix-lsp

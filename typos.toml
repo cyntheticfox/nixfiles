@@ -1,0 +1,9 @@
+files.extend-exclude = ["*typos.toml"]
+
+[default.extend-words]
+# Don't fix "substituters"
+substituters = "substituters"
+
+[default.extend-identifiers]
+# VimSence is correct...somehow
+VimSence = "VimSence"

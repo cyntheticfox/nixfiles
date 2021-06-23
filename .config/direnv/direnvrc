@@ -113,7 +113,7 @@ use_flake() {
     local old_tempdir=${TEMPDIR:-__UNSET__}
     eval "$(<"$profile_rc")"
     # nix print-env-dev will create a temporary directory and use it a TMPDIR,
-    # we cannot rely on this directory beeing not deleted at some point,
+    # we cannot rely on this directory being not deleted at some point,
     # hence we are just removing it right away.
     if [[ "$NIX_BUILD_TOP" == */nix-shell.* && -d "$NIX_BUILD_TOP" ]]; then
         rmdir "$NIX_BUILD_TOP"
