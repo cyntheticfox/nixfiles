@@ -22,6 +22,11 @@ repos:
           - "-x"
           - "-eSC1090,SC1091,SC1071,SC2140"
       - id: shfmt
+  - repo: https://github.com/hugoh/pre-commit-fish
+    rev: v1.2
+    hooks:
+      - id: fish_syntax
+      - id: fish_indent
   - repo: https://github.com/nix-community/nixpkgs-fmt
     rev: v1.2.0
     hooks:
