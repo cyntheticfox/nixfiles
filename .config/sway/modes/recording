@@ -29,4 +29,3 @@ mode --pango_markup $mode_recording {
     bindsym Return mode "default"
 }
 bindsym $mod+Shift+r mode $mode_recording
-
