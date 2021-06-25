@@ -1,5 +1,3 @@
-" This file will need to be renamed to ".vimrc" before use
-
 " Enable filetype plugins
 filetype plugin on
 filetype indent on
@@ -12,6 +10,7 @@ set backspace=indent,eol,start
 set whichwrap+=<,>,h,l
 
 " Set Editor information
+set termguicolors
 set scrolloff=7
 set number
 syntax on
@@ -109,17 +108,14 @@ Plug 'jghauser/mkdir.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'steelsojka/pears.nvim'
 
-" Neovim Theming
-Plug 'romainl/Apprentice', { 'branch': 'fancylines-and-neovim' }
-
 " Neovim Tabline
 Plug 'romgrk/barbar.nvim'
 
 " Neovim Statusline
-Plug 'glepnir/galaxyline.nvim', {'branch': 'main'}
+Plug 'hoob3rt/lualine.nvim'
 
-" Neovim Cursorline
-Plug 'yamatsum/nvim-cursorline'
+" Neovim Theming
+Plug 'Th3Whit3Wolf/one-nvim'
 
 " Standard Vim plugins
 "Plug 'LnL7/vim-nix'
@@ -158,8 +154,7 @@ Plug 'vim-crystal/vim-crystal'
 
 call plug#end()
 
-" Set colorschemes
-colorscheme apprentice
+colorscheme one-nvim
 
 " Enable Tabline
 " let g:airline#extensions#tabline#enabled = 1
@@ -276,6 +271,10 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
   },
 }
+
+require('gitsigns').setup()
+require('lualine').setup()
+require'nvim-lastplace'.setup{}
 EOF
 
 " Set default TeX style
