@@ -91,40 +91,70 @@ let g:ale_echo_cursor = 1
 
 call plug#begin('~/.local/share/nvim/site/plugged')
 
-Plug 'LnL7/vim-nix'
-Plug 'NovaDev94/vim-fish'
-Plug 'airblade/vim-gitgutter'
-Plug 'cespare/vim-toml'
+" Dependencies
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'nvim-lua/plenary.nvim'
+
+" Neovim LSP plugins
+Plug 'neovim/nvim-lspconfig'
+Plug 'simrat39/rust-tools.nvim'
+
+" Neovim Syntax
+Plug 'nvim-treesitter/nvim-treesitter', {'do', ':TSUpdate'}
+
+# Neovim Utility
+Plug 'b3nj5m1n/kommentary'
+Plug 'ethanholz/nvim-lastplace'
+Plug 'jghauser/mkdir.nvim'
+Plug 'lewis6991/gitsigns.nvim'
+Plug 'steelsojka/pears.nvim'
+
+" Neovim Theming
+Plug 'romainl/Apprentice', { 'branch': 'fancylines-and-neovim' }
+
+" Neovim Tabline
+Plug 'romgrk/barbar.nvim'
+
+" Neovim Statusline
+Plug 'glepnir/galaxyline.nvim', {'branch': 'main'}
+
+" Neovim Cursorline
+Plug 'yamatsum/nvim-cursorline'
+
+" Standard Vim plugins
+"Plug 'LnL7/vim-nix'
+"Plug 'NovaDev94/vim-fish'
+"Plug 'airblade/vim-gitgutter'
+"Plug 'cespare/vim-toml'
 Plug 'dense-analysis/ale'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'farmergreg/vim-lastplace'
-Plug 'fidian/hexmode'
-Plug 'gisraptor/vim-lilypond-integrator'
-Plug 'glts/vim-radical'
+"Plug 'farmergreg/vim-lastplace'
+"Plug 'fidian/hexmode'
+"Plug 'gisraptor/vim-lilypond-integrator'
+"Plug 'glts/vim-radical'
 Plug 'hashivim/vim-terraform'
-Plug 'jiangmiao/auto-pairs'
-Plug 'junegunn/vim-plug'
-Plug 'leafgarland/typescript-vim'
-Plug 'lervag/vimtex'
+"Plug 'jiangmiao/auto-pairs'
+"Plug 'junegunn/vim-plug'
+"Plug 'leafgarland/typescript-vim'
+"Plug 'lervag/vimtex'
 Plug 'lilyinstarlight/vim-resolve'
 Plug 'lilyinstarlight/vim-spl'
 Plug 'mattn/emmet-vim'
 Plug 'mhinz/vim-startify'
 Plug 'pearofducks/ansible-vim'
 Plug 'PProvost/vim-ps1'
-Plug 'ryanoasis/vim-devicons'
-Plug 'romainl/Apprentice', { 'branch': 'fancylines-and-neovim' }
-Plug 'rust-lang/rust.vim'
-Plug 'tmux-plugins/vim-tmux'
-Plug 'tpope/vim-commentary'
+"Plug 'ryanoasis/vim-devicons'
+"Plug 'rust-lang/rust.vim'
+"Plug 'tmux-plugins/vim-tmux'
+"Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fugitive'
+"Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-crystal/vim-crystal'
-Plug 'vim-syntastic/syntastic'
-Plug 'vimsence/vimsence'
+"Plug 'vim-syntastic/syntastic'
+"Plug 'vimsence/vimsence'
 
 call plug#end()
 
@@ -132,12 +162,12 @@ call plug#end()
 colorscheme apprentice
 
 " Enable Tabline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#alt_sep = 1
-let g:airline#extensions#ale#enabled = 1
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline_powerline_fonts = 1
+" let g:airline#extensions#tabline#alt_sep = 1
+" let g:airline#extensions#ale#enabled = 1
 
-let g:airline_theme = 'apprentice'
+" let g:airline_theme = 'apprentice'
 
 " Enable vim-terraform options
 let g:terraform_fmt_on_save = 1
@@ -230,8 +260,25 @@ let g:ale_sh_shellcheck_options = '-x'
 let g:ale_python_black_options = '-l 79'
 
 " Setup VimSence for NeoVim
-let g:vimsence_small_text = 'NeoVim'
-let g:vimsence_small_image = 'neovim'
+" let g:vimsence_small_text = 'NeoVim'
+" let g:vimsence_small_image = 'neovim'
+
+lua <<EOF
+-- Set up nvim web icons
+require'nvim-web-devicons'.setup {
+  default = true;
+}
+
+-- Set up NVim-Treesitter
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "all",
+  ignore_install = {},
+  highlight = {
+    enable = true,
+    disable = {},
+  },
+}
+EOF
 
 " Set default TeX style
-let g:tex_flavor = 'latex'
+" let g:tex_flavor = 'latex'
