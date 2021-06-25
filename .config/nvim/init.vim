@@ -273,7 +273,11 @@ require'nvim-treesitter.configs'.setup {
 }
 
 require('gitsigns').setup()
-require('lualine').setup()
+require('lualine').setup{
+  options = {
+    theme = 'horizon'
+  },
+}
 require'nvim-lastplace'.setup{}
 EOF
 
