@@ -102,7 +102,7 @@ Plug 'simrat39/rust-tools.nvim'
 " Neovim Syntax
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
-# Neovim Utility
+" Neovim Utility
 Plug 'b3nj5m1n/kommentary'
 Plug 'ethanholz/nvim-lastplace'
 Plug 'jghauser/mkdir.nvim'
