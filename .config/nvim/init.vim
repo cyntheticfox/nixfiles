@@ -100,7 +100,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'simrat39/rust-tools.nvim'
 
 " Neovim Syntax
-Plug 'nvim-treesitter/nvim-treesitter', {'do', ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 # Neovim Utility
 Plug 'b3nj5m1n/kommentary'
@@ -272,10 +272,8 @@ require'nvim-web-devicons'.setup {
 -- Set up NVim-Treesitter
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "all",
-  ignore_install = {},
   highlight = {
     enable = true,
-    disable = {},
   },
 }
 EOF
