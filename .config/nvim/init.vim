@@ -118,7 +118,7 @@ Plug 'hoob3rt/lualine.nvim'
 Plug 'Th3Whit3Wolf/one-nvim'
 
 " Standard Vim plugins
-"Plug 'LnL7/vim-nix'
+Plug 'LnL7/vim-nix'
 "Plug 'NovaDev94/vim-fish'
 "Plug 'airblade/vim-gitgutter'
 "Plug 'cespare/vim-toml'
