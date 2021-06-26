@@ -273,12 +273,16 @@ require'nvim-treesitter.configs'.setup {
 }
 
 require('gitsigns').setup()
+
 require('lualine').setup{
   options = {
     theme = 'horizon'
   },
 }
 require'nvim-lastplace'.setup{}
+
+-- Set up lsps
+require'lspconfig'.rnix.setup{}
 EOF
 
 " Set default TeX style
