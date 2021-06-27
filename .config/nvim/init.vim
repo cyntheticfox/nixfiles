@@ -287,7 +287,6 @@ require'lspconfig'.ccls.setup{}
 require'lspconfig'.dockerls.setup{}
 require'lspconfig'.gopls.setup{}
 require'lspconfig'.hls.setup{}
-require'lspconfig'.pyls_ms.setup{}
 require'lspconfig'.rnix.setup{}
 require'lspconfig'.rust_analyzer.setup{}
 require'lspconfig'.terraformls.setup{}
