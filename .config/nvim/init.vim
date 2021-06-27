@@ -282,7 +282,16 @@ require('lualine').setup{
 require'nvim-lastplace'.setup{}
 
 -- Set up lsps
+require'lspconfig'.bashls.setup{}
+require'lspconfig'.ccls.setup{}
+require'lspconfig'.dockerls.setup{}
+require'lspconfig'.gopls.setup{}
+require'lspconfig'.hls.setup{}
+require'lspconfig'.pyls_ms.setup{}
 require'lspconfig'.rnix.setup{}
+require'lspconfig'.rust_analyzer.setup{}
+require'lspconfig'.terraformls.setup{}
+require'lspconfig'.yamlls.setup{}
 EOF
 
 " Set default TeX style
