@@ -106,7 +106,6 @@ Plug 'b3nj5m1n/kommentary'
 Plug 'ethanholz/nvim-lastplace'
 Plug 'jghauser/mkdir.nvim'
 Plug 'lewis6991/gitsigns.nvim'
-Plug 'steelsojka/pears.nvim'
 
 " Neovim Tabline
 Plug 'romgrk/barbar.nvim'
@@ -120,7 +119,7 @@ Plug 'Th3Whit3Wolf/one-nvim'
 " Standard Vim plugins
 Plug 'LnL7/vim-nix'
 "Plug 'NovaDev94/vim-fish'
-"Plug 'airblade/vim-gitgutter'
+" Plug 'airblade/vim-gitgutter'
 "Plug 'cespare/vim-toml'
 Plug 'dense-analysis/ale'
 Plug 'editorconfig/editorconfig-vim'
@@ -129,8 +128,8 @@ Plug 'editorconfig/editorconfig-vim'
 "Plug 'gisraptor/vim-lilypond-integrator'
 "Plug 'glts/vim-radical'
 Plug 'hashivim/vim-terraform'
-"Plug 'jiangmiao/auto-pairs'
-"Plug 'junegunn/vim-plug'
+Plug 'jiangmiao/auto-pairs'
+Plug 'junegunn/vim-plug'
 "Plug 'leafgarland/typescript-vim'
 "Plug 'lervag/vimtex'
 Plug 'lilyinstarlight/vim-resolve'
@@ -271,8 +270,6 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
   },
 }
-
-require'pears'.setup{}
 
 require('gitsigns').setup{}
 
