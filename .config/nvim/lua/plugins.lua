@@ -110,6 +110,7 @@ return require('packer').startup(function()
     }
 
     -- Vim plugins
+    use 'LnL7/vim-nix'
     use 'editorconfig/editorconfig-vim'
     use 'jiangmiao/auto-pairs'
     use 'lilyinstarlight/vim-resolve'
