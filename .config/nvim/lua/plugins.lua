@@ -103,6 +103,7 @@ return require('packer').startup(function()
   use 'lilyinstarlight/vim-resolve'
   use 'lilyinstarlight/vim-spl'
   use 'mhinz/vim-startify'
+  use 'pearofducks/ansible-vim'
   use 'tpope/vim-eunuch'
   use 'tpope/vim-surround'
 end)
