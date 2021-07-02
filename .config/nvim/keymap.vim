@@ -1,0 +1,11 @@
+map <space> /
+map <C-space> ?
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+map 0 ^
+nmap <M-j> mz:m+<cr>`z
+nmap <M-k> mz:m-2<cr>`z
+vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z

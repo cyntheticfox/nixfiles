@@ -28,6 +28,6 @@ indent_style = tab
 indent_size = 8
 
 # Default to two spaces for data languages
-[*.{c,cpp,css,h,hpp,htm,html,js,json,nix,tf,ts,yml,yaml,xml,xhtml}]
+[*.{c,cpp,css,h,hpp,htm,html,js,json,lua,nix,tf,ts,yml,yaml,xml,xhtml}]
 indent_style = space
 indent_size = 2
