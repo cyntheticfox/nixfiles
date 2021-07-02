@@ -15,7 +15,7 @@ nvim_lsp.gopls.setup{ on_attach=on_attach_func }
 
 nvim_lsp.hls.setup{ on_attach=on_attach_func }
 
-nvim_lsp.rnix.setup{ on_attach=on_attach_func }
+nvim_lsp.rnix.setup{}
 
 nvim_lsp.rust_analyzer.setup{ on_attach=on_attach_func }
 

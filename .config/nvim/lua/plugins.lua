@@ -49,12 +49,6 @@ return require('packer').startup(function()
     end
   }
   use {
-    'glepnir/dashboard.nvim',
-    config = function()
-      vim.g.dashboard_default_executive='telescope'
-    end
-  }
-  use {
     'lewis6991/gitsigns.nvim',
     requires = {
       'nvim-lua/plenary.nvim'
@@ -71,12 +65,6 @@ return require('packer').startup(function()
     },
     config = function()
       require'telescope_config'
-    end
-  }
-  use {
-    "blackCauldron7/surround.nvim",
-    config = function()
-      require "surround".setup{}
     end
   }
 
@@ -114,5 +102,7 @@ return require('packer').startup(function()
   use 'jiangmiao/auto-pairs'
   use 'lilyinstarlight/vim-resolve'
   use 'lilyinstarlight/vim-spl'
+  use 'mhinz/vim_startify'
   use 'tpope/vim-eunuch'
+  use 'tpope/vim-surround'
 end)

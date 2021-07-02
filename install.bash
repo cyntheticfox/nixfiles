@@ -40,8 +40,8 @@ find . \
     -type f \
     -not -name '.git*' \
     -not -name 'install.sh' \
-    -not -name 'README.md' \
-    -not -name 'LICENSE' \
+    -not -name 'readme.md' \
+    -not -name 'license' \
     -not -name 'flake*' \
     -not -name 'typos.toml' \
     -exec bash -c "copy_if_ne" "{}" \;
