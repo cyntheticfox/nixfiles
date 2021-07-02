@@ -4,7 +4,7 @@ require('lualine').setup{
         theme = 'horizon',
     },
     sections = {
-        lualine_a = {'diagnostics', {'mode', upper = true}},
+        lualine_a = {{'mode', upper = true}},
         lualine_b = {{'branch', lower = true}},
         lualine_c = {'diff', 'hostname', 'filename'},
         lualine_x = {'encoding', 'fileformat', 'filetype'},

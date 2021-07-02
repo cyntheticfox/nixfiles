@@ -102,7 +102,7 @@ return require('packer').startup(function()
   use 'jiangmiao/auto-pairs'
   use 'lilyinstarlight/vim-resolve'
   use 'lilyinstarlight/vim-spl'
-  use 'mhinz/vim_startify'
+  use 'mhinz/vim-startify'
   use 'tpope/vim-eunuch'
   use 'tpope/vim-surround'
 end)
