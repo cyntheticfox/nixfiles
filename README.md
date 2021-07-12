@@ -17,7 +17,6 @@ Here are a few tools I use:
 - [alacritty](https://github.com/alacritty/alacritty)
 - [FiraCode Font](https://github.com/tonsky/FiraCode)
 - [git](https://github.com/git/git)
-- [gitflow](https://github.com/nvie/gitflow)
 - [gnupg](https://gnupg.org/)
 - [neovim](https://github.com/neovim/neovim)
 - [nerd-fonts](https://github.com/ryanoasis/nerd-fonts)
