@@ -89,10 +89,10 @@ return require('packer').startup(function()
 
   -- Theme
   use {
-    'navarasu/onedark.vim',
+    'navarasu/onedark.nvim',
     config = function()
-      vim.cmd [[colorscheme onedark]]
       require('onedark').setup{}
+      vim.cmd [[colorscheme onedark]]
     end
   }
 
