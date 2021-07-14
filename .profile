@@ -105,6 +105,8 @@ else
         export TERM="xterm-termite"
     elif command -v alacritty &>/dev/null; then
         export TERM="alacritty"
+    elif command -v wt.exe &>/dev/null; then
+        export TERM="ms-terminal"
     else
         echo "No known terminal found"
     fi
