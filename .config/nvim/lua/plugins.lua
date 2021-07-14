@@ -89,10 +89,10 @@ return require('packer').startup(function()
 
   -- Theme
   use {
-    'Th3Whit3Wolf/one-nvim',
+    'navarasu/onedark.vim',
     config = function()
-      vim.cmd [[colorscheme one-nvim]]
-      vim.g.one_nvim_transparent_bg = true
+      vim.cmd [[colorscheme onedark]]
+      require('onedark').setup{}
     end
   }
 

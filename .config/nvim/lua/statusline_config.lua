@@ -1,7 +1,7 @@
 require('lualine').setup{
     options = {
         icons_enabled = true,
-        theme = 'horizon',
+        theme = 'onedark',
     },
     sections = {
         lualine_a = {{'mode', upper = true}},
