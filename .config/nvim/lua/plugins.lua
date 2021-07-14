@@ -96,13 +96,21 @@ return require('packer').startup(function()
     end
   }
 
+  -- Start page
+  use {
+    'glepnir/dashboard-nvim',
+    config = function()
+      vim.g.dashboard_default_executive = 'telescope'
+    end
+  }
+
   -- Vim plugins
   use 'LnL7/vim-nix'
   use 'editorconfig/editorconfig-vim'
   use 'jiangmiao/auto-pairs'
   use 'lilyinstarlight/vim-resolve'
   use 'lilyinstarlight/vim-spl'
-  use 'mhinz/vim-startify'
+  --use 'mhinz/vim-startify'
   use 'pearofducks/ansible-vim'
   use 'tpope/vim-eunuch'
   use 'tpope/vim-surround'
