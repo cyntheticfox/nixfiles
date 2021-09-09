@@ -9,7 +9,7 @@
       (system:
         let pkgs = nixpkgs.legacyPackages.${system};
         in
-        rec {
+        {
           devShell =
             pkgs.mkShell {
               nativeBuildInputs = with pkgs; [
