@@ -26,24 +26,24 @@
         }) // {
       nixosModules.dotfiles = ({ config, ... }: {
         home.file = {
-          ".profile".source = ./.profile;
-          ".bashrc".source = ./.bashrc;
-          ".bash_profile".source = ./.bash_profile;
-          ".editorconfig".source = ./.editorconfig;
-          ".zshrc".source = ./.zshrc;
+          ".profile".source = ./home/.profile;
+          ".bashrc".source = ./home/.bashrc;
+          ".bash_profile".source = ./home/.bash_profile;
+          ".editorconfig".source = ./home/.editorconfig;
+          ".zshrc".source = ./home/.zshrc;
 
           ".config" = {
-            source = ./.config;
+            source = ./home/.config;
             recursive = true;
           };
 
           ".ssh" = {
-            source = ./.ssh;
+            source = ./home/.ssh;
             recursive = true;
           };
 
           ".gnupg" = {
-            source = ./.gnupg;
+            source = ./home/.gnupg;
             recursive = true;
           };
         };
