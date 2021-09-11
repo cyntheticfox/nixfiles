@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal Configuration files, meant to be easily cloned down and propagated for standard use
+Personal Configuration files, meant to be easily cloned down and propagated for standard use. Recently rewritten to also be the home for my personal NixOS configuration files.
 
 ## Cloning
 
