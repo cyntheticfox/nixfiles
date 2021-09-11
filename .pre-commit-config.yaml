@@ -35,8 +35,4 @@ repos:
     rev: v0.4a3
     hooks:
       - id: vint
-  - repo: https://github.com/crate-ci/typos
-    rev: v1.0.9
-    hooks:
-      - id: typos
 ...

@@ -37,19 +37,35 @@
               ];
             };
         }) // {
-      lib.hmConfig = { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }: (home-manager.lib.homeManagerConfiguration {
-        system = system;
-        username = "david";
-        homeDirectory = "/home/${username}";
+      lib = {
+        hmConfig = { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }: (home-manager.lib.homeManagerConfiguration {
+          system = system;
+          username = "david";
+          homeDirectory = "/home/${username}";
 
-        configuration = { pkgs, lib, ... }: {
-          imports = [
-            self.nixosModules.dotfiles
-            ./home-manager/config/base.nix
-            extraArgs
-          ] ++ modules;
-        };
-      });
+          configuration = { pkgs, lib, ... }: {
+            imports = [
+              self.nixosModules.dotfiles
+              ./home-manager/config/base.nix
+              extraArgs
+            ] ++ modules;
+          };
+        });
+
+        defFlakeSystem = { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
+          nixpkgs.lib.nixosSystem {
+            system = system;
+            modules = [
+              # Add home-manager to all configs
+              ./nixos/config/base.nix
+              home-manager.nixosModules.home-manager
+            ] ++ modules;
+            extraArgs = {
+              inherit self;
+              inherit (self) inputs outputs;
+            } // extraArgs;
+          };
+      };
 
       nixosModules = {
         dh-laptop2.imports = [
@@ -118,6 +134,19 @@
           extraConfig = {
             nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
           };
+        };
+      };
+
+      nixosConfigurations = {
+        dh-laptop2 = self.lib.defFlakeSystem {
+          modules = [
+            ./nixos/hosts/dh-laptop2/configuration.nix
+          ];
+        };
+        ashley = self.lib.defFlakeSystem {
+          modules = [
+            ./nixos/hosts/ashley/configuration.nix
+          ];
         };
       };
     };
