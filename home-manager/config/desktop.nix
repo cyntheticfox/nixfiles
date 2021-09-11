@@ -26,5 +26,8 @@
 
     # Extractor
     xarchive
+
+    # Dev
+    vscode
   ];
 }
