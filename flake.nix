@@ -1,10 +1,23 @@
 {
   description = "Personal dotfiles";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
 
-  outputs = { self, nixpkgs, flake-utils }@inputs:
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, ... }@inputs:
+    with inputs;
     flake-utils.lib.eachDefaultSystem
       (system:
         let pkgs = nixpkgs.legacyPackages.${system};
@@ -24,29 +37,88 @@
               ];
             };
         }) // {
-      nixosModules.dotfiles = ({ config, ... }: {
-        home.file = {
-          ".profile".source = ./home/.profile;
-          ".bashrc".source = ./home/.bashrc;
-          ".bash_profile".source = ./home/.bash_profile;
-          ".editorconfig".source = ./home/.editorconfig;
-          ".zshrc".source = ./home/.zshrc;
+      lib.hmConfig = { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }: (home-manager.lib.homeManagerConfiguration {
+        system = system;
+        username = "david";
+        homeDirectory = "/home/${username}";
 
-          ".config" = {
-            source = ./home/.config;
-            recursive = true;
-          };
-
-          ".ssh" = {
-            source = ./home/.ssh;
-            recursive = true;
-          };
-
-          ".gnupg" = {
-            source = ./home/.gnupg;
-            recursive = true;
-          };
+        configuration = { pkgs, lib, ... }: {
+          imports = [
+            self.nixosModules.dotfiles
+            ./home-manager/config/base.nix
+            extraArgs
+          ] ++ modules;
         };
       });
+
+      nixosModules = {
+        dh-laptop2.imports = [
+          {
+            nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
+          }
+          self.nixosModules.dotfiles
+          ./home-manager/config/base.nix
+          ./home-manager/config/server.nix
+          ./home-manager/config/dev.nix
+          ./home-manager/config/desktop.nix
+          ./home-manager/config/work.nix
+          ./home-manager/modules/desktop-chat.nix
+          ./home-manager/modules/documents.nix
+          ./home-manager/modules/games.nix
+          ./home-manager/modules/libvirt.nix
+          ./home-manager/modules/kubernetes.nix
+          ./home-manager/modules/music.nix
+          ./home-manager/modules/music-editing.nix
+          ./home-manager/modules/openshift.nix
+          ./home-manager/modules/postman.nix
+          ./home-manager/modules/video.nix
+          ./home-manager/modules/video-editing.nix
+        ];
+        dotfiles = ({ config, ... }: {
+          home.file = {
+            ".profile".source = ./home/.profile;
+            ".bashrc".source = ./home/.bashrc;
+            ".bash_profile".source = ./home/.bash_profile;
+            ".editorconfig".source = ./home/.editorconfig;
+            ".zshrc".source = ./home/.zshrc;
+
+            ".config" = {
+              source = ./home/.config;
+              recursive = true;
+            };
+
+            ".ssh" = {
+              source = ./home/.ssh;
+              recursive = true;
+            };
+
+            ".gnupg" = {
+              source = ./home/.gnupg;
+              recursive = true;
+            };
+          };
+        });
+      };
+
+      homeConfigurations = {
+        wsl = self.lib.hmConfig {
+          modules = [
+            ./home-manager/config/server.nix
+            ./home-manager/config/dev.nix
+          ];
+          extraConfig = {
+            nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
+          };
+        };
+        pbp = self.lib.hmConfig {
+          system = "aarch64-linux";
+          modules = [
+            ./home-manager/config/server.nix
+          ];
+          extraConfig = {
+            nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
+          };
+        };
+      };
     };
 }
