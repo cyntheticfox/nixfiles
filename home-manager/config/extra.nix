@@ -4,15 +4,12 @@
     mpd
     ncmpcpp
 
-    # Email
-    neomutt
-
     # Web
     nyxt
-    w3m
 
     # Extra Shells
     elvish
+    fish
     mosh
     powershell
     xonsh

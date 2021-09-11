@@ -17,6 +17,7 @@
     htop
     libtool
     neofetch
+    neomutt
     neovim
     pandoc
     p7zip
