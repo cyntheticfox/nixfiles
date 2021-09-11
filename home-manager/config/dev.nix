@@ -1,7 +1,6 @@
 { config, pkgs, ... }: {
   imports = [
     ../modules/formatters.nix
-    ../modules/git.nix
     ../modules/linters.nix
     ../modules/lsp.nix
   ];
@@ -13,22 +12,14 @@
     gcc_latest
     deno
     diff-so-fancy
-    direnv
-    fish
-    gnupg
     hyperfine
     jq
     libnotify
-    neovim
     nodejs_latest
-    pandoc
     poetry
     python
     python3
-    starship
-    texlive.combined.scheme-full
-    tree-sitter
-    zsh
+    texlive.combined.scheme-basic
 
     # Repository Management
     pre-commit

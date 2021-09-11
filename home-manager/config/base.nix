@@ -1,4 +1,7 @@
 { config, pkgs, ... }: {
+  imports = [
+    ../modules/git.nix
+  ];
 
   home.stateVersion = "20.09";
 
@@ -8,12 +11,19 @@
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
     bashInteractive_5
+    direnv
     exa
+    gnupg
     htop
     libtool
     neofetch
+    neovim
+    pandoc
     p7zip
-    zellij
+    starship
+    tmux
+    tree-sitter
     w3m
+    zsh
   ];
 }
