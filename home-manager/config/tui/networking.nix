@@ -8,5 +8,6 @@
     sshfs
     traceroute
     whois
+    wireguard
   ];
 }

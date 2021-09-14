@@ -18,7 +18,7 @@
     nixfmt
 
     # Python
-    pythonPackages.autopep8
+    python39Packages.autopep8
     black
 
     # Rust

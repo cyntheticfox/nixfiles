@@ -1,6 +1,9 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
-    audacity
-    lmms
+    fd
+    pistol
+    ranger
+    ripgrep
+    zstd
   ];
 }

@@ -41,8 +41,6 @@
 
             configuration = { pkgs, lib, ... }: {
               imports = [
-                self.nixosModules.dotfiles
-                ./home-manager/config/base.nix
                 extraArgs
               ] ++ modules;
             };
@@ -68,52 +66,14 @@
           {
             nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
           }
-          self.nixosModules.dotfiles
-          ./home-manager/config/base.nix
-          ./home-manager/config/server.nix
-          ./home-manager/config/dev.nix
-          ./home-manager/config/desktop.nix
-          ./home-manager/config/work.nix
-          ./home-manager/modules/desktop-chat.nix
-          ./home-manager/modules/documents.nix
-          ./home-manager/modules/games.nix
-          ./home-manager/modules/libvirt.nix
-          ./home-manager/modules/music.nix
-          ./home-manager/modules/postman.nix
-          ./home-manager/modules/video.nix
+          ./home-manager/hosts/dh-laptop2/home.nix
         ];
-
-        dotfiles = { config, ... }: {
-          home.file = {
-            ".profile".source = ./home/.profile;
-            ".bashrc".source = ./home/.bashrc;
-            ".bash_profile".source = ./home/.bash_profile;
-            ".editorconfig".source = ./home/.editorconfig;
-            ".zshrc".source = ./home/.zshrc;
-
-            ".config" = {
-              source = ./home/.config;
-              recursive = true;
-            };
-
-            ".ssh" = {
-              source = ./home/.ssh;
-              recursive = true;
-            };
-
-            ".gnupg" = {
-              source = ./home/.gnupg;
-              recursive = true;
-            };
-          };
-        };
       };
 
       homeConfigurations = {
         wsl = self.lib.hmConfig {
           modules = [
-            ./home-manager/config/server.nix
-            ./home-manager/config/dev.nix
+            ./home-manager/hosts/wsl/home.nix
           ];
           extraConfig = {
             nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
@@ -123,7 +83,7 @@
         pbp = self.lib.hmConfig {
           system = "aarch64-linux";
           modules = [
-            ./home-manager/config/server.nix
+            ./home-manager/hosts/pbp/home.nix
           ];
           extraConfig = {
             nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];

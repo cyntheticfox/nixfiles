@@ -56,7 +56,7 @@
     # Python
     python39Packages.bandit
     python39Packages.flake8
-    mypy
+    python39Packages.mypy
     python39Packages.pydocstyle
     python39Packages.pylama
     python39Packages.pylint
