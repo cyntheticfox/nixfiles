@@ -26,11 +26,6 @@
           devShell =
             pkgs.mkShell {
               nativeBuildInputs = with pkgs; [
-                cargo
-                fish
-                nixpkgs-fmt
-                rnix-lsp
-                proselint
                 shfmt
                 shellcheck
                 vim-vint
@@ -38,19 +33,20 @@
             };
         }) // {
       lib = {
-        hmConfig = { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }: (home-manager.lib.homeManagerConfiguration {
-          system = system;
-          username = "david";
-          homeDirectory = "/home/${username}";
+        hmConfig = { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
+          home-manager.lib.homeManagerConfiguration {
+            system = system;
+            username = "david";
+            homeDirectory = "/home/${username}";
 
-          configuration = { pkgs, lib, ... }: {
-            imports = [
-              self.nixosModules.dotfiles
-              ./home-manager/config/base.nix
-              extraArgs
-            ] ++ modules;
-          };
-        });
+            configuration = { pkgs, lib, ... }: {
+              imports = [
+                self.nixosModules.dotfiles
+                ./home-manager/config/base.nix
+                extraArgs
+              ] ++ modules;
+            };
+        };
 
         defFlakeSystem = { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
           nixpkgs.lib.nixosSystem {
@@ -82,15 +78,12 @@
           ./home-manager/modules/documents.nix
           ./home-manager/modules/games.nix
           ./home-manager/modules/libvirt.nix
-          ./home-manager/modules/kubernetes.nix
           ./home-manager/modules/music.nix
-          ./home-manager/modules/music-editing.nix
-          ./home-manager/modules/openshift.nix
           ./home-manager/modules/postman.nix
           ./home-manager/modules/video.nix
-          ./home-manager/modules/video-editing.nix
         ];
-        dotfiles = ({ config, ... }: {
+
+        dotfiles = { config, ... }: {
           home.file = {
             ".profile".source = ./home/.profile;
             ".bashrc".source = ./home/.bashrc;
@@ -113,7 +106,7 @@
               recursive = true;
             };
           };
-        });
+        };
       };
 
       homeConfigurations = {
@@ -126,6 +119,7 @@
             nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
           };
         };
+
         pbp = self.lib.hmConfig {
           system = "aarch64-linux";
           modules = [
@@ -143,6 +137,7 @@
             ./nixos/hosts/dh-laptop2/configuration.nix
           ];
         };
+
         ashley = self.lib.defFlakeSystem {
           modules = [
             ./nixos/hosts/ashley/configuration.nix
