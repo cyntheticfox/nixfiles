@@ -7,6 +7,7 @@
     ../../config/gui/dev.nix
     ../../config/gui/documents.nix
     ../../config/gui/email.nix
+    ../../config/gui/fonts.nix
     ../../config/gui/games.nix
     ../../config/gui/music.nix
     ../../config/gui/terminals.nix
