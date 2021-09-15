@@ -29,6 +29,14 @@ return require('packer').startup(function()
   }
 
   -- Utility
+  use {
+    'folke/todo-comments.nvim',
+    requires = 'nvim-lua/plenary.nvim',
+    config = function()
+      require('todo-comments').setup {
+      }
+    end
+  }
   use 'b3nj5m1n/kommentary'
   use {
     'ethanholz/nvim-lastplace',
@@ -98,7 +106,7 @@ return require('packer').startup(function()
   use {
     'navarasu/onedark.nvim',
     config = function()
-      require('onedark').setup{}
+      require('onedark').setup()
       vim.cmd [[colorscheme onedark]]
     end
   }

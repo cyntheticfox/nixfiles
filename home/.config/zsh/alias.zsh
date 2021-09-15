@@ -41,9 +41,14 @@ if command -v bat &>/dev/null; then
     alias cat="bat"
 fi
 
-# Alias for diff
-if command -v diff-so-fancy &>/dev/null; then
-    alias diff="diff-so-fancy"
+# alias htop for top if available
+if command -v htop &>/dev/null; then
+    alias top="htop"
+fi
+
+# alias procs for ps if available
+if command -v procs &>/dev/null; then
+    alias ps="procs"
 fi
 
 # Set additional aliases for ls
