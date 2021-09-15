@@ -12,18 +12,21 @@
     git
     gnupg
     htop
-    libtool
     neofetch
     neovim
     p7zip
     procs
     starship
     tmux
-    tree-sitter
     unzip
     w3m
     zip
     zsh
+
+    # NeoVim Tools
+    code-minimap
+    libtool
+    tree-sitter
   ];
 
   home.file = {
