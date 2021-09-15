@@ -18,7 +18,10 @@ return require('packer').startup(function()
     run = ':TSUpdate',
     config = function()
       require'treesitter_config'
-    end
+    end,
+    requires = {
+      'p00f/nvim-ts-rainbow'
+    }
   }
 
   -- Utility
