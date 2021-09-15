@@ -14,6 +14,10 @@ return require('packer').startup(function()
   }
 
   use {
+    'ray-x/lsp_signature.nvim'
+  }
+
+  use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
