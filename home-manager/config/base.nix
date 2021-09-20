@@ -17,6 +17,7 @@
     p7zip
     procs
     starship
+    smbclient
     tmux
     unzip
     w3m
