@@ -11,6 +11,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixpkgs-wayland = {
+      url = "github:nix-community/nixpkgs-wayland";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.master.follows = "nixpkgs-master";
+    };
+
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,7 +51,7 @@
                 extraArgs
               ] ++ modules;
             };
-        };
+          };
 
         defFlakeSystem = { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
           nixpkgs.lib.nixosSystem {
@@ -65,7 +71,10 @@
       nixosModules = {
         dh-laptop2.imports = [
           {
-            nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
+            nixpkgs.overlays = [
+              neovim-nightly-overlay.overlay
+              nixpkgs-wayland.overlay
+            ];
           }
           ./home-manager/hosts/dh-laptop2/home.nix
         ];
