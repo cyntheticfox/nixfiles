@@ -9,6 +9,7 @@
     ../../config/gui/email.nix
     ../../config/gui/fonts.nix
     ../../config/gui/games.nix
+    ../../config/gui/libvirt.nix
     ../../config/gui/music.nix
     ../../config/gui/terminals.nix
     ../../config/gui/video.nix
