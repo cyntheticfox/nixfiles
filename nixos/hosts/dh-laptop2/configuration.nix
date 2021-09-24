@@ -9,7 +9,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../config/users/david.nix
-    ../../config/desktops/gnome.nix
+    ../../config/desktops/sway.nix
     ../../config/services/libvirtd.nix
     ../../config/services/cupsd.nix
     ../../config/services/podman.nix
@@ -107,6 +107,6 @@
     enable = true;
     alsa.enable = true;
     jack.enable = true;
-    pulse.enable = false;
+    pulse.enable = true;
   };
 }
