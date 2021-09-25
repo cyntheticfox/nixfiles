@@ -27,6 +27,7 @@ in
     enable = true;
     extraPackages = with pkgs; [
       gnome_themes_standard
+      imv
       kanshi
       mako
       pavucontrol
