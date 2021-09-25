@@ -22,7 +22,9 @@ set $term alacritty
 set $appmenu wofi --show drun | xargs swaymsg exec --
 set $menu wofi --show run --exec-search | xargs swaymsg exec --
 
-set $lockscreen swaylock --screenshots --clock --indicator --effect-blur 7x5 --effect-vignette 0.5:0.5 --grace 5 --fade-in 0.2
+set $lockscreen swaylock --daemonize --show-failed-attempts --screenshots --clock --indicator --effect-blur 7x5 --effect-vignette 0.5:0.5 --fade-in 0.2
+
+set $notifications mako --default-timeout 15000
 
 ### Idle configuration
 # This will lock your screen after 15 minutes of inactivity, then turn off
@@ -30,10 +32,11 @@ set $lockscreen swaylock --screenshots --clock --indicator --effect-blur 7x5 --e
 # resumed. It will also lock your screen before your computer goes to sleep.
 #
 set $idle swayidle -w \
-    timeout 900 $lockscreen \
+    timeout 900 'exec $lockscreen' \
     timeout 960 'swaymsg "output * dpms off"' \
-    resume 'swaymsg "output * dpms on"' \
-    beforesleep $lockscreen
+        resume 'swaymsg "output * dpms on"' \
+    before-sleep 'exec $lockscreen'
+
 
 # statusbar command
 set $statusbar waybar

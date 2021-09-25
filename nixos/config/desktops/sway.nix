@@ -84,4 +84,6 @@ in
       "modesetting"
     ];
   };
+
+  services.tlp.enable = true;
 }

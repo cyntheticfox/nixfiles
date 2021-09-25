@@ -11,7 +11,7 @@ include ~/.config/sway/inputs/*
 include ~/.config/sway/outputs/*
 
 # include additional configs e.g. to autostart applications
-include /etc/sway/config.d/*
+include ~/.config/sway/config.d/*
 
 # enable modes
 include ~/.config/sway/modes/*
