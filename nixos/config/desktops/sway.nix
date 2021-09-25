@@ -39,6 +39,7 @@ in
       wl-clipboard
       wlogout
       wofi
+      workstyle
     ];
     extraSessionCommands = ''
       export WLR_NO_HARDWARE_CURSORS=1
