@@ -106,7 +106,9 @@
       nixosConfigurations = {
         dh-laptop2 = self.lib.defFlakeSystem {
           modules = [
+            nixos-hardware.nixosModules.common-cpu-intel
             nixos-hardware.nixosModules.common-pc-laptop-ssd
+            nixos-hardware.nixosModules.common-pc-laptop
             ./nixos/hosts/dh-laptop2/configuration.nix
           ];
         };
