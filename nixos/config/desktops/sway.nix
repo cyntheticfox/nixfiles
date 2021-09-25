@@ -31,7 +31,7 @@ in
       pavucontrol
       polkit_gnome
       swayidle
-      swaylock
+      swaylock-effects
       xwayland
       waybar
       wl-clipboard

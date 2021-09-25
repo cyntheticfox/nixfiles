@@ -22,16 +22,18 @@ set $term alacritty
 set $appmenu wofi --show drun | xargs swaymsg exec --
 set $menu wofi --show run --exec-search | xargs swaymsg exec --
 
+set $lockscreen swaylock --screenshots --clock --indicator --effect-blur 7x5 --effect-vignette 0.5:0.5 --grace 5 --fade-in 0.2
+
 ### Idle configuration
-# This will lock your screen after 300 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
+# This will lock your screen after 15 minutes of inactivity, then turn off
+# your displays after another minute, and turn your screens back on when
 # resumed. It will also lock your screen before your computer goes to sleep.
 #
 set $idle swayidle -w \
-    timeout 900 'swaylock -f -c 000000' \
+    timeout 900 $lockscreen \
     timeout 960 'swaymsg "output * dpms off"' \
     resume 'swaymsg "output * dpms on"' \
-    before-sleep 'swaylock -f -c 000000'
+    beforesleep $lockscreen
 
 # statusbar command
 set $statusbar waybar
