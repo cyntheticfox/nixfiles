@@ -54,7 +54,11 @@ in
     lxappearance
   ];
 
-  programs.qt5ct.enable = true;
+  qt5 = {
+    enable = true;
+    style = "adwaita-dark";
+    platformTheme = "gnome";
+  };
 
   programs.waybar.enable = true;
 
