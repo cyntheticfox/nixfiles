@@ -17,13 +17,6 @@
       inputs.master.follows = "nixpkgs-master";
     };
 
-    foosteros = {
-      url = "github:lilyinstarlight/foosteros";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-      inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";

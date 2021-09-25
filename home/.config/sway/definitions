@@ -14,15 +14,13 @@ set $right l
 set $theme ~/.config/sway/themes/matcha-green
 
 # Your preferred terminal emulator
-set $term termite
+set $term alacritty
 
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $appmenu wofi --show drun --prompt "Application Launcher" | xargs swaymsg exec --
-set $menu wofi --show run --exec-search --prompt "Run Command" | xargs swaymsg exec --
-set $selwin sws.sh --dmenu-cmd "wofi --show dmenu" --format "%W | %A - %T"
-set $help swhelp.sh --conf $HOME/.config/wofi/swhelp --location 7 --xoffset 15 --yoffset -30
+set $appmenu wofi --show drun | xargs swaymsg exec --
+set $menu wofi --show run --exec-search | xargs swaymsg exec --
 
 ### Idle configuration
 # This will lock your screen after 300 seconds of inactivity, then turn off
