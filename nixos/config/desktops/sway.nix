@@ -29,6 +29,7 @@ in
       gnome_themes_standard
       mako
       pavucontrol
+      playerctl
       polkit_gnome
       swayidle
       swaylock-effects

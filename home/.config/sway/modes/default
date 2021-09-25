@@ -28,9 +28,14 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+e exec $shutdown
 
 # Media key bindings
-bindsym XF86AudioLowerVolume exec pamixer -d 2
 bindsym XF86AudioMute exec pamixer -t
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPrev exec playerctl previous
+bindsym XF86AudioLowerVolume exec pamixer -d 2
 bindsym XF86AudioRaiseVolume exec pamixer -i 2
+bindsym XF86AudioStop exec playerctl stop
+
 
 # Screen brightness bindings
 bindsym XF86MonBrightnessDown exec light -U 5

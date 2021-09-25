@@ -35,6 +35,7 @@ set $idle swayidle -w \
     timeout 900 'exec $lockscreen' \
     timeout 960 'swaymsg "output * dpms off"' \
         resume 'swaymsg "output * dpms on"' \
+    before-sleep 'playerctl pause' \
     before-sleep 'exec $lockscreen'
 
 
