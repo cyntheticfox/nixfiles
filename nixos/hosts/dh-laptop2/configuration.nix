@@ -13,6 +13,7 @@
     ../../config/services/libvirtd.nix
     ../../config/services/cupsd.nix
     ../../config/services/podman.nix
+    ../../config/services/clamav.nix
   ];
 
   boot = {
