@@ -6,6 +6,8 @@
     nixpkgs-master.url = "github:Nixos/nixpkgs/master";
     flake-utils.url = "github:numtide/flake-utils";
 
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
+
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -104,6 +106,7 @@
       nixosConfigurations = {
         dh-laptop2 = self.lib.defFlakeSystem {
           modules = [
+            nixos-hardware.nixosModules.common-pc-laptop-ssd
             ./nixos/hosts/dh-laptop2/configuration.nix
           ];
         };
