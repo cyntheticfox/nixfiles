@@ -10,6 +10,7 @@
     ./hardware-configuration.nix
     ../../config/users/david.nix
     ../../config/desktops/sway.nix
+    ../../config/services/dropbox.nix
     ../../config/services/libvirtd.nix
     ../../config/services/cupsd.nix
     ../../config/services/podman.nix
@@ -80,6 +81,7 @@
   ];
 
   environment.systemPackages = with pkgs; [
+    cifs-utils
     git
     gnupg
     neovim
