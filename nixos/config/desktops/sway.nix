@@ -27,6 +27,7 @@ in
     enable = true;
     extraPackages = with pkgs; [
       gnome_themes_standard
+      grim
       imv
       kanshi
       mako
@@ -35,6 +36,7 @@ in
       polkit_gnome
       swayidle
       swaylock-effects
+      sway-contrib.grimshot
       xwayland
       waybar
       wl-clipboard
