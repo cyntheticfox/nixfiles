@@ -101,15 +101,15 @@ else
     fi
 
     # Set terminal
-    if command -v termite &>/dev/null; then
-        export TERM="xterm-termite"
-    elif command -v alacritty &>/dev/null; then
-        export TERM="alacritty"
-    elif command -v wt.exe &>/dev/null; then
-        export TERM="ms-terminal"
-    else
-        echo "No known terminal found"
-    fi
+    # if command -v termite &>/dev/null; then
+    #     export TERM="xterm-termite"
+    # elif command -v alacritty &>/dev/null; then
+    #     export TERM="alacritty"
+    # elif command -v wt.exe &>/dev/null; then
+    #     export TERM="ms-terminal"
+    # else
+    #     echo "No known terminal found"
+    # fi
 
     # Set editor
     if command -v nvim &>/dev/null; then

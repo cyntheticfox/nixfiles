@@ -21,6 +21,7 @@
     ../../config/tui/email.nix
     ../../config/tui/file.nix
     ../../config/tui/formatters.nix
+    ../../config/tui/git-extra.nix
     ../../config/tui/hacking.nix
     ../../config/tui/kubernetes.nix
     ../../config/tui/linters.nix
