@@ -53,10 +53,13 @@
     # Terraform
     terraform-ls
 
-    # YAML
-    nodePackages.yaml-language-server
-
     # Vim
     nodePackages.vim-language-server
+
+    # Vue
+    nodePackages.vue-language-server
+
+    # YAML
+    nodePackages.yaml-language-server
   ];
 }

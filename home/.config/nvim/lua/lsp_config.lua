@@ -58,6 +58,10 @@ nvim_lsp.gopls.setup{
 
 nvim_lsp.hls.setup{
   capabilities=capabilities_var,
+  cmd = {
+    "haskell-language-server",
+    "lsp"
+  },
   on_attach=on_attach_func
 }
 
@@ -101,15 +105,6 @@ nvim_lsp.stylelint_lsp.setup{
   on_attach=on_attach_func
 }
 
-nvim_lsp.vimls.setup{
-  capabilities=capabilities_var,
-  on_attach=on_attach_func
-}
-
-nvim_lsp.yamlls.setup{
-  capabilities=capabilities_var,
-  on_attach=on_attach_func
-}
 
 nvim_lsp.sumneko_lua.setup{
   capabilities=capabilities_var,
@@ -136,6 +131,20 @@ nvim_lsp.terraformls.setup{
   on_attach=on_attach_func
 }
 
+nvim_lsp.vimls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
+
+nvim_lsp.vuels.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
+
+nvim_lsp.yamlls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 -- Language-agnostic language-servers
 nvim_lsp.diagnosticls.setup{
   on_attach=on_attach_func,
