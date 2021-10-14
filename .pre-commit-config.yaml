@@ -6,6 +6,7 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: check-json
+      - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: mixed-line-ending
         args:
@@ -13,7 +14,6 @@ repos:
       - id: pretty-format-json
         args:
           - "--autofix"
-      - id: trailing-whitespace
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
     rev: 2.1.5
     hooks:
@@ -31,7 +31,3 @@ repos:
     rev: v1.2.0
     hooks:
       - id: nixpkgs-fmt
-  - repo: https://github.com/Vimjas/vint
-    rev: v0.4a3
-    hooks:
-      - id: vint

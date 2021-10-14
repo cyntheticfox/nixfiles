@@ -31,3 +31,7 @@ indent_size = 8
 [*.{c,cpp,css,h,hpp,htm,html,js,json,lua,nix,tf,ts,yml,yaml,xml,xhtml}]
 indent_style = space
 indent_size = 2
+
+[flake.lock]
+indent_style = space
+indent_size = 2

@@ -29,37 +29,36 @@
     with inputs;
     flake-utils.lib.eachDefaultSystem
       (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
+        let pkgs = nixpkgs.legacyPackages."${system}";
         in
         {
-          devShell =
-            pkgs.mkShell {
-              nativeBuildInputs = with pkgs; [
-                shfmt
-                shellcheck
-                vim-vint
-              ];
-            };
+          devShell = pkgs.mkShell {
+            nativeBuildInputs = with pkgs; [
+              shfmt
+              shellcheck
+              vim-vint
+            ];
+          };
         }) // {
       lib = {
-        hmConfig = { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
+        hmConfig =
+          { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
           home-manager.lib.homeManagerConfiguration {
             system = system;
             username = "david";
             homeDirectory = "/home/${username}";
 
             configuration = { pkgs, lib, ... }: {
-              imports = [
-                extraArgs
-              ] ++ modules;
+              imports = [ extraArgs ] ++ modules;
             };
           };
 
-        defFlakeSystem = { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
+        defFlakeSystem =
+          { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
           nixpkgs.lib.nixosSystem {
             system = system;
             modules = [
-              # Add home-manager to all configs
+              # Add home-manager to all configurations
               ./nixos/config/base.nix
               home-manager.nixosModules.home-manager
             ] ++ modules;
@@ -84,9 +83,7 @@
 
       homeConfigurations = {
         wsl = self.lib.hmConfig {
-          modules = [
-            ./home-manager/hosts/wsl/home.nix
-          ];
+          modules = [ ./home-manager/hosts/wsl/home.nix ];
           extraConfig = {
             nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
           };
@@ -94,9 +91,7 @@
 
         pbp = self.lib.hmConfig {
           system = "aarch64-linux";
-          modules = [
-            ./home-manager/hosts/pbp/home.nix
-          ];
+          modules = [ ./home-manager/hosts/pbp/home.nix ];
           extraConfig = {
             nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
           };
@@ -114,9 +109,7 @@
         };
 
         ashley = self.lib.defFlakeSystem {
-          modules = [
-            ./nixos/hosts/ashley/configuration.nix
-          ];
+          modules = [ ./nixos/hosts/ashley/configuration.nix ];
         };
       };
     };

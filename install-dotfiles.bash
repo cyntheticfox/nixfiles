@@ -43,8 +43,7 @@ function install_nerdfonts() {
     # Create fonts dir if it does not exist
     create_if_nd "${FONTS_DIR}/ttf"
     create_if_nd "${FONTS_DIR}/otf"
-
-    # Dowload and install fonts
+    # Download and install fonts
     for NERD_FONT in ${NERD_FONTS}; do
         mkdir -p "${TEMP_DIR}"
         curl -Lo "${TEMP_DIR}/${DL_OUT}" "https://github.com/ryanoasis/nerd-fonts/releases/download/${NERD_TAG}/${NERD_FONT}.zip"

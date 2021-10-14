@@ -1,6 +1,15 @@
 " Enable filetype plugins
-filetype plugin on
-filetype indent on
+if has('autocmd')
+    filetype plugin indent on
+endif
+
+" Enable syntax
+if has('syntax')
+    syntax enable
+    if has('autocmd')
+        autocmd BufNewFile,BufRead flake.lock set filetype=json
+    endif
+endif
 
 " Allow autoread for outside file changes
 set autoread
@@ -11,9 +20,11 @@ set whichwrap+=<,>,h,l
 
 " Set Editor information
 set termguicolors
+set sessionoptions-=options
+set viewoptions-=options
+set display+=lastline
 set scrolloff=7
 set number
-syntax on
 set cursorline
 set ruler
 set nostartofline
@@ -23,7 +34,7 @@ set nolazyredraw
 set magic
 set showmatch
 set foldcolumn=1
-set encoding=utf8
+set encoding=utf-8
 set fileformats=unix,dos,mac
 set showtabline=2
 set ttyfast

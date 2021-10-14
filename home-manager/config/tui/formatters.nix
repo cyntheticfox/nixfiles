@@ -1,7 +1,6 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
     # Bash/shell
-    bashate
     shfmt
 
     # C/C++
@@ -10,15 +9,13 @@
     # Go
     gofumpt
 
-    # Javascript
+    # JavaScript
     nodePackages.prettier
 
     # Nix
     nixpkgs-fmt
-    nixfmt
 
     # Python
-    python39Packages.autopep8
     black
 
     # Rust

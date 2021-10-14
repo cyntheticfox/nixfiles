@@ -1,5 +1,4 @@
 local on_attach_func = function(client, bufnr)
-    require'completion'.on_attach(client, bufnr)
     require'lsp_signature'.on_attach({
       bind = true,
       handler_opts = {
@@ -8,6 +7,7 @@ local on_attach_func = function(client, bufnr)
     }, bufnr)
 end
 
+local capabilities_var = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
@@ -15,48 +15,106 @@ table.insert(runtime_path, "lua/?/init.lua")
 local nvim_lsp = require'lspconfig'
 
 -- language-specific language-servers
-nvim_lsp.bashls.setup{ on_attach=on_attach_func }
-
-nvim_lsp.ccls.setup{ on_attach=on_attach_func }
-
-nvim_lsp.cssls.setup{ on_attach=on_attach_func }
-
-nvim_lsp.dockerls.setup{ on_attach=on_attach_func }
-
-nvim_lsp.elixirls.setup{
-  on_attach=on_attach_func,
-  cmd = { "elixir-ls" };
+nvim_lsp.ansiblels.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
 }
 
-nvim_lsp.erlangls.setup{ on_attach=on_attach_func }
+nvim_lsp.bashls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
-nvim_lsp.gopls.setup{ on_attach=on_attach_func }
+nvim_lsp.ccls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
-nvim_lsp.hls.setup{ on_attach=on_attach_func }
+nvim_lsp.cssls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
-nvim_lsp.html.setup{ on_attach=on_attach_func }
+nvim_lsp.dockerls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
-nvim_lsp.jsonls.setup{ on_attach=on_attach_func }
+nvim_lsp.elixirls.setup{
+  capabilities=capabilities_var,
+  cmd = { "elixir-ls" },
+  on_attach=on_attach_func
+}
 
-nvim_lsp.pylsp.setup{ on_attach=on_attach_func }
+nvim_lsp.erlangls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
-nvim_lsp.pyright.setup{ on_attach=on_attach_func }
+nvim_lsp.gopls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
-nvim_lsp.rnix.setup{ on_attach=on_attach_func }
+nvim_lsp.hls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
-nvim_lsp.rust_analyzer.setup{ on_attach=on_attach_func }
+nvim_lsp.html.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
-nvim_lsp.sqls.setup{ on_attach=on_attach_func }
+nvim_lsp.jsonls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
-nvim_lsp.stylelint_lsp.setup{ on_attach=on_attach_func }
+nvim_lsp.pylsp.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
-nvim_lsp.vimls.setup{ on_attach=on_attach_func }
+nvim_lsp.pyright.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
-nvim_lsp.yamlls.setup{ on_attach=on_attach_func }
+nvim_lsp.rnix.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
+
+nvim_lsp.rust_analyzer.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
+
+nvim_lsp.sqls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
+
+nvim_lsp.stylelint_lsp.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
+
+nvim_lsp.vimls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
+
+nvim_lsp.yamlls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
 nvim_lsp.sumneko_lua.setup{
-  on_attach=on_attach_func,
+  capabilities=capabilities_var,
   cmd = {"lua-language-server"},
+  on_attach=on_attach_func,
   settings = {
     Lua = {
       runtime = {
@@ -73,7 +131,10 @@ nvim_lsp.sumneko_lua.setup{
   }
 }
 
-nvim_lsp.terraformls.setup{ on_attach=on_attach_func }
+nvim_lsp.terraformls.setup{
+  capabilities=capabilities_var,
+  on_attach=on_attach_func
+}
 
 -- Language-agnostic language-servers
 nvim_lsp.diagnosticls.setup{

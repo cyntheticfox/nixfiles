@@ -9,7 +9,40 @@ return require('packer').startup(function()
       require('lsp_config')
     end,
     requires = {
-      'nvim-lua/completion-nvim'
+      {
+        'hrsh7th/nvim-cmp',
+        config = function()
+          require('cmp').setup{
+            snippet = {
+              expand = function(args)
+                vim.fn["vsnip#anonymous"](args.body)
+              end
+            },
+            sources = {
+              { name = 'nvim_lsp' },
+              { name = 'vsnip' },
+              { name = 'buffer'},
+              { name = 'path' },
+              { name = 'treesitter'}
+            }
+          }
+        end,
+        requires = {
+          'hrsh7th/cmp-nvim-lsp',
+          'hrsh7th/cmp-path',
+          'hrsh7th/cmp-buffer',
+          'hrsh7th/cmp-vsnip',
+          'hrsh7th/vim-vsnip',
+          'ray-x/cmp-treesitter',
+          {
+            'dcampos/cmp-snippy',
+            requires = {
+              'dcampos/nvim-snippy',
+              'honza/vim-snippets'
+            }
+          }
+        }
+      }
     }
   }
 
@@ -53,6 +86,13 @@ return require('packer').startup(function()
       require('indent_guides').setup()
     end
   }
+  use {
+    'mhartington/formatter.nvim',
+    config = function()
+      require('formatter_config')
+    end
+  }
+
   use {
     'windwp/nvim-autopairs',
     config = function()
