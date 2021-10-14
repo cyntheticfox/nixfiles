@@ -35,4 +35,3 @@ repos:
     rev: v0.4a3
     hooks:
       - id: vint
-...

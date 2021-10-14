@@ -6,42 +6,63 @@ return require('packer').startup(function()
   use {
     'neovim/nvim-lspconfig',
     config = function()
-      require'lsp_config'
+      require('lsp_config')
     end,
     requires = {
       'nvim-lua/completion-nvim'
     }
   }
 
-  use {
-    'ray-x/lsp_signature.nvim'
-  }
+  use 'ray-x/lsp_signature.nvim'
 
   use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
-      require'treesitter_config'
+      require('treesitter_config')
     end,
     requires = {
-      'p00f/nvim-ts-rainbow'
+      'p00f/nvim-ts-rainbow',
+      {
+        'windwp/nvim-ts-autotag',
+        config = function()
+          require('nvim-ts-autotag').setup()
+        end
+      },
+      {
+        'lewis6991/spellsitter.nvim',
+        config = function()
+          require('spellsitter').setup()
+        end
+      }
     }
   }
 
   -- Utility
+  use 'b3nj5m1n/kommentary'
   use {
     'folke/todo-comments.nvim',
     requires = 'nvim-lua/plenary.nvim',
     config = function()
-      require('todo-comments').setup {
-      }
+      require('todo-comments').setup()
     end
   }
-  use 'b3nj5m1n/kommentary'
+  use {
+    'glepnir/indent-guides.nvim',
+    config = function()
+      require('indent_guides').setup()
+    end
+  }
+  use {
+    'windwp/nvim-autopairs',
+    config = function()
+      require('nvim-autopairs').setup()
+    end
+  }
   use {
     'ethanholz/nvim-lastplace',
     config = function()
-      require'nvim-lastplace'.setup {
+      require('nvim-lastplace').setup {
         lastplace_ignore_buftype = {
           "quickfix",
           "nofile",
@@ -69,7 +90,7 @@ return require('packer').startup(function()
       'nvim-lua/plenary.nvim'
     },
     config = function()
-      require('gitsigns').setup{}
+      require('gitsigns').setup()
     end
   }
   use {
@@ -79,7 +100,7 @@ return require('packer').startup(function()
       {'nvim-lua/plenary.nvim'}
     },
     config = function()
-      require'telescope_config'
+      require('telescope_config')
     end
   }
 
@@ -98,7 +119,7 @@ return require('packer').startup(function()
       'kyazdani42/nvim-web-devicons'
     },
     config = function()
-      require'statusline_config'
+      require('statusline_config')
     end
   }
 
@@ -122,7 +143,6 @@ return require('packer').startup(function()
   -- Vim plugins
   use 'LnL7/vim-nix'
   use 'editorconfig/editorconfig-vim'
-  use 'jiangmiao/auto-pairs'
   use 'lilyinstarlight/vim-resolve'
   use 'lilyinstarlight/vim-spl'
   --use 'mhinz/vim-startify'
