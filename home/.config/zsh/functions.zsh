@@ -2,44 +2,94 @@
 #
 # Zsh functions for git and such
 
+function __is_git_repository() {
+    git rev-parse --git-dir >/dev/null 2>&1
+
+    return "$?"
+}
+
+function __msg_not_valid_repository() {
+    echo "($1): Current directory is not a valid Git repository."
+}
+
 function push() {
-    git push "$@"
+    if __is_git_repository; then
+        git push "$@"
+    else
+        __msg_not_valid_repository "push"
+    fi
 }
 
 function pull() {
-    git pull "$@"
+    if __is_git_repository; then
+        git pull "$@"
+    else
+        __msg_not_valid_repository "pull"
+    fi
 }
 
 function commit() {
-    git commit --signoff "$@"
+    if __is_git_repository; then
+        git commit --signoff "$@"
+    else
+        __msg_not_valid_repository "commit"
+    fi
 }
 
 function commit-all() {
-    git commit -a --signoff "$@"
+    if __is_git_repository; then
+        git commit -a --signoff "$@"
+    else
+        __msg_not_valid_repository "commit-all"
+    fi
 }
 
 function switch() {
-    git switch "$@"
+    if __is_git_repository; then
+        git switch "$@"
+    else
+        __msg_not_valid_repository "switch"
+    fi
 }
 
 function stash() {
-    git stash "$@"
+    if __is_git_repository; then
+        git stash "$@"
+    else
+        __msg_not_valid_repository "stash"
+    fi
 }
 
 function rebase() {
-    git rebase '$@'
+    if __is_git_repository; then
+        git rebase '$@'
+    else
+        __msg_not_valid_repository "rebase"
+    fi
 }
 
 function stage() {
-    git add .
+    if __is_git_repository; then
+        git add .
+    else
+        __msg_not_valid_repository "stage"
+    fi
 }
 
 function unstage() {
-    git unstage
+    if __is_git_repository; then
+        git unstage
+    else
+        __msg_not_valid_repository "unstage"
+    fi
 }
 
 function state() {
-    git state
+    if __is_git_repository; then
+        git state
+    else
+        __msg_not_valid_repository "state"
+    fi
 }
 
 function github() {
@@ -62,7 +112,7 @@ function gitlab() {
     fi
 }
 
-# Create Functions for nixos
+# Create Functions for NixOS
 function nixupd() {
     if command -v nixos-rebuild &>/dev/null; then
         sudo nix-channel --update "$@"
