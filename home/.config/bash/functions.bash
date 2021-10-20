@@ -11,11 +11,11 @@ function pull() {
 }
 
 function commit() {
-    git commit "$@"
+    git commit --signoff "$@"
 }
 
 function commit-all() {
-    git commit -a "$@"
+    git commit -a --signoff "$@"
 }
 
 function rebase() {

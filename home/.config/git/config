@@ -22,5 +22,5 @@
 [alias]
     l = log --abbrev-commit --pretty=oneline
     lg = log --pretty=format:'%h %s' --graph
-    state = status -s --
+    state = status -sb --
     unstage = reset HEAD --
