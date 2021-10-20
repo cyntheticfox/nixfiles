@@ -3,6 +3,10 @@
     name = David Houston
     email = houstdav000@gmail.com
     signingkey = 5960278CE235F821
+
+    # Special zsh function vars
+    github = houstdav000
+    gitlab = houstdav000
 [credential]
     helper = cache --timeout 600
 [commit]

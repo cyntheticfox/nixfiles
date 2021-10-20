@@ -12,6 +12,47 @@ function __msg_not_valid_repository() {
     echo "($1): Current directory is not a valid Git repository."
 }
 
+function __clone_func() {
+    echo "📦 Remote repository: $1"
+    git clone $1
+}
+
+function __hosting_clone_func() {
+    local HOST_USERNAME=""
+    local HOST_URL=""
+
+    HOST_USERNAME=$(git config --global --get "user.$1")
+
+    if [[ $# -gt 1 ]]; then
+        if [[ $# -eq 2 ]]; then
+            if [[ "$2" =~ ^[a-zA-Z0-9\-]+$ ]]; then
+                HOST_URL="$1:$HOST_USERNAME/$2.git"
+            else
+                HOST_URL= "$1:$2.git"
+            fi
+        else
+            HOST_URL="$1:$2/$3.git"
+        fi
+
+        __clone_func "$HOST_URL"
+    else
+        echo "Repository name is required!"
+        echo "Example: $1 your-repo-name"
+        echo
+        echo "Usages:"
+        echo "  a) $1 username/repo-name"
+        echo "  b) $1 username repo-name"
+        echo "  c) $1 repo-name"
+        echo "     For this, it's necessary to set your $1 username (login)"
+        echo "     in your global config first, like:"
+        echo "     git config --global user.$1 \"your-username\""
+        echo
+        echo "     You will also need to set your ssh config for $1 to use"
+        echo "     any of these."
+        echo
+    fi
+}
+
 function push() {
     if __is_git_repository; then
         git push "$@"
@@ -93,23 +134,15 @@ function state() {
 }
 
 function github() {
-    if [[ $# -eq 1 ]]; then
-        git clone "github:$1.git"
-    elif [[ $# -eq 2 ]]; then
-        git clone "github:$1/$2.git"
-    else
-        echo "Usage: github <user> <repo>"
-    fi
+    __hosting_clone_func "github" $@
 }
 
 function gitlab() {
-    if [[ $# -eq 1 ]]; then
-        git clone "gitlab:$1.git"
-    elif [[ $# -eq 2 ]]; then
-        git clone "gitlab:$1/$2.git"
-    else
-        echo "Usage: gitlab <user> <repo>"
-    fi
+    __hosting_clone_func "gitlab" $@
+}
+
+function bitbucket() {
+    __hosting_clone_func "bitbucket" $@
 }
 
 # Create Functions for NixOS
