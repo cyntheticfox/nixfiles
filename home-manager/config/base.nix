@@ -42,6 +42,11 @@
       recursive = true;
     };
 
+    ".config/kitty/aura-theme.conf".source = builtins.fetchurl {
+      url = "https://raw.githubusercontent.com/daltonmenezes/aura-theme/main/packages/kitty/aura-theme.conf";
+      sha256 = "03c8c9e1bf283bf8380379183f39168c45a05c3fd4b22ab54c156675d8e519f1";
+    };
+
     ".ssh" = {
       source = ../../home/.ssh;
       recursive = true;
