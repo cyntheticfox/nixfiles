@@ -53,6 +53,9 @@
     # Markdown
     mdl
 
+    # Nix
+    statix
+
     # Python
     python39Packages.bandit
     python39Packages.flake8

@@ -44,7 +44,7 @@
         hmConfig =
           { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
           home-manager.lib.homeManagerConfiguration {
-            system = system;
+            inherit system;
             username = "david";
             homeDirectory = "/home/${username}";
 
@@ -56,7 +56,7 @@
         defFlakeSystem =
           { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
           nixpkgs.lib.nixosSystem {
-            system = system;
+            inherit system;
             modules = [
               # Add home-manager to all configurations
               ./nixos/config/base.nix
