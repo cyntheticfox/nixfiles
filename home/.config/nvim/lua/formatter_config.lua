@@ -50,10 +50,3 @@ require('formatter').setup({
     }
   }
 })
-
-vim.api.nvim_exec([[
-augroup FormatAutogroup
-  autocmd!
-  autocmd BufWritePost *.rs,*.bash,*.sh,*.nix,*.tf FormatWrite
-augroup END
-]], true)

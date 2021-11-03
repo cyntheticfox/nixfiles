@@ -46,6 +46,18 @@ return require('packer').startup(function()
     }
   }
 
+  use {
+    'mfussenegger/nvim-lint',
+    config = function()
+      require('lint').linters_by_ft = {
+        nix = {'nix'},
+        sh = {'shellcheck'}
+      }
+
+      vim.cmd [[autocmd BufWritePost <buffer> lua require('lint').try_lint()]]
+    end
+  }
+
   use 'ray-x/lsp_signature.nvim'
 
   use {
