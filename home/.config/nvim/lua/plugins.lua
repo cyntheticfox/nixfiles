@@ -49,8 +49,18 @@ return require('packer').startup(function()
   use {
     'mfussenegger/nvim-lint',
     config = function()
+      require('lint').linters.statix = {
+        cmd = 'statix',
+        stdin = false,
+        args = {'check', '-o', 'errfmt', '--'},
+        stream = 'stderr',
+        parser = require('lint.parser').from_errorformat('%f>%l:%c:%t:%n:%m', {
+          source = 'statix'
+        })
+      }
+
       require('lint').linters_by_ft = {
-        nix = {'nix'},
+        nix = {'nix', 'statix'},
         sh = {'shellcheck'}
       }
 
