@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-master.url = "github:Nixos/nixpkgs/master";
-    flake-utils.url = "github:numtide/flake-utils";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
@@ -27,19 +26,7 @@
 
   outputs = { self, ... }@inputs:
     with inputs;
-    flake-utils.lib.eachDefaultSystem
-      (system:
-        let pkgs = nixpkgs.legacyPackages."${system}";
-        in
-        {
-          devShell = pkgs.mkShell {
-            nativeBuildInputs = with pkgs; [
-              shfmt
-              shellcheck
-              vim-vint
-            ];
-          };
-        }) // {
+    {
       lib = {
         hmConfig =
           { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
