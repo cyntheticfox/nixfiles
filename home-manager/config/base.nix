@@ -20,6 +20,7 @@
     smbclient
     tmux
     unzip
+    vim
     w3m
     zip
     zsh
@@ -35,6 +36,7 @@
     ".bashrc".source = ../../home/.bashrc;
     ".bash_profile".source = ../../home/.bash_profile;
     ".editorconfig".source = ../../home/.editorconfig;
+    ".vimrc".source = ../../home/.vimrc;
     ".zshrc".source = ../../home/.zshrc;
 
     ".config" = {
