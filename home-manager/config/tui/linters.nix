@@ -26,6 +26,7 @@
 
     # General
     proselint
+    nodePackages.cspell
     vale
 
     # Gitcommit
