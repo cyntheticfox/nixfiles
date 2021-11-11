@@ -92,10 +92,9 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'LnL7/vim-nix'
 Plug 'NovaDev94/vim-fish'
-"Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter'
 Plug 'cespare/vim-toml'
-"Plug 'dense-analysis/ale'
-Plug 'houstdav000/ale', { 'branch': 'feature/gofumpt' }
+Plug 'dense-analysis/ale'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'farmergreg/vim-lastplace'
 Plug 'fidian/hexmode'
