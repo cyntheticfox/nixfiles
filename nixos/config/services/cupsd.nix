@@ -7,7 +7,5 @@
     enable = true;
     browsing = false;
     startWhenNeeded = true;
-    tempDir = "/tmp/cups";
-    webInterface = false;
   };
 }
