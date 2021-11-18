@@ -22,11 +22,12 @@
     nodePackages.stylelint
 
     # Dockerfile
-    hadolint
+    # BROKEN -- hadolint
 
     # General
     proselint
     nodePackages.cspell
+    nodePackages.alex
     vale
 
     # Gitcommit
