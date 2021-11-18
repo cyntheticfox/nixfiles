@@ -50,9 +50,26 @@ return require('packer').startup(function()
     'mfussenegger/nvim-lint',
     config = function()
       require('lint').linters_by_ft = {
-        c = {'flawfinder'},
+        ada = {'cspell'},
+        asciidoc = {'cspell'},
+        c = {'flawfinder', 'cspell'},
+        cpp = {'flawfinder', 'cspell'},
+        go = {'cspell'},
+        haskell = {'cspell'},
+        html = {'cspell'},
+        java = {'cspell'},
+        javascript = {'cspell'},
+        json = {'cspell'},
+        lua = {'cspell'},
+        markdown = {'cspell'},
         nix = {'nix', 'statix'},
-        sh = {'shellcheck'}
+        python = {'pylint', 'flake8', 'cspell'},
+        rst = {'cspell'},
+        ruby = {'cspell'},
+        rust = {'cspell'},
+        sh = {'shellcheck', 'cspell'},
+        tex = {'cspell'},
+        text = {'cspell'}
       }
 
       vim.cmd [[autocmd BufWritePost <buffer> lua require('lint').try_lint()]]
