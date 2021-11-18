@@ -19,27 +19,6 @@
     };
   };
 
-  # Set containerpolicy
-  environment.etc."containers/policy.json" = {
-    mode = "0644";
-    text = ''
-      {
-        "default": [
-          {
-            "type": "insecureAcceptAnything"
-          }
-        ],
-        "transports":
-          {
-            "docker-daemon":
-              {
-                "": [{"type":"insecureAcceptAnything"}]
-              }
-          }
-      }
-    '';
-  };
-
   environment.etc."containers/registry.conf" = {
     mode = "0644";
     text = ''
