@@ -85,7 +85,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 " Required pre-set ALE options
-let g:ale_cursor_detail = 1
+let g:ale_cursor_detail = 0
 let g:ale_echo_cursor = 1
 
 call plug#begin('~/.vim/plugged')
@@ -95,6 +95,7 @@ Plug 'NovaDev94/vim-fish'
 Plug 'airblade/vim-gitgutter'
 Plug 'cespare/vim-toml'
 Plug 'dense-analysis/ale'
+"Plug 'houstdav000/ale', { 'branch': 'patch/alex-stdin' }
 Plug 'editorconfig/editorconfig-vim'
 Plug 'farmergreg/vim-lastplace'
 Plug 'fidian/hexmode'
@@ -102,6 +103,7 @@ Plug 'gisraptor/vim-lilypond-integrator'
 Plug 'glts/vim-radical'
 Plug 'hashivim/vim-terraform'
 Plug 'jiangmiao/auto-pairs'
+Plug 'junegunn/vader.vim'
 Plug 'junegunn/vim-plug'
 Plug 'leafgarland/typescript-vim'
 Plug 'lervag/vimtex'
@@ -123,6 +125,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-crystal/vim-crystal'
 Plug 'vim-syntastic/syntastic'
+Plug 'wfxr/minimap.vim'
 
 call plug#end()
 
@@ -162,7 +165,7 @@ let g:ale_fixers = {
 \    'cpp': ['remove_trailing_lines', 'trim_whitespace', 'clang-format', 'astyle', 'uncrustify'],
 \    'go': ['remove_trailing_lines', 'trim_whitespace', 'gofumpt'],
 \    'html': ['remove_trailing_lines', 'trim_whitespace', 'prettier'],
-\    'javascript': ['remove_trailing_lines', 'trim_whitespace', 'eslint', 'prettier'],
+\    'javascript': ['remove_trailing_lines', 'trim_whitespace', 'eslint', 'prettier', 'standard'],
 \    'json': ['remove_trailing_lines', 'trim_whitespace', 'jq', 'prettier'],
 \    'latex': ['remove_trailing_lines', 'trim_whitespace', 'latexindent'],
 \    'markdown': ['remove_trailing_lines', 'trim_whitespace', 'prettier'],
@@ -178,34 +181,47 @@ let g:ale_fix_on_save = 0
 let g:ale_history_enabled = 1
 let g:ale_hover_to_preview = 1
 let g:ale_linters = {
-\    '*': ['proselint', 'vale'],
+\    '*': ['proselint', 'vale', 'alex', 'cspell'],
+\    'ada': ['cspell'],
 \    'ansible': ['ansible-lint'],
-\    'c': ['cc', 'ccls', 'clangtidy', 'flawfinder'],
-\    'cpp': ['cc', 'ccls', 'clangtidy', 'flawfinder'],
-\    'css': ['csslint'],
-\    'elixir': ['dialyxir', 'dogma', 'elixir_ls', 'mix'],
+\    'asciidoc': ['cspell'],
+\    'c': ['cc', 'ccls', 'clangtidy', 'flawfinder', 'cspell'],
+\    'cpp': ['cc', 'ccls', 'clangtidy', 'flawfinder', 'cspell'],
+\    'cs': ['cspell'],
+\    'css': ['csslint', 'cspell'],
+\    'elixir': ['dialyxir', 'dogma', 'elixir_ls', 'mix', 'cspell'],
 \    'elm': ['elm_ls'],
 \    'erlang': ['dialyzer', 'elvis', 'erlc', 'syntaxerl'],
 \    'dockerfile': ['hadolint'],
 \    'fish': ['fish'],
 \    'gitcommit': ['gitlint'],
-\    'go': ['bingo', 'golint', 'gotype', 'staticcheck'],
-\    'html': ['tidy', 'proselint'],
-\    'java': ['javac', 'checkstyle', 'javalsp'],
-\    'javascript': ['eslint', 'flow', 'flow-language-server'],
-\    'json': ['jq', 'jsonlint'],
+\    'go': ['bingo', 'golint', 'gotype', 'staticcheck', 'cspell'],
+\    'haskell': ['cspell'],
+\    'html': ['tidy', 'proselint', 'cspell'],
+\    'java': ['javac', 'checkstyle', 'javalsp', 'cspell'],
+\    'javascript': ['eslint', 'flow', 'flow-language-server', 'cspell'],
+\    'json': ['jq', 'jsonlint', 'cspell'],
+\    'lua': ['cspell'],
 \    'make': ['checkmake'],
-\    'markdown': ['mdl', 'proselint', 'vale'],
-\    'nix': ['statix'],
-\    'powershell': ['powershell'],
-\    'python': ['mypy', 'pylint', 'flake8', 'pyre'],
-\    'rust': ['rustc', 'cargo', 'rls', 'analyzer'],
+\    'markdown': ['mdl', 'proselint', 'vale', 'alex', 'cspell'],
+\    'nix': ['nix', 'rnix-lsp', 'statix'],
+\    'php': ['cspell'],
+\    'powershell': ['powershell', 'cspell'],
+\    'python': ['mypy', 'pylint', 'flake8', 'pyre', 'cspell'],
+\    'rst': ['cspell'],
+\    'ruby': ['cspell'],
+\    'rust': ['rustc', 'cargo', 'rls', 'analyzer', 'cspell'],
+\    'scala': ['cspell'],
 \    'sh': ['shell', 'bashate', 'shellcheck'],
 \    'sql': ['sqlint'],
+\    'swift': ['cspell'],
 \    'systemd': ['systemd-analyze'],
 \    'terraform': ['terraform', 'tflint', 'terraform_ls', 'terraform_lsp'],
-\    'tex': ['texlab', 'proselint', 'vale'],
+\    'tex': ['texlab', 'proselint', 'vale', 'alex', 'cspell'],
+\    'text': ['proselint', 'vale', 'alex', 'cspell'],
+\    'typescript': ['cspell'],
 \    'vim': ['ale_custom_linting_rules', 'vint'],
+\    'xhtml': ['proselint', 'vale', 'alex', 'cspell'],
 \    'yaml': ['yamllint'],
 \}
 let g:ale_linters_explicit = 1
@@ -229,3 +245,10 @@ let g:ale_python_black_options = '-l 79'
 
 " Set default TeX style
 let g:tex_flavor = 'latex'
+
+" Set minimap details
+let g:minimap_width = 10
+let g:minimap_auto_start = 1
+let g:minimap_auto_start_win_enter = 1
+let g:minimap_git_colors = 1
+let g:minimap_search_color = 1
