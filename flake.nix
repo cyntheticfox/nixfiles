@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-master.url = "github:Nixos/nixpkgs/master";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
@@ -22,10 +21,26 @@
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
   };
 
   outputs = { self, ... }@inputs:
     with inputs;
+
+    let
+      supportedSystems = with nixpkgs.lib; (intersectLists (platforms.x86_64 ++ platforms.aarch64) platforms.linux);
+
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+
+      systempkgs = { system }: import nixpkgs {
+        inherit system;
+        overlays = nixpkgs.lib.attrValues self.overlays;
+      };
+    in
     {
       lib = {
         hmConfig =
@@ -99,5 +114,38 @@
           modules = [ ./nixos/hosts/ashley/configuration.nix ];
         };
       };
+
+      overlays.ospkgs = final: prev: import ./pkgs {
+        pkgs = prev;
+        outpkgs = final;
+        isOverlay = true;
+      };
+      overlay = self.overlays.ospkgs;
+
+      legacyPackages = forAllSystems (system: import ./pkgs {
+        pkgs = systempkgs { inherit system; };
+        isOverlay = false;
+      });
+
+      defaultPackage = forAllSystems (system:
+        let
+          pkgs = systempkgs { inherit system; };
+        in
+        pkgs.linkFarmFromDrvs "ospkgs" (nixpkgs.lib.filter (drv: !drv.meta.unsupported) (nixpkgs.lib.collect nixpkgs.lib.isDerivation (
+          import ./pkgs {
+            inherit pkgs;
+            allowUnfree = false;
+            isOverlay = false;
+          }
+        )
+        ))
+      );
+
+      checks = forAllSystems (system: import ./tests {
+        pkgs = systempkgs { inherit system; };
+        inherit self;
+        inherit (self) inputs outputs;
+        inherit system;
+      });
     };
 }

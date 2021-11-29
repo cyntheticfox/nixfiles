@@ -1,5 +1,8 @@
 { config, lib, pkgs, self, inputs, outputs, ... }: {
-  home-manager.useUserPackages = true;
+  home-manager = {
+    useUserPackages = true;
+    useGlobalPkgs = true;
+  };
 
   nix = {
     allowedUsers = [ "@wheel" ];
@@ -21,14 +24,17 @@
     '';
     gc.automatic = true;
     maxJobs = "auto";
-    nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+    nixPath = (lib.mapAttrsToList (name: value: name + "=" + value) inputs) ++ [ ("ospkgs=" + "../.") ("nixpkgs-overlays=" + ../. + "/overlays.nix") ];
     optimise.automatic = true;
-    registry.nixpkgs.flake = inputs.nixpkgs;
+    registry = (lib.mapAttrs (name: value: { flake = value; }) (lib.filterAttrs (name: value: value ? outputs) inputs)) // { ospkgs = { flake = self; }; };
     requireSignedBinaryCaches = true;
     useSandbox = true;
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs = {
+    config.allowUnfree = true;
+    overlays = lib.attrValues outputs.overlays;
+  };
 
   system.stateVersion = "21.11";
 }
