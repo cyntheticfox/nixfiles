@@ -20,7 +20,7 @@
     checkConfig = true;
     package = pkgs.nixUnstable;
     extraOptions = ''
-      experimental-features = nix-command flakes ca-references
+      experimental-features = nix-command flakes
     '';
     gc.automatic = true;
     maxJobs = "auto";
