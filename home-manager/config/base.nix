@@ -3,7 +3,6 @@
   # Enable home-manager
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
-    bashInteractive_5
     bat
     direnv
     exa
