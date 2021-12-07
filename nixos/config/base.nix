@@ -22,7 +22,12 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
-    gc.automatic = true;
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 7d";
+      dates = "weekly";
+      persistent = true;
+    };
     maxJobs = "auto";
     nixPath = (lib.mapAttrsToList (name: value: name + "=" + value) inputs) ++ [ ("ospkgs=" + "../.") ("nixpkgs-overlays=" + ../. + "/overlays.nix") ];
     optimise.automatic = true;

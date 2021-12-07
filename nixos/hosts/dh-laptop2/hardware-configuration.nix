@@ -12,11 +12,9 @@
         "sd_mod"
         "sdhci_pci"
       ];
-      kernelModules = [ "dm-snapshot" "i915" ];
+      kernelModules = [ "kvm-intel" "dm-snapshot" "i915" ];
     };
-    kernelModules = [ "kvm-intel" ];
     extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
-
   };
 
   fileSystems = {

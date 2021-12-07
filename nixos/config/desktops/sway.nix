@@ -43,6 +43,9 @@ in
       wlogout
       wofi
       workstyle
+
+      # Login
+      greetd.tuigreet
     ];
     extraSessionCommands = ''
       export WLR_NO_HARDWARE_CURSORS=1
@@ -68,27 +71,15 @@ in
 
   programs.waybar.enable = true;
 
-  services.xserver = {
+  services.greetd = {
     enable = true;
-    autorun = true;
-    layout = "us";
-    displayManager = {
-      defaultSession = "sway";
-      gdm = {
-        enable = true;
-        autoSuspend = true;
-        debug = false;
-        wayland = true;
+    settings = {
+      terminal.vt = 7;
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd sway --time --asterisks --remember";
+        user = "david";
       };
-      hiddenUsers = [ "nobody" ];
     };
-    terminateOnReset = true;
-    useGlamor = true;
-    videoDrivers = [
-      "intel"
-      "vmware"
-      "modesetting"
-    ];
   };
 
   services.tlp.enable = true;
