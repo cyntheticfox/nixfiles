@@ -61,12 +61,13 @@
             inherit system;
             modules = [
               # Add home-manager to all configurations
-              ./nixos/config/base.nix
               home-manager.nixosModules.home-manager
             ] ++ modules;
             extraArgs = {
               inherit self;
               inherit (self) inputs outputs;
+
+              imports = [ ./nixos/config/base.nix ];
             } // extraArgs;
           };
       };
@@ -75,6 +76,7 @@
         dh-laptop2.imports = [
           {
             nixpkgs.overlays = [
+              self.overlay
               neovim-nightly-overlay.overlay
               nixpkgs-wayland.overlay
             ];

@@ -1,4 +1,5 @@
 { config, pkgs, ... }: {
+  nixpkgs.config.allowUnfree = true;
 
   # Enable home-manager
   programs.home-manager.enable = true;

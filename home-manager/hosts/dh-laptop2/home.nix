@@ -31,9 +31,5 @@
     ../../config/tui/web.nix
   ];
 
-  home.packages = with pkgs; [
-    dropbox-cli
-  ];
-
   home.stateVersion = "20.09";
 }
