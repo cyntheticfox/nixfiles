@@ -53,6 +53,7 @@ fi
 # Set additional aliases for ls
 alias la="ls -abghl"
 alias dir="la"
+alias l="ls"
 
 # Set clearing alias
 alias cls="clear"
