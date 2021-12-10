@@ -12,7 +12,9 @@
     neofetch
     neovim
     p7zip
+    pinentry
     procs
+    rbw
     starship
     smbclient
     tmux

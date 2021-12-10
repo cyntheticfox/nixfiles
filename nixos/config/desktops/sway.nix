@@ -43,12 +43,10 @@ in
       wlogout
       wofi
       workstyle
-
-      # Login
-      greetd.tuigreet
     ];
     extraSessionCommands = ''
       export WLR_NO_HARDWARE_CURSORS=1
+      export XDG_SESSION_TYPE=wayland
     '';
   };
 

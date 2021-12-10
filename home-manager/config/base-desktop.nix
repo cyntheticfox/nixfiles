@@ -1,12 +1,12 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
-    termite
+    kitty
     fira-code
     noto-fonts-emoji
     nerdfonts
     pcmanfm
     remmina
-    shutter
+    rictydiminished-with-firacode
     xsel
   ];
 }

@@ -12,8 +12,7 @@
     ../../config/tui/lsp.nix
     ../../config/tui/networking.nix
     ../../config/tui/shells.nix
-    ../../config/tui/web.nix
   ];
 
-  home.stateVersion = "20.09";
+  home.stateVersion = "21.11";
 }
