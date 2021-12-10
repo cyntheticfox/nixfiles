@@ -113,10 +113,8 @@ else
 
     # Set editor
     if command -v nvim &>/dev/null; then
-    #     export EDITOR="nvim"
-    #     export VISUAL="nvim -R"
-        export EDITOR="vim"
-        export VISUAL="vim -R"
+        export EDITOR="nvim"
+        export VISUAL="nvim -R"
     elif command -v vim &>/dev/null; then
         export EDITOR="vim"
         export VISUAL="vim -R"

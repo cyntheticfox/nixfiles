@@ -3,16 +3,15 @@
 # Set aliases depending on the editor
 case $EDITOR in
 "nvim")
-    alias vim="nvim"
-    alias vi="nvim"
+    alias v="nvim"
     alias edit="nvim"
     ;;
 "vim")
-    alias vi="vim"
+    alias v="vim"
     alias edit="vim"
     ;;
 *)
-    alias vim="vi"
+    alias v="vi"
     alias edit="vi"
     ;;
 esac

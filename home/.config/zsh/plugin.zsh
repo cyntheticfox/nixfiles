@@ -5,62 +5,44 @@ if ! command -v git &>/dev/null; then
     exit 1
 fi
 
-LS=""
-if ! command -v exa &>/dev/null; then
-    LS="$(which ls) -F --color=always"
-else
-    LS="$(which exa) -F --color=always --icons"
-fi
-ECHO="$(which echo)"
+export ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
-export ZPLUG_HOME="${XDG_CONFIG_HOME}/zsh/zplug"
-
-if [[ ! -d "$ZPLUG_HOME" ]]; then
-    git clone "https://github.com/zplug/zplug" "${ZPLUG_HOME}"
+if [[ ! -d "$ZINIT_HOME" ]]; then
+    git clone "https://github.com/zdharma-continuum/zinit" "$ZINIT_HOME"
 fi
 
-# shellcheck source=~/.config/zsh/zplug
-source ${ZPLUG_HOME}/init.zsh
+# shellcheck source=~/.local/share/zinit/zinit.git/zinit.zsh
+source ${ZINIT_HOME}/zinit.zsh
 
-# Source omz plugins
-zplug "plugins/archlinux", from:"oh-my-zsh", if:"echo ${OS} | grep 'Arch|Manjaro'"
-zplug "plugins/cargo", from:"oh-my-zsh"
-zplug "plugins/command-not-found", from:"oh-my-zsh"
-zplug "plugins/dnf", from:"oh-my-zsh", if:"echo ${OS} | grep 'Fedora'"
-zplug "plugins/docker", from:"oh-my-zsh"
-zplug "plugins/git", from:"oh-my-zsh"
-zplug "plugins/git-flow", from:"oh-my-zsh"
-zplug "plugins/git-lfs", from:"oh-my-zsh"
-zplug "plugins/golang", from:"oh-my-zsh"
-zplug "plugins/kubectl", from:"oh-my-zsh"
-zplug "plugins/python", from:"oh-my-zsh"
-zplug "plugins/rust", from:"oh-my-zsh"
-zplug "plugins/systemadmin", from:"oh-my-zsh"
-zplug "plugins/systemd", from:"oh-my-zsh"
-zplug "plugins/terraform", from:"oh-my-zsh"
-zplug "plugins/ubuntu", from:"oh-my-zsh", if:"echo ${OS} | grep 'Ubuntu'"
-zplug "plugins/yum", from:"oh-my-zsh", if:"echo ${OS} | grep 'Red Hat|CentOS'"
+# Source omz snippets
+zinit snippet OMZP::cargo
+zinit snippet OMZP::command-not-found
+zinit snippet OMZP::git
+zinit snippet OMZP::git-flow
+zinit snippet OMZP::git-lfs
+zinit snippet OMZP::golang
+zinit snippet OMZP::kubectl
+zinit snippet OMZP::python
+zinit snippet OMZP::systemadmin
+zinit snippet OMZP::terraform
 
 # Load and set autosuggestion options
-zplug "zsh-users/zsh-autosuggestions"
+zinit wait lucid for \
+    light-mode zsh-users/zsh-autosuggestions
 export ZSH_AUTOSUGGEST_STRATEGY=("history" "completion")
 export ZSH_AUTOSUGGEST_USE_ASYNC="1"
 export ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *"
 
 # Load zsh-users plugins
-zplug "zsh-users/zsh-completions"
-zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
+zinit for \
+    light-mode zsh-users/zsh-completions \
+    light-mode zdharma-continuum/fast-syntax-highlighting \
+               zdharma-continuum/history-search-multi-word
 
 # Add extra plugins
-zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
-zplug "MichaelAquilina/zsh-you-should-use"
+zinit wait lucid for \
+    light-mode MichaelAquilina/zsh-you-should-use \
+    light-mode eendroroy/zed-zsh
 
-# Add local zsh plugins
-zplug "${HOME}/.zsh", from:local
-
-if ! zplug check; then
-    zplug install
-fi
-
-zplug load
+zinit wait lucid atload"zicompinit; zicdreplay" blockf for \
+    zsh-users/zsh-completions
