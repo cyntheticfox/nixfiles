@@ -65,3 +65,16 @@ fi
 if command -v clang &>/dev/null; then
     alias clang="clang -fcolor-diagnostics"
 fi
+
+# Add aliases for nix flakes
+alias n="nix"
+alias nb="nix build"
+alias nf="nix flake"
+alias nfc="nix flake check"
+alias nfi="nix flake init"
+alias nfl"nix flake lock"
+alias nfu="nix flake update"
+alias nfsw="sudo nixos-rebuild switch --flake ."
+alias nr="nix run"
+alias ns="nix search"
+alias nsn="nix search nixpkgs"
