@@ -12,9 +12,9 @@
       "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
     ];
     binaryCaches = [
-      "https://cache.nixos.org/"
-      "https://nix-community.cachix.org/"
-      "https://nixpkgs-wayland.cachix.org/"
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+      "https://nixpkgs-wayland.cachix.org"
     ];
     buildCores = 0;
     checkConfig = true;
@@ -41,5 +41,5 @@
     overlays = lib.attrValues outputs.overlays;
   };
 
-  system.stateVersion = "21.11";
+  system.stateVersion = "22.05";
 }

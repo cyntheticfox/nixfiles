@@ -44,31 +44,32 @@
     {
       lib = {
         hmConfig =
-          { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
+          { system ? "x86_64-linux", modules ? [ ] }:
           home-manager.lib.homeManagerConfiguration {
             inherit system;
             username = "david";
             homeDirectory = "/home/${username}";
 
             configuration = { pkgs, lib, ... }: {
-              imports = [ extraArgs ] ++ modules;
+              imports = modules;
             };
           };
 
         defFlakeSystem =
-          { system ? "x86_64-linux", modules ? [ ], extraArgs ? { } }:
+          { system ? "x86_64-linux", modules ? [ ] }:
           nixpkgs.lib.nixosSystem {
             inherit system;
             modules = [
+              ./nixos/config/base.nix
               # Add home-manager to all configurations
               home-manager.nixosModules.home-manager
+              {
+                config._module.args = {
+                  inherit self;
+                  inherit (self) inputs outputs;
+                };
+              }
             ] ++ modules;
-            extraArgs = {
-              inherit self;
-              inherit (self) inputs outputs;
-
-              imports = [ ./nixos/config/base.nix ];
-            } // extraArgs;
           };
       };
 
