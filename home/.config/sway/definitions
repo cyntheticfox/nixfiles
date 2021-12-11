@@ -16,6 +16,9 @@ set $theme ~/.config/sway/themes/matcha-green
 # Your preferred terminal emulator
 set $term kitty
 
+# Your preferred web browser
+set $web qutebrowser
+
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
