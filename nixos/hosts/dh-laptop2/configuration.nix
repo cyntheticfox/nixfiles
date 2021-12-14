@@ -81,16 +81,9 @@
 
   environment.systemPackages = with pkgs; [
     cifs-utils
-    git
-    gnupg
-    neovim
-    neofetch
     htop
     nixos-grub2-theme
     nixos-icons
-    openvpn
-    openconnect
-    pamixer
   ];
 
   programs = {
@@ -103,7 +96,11 @@
     };
   };
 
+  # Power config
   services.auto-cpufreq.enable = true;
+  services.tlp.enable = true;
+
+  # Sound config
   sound.enable = true;
   services.pipewire = {
     enable = true;

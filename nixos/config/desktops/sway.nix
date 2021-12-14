@@ -4,6 +4,9 @@
 
 { config, pkgs, lib, ... }:
 let
+  gtk-theme = "Adapta-Nokto";
+  icon-theme = "Adwaita";
+  cursor-theme = "Adwaita";
   sway-gsettings-desktop-schemas = pkgs.runCommand "sway-gsettings-desktop-schemas" { preferLocalBuild = true; } ''
     mkdir -p $out/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas/
 
@@ -11,9 +14,9 @@ let
 
     cat - >$out/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas/sway-interface.gschema.override <<- EOF
       [org.gnome.desktop.interface]
-      gtk-theme='Adapta-Nokto'
-      icon-theme='Adwaita'
-      cursor-theme='Adwaita'
+      gtk-theme='${gtk-theme}'
+      icon-theme='${icon-theme}'
+      cursor-theme='${cursor-theme}'
     EOF
 
     ${pkgs.glib.dev}/bin/glib-compile-schemas $out/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas/
@@ -73,10 +76,7 @@ in
       terminal.vt = 7;
       default_session = {
         command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd ${pkgs.sway}/bin/sway --time --asterisks --remember";
-        user = "david";
       };
     };
   };
-
-  services.tlp.enable = true;
 }

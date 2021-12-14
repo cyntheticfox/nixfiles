@@ -41,5 +41,9 @@
     overlays = lib.attrValues outputs.overlays;
   };
 
+  environment.systemPackages = with pkgs; [
+    git gnupg neofetch
+  ];
+
   system.stateVersion = "22.05";
 }

@@ -1,6 +1,0 @@
-{
-  "editor.suggestSelection": "first",
-  "vsicons.dontShowNewVersionMessage": true,
-  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-  "workbench.iconTheme": "vscode-icons"
-}
