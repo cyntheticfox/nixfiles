@@ -12,8 +12,41 @@
         "sd_mod"
         "sdhci_pci"
       ];
-      kernelModules = [ "kvm-intel" "dm-snapshot" "i915" ];
+
+      kernelModules = [
+        "vfat"
+        "nls_cp437"
+        "nls_iso8859-1"
+        "usbhid"
+        "kvm-intel"
+        "dm-snapshot"
+        "i915"
+      ];
+
+      luks = {
+        # Support for Yubikey PBA
+        yubikeySupport = true;
+
+        devices."nixos-enc" = {
+          device = "/dev/disk/by-partlabel/root";
+
+          yubikey = {
+            slot = 2;
+            twoFactor = true;
+            gracePeriod = 30;
+            keyLength = 64;
+            saltLength = 16;
+
+            storage = {
+              device = "/dev/disk/by-label/boot";
+              fsType = "vfat";
+              path = "/crypt-storage/default";
+            };
+          };
+        };
+      };
     };
+
     extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
   };
 
@@ -21,13 +54,21 @@
     "/" = {
       device = "/dev/disk/by-label/fsroot";
       fsType = "btrfs";
-      options = [ "subvol=nixos" ];
+      options = [ "subvol=root" ];
     };
+
     "/home" = {
       device = "/dev/disk/by-label/fsroot";
       fsType = "btrfs";
       options = [ "subvol=home" ];
     };
+
+    "/nix" = {
+      device = "/dev/disk/by-label/fsroot";
+      fsType = "btrfs";
+      options = [ "subvol=nix" ];
+    };
+
     "/boot" = {
       device = "/dev/disk/by-label/boot";
       fsType = "vfat";
