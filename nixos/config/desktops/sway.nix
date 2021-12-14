@@ -11,7 +11,7 @@ let
 
     cat - >$out/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas/sway-interface.gschema.override <<- EOF
       [org.gnome.desktop.interface]
-      gtk-theme='Adwaita-Dark'
+      gtk-theme='Adapta-Nokto'
       icon-theme='Adwaita'
       cursor-theme='Adwaita'
     EOF
@@ -26,7 +26,12 @@ in
   programs.sway = {
     enable = true;
     extraPackages = with pkgs; [
+      # Theming
+      adapta-gtk-theme
       gnome_themes_standard
+      papirus-icon-theme
+
+      # Util
       grim
       imv
       kanshi
@@ -54,13 +59,6 @@ in
 
   environment.pathsToLink = [ "/libexec" ];
 
-  environment.systemPackages = with pkgs; [
-    gtk-engine-murrine
-    gtk_engines
-    gsettings-desktop-schemas
-    lxappearance
-  ];
-
   qt5 = {
     enable = true;
     style = "adwaita-dark";
@@ -74,7 +72,7 @@ in
     settings = {
       terminal.vt = 7;
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd sway --time --asterisks --remember";
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd ${pkgs.sway}/bin/sway --time --asterisks --remember";
         user = "david";
       };
     };
