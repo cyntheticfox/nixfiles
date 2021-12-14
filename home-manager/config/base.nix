@@ -9,6 +9,7 @@ in {
 
   imports = [
     ./tui/git.nix
+    ./tui/rbw.nix
     ./tui/shell.nix
     ./tui/ssh.nix
   ];
@@ -20,8 +21,6 @@ in {
     neofetch
     neovim
     p7zip
-    pinentry
-    rbw
     smbclient
     tmux
     traceroute
