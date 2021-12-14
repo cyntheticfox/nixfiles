@@ -1,9 +1,0 @@
-# Ignore vim swap files
-*~
-.*.swp
-
-# Ignore MacOS DS Store files
-.DS_Store
-
-# Ignore direnv .envrc files
-.envrc

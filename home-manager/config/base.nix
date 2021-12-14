@@ -9,12 +9,12 @@ in {
 
   imports = [
     ./tui/shell.nix
+    ./tui/git.nix
   ];
 
   home.packages = with pkgs; [
     aria2
     file
-    git
     gnupg
     neofetch
     neovim
