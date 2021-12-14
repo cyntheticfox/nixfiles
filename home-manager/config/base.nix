@@ -8,8 +8,9 @@ in {
   programs.home-manager.enable = true;
 
   imports = [
-    ./tui/shell.nix
     ./tui/git.nix
+    ./tui/shell.nix
+    ./tui/ssh.nix
   ];
 
   home.packages = with pkgs; [
@@ -18,7 +19,6 @@ in {
     gnupg
     neofetch
     neovim
-    openssh
     p7zip
     pinentry
     rbw
@@ -76,11 +76,6 @@ in {
 
     ".config" = {
       source = ../../home/.config;
-      recursive = true;
-    };
-
-    ".ssh" = {
-      source = ../../home/.ssh;
       recursive = true;
     };
 
