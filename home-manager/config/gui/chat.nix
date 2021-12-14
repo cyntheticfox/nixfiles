@@ -1,6 +1,6 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
-    discord
-    element-desktop
+    discord-canary
+    element-desktop-wayland
   ];
 }

@@ -23,7 +23,6 @@ let
   '';
 in
 {
-
   environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${sway-gsettings-desktop-schemas}/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas";
 
   programs.sway = {
@@ -52,15 +51,16 @@ in
       wofi
       workstyle
     ];
+
     extraSessionCommands = ''
       export WLR_NO_HARDWARE_CURSORS=1
       export XDG_SESSION_TYPE=wayland
     '';
   };
 
-  programs.light.enable = true;
+  xdg.portal.enable = true;
 
-  environment.pathsToLink = [ "/libexec" ];
+  programs.light.enable = true;
 
   qt5 = {
     enable = true;

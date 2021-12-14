@@ -6,9 +6,6 @@
     # C/C++
     ccls
 
-    # C#
-    omnisharp-roslyn
-
     # CSS
     nodePackages.vscode-langservers-extracted
 
@@ -20,9 +17,6 @@
 
     # Erlang
     erlang-ls
-
-    # General
-    nodePackages.diagnostic-languageserver # For use with any linter!
 
     # Go
     gopls
@@ -46,9 +40,6 @@
 
     # Rust
     rust-analyzer
-
-    # SQL
-    sqls
 
     # Terraform
     terraform-ls

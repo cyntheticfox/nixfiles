@@ -1,4 +1,10 @@
 { config, pkgs, ... }: {
+  imports = [
+    ./lsp.nix
+    ./linters.nix
+    ./formatters.nix
+  ];
+
   home.packages = with pkgs; [
     ansible
     cargo
