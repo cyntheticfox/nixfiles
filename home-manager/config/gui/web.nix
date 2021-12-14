@@ -9,6 +9,8 @@ in
     chromium
   ];
 
+  home.sessionVariables."BROWSER" = "qutebrowser";
+
   programs.qutebrowser = {
     enable = true;
     loadAutoconfig = true;
