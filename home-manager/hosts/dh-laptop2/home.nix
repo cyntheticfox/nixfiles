@@ -18,9 +18,7 @@
     # Terminal modules
     ../../config/tui/dev.nix
     ../../config/tui/documents.nix
-    ../../config/tui/email.nix
     ../../config/tui/file.nix
-    ../../config/tui/networking.nix
   ];
 
   home.stateVersion = "21.11";

@@ -1,28 +1,33 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+
+let
+  personal_email = "houstdav000@gmail.com";
+  personal_github = "houstdav000";
+in {
   # Enable home-manager
   programs.home-manager.enable = true;
+
+  imports = [
+    ./tui/shell.nix
+  ];
+
   home.packages = with pkgs; [
-    bat
-    direnv
-    exa
+    aria2
     file
     git
     gnupg
-    htop
     neofetch
     neovim
+    openssh
     p7zip
     pinentry
-    procs
     rbw
-    starship
     smbclient
     tmux
+    traceroute
     unzip
-    vim
-    w3m
+    whois
     zip
-    zsh
 
     # NeoVim Tools
     code-minimap
@@ -30,13 +35,44 @@
     tree-sitter
   ];
 
+  xdg.userDirs = {
+    enable = true;
+    desktop = "$HOME";
+    documents = "$HOME/docs";
+    download = "$HOME/tmp";
+    music = "$HOME/music";
+    pictures = "$HOME/pics";
+    publicShare = "$HOME/public";
+    templates = "$HOME/.templates";
+    videos = "$HOME/videos";
+  };
+
+  home.sessionVariables = {
+    # Set more user information
+    "EMAIL" = personal_email;
+    "GITHUB_USER" = personal_github;
+
+    # Set LESS colors
+    "LESS_TERMCAP_mb" = "$'\e[01;31m'";
+    "LESS_TERMCAP_md" = "$'\e[01;34m'";
+    "LESS_TERMCAP_me" = "$'\e[0m'";
+    "LESS_TERMCAP_se" = "$'\e[0m'";
+    "LESS_TERMCAP_so" = "$'\e[01;31m'";
+    "LESS_TERMCAP_ue" = "$'\e[0m'";
+    "LESS_TERMCAP_us" = "$'\e[01;32m'";
+
+    # Set runtime dir
+    "XDG_RUNTIME_DIR" = "$HOME/tmp";
+  };
+
+  home.sessionPath = [
+    "$HOME/bin"
+    "$HOME/.local/bin"
+    "$HOME/.cargo/bin"
+  ];
+
   home.file = {
-    ".profile".source = ../../home/.profile;
-    ".bashrc".source = ../../home/.bashrc;
-    ".bash_profile".source = ../../home/.bash_profile;
     ".editorconfig".source = ../../home/.editorconfig;
-    ".vimrc".source = ../../home/.vimrc;
-    ".zshrc".source = ../../home/.zshrc;
 
     ".config" = {
       source = ../../home/.config;
@@ -51,11 +87,6 @@
     ".gnupg" = {
       source = ../../home/.gnupg;
       recursive = true;
-    };
-
-    "wallpaper.png".source = builtins.fetchurl {
-      url = "https://github.com/NixOS/nixos-artwork/raw/03c6c20be96c38827037d2238357f2c777ec4aa5/wallpapers/nix-wallpaper-nineish-dark-gray.png";
-      sha256 = "9e1214b42cbf1dbf146eec5778bde5dc531abac8d0ae78d3562d41dc690bf41f";
     };
   };
 }
