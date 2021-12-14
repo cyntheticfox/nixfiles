@@ -1,6 +1,7 @@
-{ config, pkgs, dotfiles, ... }: {
+{ config, pkgs, lib, ... }: {
   home.packages = with pkgs; [
     firefox-wayland
+    chromium
   ];
 
   programs.qutebrowser = {
@@ -27,4 +28,18 @@
       zoom.default = "90%";
     };
   };
+
+  xdg.configFile."mimeapps.list".text = lib.mkDefault ''
+    [Default Applications]
+    text/html=org.qutebrowser.qutebrowser.desktop
+    text/xml=org.qutebrowser.qutebrowser.desktop
+    application/xhtml+xml=org.qutebrowser.qutebrowser.desktop
+    application/xml=org.qutebrowser.qutebrowser.desktop
+    application/rdf+xml=org.qutebrowser.qutebrowser.desktop
+    image/gif=org.qutebrowser.qutebrowser.desktop
+    image/jpeg=org.qutebrowser.qutebrowser.desktop
+    image/png=org.qutebrowser.qutebrowser.desktop
+    x-scheme-handler/http=org.qutebrowser.qutebrowser.desktop
+    x-scheme-handler/https=org.qutebrowser.qutebrowser.desktop
+  '';
 }
