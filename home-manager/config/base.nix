@@ -9,6 +9,7 @@ in {
 
   imports = [
     ./tui/bat.nix
+    ./tui/file.nix
     ./tui/git.nix
     ./tui/gnupg.nix
     ./tui/htop.nix
@@ -22,13 +23,9 @@ in {
   ];
 
   home.packages = with pkgs; [
-    file
-    p7zip
     smbclient
+    mtr
     traceroute
-    unzip
-    whois
-    zip
   ];
 
   xdg.userDirs = {
