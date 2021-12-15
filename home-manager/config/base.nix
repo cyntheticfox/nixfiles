@@ -8,6 +8,7 @@ in {
   programs.home-manager.enable = true;
 
   imports = [
+    ./tui/bat.nix
     ./tui/git.nix
     ./tui/gnupg.nix
     ./tui/man.nix
