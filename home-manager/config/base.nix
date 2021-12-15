@@ -9,6 +9,8 @@ in {
 
   imports = [
     ./tui/git.nix
+    ./tui/gnupg.nix
+    ./tui/man.nix
     ./tui/rbw.nix
     ./tui/shell.nix
     ./tui/ssh.nix
@@ -17,7 +19,6 @@ in {
   home.packages = with pkgs; [
     aria2
     file
-    gnupg
     neofetch
     neovim
     p7zip
@@ -51,15 +52,6 @@ in {
     "EMAIL" = personal_email;
     "GITHUB_USER" = personal_github;
 
-    # Set LESS colors
-    "LESS_TERMCAP_mb" = "$'\e[01;31m'";
-    "LESS_TERMCAP_md" = "$'\e[01;34m'";
-    "LESS_TERMCAP_me" = "$'\e[0m'";
-    "LESS_TERMCAP_se" = "$'\e[0m'";
-    "LESS_TERMCAP_so" = "$'\e[01;31m'";
-    "LESS_TERMCAP_ue" = "$'\e[0m'";
-    "LESS_TERMCAP_us" = "$'\e[01;32m'";
-
     # Set runtime dir
     "XDG_RUNTIME_DIR" = "$HOME/tmp";
   };
@@ -75,11 +67,6 @@ in {
 
     ".config" = {
       source = ../../home/.config;
-      recursive = true;
-    };
-
-    ".gnupg" = {
-      source = ../../home/.gnupg;
       recursive = true;
     };
   };
