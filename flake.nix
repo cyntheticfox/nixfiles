@@ -17,11 +17,6 @@
       inputs.master.follows = "nixpkgs-master";
     };
 
-    neovim-nightly-overlay = {
-      url = "github:nix-community/neovim-nightly-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
@@ -78,7 +73,6 @@
           {
             nixpkgs.overlays = [
               self.overlay
-              neovim-nightly-overlay.overlay
               nixpkgs-wayland.overlay
             ];
           }
@@ -89,17 +83,11 @@
       homeConfigurations = {
         wsl = self.lib.hmConfig {
           modules = [ ./home-manager/hosts/wsl/home.nix ];
-          extraConfig = {
-            nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
-          };
         };
 
         pbp = self.lib.hmConfig {
           system = "aarch64-linux";
           modules = [ ./home-manager/hosts/pbp/home.nix ];
-          extraConfig = {
-            nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
-          };
         };
       };
 

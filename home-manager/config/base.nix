@@ -12,6 +12,7 @@ in {
     ./tui/gnupg.nix
     ./tui/man.nix
     ./tui/neofetch.nix
+    ./tui/neovim.nix
     ./tui/rbw.nix
     ./tui/shell.nix
     ./tui/ssh.nix
@@ -20,18 +21,12 @@ in {
 
   home.packages = with pkgs; [
     file
-    neovim
     p7zip
     smbclient
     traceroute
     unzip
     whois
     zip
-
-    # NeoVim Tools
-    code-minimap
-    libtool
-    tree-sitter
   ];
 
   xdg.userDirs = {
