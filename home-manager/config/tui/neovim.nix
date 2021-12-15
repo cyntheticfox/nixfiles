@@ -1,49 +1,4 @@
 { config, pkgs, inputs, ... }: {
-  home.packages = with pkgs; [
-    # Language servers
-    ccls
-    elixir_ls
-    erlang-ls
-    gopls
-    go-langserver
-    haskellPackages.haskell-language-server
-    nodePackages.bash-language-server
-    nodePackages.vscode-langservers-extracted
-    nodePackages.dockerfile-language-server-nodejs
-    nodePackages.typescript-language-server
-    nodePackages.vim-language-server
-    nodePackages.vue-language-server
-    nodePackages.yaml-language-server
-    python39Packages.python-lsp-server
-    python39Packages.python-lsp-black
-    rnix-lsp
-    rust-analyzer
-    sumneko-lua-language-server
-    terraform-ls
-
-    # Linters
-    ansible-lint
-    shellcheck
-    cppcheck
-    flawfinder
-    nodePackages.cspell
-    statix
-
-    # # Formatters
-    # astyle
-    # black
-    # gofumpt
-    # jq
-    # nodePackages.prettier
-    # nixpkgs-fmt
-    # rustfmt
-    # shfmt
-
-    # Plugin tools
-    code-minimap
-    libtool
-  ];
-
   programs.neovim = {
     enable = true;
 
@@ -145,7 +100,15 @@
     '';
 
     plugins = with pkgs.vimPlugins; [
-      ansible-vim
+      {
+        plugin = ansible-vim;
+        config = ''
+          augroup ansible_vim_ftplaybooks
+            autocmd!
+            autocmd BufNewFile,BufRead */playbooks/*.yml setfiletype yaml.ansible
+          augroup END
+        '';
+      }
       barbar-nvim
       cmp-buffer
       cmp-nvim-lsp
@@ -163,6 +126,51 @@
           lua << EOF
           require('formatter').setup({
             filetype = {
+              javascript = {
+                -- Prettier
+                function()
+                  return {
+                    exe = "${pkgs.nodePackages.prettier}/bin/prettier",
+                    args = {
+                      "--stdin-filepath",
+                      vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)),
+                      "--single-quote"
+                    },
+                    stdin = true
+                  }
+                end
+              },
+              go = {
+                -- gofumpt
+                function()
+                  return {
+                    exe = "${pkgs.gofumpt}/bin/gofumpt",
+                    args = {},
+                    stdin = false,
+                  }
+                end
+              },
+              nix = {
+                function()
+                  return {
+                    exe = "${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt",
+                    args = {
+                      "--"
+                    },
+                    stdin = true
+                  }
+                end
+              },
+              python = {
+                -- Black
+                function()
+                  return {
+                    exe = "${pkgs.python3Packages.black}/bin/black",
+                    args = { '-' },
+                    stdin = true,
+                  }
+                end
+              },
               rust = {
                 -- Rustfmt
                 function()
@@ -183,17 +191,6 @@
                     args = {
                       "-i",
                       "4"
-                    },
-                    stdin = true
-                  }
-                end
-              },
-              nix = {
-                function()
-                  return {
-                    exe = "${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt",
-                    args = {
-                      "--"
                     },
                     stdin = true
                   }
@@ -282,11 +279,21 @@
         plugin = nvim-lint;
         config = ''
           lua << EOF
+          require('lint').linters.ansible_lint.cmd = '${pkgs.ansible-lint}/bin/ansible-lint'
+          require('lint').linters.cppcheck.cmd = '${pkgs.cppcheck}/bin/cppcheck'
+          require('lint').linters.cspell.cmd = '${pkgs.nodePackages.cspell}/bin/cspell'
+          require('lint').linters.flake8.cmd = '${pkgs.python3Packages.flake8}/bin/flake8'
+          require('lint').linters.flawfinder.cmd = '${pkgs.flawfinder}/bin/flawfinder'
+          require('lint').linters.nix.cmd = '${pkgs.nixUnstable}/bin/nix-instantiate'
+          require('lint').linters.pylint.cmd = '${pkgs.python3Packages.pylint}/bin/pylint'
+          require('lint').linters.shellcheck.cmd = '${pkgs.shellcheck}/bin/shellcheck'
+          require('lint').linters.statix.cmd = '${pkgs.statix}/bin/statix'
+
           require('lint').linters_by_ft = {
             ada = {'cspell'},
             asciidoc = {'cspell'},
             c = {'flawfinder', 'cspell'},
-            cpp = {'flawfinder', 'cspell'},
+            cpp = {'flawfinder', 'cppcheck', 'cspell'},
             go = {'cspell'},
             haskell = {'cspell'},
             java = {'cspell'},
@@ -301,7 +308,8 @@
             rust = {'cspell'},
             sh = {'shellcheck', 'cspell'},
             tex = {'cspell'},
-            text = {'cspell'}
+            text = {'cspell'},
+            yaml = {'ansible_lint'}
           }
           EOF
 
@@ -329,100 +337,130 @@
           local nvim_lsp = require('lspconfig')
 
           -- language-specific language-servers
-          nvim_lsp.ansiblels.setup({
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
-          })
-
           nvim_lsp.bashls.setup({
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
+            capabilities = capabilities_var,
+            cmd = {
+              "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server",
+              "start"
+            },
+            on_attach = on_attach_func
           })
 
-          nvim_lsp.ccls.setup{
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
-          }
+          nvim_lsp.ccls.setup({
+            capabilities = capabilities_var,
+            cmd = { "${pkgs.ccls}/bin/ccls" },
+            on_attach = on_attach_func
+          })
 
-          nvim_lsp.cssls.setup{
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
-          }
+          nvim_lsp.cssls.setup({
+            capabilities = capabilities_var,
+            cmd = {
+              "${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-css-language-server",
+              "--stdio"
+            },
+            on_attach = on_attach_func
+          })
 
-          nvim_lsp.dockerls.setup{
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
-          }
+          nvim_lsp.dockerls.setup({
+            capabilities = capabilities_var,
+            cmd = {
+              "${pkgs.nodePackages.dockerfile-language-server-nodejs}/bin/docker-langserver",
+              "--stdio"
+            },
+            on_attach = on_attach_func
+          })
 
-          nvim_lsp.elixirls.setup{
-            capabilities=capabilities_var,
-            cmd = { "elixir-ls" },
-            on_attach=on_attach_func
-          }
+          nvim_lsp.elixirls.setup({
+            capabilities = capabilities_var,
+            cmd = { "${pkgs.elixir_ls}/bin/elixir-ls" },
+            on_attach = on_attach_func
+          })
 
-          nvim_lsp.erlangls.setup{
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
-          }
+          nvim_lsp.erlangls.setup({
+            capabilities = capabilities_var,
+            cmd = { "${pkgs.erlang-ls}/bin/erlang_ls" },
+            on_attach = on_attach_func
+          })
+
+          nvim_lsp.eslint.setup({
+            capabilities = capabilities_var,
+            cmd = {
+              "${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-eslint-language-server",
+              "--stdio"
+            },
+            on_attach = on_attach_func
+          })
 
           nvim_lsp.gopls.setup({
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
+            capabilities = capabilities_var,
+            cmd = { "${pkgs.gopls}/bin/gopls" },
+            on_attach = on_attach_func
           })
 
           nvim_lsp.hls.setup({
-            capabilities=capabilities_var,
+            capabilities = capabilities_var,
             cmd = {
               "${pkgs.haskell-language-server}/bin/haskell-language-server",
               "lsp"
             },
-            on_attach=on_attach_func
+            on_attach = on_attach_func
           })
 
           nvim_lsp.html.setup({
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
+            capabilities = capabilities_var,
+            cmd = {
+              "${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-html-language-server",
+              "--stdio"
+            },
+            on_attach = on_attach_func
           })
 
           nvim_lsp.jsonls.setup({
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
+            capabilities = capabilities_var,
+            cmd = {
+              "${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-json-language-server",
+              "--stdio"
+            },
+            on_attach = on_attach_func
           })
 
           nvim_lsp.pylsp.setup({
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
+            capabilities = capabilities_var,
+            cmd = { "${pkgs.python3Packages.python-lsp-server}/bin/pylsp"},
+            on_attach = on_attach_func
           })
 
           nvim_lsp.pyright.setup({
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
+            capabilities = capabilities_var,
+            cmd = {
+              "${pkgs.pyright}/bin/pyright-langserver",
+              "--stdio"
+            },
+            on_attach = on_attach_func
           })
 
           nvim_lsp.rnix.setup({
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
+            capabilities = capabilities_var,
+            cmd = { "${pkgs.rnix-lsp}/bin/rnix-lsp" },
+            on_attach = on_attach_func
           })
 
           nvim_lsp.rust_analyzer.setup({
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
+            capabilities = capabilities_var,
+            cmd = { "${pkgs.rust-analyzer}/bin/rust-analyzer" },
+            on_attach = on_attach_func
           })
 
-          nvim_lsp.sqls.setup{
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
-          }
+          nvim_lsp.sqls.setup({
+            capabilities = capabilities_var,
+            cmd = { "${pkgs.sqls}/bin/sqls" },
+            on_attach = on_attach_func
+          })
 
-          nvim_lsp.stylelint_lsp.setup{
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
-          }
-
-          nvim_lsp.sumneko_lua.setup{
-            capabilities=capabilities_var,
-            cmd = {"lua-language-server"},
-            on_attach=on_attach_func,
+          nvim_lsp.sumneko_lua.setup({
+            capabilities = capabilities_var,
+            cmd = {"${pkgs.sumneko-lua-language-server}/bin/lua-language-server"},
+            on_attach = on_attach_func,
             settings = {
               Lua = {
                 runtime = {
@@ -437,27 +475,49 @@
                 }
               }
             }
-          }
+          })
 
-          nvim_lsp.terraformls.setup{
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
-          }
+          nvim_lsp.terraformls.setup({
+            capabilities = capabilities_var,
+            cmd = {
+              "${pkgs.terraform-ls}/bin/terraform-ls",
+              "serve"
+            },
+            on_attach = on_attach_func
+          })
 
-          nvim_lsp.vimls.setup{
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
-          }
+          nvim_lsp.tsserver.setup({
+            capabilities = capabilities_var,
+            cmd = {
+              "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server",
+              "--stdio"
+            },
+            on_attach = on_attach_func
+          })
 
-          nvim_lsp.vuels.setup{
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
-          }
+          nvim_lsp.vimls.setup({
+            capabilities = capabilities_var,
+            cmd = {
+              "${pkgs.nodePackages.vim-language-server}/bin/vim-language-server",
+              "--stdio"
+            },
+            on_attach = on_attach_func
+          })
 
-          nvim_lsp.yamlls.setup{
-            capabilities=capabilities_var,
-            on_attach=on_attach_func
-          }
+          nvim_lsp.vuels.setup({
+            capabilities = capabilities_var,
+            cmd = { "${pkgs.nodePackages.vue-language-server}/bin/vls" },
+            on_attach = on_attach_func
+          })
+
+          nvim_lsp.yamlls.setup({
+            capabilities = capabilities_var,
+            cmd = {
+              "${pkgs.nodePackages.yaml-language-server}/bin/yaml-languag-server",
+              "--stdio"
+            },
+            on_attach = on_attach_func
+          })
           EOF
         '';
       }
@@ -547,5 +607,4 @@
       vim-vsnip
     ];
   };
-
 }
