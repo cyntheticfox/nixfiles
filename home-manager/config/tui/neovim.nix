@@ -29,20 +29,19 @@
     nodePackages.cspell
     statix
 
-    # Formatters
-    astyle
-    black
-    gofumpt
-    jq
-    nodePackages.prettier
-    nixpkgs-fmt
-    rustfmt
-    shfmt
+    # # Formatters
+    # astyle
+    # black
+    # gofumpt
+    # jq
+    # nodePackages.prettier
+    # nixpkgs-fmt
+    # rustfmt
+    # shfmt
 
     # Plugin tools
     code-minimap
     libtool
-    tree-sitter
   ];
 
   programs.neovim = {
@@ -168,7 +167,7 @@
                 -- Rustfmt
                 function()
                   return {
-                    exe = "rustfmt",
+                    exe = "${pkgs.rustfmt}/bin/rustfmt",
                     args = {
                       "--emit=stdout"
                     },
@@ -180,7 +179,7 @@
                 -- Shell script formatter
                 function()
                   return {
-                    exe = "shfmt",
+                    exe = "${pkgs.shfmt}/bin/shfmt",
                     args = {
                       "-i",
                       "4"
@@ -192,7 +191,7 @@
               nix = {
                 function()
                   return {
-                    exe = "nixpkgs-fmt",
+                    exe = "${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt",
                     args = {
                       "--"
                     },
@@ -203,7 +202,7 @@
               terraform = {
                 function()
                   return {
-                    exe = "terraform",
+                    exe = "${pkgs.terraform}/bin/terraform",
                     args = {
                       "fmt",
                       "-"
@@ -222,11 +221,12 @@
         config = "lua require('gitsigns').setup()";
       }
       kommentary
+      lsp_signature-nvim
       {
         plugin = lualine-nvim;
         config = ''
           lua << EOF
-          require('lualine').setup{
+          require('lualine').setup({
             options = {
               icons_enabled = true,
               theme = 'nord',
@@ -239,7 +239,7 @@
               lualine_y = {'progress'},
               lualine_z = {'location'}
             }
-          }
+          })
           EOF
         '';
       }
@@ -261,7 +261,7 @@
         plugin = nvim-cmp;
         config = ''
           lua << EOF
-          require('cmp').setup{
+          require('cmp').setup({
             snippet = {
               expand = function(args)
                 vim.fn["vsnip#anonymous"](args.body)
@@ -274,7 +274,7 @@
               { name = 'path' },
               { name = 'treesitter' }
             }
-          }
+          })
           EOF
         '';
       }
@@ -329,15 +329,15 @@
           local nvim_lsp = require('lspconfig')
 
           -- language-specific language-servers
-          nvim_lsp.ansiblels.setup{
+          nvim_lsp.ansiblels.setup({
             capabilities=capabilities_var,
             on_attach=on_attach_func
-          }
+          })
 
-          nvim_lsp.bashls.setup{
+          nvim_lsp.bashls.setup({
             capabilities=capabilities_var,
             on_attach=on_attach_func
-          }
+          })
 
           nvim_lsp.ccls.setup{
             capabilities=capabilities_var,
@@ -365,49 +365,49 @@
             on_attach=on_attach_func
           }
 
-          nvim_lsp.gopls.setup{
+          nvim_lsp.gopls.setup({
             capabilities=capabilities_var,
             on_attach=on_attach_func
-          }
+          })
 
-          nvim_lsp.hls.setup{
+          nvim_lsp.hls.setup({
             capabilities=capabilities_var,
             cmd = {
-              "haskell-language-server",
+              "${pkgs.haskell-language-server}/bin/haskell-language-server",
               "lsp"
             },
             on_attach=on_attach_func
-          }
+          })
 
-          nvim_lsp.html.setup{
+          nvim_lsp.html.setup({
             capabilities=capabilities_var,
             on_attach=on_attach_func
-          }
+          })
 
-          nvim_lsp.jsonls.setup{
+          nvim_lsp.jsonls.setup({
             capabilities=capabilities_var,
             on_attach=on_attach_func
-          }
+          })
 
-          nvim_lsp.pylsp.setup{
+          nvim_lsp.pylsp.setup({
             capabilities=capabilities_var,
             on_attach=on_attach_func
-          }
+          })
 
-          nvim_lsp.pyright.setup{
+          nvim_lsp.pyright.setup({
             capabilities=capabilities_var,
             on_attach=on_attach_func
-          }
+          })
 
-          nvim_lsp.rnix.setup{
+          nvim_lsp.rnix.setup({
             capabilities=capabilities_var,
             on_attach=on_attach_func
-          }
+          })
 
-          nvim_lsp.rust_analyzer.setup{
+          nvim_lsp.rust_analyzer.setup({
             capabilities=capabilities_var,
             on_attach=on_attach_func
-          }
+          })
 
           nvim_lsp.sqls.setup{
             capabilities=capabilities_var,
@@ -462,10 +462,10 @@
         '';
       }
       {
-        plugin = nvim-treesitter;
+        plugin = nvim-treesitter.withPlugins (plugins: pkgs.tree-sitter.allGrammars);
         config = ''
           lua << EOF
-          require('nvim-treesitter.configs').setup{
+          require('nvim-treesitter.configs').setup({
             ensure_installed = "all",
             highlight = {
               enable = true,
@@ -475,7 +475,7 @@
               extended_mode = true,
               max_file_lines = 2000
             }
-          }
+          })
           EOF
         '';
       }
@@ -485,13 +485,11 @@
         plugin = nord-nvim;
         config = "colorscheme nord";
       }
-      plenary-nvim
-      popup-nvim
       {
         plugin = telescope-nvim;
         config = ''
           lua << EOF
-          require('telescope').setup{
+          require('telescope').setup({
             defaults = {
               vimgrep_arguments = {
                 'rg',
@@ -533,7 +531,7 @@
               -- Developer configurations: Not meant for general override
               buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
             }
-          }
+          })
           EOF
         '';
       }
