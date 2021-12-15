@@ -24,12 +24,12 @@
     };
 
     extraConfig = ''
-      include aura-theme.conf
+      include ./nord.conf
     '';
   };
 
-  xdg.configFile."kitty/aura-theme.conf".source = builtins.fetchurl {
-    url = "https://raw.githubusercontent.com/daltonmenezes/aura-theme/main/packages/kitty/aura-theme.conf";
-    sha256 = "03c8c9e1bf283bf8380379183f39168c45a05c3fd4b22ab54c156675d8e519f1";
+  xdg.configFile."kitty/nord.conf".source = builtins.fetchurl {
+    url = "https://raw.githubusercontent.com/connorholyday/nord-kitty/3a819c1f207cd2f98a6b7c7f9ebf1c60da91c9e9/nord.conf";
+    sha256 = "sha256:1fbnc6r9mbqb6wxqqi9z8hjhfir44rqd6ynvbc49kn6gd8v707p1";
   };
 }
