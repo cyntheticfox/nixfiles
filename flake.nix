@@ -14,7 +14,6 @@
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.master.follows = "nixpkgs-master";
     };
 
     flake-compat = {
