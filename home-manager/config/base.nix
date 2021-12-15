@@ -56,12 +56,8 @@ in {
     "$HOME/.cargo/bin"
   ];
 
-  home.file = {
-    ".editorconfig".source = ../../home/.editorconfig;
-
-    ".config" = {
-      source = ../../home/.config;
-      recursive = true;
-    };
+  home.file.".config" = {
+    source = ../../home/.config;
+    recursive = true;
   };
 }
