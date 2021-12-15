@@ -4,12 +4,17 @@ let
   font = "FiraMono Nerd Font";
 in
 {
-  home.packages = with pkgs; [
-    firefox-wayland
-    chromium
-  ];
-
   home.sessionVariables."BROWSER" = "qutebrowser";
+
+  programs.chromium = {
+    enable = true;
+    package = pkgs.ungoogled-chromium;
+  };
+
+  programs.firefox = {
+    enable = true;
+    package = pkgs.firefox-wayland;
+  };
 
   programs.qutebrowser = {
     enable = true;

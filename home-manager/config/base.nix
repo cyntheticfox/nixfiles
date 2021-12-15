@@ -11,15 +11,14 @@ in {
     ./tui/git.nix
     ./tui/gnupg.nix
     ./tui/man.nix
+    ./tui/neofetch.nix
     ./tui/rbw.nix
     ./tui/shell.nix
     ./tui/ssh.nix
   ];
 
   home.packages = with pkgs; [
-    aria2
     file
-    neofetch
     neovim
     p7zip
     smbclient
