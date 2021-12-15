@@ -15,6 +15,7 @@ in {
     ./tui/rbw.nix
     ./tui/shell.nix
     ./tui/ssh.nix
+    ./tui/tmux.nix
   ];
 
   home.packages = with pkgs; [
@@ -22,7 +23,6 @@ in {
     neovim
     p7zip
     smbclient
-    tmux
     traceroute
     unzip
     whois
