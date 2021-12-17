@@ -41,18 +41,23 @@ in
       pavucontrol
       playerctl
       polkit_gnome
+      qt5.qtwayland
+      slurp
       swayidle
       swaylock-effects
       sway-contrib.grimshot
-      xwayland
       waybar
+      wf-recorder
       wl-clipboard
       wlogout
       wofi
       workstyle
+      xwayland
     ];
 
     extraSessionCommands = ''
+      export SDL_VIDEODRIVER=wayland
+      export QT_QPA_PLATFORM=wayland
       export WLR_NO_HARDWARE_CURSORS=1
       export XDG_SESSION_TYPE=wayland
     '';
@@ -74,9 +79,7 @@ in
     enable = true;
     settings = {
       terminal.vt = 7;
-      default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd ${pkgs.sway}/bin/sway --time --asterisks --remember";
-      };
+      default_session.command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd ${pkgs.sway}/bin/sway --time --asterisks --remember";
     };
   };
 }
