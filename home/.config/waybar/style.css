@@ -173,6 +173,7 @@
 
 #window {
   font-weight: bold;
+  font-family: "Noto Sans", Roboto, sans-serif;
 }
 
 #workspaces button {

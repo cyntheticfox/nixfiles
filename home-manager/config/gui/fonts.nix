@@ -5,6 +5,7 @@
     fira-code
     fira-code-symbols
     fira-mono
+    font-awesome
     nerdfonts
     noto-fonts-emoji
     rictydiminished-with-firacode
