@@ -1,6 +1,6 @@
 { config, pkgs, ... }: {
   imports = [
-    ../../config/base-desktop.nix
+    ../../config/sway.nix
 
     # Desktop modules
     ../../config/gui/chat.nix
