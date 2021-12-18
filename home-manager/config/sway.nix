@@ -2,9 +2,12 @@
 let
   user-bins = {
     pamixer = "${pkgs.pamixer}/bin/pamixer";
+    playerctl = "${pkgs.playerctl}/bin/playerctl";
   };
 in {
   imports = [ ./base-desktop.nix ];
+
+  services.playerctld.enable = true;
 
   xdg.configFile."sway/config".text = ''
     ###########################################################################
@@ -50,7 +53,7 @@ in {
       timeout 900 'exec $lockscreen' \
       timeout 960 'swaymsg "output * dpms off"' \
         resume 'swaymsg "output * dpms on"' \
-      before-sleep 'playerctl pause' \
+      before-sleep '${user-bins.playerctl} pause' \
       before-sleep 'exec $lockscreen'
 
     # statusbar command
@@ -97,7 +100,6 @@ in {
     exec_always {
         '[ -x "$(command -v kanshi)" ] && pkill kanshi; exec kanshi'
         '[ -x "$(command -v workstyle)" ] && pkill workstyle; workstyle &> ~/tmp/workstyle.log'
-        '[ -x "$(command -v playerctl)" ] && pkill playerctl; playerctl -a metadata --format \'{{status}} {{title}}\' --follow | while read line; do pkill -RTMIN+5 waybar; done'
     }
 
     # https://github.com/Alexays/Waybar/issues/1093#issuecomment-841846291
@@ -146,12 +148,12 @@ in {
 
     # Media key bindings
     bindsym XF86AudioMute exec ${user-bins.pamixer} -t
-    bindsym XF86AudioNext exec playerctl next
-    bindsym XF86AudioPlay exec playerctl play-pause
-    bindsym XF86AudioPrev exec playerctl previous
+    bindsym XF86AudioNext exec ${user-bins.playerctl} next
+    bindsym XF86AudioPlay exec ${user-bins.playerctl} play-pause
+    bindsym XF86AudioPrev exec ${user-bins.playerctl} previous
     bindsym XF86AudioLowerVolume exec ${user-bins.pamixer} -d 2
     bindsym XF86AudioRaiseVolume exec ${user-bins.pamixer} -i 2
-    bindsym XF86AudioStop exec playerctl stop
+    bindsym XF86AudioStop exec ${user-bins.playerctl} stop
 
 
     # Screen brightness bindings
