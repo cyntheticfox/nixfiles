@@ -332,4 +332,16 @@
       color: #Cd3f45;
     }
   '';
+
+  xdg.configFile."kanshi/config".text = ''
+    profile {
+        output eDP-1 enable
+    }
+
+    profile docked {
+        output eDP-1 disable
+        output "ViewSonic Corporation VP211b A22050300003" enable
+        output "Samsung Electric Company SMS27A350H 0x00007F36" enable
+    }
+  '';
 }
