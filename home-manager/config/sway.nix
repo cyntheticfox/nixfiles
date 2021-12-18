@@ -9,457 +9,461 @@ in {
 
   services.playerctld.enable = true;
 
-  xdg.configFile."sway/config".text = ''
-    ###########################################################################
-    #                                                                         #
-    #                         Sway Variable Definitions                       #
-    #                                                                         #
-    ###########################################################################
+  wayland.windowManager.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+    systemdIntegration = true;
+    config = null;
+    extraConfig = ''
+      ###########################################################################
+      #                                                                         #
+      #                         Sway Variable Definitions                       #
+      #                                                                         #
+      ###########################################################################
 
-    ### Variables
-    #
-    # Logo key. Use Mod1 for Alt.
-    # * change modifier key from Alt to Win/Pine-Key: set $mod Mod4
-    set $mod Mod4
+      ### Variables
+      #
+      # Logo key. Use Mod1 for Alt.
+      # * change modifier key from Alt to Win/Pine-Key: set $mod Mod4
+      set $mod Mod4
 
-    # Home row direction keys, like vim
-    set $left h
-    set $down j
-    set $up k
-    set $right l
+      # Home row direction keys, like vim
+      set $left h
+      set $down j
+      set $up k
+      set $right l
 
-    # Your preferred terminal emulator
-    set $term kitty
+      # Your preferred terminal emulator
+      set $term kitty
 
-    # Your preferred web browser
-    set $web qutebrowser
+      # Your preferred web browser
+      set $web qutebrowser
 
-    # Your preferred application launcher
-    # Note: pass the final command to swaymsg so that the resulting window can be opened
-    #   on the original workspace that the command was run on.
-    set $appmenu wofi --show drun | xargs swaymsg exec --
-    set $menu wofi --show run --exec-search | xargs swaymsg exec --
+      # Your preferred application launcher
+      # Note: pass the final command to swaymsg so that the resulting window can be opened
+      #   on the original workspace that the command was run on.
+      set $appmenu wofi --show drun | xargs swaymsg exec --
+      set $menu wofi --show run --exec-search | xargs swaymsg exec --
 
-    set $lockscreen swaylock --daemonize --show-failed-attempts --screenshots --clock --indicator --effect-blur 7x5 --effect-vignette 0.5:0.5 --fade-in 0.2
+      set $lockscreen swaylock --daemonize --show-failed-attempts --screenshots --clock --indicator --effect-blur 7x5 --effect-vignette 0.5:0.5 --fade-in 0.2
 
-    set $notifications mako --default-timeout 15000
+      set $notifications mako --default-timeout 15000
 
-    ### Idle configuration
-    # This will lock your screen after 15 minutes of inactivity, then turn off
-    #   your displays after another minute, and turn your screens back on when
-    #   resumed. It will also lock your screen before your computer goes to sleep.
-    #
-    set $idle swayidle -w \
-      timeout 900 'exec $lockscreen' \
-      timeout 960 'swaymsg "output * dpms off"' \
-        resume 'swaymsg "output * dpms on"' \
-      before-sleep '${user-bins.playerctl} pause' \
-      before-sleep 'exec $lockscreen'
+      ### Idle configuration
+      # This will lock your screen after 15 minutes of inactivity, then turn off
+      #   your displays after another minute, and turn your screens back on when
+      #   resumed. It will also lock your screen before your computer goes to sleep.
+      #
+      set $idle swayidle -w \
+        timeout 900 'exec $lockscreen' \
+        timeout 960 'swaymsg "output * dpms off"' \
+          resume 'swaymsg "output * dpms on"' \
+        before-sleep '${user-bins.playerctl} pause' \
+        before-sleep 'exec $lockscreen'
 
-    # statusbar command
-    set $statusbar waybar
+      # statusbar command
+      set $statusbar waybar
 
-    # shutdown command
-    set $shutdown wlogout --buttons-per-row 3
+      # shutdown command
+      set $shutdown wlogout --buttons-per-row 3
 
-    ###########################################################################
-    #                                                                         #
-    #                         Sway Input Configurations                       #
-    #                                                                         #
-    ###########################################################################
+      ###########################################################################
+      #                                                                         #
+      #                         Sway Input Configurations                       #
+      #                                                                         #
+      ###########################################################################
 
-    # Default keyboard configuration
-    input type:keyboard {
-      xkb_layout "us"
-      xkb_numlock enabled
-    }
+      # Default keyboard configuration
+      input type:keyboard {
+        xkb_layout "us"
+        xkb_numlock enabled
+      }
 
-    # Touchpad configuration (if using a laptop)
-    input type:touchpad {
-      accel_profile flat
-      pointer_accel 1
+      # Touchpad configuration (if using a laptop)
+      input type:touchpad {
+        accel_profile flat
+        pointer_accel 1
 
-      dwt enabled
-      tap enabled
-      natural_scroll disabled
-    }
+        dwt enabled
+        tap enabled
+        natural_scroll disabled
+      }
 
-    ###########################################################################
-    #                                                                         #
-    #                         Sway Startup Configurations                     #
-    #                                                                         #
-    ###########################################################################
+      ###########################################################################
+      #                                                                         #
+      #                         Sway Startup Configurations                     #
+      #                                                                         #
+      ###########################################################################
 
-    # Enable the idle daemon
-    exec $idle
+      # Enable the idle daemon
+      exec $idle
 
-    # Autostart background apps
-    exec $notifications
+      # Autostart background apps
+      exec $notifications
 
-    # Run if-exists
-    exec_always {
-        '[ -x "$(command -v kanshi)" ] && pkill kanshi; exec kanshi'
-        '[ -x "$(command -v workstyle)" ] && pkill workstyle; workstyle &> ~/tmp/workstyle.log'
-    }
+      # Run if-exists
+      exec_always {
+          '[ -x "$(command -v workstyle)" ] && pkill workstyle; workstyle &> ~/tmp/workstyle.log'
+      }
 
-    # https://github.com/Alexays/Waybar/issues/1093#issuecomment-841846291
-    exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
-    exec hash dbus-update-activation-environment 2>/dev/null && \
-        dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+      # https://github.com/Alexays/Waybar/issues/1093#issuecomment-841846291
+      exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+      exec hash dbus-update-activation-environment 2>/dev/null && \
+          dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
 
-    ###########################################################################
-    #                                                                         #
-    #                         Sway Mode Configurations                        #
-    #                                                                         #
-    ###########################################################################
+      ###########################################################################
+      #                                                                         #
+      #                         Sway Mode Configurations                        #
+      #                                                                         #
+      ###########################################################################
 
-    #\                               /#
-    # |  Default Mode Configuration | #
-    #/                               \#
+      #\                               /#
+      # |  Default Mode Configuration | #
+      #/                               \#
 
-    ### Key bindings
-    #
-    # Basics:
-    #
-    # Start a terminal
-    bindsym $mod+Return exec $term
+      ### Key bindings
+      #
+      # Basics:
+      #
+      # Start a terminal
+      bindsym $mod+Return exec $term
 
-    # Kill focused window
-    bindsym $mod+Shift+q kill
+      # Kill focused window
+      bindsym $mod+Shift+q kill
 
-    # Start your launcher
-    bindsym $mod+d exec $appmenu
-    bindsym $mod+Shift+d exec $menu
-    bindsym $mod+Ctrl+d exec $selwin
-    bindsym $mod+question exec $help
+      # Start your launcher
+      bindsym $mod+d exec $appmenu
+      bindsym $mod+Shift+d exec $menu
+      bindsym $mod+Ctrl+d exec $selwin
+      bindsym $mod+question exec $help
 
-    # Drag floating windows by holding down $mod and left mouse button.
-    # Resize them with right mouse button + $mod.
-    # Despite the name, also works for non-floating windows.
-    # Change normal to inverse to use left mouse button for resizing and right
-    # mouse button for dragging.
-    floating_modifier $mod normal
+      # Drag floating windows by holding down $mod and left mouse button.
+      # Resize them with right mouse button + $mod.
+      # Despite the name, also works for non-floating windows.
+      # Change normal to inverse to use left mouse button for resizing and right
+      # mouse button for dragging.
+      floating_modifier $mod normal
 
-    # Reload the configuration file
-    bindsym $mod+Shift+c reload
+      # Reload the configuration file
+      bindsym $mod+Shift+c reload
 
-    # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec $shutdown
+      # Exit sway (logs you out of your Wayland session)
+      bindsym $mod+Shift+e exec $shutdown
 
-    # Media key bindings
-    bindsym XF86AudioMute exec ${user-bins.pamixer} -t
-    bindsym XF86AudioNext exec ${user-bins.playerctl} next
-    bindsym XF86AudioPlay exec ${user-bins.playerctl} play-pause
-    bindsym XF86AudioPrev exec ${user-bins.playerctl} previous
-    bindsym XF86AudioLowerVolume exec ${user-bins.pamixer} -d 2
-    bindsym XF86AudioRaiseVolume exec ${user-bins.pamixer} -i 2
-    bindsym XF86AudioStop exec ${user-bins.playerctl} stop
+      # Media key bindings
+      bindsym XF86AudioMute exec ${user-bins.pamixer} -t
+      bindsym XF86AudioNext exec ${user-bins.playerctl} next
+      bindsym XF86AudioPlay exec ${user-bins.playerctl} play-pause
+      bindsym XF86AudioPrev exec ${user-bins.playerctl} previous
+      bindsym XF86AudioLowerVolume exec ${user-bins.pamixer} -d 2
+      bindsym XF86AudioRaiseVolume exec ${user-bins.pamixer} -i 2
+      bindsym XF86AudioStop exec ${user-bins.playerctl} stop
 
 
-    # Screen brightness bindings
-    bindsym XF86MonBrightnessDown exec light -U 5
-    bindsym XF86MonBrightnessUp exec light -A 5
+      # Screen brightness bindings
+      bindsym XF86MonBrightnessDown exec light -U 5
+      bindsym XF86MonBrightnessUp exec light -A 5
 
-    # capture PowerOff key
-    bindsym XF86PowerOff exec $shutdown
+      # capture PowerOff key
+      bindsym XF86PowerOff exec $shutdown
 
-    #
-    # Moving around:
-    #
-    # Move your focus around
-    bindsym $mod+$left focus left
-    bindsym $mod+$down focus down
-    bindsym $mod+$up focus up
-    bindsym $mod+$right focus right
-    # Or use $mod+[up|down|left|right]
-    bindsym $mod+Left focus left
-    bindsym $mod+Down focus down
-    bindsym $mod+Up focus up
-    bindsym $mod+Right focus right
+      #
+      # Moving around:
+      #
+      # Move your focus around
+      bindsym $mod+$left focus left
+      bindsym $mod+$down focus down
+      bindsym $mod+$up focus up
+      bindsym $mod+$right focus right
+      # Or use $mod+[up|down|left|right]
+      bindsym $mod+Left focus left
+      bindsym $mod+Down focus down
+      bindsym $mod+Up focus up
+      bindsym $mod+Right focus right
 
-    # Move the focused window with the same, but add Shift
-    bindsym $mod+Shift+$left move left
-    bindsym $mod+Shift+$down move down
-    bindsym $mod+Shift+$up move up
-    bindsym $mod+Shift+$right move right
-    # Ditto, with arrow keys
-    bindsym $mod+Shift+Left move left
-    bindsym $mod+Shift+Down move down
-    bindsym $mod+Shift+Up move up
-    bindsym $mod+Shift+Right move right
-
-    #
-    # Workspaces:
-    #
-    # Switch to workspace
-    bindsym $mod+1 workspace number 1
-    bindsym $mod+KP_1 workspace number 1
-    bindsym $mod+2 workspace number 2
-    bindsym $mod+KP_2 workspace number 2
-    bindsym $mod+3 workspace number 3
-    bindsym $mod+KP_3 workspace number 3
-    bindsym $mod+4 workspace number 4
-    bindsym $mod+KP_4 workspace number 4
-    bindsym $mod+5 workspace number 5
-    bindsym $mod+KP_5 workspace number 5
-    bindsym $mod+6 workspace number 6
-    bindsym $mod+KP_6 workspace number 6
-    bindsym $mod+7 workspace number 7
-    bindsym $mod+KP_7 workspace number 7
-    bindsym $mod+8 workspace number 8
-    bindsym $mod+KP_8 workspace number 8
-    bindsym $mod+9 workspace number 9
-    bindsym $mod+KP_9 workspace number 9
-    bindsym $mod+0 workspace number 10
-    bindsym $mod+KP_0 workspace number 10
-
-    # Move workspaces with ctrl+mod
-    bindsym $mod+Ctrl+$left workspace prev
-    bindsym $mod+Ctrl+$right workspace next
-    bindsym $mod+Ctrl+Left workspace prev
-    bindsym $mod+Ctrl+Right workspace next
-
-    # Move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace number 1
-    bindsym $mod+Shift+2 move container to workspace number 2
-    bindsym $mod+Shift+3 move container to workspace number 3
-    bindsym $mod+Shift+4 move container to workspace number 4
-    bindsym $mod+Shift+5 move container to workspace number 5
-    bindsym $mod+Shift+6 move container to workspace number 6
-    bindsym $mod+Shift+7 move container to workspace number 7
-    bindsym $mod+Shift+8 move container to workspace number 8
-    bindsym $mod+Shift+9 move container to workspace number 9
-    bindsym $mod+Shift+0 move container to workspace number 10
-
-    bindsym $mod+Ctrl+Shift+$left move container to workspace prev
-    bindsym $mod+Ctrl+Shift+$right move container to workspace next
-    bindsym $mod+Ctrl+Shift+Left move container to workspace prev
-    bindsym $mod+Ctrl+Shift+Right move container to workspace next
-
-    # Note: workspaces can have any name you want, not just numbers.
-    # We just use 1-10 as the default.
-
-    #
-    # Layout stuff:
-    #
-    # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
-    # respectively.
-    bindsym $mod+b splith
-    bindsym $mod+v splitv
-
-    # Switch the current container between different layout styles
-    bindsym $mod+s layout stacking
-    bindsym $mod+w layout tabbed
-    bindsym $mod+e layout toggle split
-
-    # Make the current focus fullscreen
-    bindsym $mod+f fullscreen
-
-    # Toggle the current focus between tiling and floating mode
-    bindsym $mod+Shift+space floating toggle
-
-    # Swap focus between the tiling area and the floating area
-    bindsym $mod+space focus mode_toggle
-
-    # Move focus to the parent container
-    bindsym $mod+a exec $web
-
-    # Create a lockscreen bind
-    bindsym $mod+o exec $lockscreen
-
-    default_border pixel 1
-    hide_edge_borders smart
-
-    #
-    # Status Bar:
-    #
-    # Read `man 5 sway-bar` for more information about this section.
-    bar {
-      position top
-
-      # Run waybar instead of swaybar
-      swaybar_command $statusbar
-    }
-
-    #\                               /#
-    # |  Resize Mode Configuration  | #
-    #/                               \#
-
-    set $mode_resize "<span foreground='$base0A'></span>  \
-      <span foreground='$base05'><b>Resize</b></span> <span foreground='$base0A'>(<b>h/j/k/l</b>)</span> \
-      <span foreground='$base01'>—</span> \
-      <span foreground='$base05'><b>Increase Gaps</b></span> <span foreground='$base0A'>(<b>+</b>)</span> \
-      <span foreground='$base01'>—</span> \
-      <span foreground='$base05'><b>Decrease Gaps</b></span> <span foreground='$base0A'>(<b>-</b>)</span>"
-
-    mode --pango_markup $mode_resize {
-      # left will shrink the containers width
-      # right will grow the containers width
-      # up will shrink the containers height
-      # down will grow the containers height
-      bindsym $left resize shrink width 10px
-      bindsym $down resize grow height 10px
-      bindsym $up resize shrink height 10px
-      bindsym $right resize grow width 10px
-      bindsym Shift+$left resize shrink width 20px
-      bindsym Shift+$down resize grow height 20px
-      bindsym Shift+$up resize shrink height 20px
-      bindsym Shift+$right resize grow width 20px
-
+      # Move the focused window with the same, but add Shift
+      bindsym $mod+Shift+$left move left
+      bindsym $mod+Shift+$down move down
+      bindsym $mod+Shift+$up move up
+      bindsym $mod+Shift+$right move right
       # Ditto, with arrow keys
-      bindsym Left resize shrink width 10px
-      bindsym Down resize grow height 10px
-      bindsym Up resize shrink height 10px
-      bindsym Right resize grow width 10px
-      bindsym Shift+Left resize shrink width 20px
-      bindsym Shift+Down resize grow height 20px
-      bindsym Shift+Up resize shrink height 20px
-      bindsym Shift+Right resize grow width 20px
+      bindsym $mod+Shift+Left move left
+      bindsym $mod+Shift+Down move down
+      bindsym $mod+Shift+Up move up
+      bindsym $mod+Shift+Right move right
 
-      ## Resize // Window Gaps // + - ##
-      bindsym minus gaps inner current minus 5px
-      bindsym plus gaps inner current plus 5px
+      #
+      # Workspaces:
+      #
+      # Switch to workspace
+      bindsym $mod+1 workspace number 1
+      bindsym $mod+KP_1 workspace number 1
+      bindsym $mod+2 workspace number 2
+      bindsym $mod+KP_2 workspace number 2
+      bindsym $mod+3 workspace number 3
+      bindsym $mod+KP_3 workspace number 3
+      bindsym $mod+4 workspace number 4
+      bindsym $mod+KP_4 workspace number 4
+      bindsym $mod+5 workspace number 5
+      bindsym $mod+KP_5 workspace number 5
+      bindsym $mod+6 workspace number 6
+      bindsym $mod+KP_6 workspace number 6
+      bindsym $mod+7 workspace number 7
+      bindsym $mod+KP_7 workspace number 7
+      bindsym $mod+8 workspace number 8
+      bindsym $mod+KP_8 workspace number 8
+      bindsym $mod+9 workspace number 9
+      bindsym $mod+KP_9 workspace number 9
+      bindsym $mod+0 workspace number 10
+      bindsym $mod+KP_0 workspace number 10
 
-      # Return to default mode
-      bindsym Return mode "default"
-      bindsym Escape mode "default"
-    }
-    bindsym $mod+r mode $mode_resize
+      # Move workspaces with ctrl+mod
+      bindsym $mod+Ctrl+$left workspace prev
+      bindsym $mod+Ctrl+$right workspace next
+      bindsym $mod+Ctrl+Left workspace prev
+      bindsym $mod+Ctrl+Right workspace next
 
-    #\                                   /#
-    # |  Screenshot Mode Configuration  | #
-    #/                                   \#
+      # Move focused container to workspace
+      bindsym $mod+Shift+1 move container to workspace number 1
+      bindsym $mod+Shift+2 move container to workspace number 2
+      bindsym $mod+Shift+3 move container to workspace number 3
+      bindsym $mod+Shift+4 move container to workspace number 4
+      bindsym $mod+Shift+5 move container to workspace number 5
+      bindsym $mod+Shift+6 move container to workspace number 6
+      bindsym $mod+Shift+7 move container to workspace number 7
+      bindsym $mod+Shift+8 move container to workspace number 8
+      bindsym $mod+Shift+9 move container to workspace number 9
+      bindsym $mod+Shift+0 move container to workspace number 10
 
-    set $mode_screenshot "<span foreground='$base0A'></span>  \
-      <span foreground='$base05'><b>Fullscreen</b></span> <span foreground='$base0A'>(<b>f</b>)</span> \
-      <span foreground='$base01'>—</span> \
-      <span foreground='$base05'><b>Window</b></span> <span foreground='$base0A'>(<b>w</b>)</span> \
-      <span foreground='$base01'>—</span> \
-      <span foreground='$base05'><b>Region</b></span> <span foreground='$base0A'>(<b>r</b>)</span>"
+      bindsym $mod+Ctrl+Shift+$left move container to workspace prev
+      bindsym $mod+Ctrl+Shift+$right move container to workspace next
+      bindsym $mod+Ctrl+Shift+Left move container to workspace prev
+      bindsym $mod+Ctrl+Shift+Right move container to workspace next
 
-    mode --pango_markup $mode_screenshot {
-      bindsym f exec --no-startup-id grimshot --notify copy screen, mode "default"
-      bindsym Shift+f exec --no-startup-id grimshot --notify save screen ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
-      bindsym w exec --no-startup-id grimshot --notify copy win, mode "default"
-      bindsym Shift+w exec --no-startup-id grimshot --notify save win ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
-      bindsym r exec --no-startup-id grimshot --notify copy area, mode "default"
-      bindsym Shift+r exec --no-startup-id grimshot --notify save area ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
+      # Note: workspaces can have any name you want, not just numbers.
+      # We just use 1-10 as the default.
 
-      # Return to default mode.
-      bindsym Escape mode "default"
-      bindsym Return mode "default"
-    }
-    bindsym $mod+Shift+s mode $mode_screenshot
+      #
+      # Layout stuff:
+      #
+      # You can "split" the current object of your focus with
+      # $mod+b or $mod+v, for horizontal and vertical splits
+      # respectively.
+      bindsym $mod+b splith
+      bindsym $mod+v splitv
 
-    #\                                  /#
-    # |  Recording Mode Configuration  | #
-    #/                                  \#
+      # Switch the current container between different layout styles
+      bindsym $mod+s layout stacking
+      bindsym $mod+w layout tabbed
+      bindsym $mod+e layout toggle split
 
-    set $mode_recording "<span foreground='$base0A'>雷</span>  \
-    <span foreground='$base05'><b>Screen</b></span> <span foreground='$base0A'>(<b>w</b>)</span> \
-    <span foreground='$base01'>—</span> \
-    <span foreground='$base05'><b>Screen (+ Mic)</b></span> <span foreground='$base0A'>(<b>Shift+w</b>)</span> \
-    <span foreground='$base01'>—</span> \
-    <span foreground='$base05'><b>Region</b></span> <span foreground='$base0A'>(<b>r</b>)</span> \
-    <span foreground='$base01'>—</span> \
-    <span foreground='$base05'><b>Region (+ Mic)</b></span> <span foreground='$base0A'>(<b>Shift+r</b>)</span>"
+      # Make the current focus fullscreen
+      bindsym $mod+f fullscreen
 
-    set $mode_recording_on "<span foreground='$base0A'>壘</span>  \
-    <span foreground='$base05'><b>Exit</b></span> <span foreground='$base0A'>(<b>ESC</b>)</span>"
+      # Toggle the current focus between tiling and floating mode
+      bindsym $mod+Shift+space floating toggle
 
-    mode --pango_markup $mode_recording_on {
-        bindsym Escape exec killall -s SIGINT wf-recorder, mode "default"
-    }
+      # Swap focus between the tiling area and the floating area
+      bindsym $mod+space focus mode_toggle
 
-    mode --pango_markup $mode_recording {
-        bindsym w exec killall -s SIGINT wf-recorder || wf-recorder --audio=0 -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') \
-                -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
-        bindsym Shift+w exec killall -s SIGINT wf-recorder || wf-recorder --audio -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') \
-                -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
-        bindsym r exec killall -s SIGINT wf-recorder || wf-recorder --audio=0 -g "$(slurp -d)" \
-                -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
-        bindsym Shift+r exec killall -s SIGINT wf-recorder || wf-recorder --audio -g "$(slurp -d)" \
-                -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
+      # Move focus to the parent container
+      bindsym $mod+a exec $web
+
+      # Create a lockscreen bind
+      bindsym $mod+o exec $lockscreen
+
+      default_border pixel 1
+      hide_edge_borders smart
+
+      #
+      # Status Bar:
+      #
+      # Read `man 5 sway-bar` for more information about this section.
+      bar {
+        position top
+
+        # Run waybar instead of swaybar
+        swaybar_command $statusbar
+      }
+
+      #\                               /#
+      # |  Resize Mode Configuration  | #
+      #/                               \#
+
+      set $mode_resize "<span foreground='$base0A'></span>  \
+        <span foreground='$base05'><b>Resize</b></span> <span foreground='$base0A'>(<b>h/j/k/l</b>)</span> \
+        <span foreground='$base01'>—</span> \
+        <span foreground='$base05'><b>Increase Gaps</b></span> <span foreground='$base0A'>(<b>+</b>)</span> \
+        <span foreground='$base01'>—</span> \
+        <span foreground='$base05'><b>Decrease Gaps</b></span> <span foreground='$base0A'>(<b>-</b>)</span>"
+
+      mode --pango_markup $mode_resize {
+        # left will shrink the containers width
+        # right will grow the containers width
+        # up will shrink the containers height
+        # down will grow the containers height
+        bindsym $left resize shrink width 10px
+        bindsym $down resize grow height 10px
+        bindsym $up resize shrink height 10px
+        bindsym $right resize grow width 10px
+        bindsym Shift+$left resize shrink width 20px
+        bindsym Shift+$down resize grow height 20px
+        bindsym Shift+$up resize shrink height 20px
+        bindsym Shift+$right resize grow width 20px
+
+        # Ditto, with arrow keys
+        bindsym Left resize shrink width 10px
+        bindsym Down resize grow height 10px
+        bindsym Up resize shrink height 10px
+        bindsym Right resize grow width 10px
+        bindsym Shift+Left resize shrink width 20px
+        bindsym Shift+Down resize grow height 20px
+        bindsym Shift+Up resize shrink height 20px
+        bindsym Shift+Right resize grow width 20px
+
+        ## Resize // Window Gaps // + - ##
+        bindsym minus gaps inner current minus 5px
+        bindsym plus gaps inner current plus 5px
+
+        # Return to default mode
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+      }
+      bindsym $mod+r mode $mode_resize
+
+      #\                                   /#
+      # |  Screenshot Mode Configuration  | #
+      #/                                   \#
+
+      set $mode_screenshot "<span foreground='$base0A'></span>  \
+        <span foreground='$base05'><b>Fullscreen</b></span> <span foreground='$base0A'>(<b>f</b>)</span> \
+        <span foreground='$base01'>—</span> \
+        <span foreground='$base05'><b>Window</b></span> <span foreground='$base0A'>(<b>w</b>)</span> \
+        <span foreground='$base01'>—</span> \
+        <span foreground='$base05'><b>Region</b></span> <span foreground='$base0A'>(<b>r</b>)</span>"
+
+      mode --pango_markup $mode_screenshot {
+        bindsym f exec --no-startup-id grimshot --notify copy screen, mode "default"
+        bindsym Shift+f exec --no-startup-id grimshot --notify save screen ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
+        bindsym w exec --no-startup-id grimshot --notify copy win, mode "default"
+        bindsym Shift+w exec --no-startup-id grimshot --notify save win ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
+        bindsym r exec --no-startup-id grimshot --notify copy area, mode "default"
+        bindsym Shift+r exec --no-startup-id grimshot --notify save area ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
 
         # Return to default mode.
         bindsym Escape mode "default"
         bindsym Return mode "default"
-    }
-    bindsym $mod+Shift+r mode $mode_recording
+      }
+      bindsym $mod+Shift+s mode $mode_screenshot
 
-    #
-    # Scratchpad:
-    #
-    # Sway has a "scratchpad", which is a bag of holding for windows.
-    # You can send windows there and get them back later.
+      #\                                  /#
+      # |  Recording Mode Configuration  | #
+      #/                                  \#
 
-    # Move the currently focused window to the scratchpad
-    bindsym $mod+Shift+minus move scratchpad
+      set $mode_recording "<span foreground='$base0A'>雷</span>  \
+      <span foreground='$base05'><b>Screen</b></span> <span foreground='$base0A'>(<b>w</b>)</span> \
+      <span foreground='$base01'>—</span> \
+      <span foreground='$base05'><b>Screen (+ Mic)</b></span> <span foreground='$base0A'>(<b>Shift+w</b>)</span> \
+      <span foreground='$base01'>—</span> \
+      <span foreground='$base05'><b>Region</b></span> <span foreground='$base0A'>(<b>r</b>)</span> \
+      <span foreground='$base01'>—</span> \
+      <span foreground='$base05'><b>Region (+ Mic)</b></span> <span foreground='$base0A'>(<b>Shift+r</b>)</span>"
 
-    # Show the next scratchpad window or hide the focused scratchpad window.
-    # If there are multiple scratchpad windows, this command cycles through them.
-    bindsym $mod+minus scratchpad show
+      set $mode_recording_on "<span foreground='$base0A'>壘</span>  \
+      <span foreground='$base05'><b>Exit</b></span> <span foreground='$base0A'>(<b>ESC</b>)</span>"
 
-    ###########################################################################
-    #                                                                         #
-    #                         Sway Theme Configuration                        #
-    #                                                                         #
-    ###########################################################################
+      mode --pango_markup $mode_recording_on {
+          bindsym Escape exec killall -s SIGINT wf-recorder, mode "default"
+      }
 
-    set $background ~/wallpaper.png
-    set $backup-color #000000
-    set $gtk-theme Matcha-dark-sea
-    set $icon-theme Papirus-Dark-Maia
-    set $cursor-theme xcursor-breeze
-    set $gui-font Noto Sans 11
-    set $term-font TerminessTTF Nerd Font Mono 14
-    set $kvantum-theme Matchama-Dark
+      mode --pango_markup $mode_recording {
+          bindsym w exec killall -s SIGINT wf-recorder || wf-recorder --audio=0 -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') \
+                  -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
+          bindsym Shift+w exec killall -s SIGINT wf-recorder || wf-recorder --audio -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') \
+                  -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
+          bindsym r exec killall -s SIGINT wf-recorder || wf-recorder --audio=0 -g "$(slurp -d)" \
+                  -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
+          bindsym Shift+r exec killall -s SIGINT wf-recorder || wf-recorder --audio -g "$(slurp -d)" \
+                  -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
 
-    # a theme specific color map
-    set $base00 #141a1b
-    set $base01 #282a2b
-    set $base02 #3B758C
-    set $base03 #41535B
-    set $base04 #43a5d5
-    set $base05 #d6d6d6
-    set $base06 #eeeeee
-    set $base07 #ffffff
-    set $base08 #Cd3f45
-    set $base09 #db7b55
-    set $base0A #e6cd69
-    set $base0B #9fca56
-    set $base0C #16a085
-    set $base0D #55b5db
-    set $base0E #a074c4
-    set $base0F #8a553f
+          # Return to default mode.
+          bindsym Escape mode "default"
+          bindsym Return mode "default"
+      }
+      bindsym $mod+Shift+r mode $mode_recording
 
-    set $transparent-background-color rgba(20, 26, 27, 0.9)
+      #
+      # Scratchpad:
+      #
+      # Sway has a "scratchpad", which is a bag of holding for windows.
+      # You can send windows there and get them back later.
 
-    # Basic color configuration using the Base16 variables for windows and borders.
-    # Property Name         Border  BG      Text    Indicator Child Border
-    client.focused          $base05 $base0C $base00 $base0C $base0C
-    client.focused_inactive $base01 $base01 $base05 $base03 $base01
-    client.unfocused        $base01 $base00 $base05 $base01 $base01
-    client.urgent           $base08 $base08 $base00 $base08 $base08
-    client.placeholder      $base00 $base00 $base05 $base00 $base00
-    client.background       $base07
+      # Move the currently focused window to the scratchpad
+      bindsym $mod+Shift+minus move scratchpad
 
-    ###########################################################################
-    #                                                                         #
-    #                         Sway Output Configurations                      #
-    #                                                                         #
-    ###########################################################################
+      # Show the next scratchpad window or hide the focused scratchpad window.
+      # If there are multiple scratchpad windows, this command cycles through them.
+      bindsym $mod+minus scratchpad show
 
-    # Default wallpaper
-    output * bg $background fill $backup-color
-  '';
+      ###########################################################################
+      #                                                                         #
+      #                         Sway Theme Configuration                        #
+      #                                                                         #
+      ###########################################################################
+
+      set $background ~/wallpaper.png
+      set $backup-color #000000
+      set $gtk-theme Matcha-dark-sea
+      set $icon-theme Papirus-Dark-Maia
+      set $cursor-theme xcursor-breeze
+      set $gui-font Noto Sans 11
+      set $term-font TerminessTTF Nerd Font Mono 14
+      set $kvantum-theme Matchama-Dark
+
+      # a theme specific color map
+      set $base00 #141a1b
+      set $base01 #282a2b
+      set $base02 #3B758C
+      set $base03 #41535B
+      set $base04 #43a5d5
+      set $base05 #d6d6d6
+      set $base06 #eeeeee
+      set $base07 #ffffff
+      set $base08 #Cd3f45
+      set $base09 #db7b55
+      set $base0A #e6cd69
+      set $base0B #9fca56
+      set $base0C #16a085
+      set $base0D #55b5db
+      set $base0E #a074c4
+      set $base0F #8a553f
+
+      set $transparent-background-color rgba(20, 26, 27, 0.9)
+
+      # Basic color configuration using the Base16 variables for windows and borders.
+      # Property Name         Border  BG      Text    Indicator Child Border
+      client.focused          $base05 $base0C $base00 $base0C $base0C
+      client.focused_inactive $base01 $base01 $base05 $base03 $base01
+      client.unfocused        $base01 $base00 $base05 $base01 $base01
+      client.urgent           $base08 $base08 $base00 $base08 $base08
+      client.placeholder      $base00 $base00 $base05 $base00 $base00
+      client.background       $base07
+
+      ###########################################################################
+      #                                                                         #
+      #                         Sway Output Configurations                      #
+      #                                                                         #
+      ###########################################################################
+
+      # Default wallpaper
+      output * bg $background fill $backup-color
+    '';
+  };
 
   # Waybar configuration
   #
   # Ref: https://github.com/Alexays/Waybar/wiki/Configuration
   xdg.configFile."waybar/config".text = ''
-
     {
       // -------------------------------------------------------------------------
       // Global configuration
@@ -816,17 +820,30 @@ in {
     }
   '';
 
-  xdg.configFile."kanshi/config".text = ''
-    profile {
-        output eDP-1 enable
-    }
+  services.kanshi = {
+    enable = true;
 
-    profile docked {
-        output eDP-1 disable
-        output "ViewSonic Corporation VP211b A22050300003" enable
-        output "Samsung Electric Company SMS27A350H 0x00007F36" enable
-    }
-    '';
+    profiles = {
+      undocked.outputs = [{
+        criteria = "eDP-1";
+        status = "enable";
+      }];
+      docked.outputs = [
+        {
+          criteria = "eDP-1";
+          status = "disable";
+        }
+        {
+          criteria = "ViewSonic Corporation VP211b A22050300003";
+          status = "enable";
+        }
+        {
+          criteria = "Samsung Electric Company SMS27A350H 0x00007F36";
+          status = "enable";
+        }
+      ];
+    };
+  };
 
   # Config for workstyle
   #

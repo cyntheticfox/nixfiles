@@ -73,8 +73,6 @@ in
     platformTheme = "gnome";
   };
 
-  programs.waybar.enable = true;
-
   services.greetd = {
     enable = true;
     settings = {
