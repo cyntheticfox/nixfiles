@@ -1,14 +1,10 @@
 { config, pkgs, ... }: {
   imports = [ ./base-desktop.nix ];
 
+  # Waybar configuration
+  #
+  # Ref: https://github.com/Alexays/Waybar/wiki/Configuration
   xdg.configFile."waybar/config".text = ''
-    // =============================================================================
-    //
-    // Waybar configuration
-    //
-    // Configuration reference: https://github.com/Alexays/Waybar/wiki/Configuration
-    //
-    // =============================================================================
 
     {
       // -------------------------------------------------------------------------
@@ -143,16 +139,10 @@
     }
   '';
 
+  # Waybar Style configuration
+  #
+  # Ref: https://github.com/Alexays/Waybar/wiki/Configuration
   xdg.configFile."waybar/style.css".text = ''
-    /* =============================================================================
-     *
-     * Waybar configuration
-     *
-     * Configuration reference: https://github.com/Alexays/Waybar/wiki/Configuration
-     *
-     * =============================================================================
-     */
-
     /* -----------------------------------------------------------------------------
      * Keyframes
      * -----------------------------------------------------------------------------
@@ -382,5 +372,51 @@
         output "ViewSonic Corporation VP211b A22050300003" enable
         output "Samsung Electric Company SMS27A350H 0x00007F36" enable
     }
+    '';
+
+  # Config for workstyle
+  #
+  # Format:
+  # "pattern" = "icon"
+  #
+  # The pattern will be used to match against the application name.
+  # The icon will be used to represent that application.
+  #
+  # Note if multiple patterns are present in the same application name,
+  # precedence is given in order of apparition in this file.
+  xdg.configFile."workstyle/config.toml".text = ''
+    "alacritty" = ""
+    "kitty" = ""
+    "github" = ""
+    "rust" = ""
+    "google" = ""
+    "private browsing" = ""
+    "firefox" = ""
+    "thunderbird" = ""
+    "chrome" = ""
+    "file manager" = ""
+    "libreoffice calc" = ""
+    "libreoffice writer" = ""
+    "libreoffice" = ""
+    "bash" = ""
+    "nvim" = ""
+    "gthumb" = ""
+    "menu" = ""
+    "calculator" = ""
+    "transmission" = ""
+    "videostream" = ""
+    "mpv" = ""
+    "music" = ""
+    "disk usage" = ""
+    ".pdf" = ""
+    "remmina" = ""
+    "microsoft teams" = ""
+    "element" = ""
+    "discord" = ""
+    "obsidian" = ""
+    "qutebrowser" = ""
+
+    [other]
+    "fallback_icon" = "🤨"
   '';
 }
