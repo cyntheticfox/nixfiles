@@ -54,9 +54,4 @@ in {
     "$HOME/.local/bin"
     "$HOME/.cargo/bin"
   ];
-
-  home.file.".config" = {
-    source = ../../home/.config;
-    recursive = true;
-  };
 }
