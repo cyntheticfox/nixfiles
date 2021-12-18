@@ -1,4 +1,9 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+let
+  user-bins = {
+    pamixer = "${pkgs.pamixer}/bin/pamixer";
+  };
+in {
   imports = [ ./base-desktop.nix ];
 
   xdg.configFile."sway/config".text = ''
@@ -140,12 +145,12 @@
     bindsym $mod+Shift+e exec $shutdown
 
     # Media key bindings
-    bindsym XF86AudioMute exec pamixer -t
+    bindsym XF86AudioMute exec ${user-bins.pamixer} -t
     bindsym XF86AudioNext exec playerctl next
     bindsym XF86AudioPlay exec playerctl play-pause
     bindsym XF86AudioPrev exec playerctl previous
-    bindsym XF86AudioLowerVolume exec pamixer -d 2
-    bindsym XF86AudioRaiseVolume exec pamixer -i 2
+    bindsym XF86AudioLowerVolume exec ${user-bins.pamixer} -d 2
+    bindsym XF86AudioRaiseVolume exec ${user-bins.pamixer} -i 2
     bindsym XF86AudioStop exec playerctl stop
 
 
