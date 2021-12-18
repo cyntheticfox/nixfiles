@@ -1,9 +1,41 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   user-bins = {
+    kitty = "${pkgs.kitty}/bin/kitty";
+    qutebrowser = "${pkgs.qutebrowser}/bin/qutebrowser";
     pamixer = "${pkgs.pamixer}/bin/pamixer";
     playerctl = "${pkgs.playerctl}/bin/playerctl";
+    swayidle = "${pkgs.swayidle}/bin/swayidle";
+    swaylock = "${pkgs.swaylock-effects}/bin/swaylock";
+    swaymsg = "${pkgs.sway}/bin/swaymsg";
+    wofi = "${pkgs.wofi}/bin/wofi";
+    xargs = "${pkgs.findutils}/bin/xargs";
   };
+  lockscreen = lib.concatStringsSep " " [
+    "${user-bins.swaylock}"
+    "--daemonize"
+    "--show-failed-attempts"
+    "--screenshots"
+    "--clock"
+    "--indicator"
+    "--effect-blur 7x5"
+    "--effect-vignette 0.5:0.5"
+    "--fade-in 0.2"
+  ];
+
+  ### Idle configuration
+  # This will lock your screen after 15 minutes of inactivity, then turn off
+  #   your displays after another minute, and turn your screens back on when
+  #   resumed. It will also lock your screen before your computer goes to sleep.
+  #
+  idle = lib.concatStringsSep " " [
+    "$idle ${user-bins.swayidle} -w "
+    "timeout 900 'exec ${lockscreen}' "
+    "timeout 960 '${user-bins.swaymsg} \"output * dpms off\"' "
+    "resume '${user-bins.swaymsg} \"output * dpms on\"' "
+    "before-sleep '${user-bins.playerctl} pause' "
+    "before-sleep 'exec ${lockscreen}'"
+  ];
 in {
   imports = [ ./base-desktop.nix ];
 
@@ -34,32 +66,18 @@ in {
       set $right l
 
       # Your preferred terminal emulator
-      set $term kitty
+      set $term ${user-bins.kitty}
 
       # Your preferred web browser
-      set $web qutebrowser
+      set $web ${user-bins.qutebrowser}
 
       # Your preferred application launcher
       # Note: pass the final command to swaymsg so that the resulting window can be opened
       #   on the original workspace that the command was run on.
-      set $appmenu wofi --show drun | xargs swaymsg exec --
-      set $menu wofi --show run --exec-search | xargs swaymsg exec --
-
-      set $lockscreen swaylock --daemonize --show-failed-attempts --screenshots --clock --indicator --effect-blur 7x5 --effect-vignette 0.5:0.5 --fade-in 0.2
+      set $appmenu ${user-bins.wofi} --show drun | ${user-bins.xargs} ${user-bins.swaymsg} exec --
+      set $menu ${user-bins.wofi} --show run --exec-search | ${user-bins.xargs} ${user-bins.swaymsg} exec --
 
       set $notifications mako --default-timeout 15000
-
-      ### Idle configuration
-      # This will lock your screen after 15 minutes of inactivity, then turn off
-      #   your displays after another minute, and turn your screens back on when
-      #   resumed. It will also lock your screen before your computer goes to sleep.
-      #
-      set $idle swayidle -w \
-        timeout 900 'exec $lockscreen' \
-        timeout 960 'swaymsg "output * dpms off"' \
-          resume 'swaymsg "output * dpms on"' \
-        before-sleep '${user-bins.playerctl} pause' \
-        before-sleep 'exec $lockscreen'
 
       # statusbar command
       set $statusbar waybar
@@ -96,7 +114,7 @@ in {
       ###########################################################################
 
       # Enable the idle daemon
-      exec $idle
+      exec ${idle}
 
       # Autostart background apps
       exec $notifications
@@ -377,9 +395,9 @@ in {
       }
 
       mode --pango_markup $mode_recording {
-          bindsym w exec killall -s SIGINT wf-recorder || wf-recorder --audio=0 -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') \
+          bindsym w exec killall -s SIGINT wf-recorder || wf-recorder --audio=0 -o $(${user-bins.swaymsg} -t get_outputs | jq -r '.[] | select(.focused) | .name') \
                   -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
-          bindsym Shift+w exec killall -s SIGINT wf-recorder || wf-recorder --audio -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') \
+          bindsym Shift+w exec killall -s SIGINT wf-recorder || wf-recorder --audio -o $(${user-bins.swaymsg} -t get_outputs | jq -r '.[] | select(.focused) | .name') \
                   -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
           bindsym r exec killall -s SIGINT wf-recorder || wf-recorder --audio=0 -g "$(slurp -d)" \
                   -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
@@ -784,7 +802,7 @@ in {
   xdg.configFile."wlogout/layout".text = ''
     {
       "label": "lock",
-      "action": "swaylock --daemonize --show-failed-attempts --clock --indicator",
+      "action": "${lockscreen}",
       "text" : "Lock",
       "keybind": "1"
     }
