@@ -11,6 +11,7 @@ let
     pamixer = "${pkgs.pamixer}/bin/pamixer";
     pkill = "${pkgs.procps}/bin/pkill";
     playerctl = "${pkgs.playerctl}/bin/playerctl";
+    slurp = "${pkgs.slurp}/bin/slurp";
     swayidle = "${pkgs.swayidle}/bin/swayidle";
     swaylock = "${pkgs.swaylock-effects}/bin/swaylock";
     swaymsg = "${pkgs.sway}/bin/swaymsg";
@@ -45,12 +46,20 @@ let
   #   resumed. It will also lock your screen before your computer goes to sleep.
   #
   idle = lib.concatStringsSep " " [
-    "$idle ${user-bins.swayidle} -w "
+    "${user-bins.swayidle} -w "
     "timeout 900 'exec ${lockscreen}' "
     "timeout 960 '${user-bins.swaymsg} \"output * dpms off\"' "
     "resume '${user-bins.swaymsg} \"output * dpms on\"' "
     "before-sleep '${user-bins.playerctl} pause' "
     "before-sleep 'exec ${lockscreen}'"
+  ];
+
+  ### Notifications Configuration
+  # Sets a default timeout of 15 seconds
+  #
+  notifications = lib.concatStringsSep " " [
+    "${user-bins.mako}"
+    "--default-timeout 15000"
   ];
 in {
   imports = [ ./base-desktop.nix ];
@@ -61,380 +70,211 @@ in {
     enable = true;
     wrapperFeatures.gtk = true;
     systemdIntegration = true;
-    config = null;
-    extraConfig = ''
-      ###########################################################################
-      #                                                                         #
-      #                         Sway Variable Definitions                       #
-      #                                                                         #
-      ###########################################################################
+    config =
+    let
+      # Use start/logo key for modifiers
+      modifier = "Mod4";
 
-      ### Variables
-      #
-      # Logo key. Use Mod1 for Alt.
-      # * change modifier key from Alt to Win/Pine-Key: set $mod Mod4
-      set $mod Mod4
-
-      # Home row direction keys, like vim
-      set $left h
-      set $down j
-      set $up k
-      set $right l
-
-      # Your preferred terminal emulator
-      set $term ${user-bins.kitty}
-
-      # Your preferred web browser
-      set $web ${user-bins.qutebrowser}
+      # Use vim-like keybindings
+      left = "h";
+      right = "l";
+      up = "j";
+      down = "k";
 
       # Your preferred application launcher
       # Note: pass the final command to swaymsg so that the resulting window can be opened
       #   on the original workspace that the command was run on.
-      set $appmenu ${user-bins.wofi} --show drun | ${user-bins.xargs} ${user-bins.swaymsg} exec --
-      set $menu ${user-bins.wofi} --show run --exec-search | ${user-bins.xargs} ${user-bins.swaymsg} exec --
+      appmenu = "${user-bins.wofi} --show drun | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
+      menu = "${user-bins.wofi} --show run --exec-search | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
 
-      set $notifications ${user-bins.mako} --default-timeout 15000
+      # Shutdown command
+      shutdown = "${user-bins.wlogout} --buttons-per-row 3";
+    in {
+      inherit modifier left right up down;
 
-      # shutdown command
-      set $shutdown ${user-bins.wlogout} --buttons-per-row 3
+      # Set the terminal
+      terminal = user-bins.kitty;
 
-      ###########################################################################
-      #                                                                         #
-      #                         Sway Input Configurations                       #
-      #                                                                         #
-      ###########################################################################
+      # Use some of the default keybindings
+      keybindings = lib.mkOptionDefault {
+        # Media key bindings
+        "XF86AudioMute" = "exec ${user-bins.pamixer} -t";
+        "XF86AudioNext" = "exec ${user-bins.playerctl} next";
+        "XF86AudioPlay" = "exec ${user-bins.playerctl} play-pause";
+        "XF86AudioPrev" = "exec ${user-bins.playerctl} previous";
+        "XF86AudioLowerVolume" = "exec ${user-bins.pamixer} -d 2";
+        "XF86AudioRaiseVolume" = "exec ${user-bins.pamixer} -i 2";
+        "XF86AudioStop" = "exec ${user-bins.playerctl} stop";
 
-      # Default keyboard configuration
-      input type:keyboard {
-        xkb_layout "us"
-        xkb_numlock enabled
-      }
+        # Screen brightness bindings
+        "XF86MonBrightnessDown" = "exec ${user-bins.light} -U 5";
+        "XF86MonBrightnessUp" = "exec ${user-bins.light} -A 5";
 
-      # Touchpad configuration (if using a laptop)
-      input type:touchpad {
-        accel_profile flat
-        pointer_accel 1
+        # Capture PowerOff key
+        "XF86PowerOff" = "exec ${shutdown}";
 
-        dwt enabled
-        tap enabled
-        natural_scroll disabled
-      }
+        # Redefine menu bindings
+        "${modifier}+d" = "exec ${appmenu}";
+        "${modifier}+Shift+d" = "exec ${menu}";
 
-      ###########################################################################
-      #                                                                         #
-      #                         Sway Startup Configurations                     #
-      #                                                                         #
-      ###########################################################################
+        # Define our own shutdown command
+        "${modifier}+Shift+e" = "exec ${shutdown}";
 
-      # Enable the idle daemon
-      exec ${idle}
+        # Move workspaces with ctrl+mod
+        "${modifier}+Ctrl+${left}" = "workspace prev";
+        "${modifier}+Ctrl+${right}" = "workspace next";
+        "${modifier}+Ctrl+Left" = "workspace prev";
+        "${modifier}+Ctrl+Right" = "workspace next";
 
-      # Autostart background apps
-      exec $notifications
+        # Move focused container to workspace
+        "${modifier}+Ctrl+Shift+${left}" = "move container to workspace prev";
+        "${modifier}+Ctrl+Shift+${right}" = "move container to workspace next";
+        "${modifier}+Ctrl+Shift+Left" = "move container to workspace prev";
+        "${modifier}+Ctrl+Shift+Right" = "move container to workspace next";
 
-      # Run if-exists
-      exec_always {
-          '[ -x "$(command -v workstyle)" ] && ${user-bins.pkill} workstyle; ${user-bins.workstyle} &> ${config.home.sessionVariables."XDG_RUNTIME_DIR"}/workstyle.log'
-      }
+        # Allow loading web browser with $modifier+a
+        "${modifier}+a" = "exec ${user-bins.qutebrowser}";
 
+        # Create a binding for the lock screen. Something close to $modifier+l
+        "${modifier}+o" = "exec ${lockscreen}";
+
+        # Create bindings for modes
+        "${modifier}+r" = "mode \"resize\"";
+        "${modifier}+Shift+s" = "mode \"screenshot\"";
+        "${modifier}+Shift+r" = "mode \"recording\"";
+      };
+
+      input = {
+        "type:keyboard" = {
+          xkb_layout = "us";
+          xkb_numlock = "enabled";
+        };
+
+        "type:touchpad" = {
+          accel_profile = "flat";
+          pointer_accel = "1";
+
+          dwt = "enabled";
+          tap = "enabled";
+          natural_scroll = "disabled";
+        };
+      };
+
+      startup = [
+        { command = "${idle}"; }
+        { command = "${notifications}"; }
+        {
+          command = "[ -x \"$(command -v workstyle)\" ] && ${user-bins.pkill} workstyle; ${user-bins.workstyle} &> ${config.home.sessionVariables."XDG_RUNTIME_DIR"}/workstyle.log";
+          always = true;
+        }
+      ];
+
+      bars = [{
+        fonts = {
+          names = [ "FontAwesome5Free" "Noto Sans" "Roboto" "sans-serif" ];
+          style = "Bold Semi-Condensed";
+          size = 11.0;
+        };
+        position = "top";
+        command = "${user-bins.waybar}";
+      }];
+
+      window = {
+        border = 1;
+        hideEdgeBorders = "smart";
+      };
+
+      modes = {
+        resize =
+        let
+          small = "10px";
+          large = "20px";
+        in {
+          # left will shrink the containers width
+          # right will grow the containers width
+          # up will shrink the containers height
+          # down will grow the containers height
+          "${left}" = "resize shrink width ${small}";
+          "${down}" = "resize grow height ${small}";
+          "${up}" = "resize shrink height ${small}";
+          "${right}" = "resize grow width ${small}";
+          "Shift+${left}" = "resize shrink width ${large}";
+          "Shift+${down}" = "resize grow height ${large}";
+          "Shift+${up}" = "resize shrink height ${large}";
+          "Shift+${right}" = "resize grow width ${large}";
+
+          # Ditto, with arrow keys
+          "Left" = "resize shrink width ${small}";
+          "Down" = "resize grow height ${small}";
+          "Up" = "resize shrink height ${small}";
+          "Right" = "resize grow width ${small}";
+          "Shift+Left" = "resize shrink width ${large}";
+          "Shift+Down" = "resize grow height ${large}";
+          "Shift+Up" = "resize shrink height ${large}";
+          "Shift+Right" = "resize grow width ${large}";
+
+          ## Resize // Window Gaps // + - ##
+          "minus" = "gaps inner current minus 5px";
+          "plus" = "gaps inner current plus 5px";
+
+          # Return to default mode
+          "Return" = "mode \"default\"";
+          "Escape" = "mode \"default\"";
+        };
+
+        screenshot =
+        let
+          exit-mode = "mode \"default\"";
+          screenshot-file = "${config.xdg.userDirs.pictures}/screenshot-$(${pkgs.coreutils}/bin/date +'%Y-%m-%d-%H%M%S').png";
+        in {
+          # Fullscreen screenshot
+          "f" =  "exec --no-startup-id ${user-bins.grimshot} --notify copy screen, ${exit-mode}";
+          "Shift+f" = "exec --no-startup-id ${user-bins.grimshot} --notify save screen ${screenshot-file}, ${exit-mode}";
+
+          # Window screenshot
+          "w" = "exec --no-startup-id ${user-bins.grimshot} --notify copy win, ${exit-mode}";
+          "Shift+w" = "exec --no-startup-id ${user-bins.grimshot} --notify save win ${screenshot-file}, ${exit-mode}";
+
+          # Region screenshot
+          "r" = "exec --no-startup-id ${user-bins.grimshot} --notify copy area, ${exit-mode}";
+          "Shift+r" = "exec --no-startup-id ${user-bins.grimshot} --notify save area ${screenshot-file}, ${exit-mode}";
+
+          # Return to default mode.
+          "Escape"  = exit-mode;
+          "Return" =  exit-mode;
+        };
+
+        recording_on = {
+          "Escape" = "exec ${user-bins.pkill} wf-recorder, mode \"default\"";
+        };
+
+        recording =
+        let
+          exit-mode = "mode \"default\"";
+          recording-mode = "mode \"recording_on\"";
+          recording-file = "${config.xdg.userDirs.videos}/recording-$(${pkgs.coreutils}/bin/date +'%Y-%m-%d-%H%M%S').mp4";
+          subcommand = "${user-bins.swaymsg} -t get_outputs | ${user-bins.jq} -r '.[] | select(.focused) | .name'";
+        in {
+          # Window recording
+          "w" = "exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio=0 -o $(${subcommand}) -f ${recording-file}, ${recording-mode}";
+          "Shift+w" = "exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio -o $(${subcommand}) -f ${recording-file}, ${recording-mode}";
+
+          # Region recording w/ Slurp
+          "r" = "exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio=0 -g \"$(${user-bins.slurp} -d)\" -f ${recording-file}, ${recording-mode}";
+          "Shift+r" = "exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio -g \"$(${user-bins.slurp} -d)\" -f ${recording-file}, ${recording-mode}";
+
+          # Return to default mode.
+          "Escape" = exit-mode;
+          "Return" = exit-mode;
+        };
+      };
+    };
+
+    extraConfig = ''
       # https://github.com/Alexays/Waybar/issues/1093#issuecomment-841846291
       # exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
       # exec hash dbus-update-activation-environment 2>/dev/null && \
       #     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
-
-      ###########################################################################
-      #                                                                         #
-      #                         Sway Mode Configurations                        #
-      #                                                                         #
-      ###########################################################################
-
-      #\                               /#
-      # |  Default Mode Configuration | #
-      #/                               \#
-
-      ### Key bindings
-      #
-      # Basics:
-      #
-      # Start a terminal
-      bindsym $mod+Return exec $term
-
-      # Kill focused window
-      bindsym $mod+Shift+q kill
-
-      # Start your launcher
-      bindsym $mod+d exec $appmenu
-      bindsym $mod+Shift+d exec $menu
-      bindsym $mod+Ctrl+d exec $selwin
-      bindsym $mod+question exec $help
-
-      # Drag floating windows by holding down $mod and left mouse button.
-      # Resize them with right mouse button + $mod.
-      # Despite the name, also works for non-floating windows.
-      # Change normal to inverse to use left mouse button for resizing and right
-      # mouse button for dragging.
-      floating_modifier $mod normal
-
-      # Reload the configuration file
-      bindsym $mod+Shift+c reload
-
-      # Exit sway (logs you out of your Wayland session)
-      bindsym $mod+Shift+e exec $shutdown
-
-      # Media key bindings
-      bindsym XF86AudioMute exec ${user-bins.pamixer} -t
-      bindsym XF86AudioNext exec ${user-bins.playerctl} next
-      bindsym XF86AudioPlay exec ${user-bins.playerctl} play-pause
-      bindsym XF86AudioPrev exec ${user-bins.playerctl} previous
-      bindsym XF86AudioLowerVolume exec ${user-bins.pamixer} -d 2
-      bindsym XF86AudioRaiseVolume exec ${user-bins.pamixer} -i 2
-      bindsym XF86AudioStop exec ${user-bins.playerctl} stop
-
-
-      # Screen brightness bindings
-      bindsym XF86MonBrightnessDown exec ${user-bins.light} -U 5
-      bindsym XF86MonBrightnessUp exec ${user-bins.light} -A 5
-
-      # capture PowerOff key
-      bindsym XF86PowerOff exec $shutdown
-
-      #
-      # Moving around:
-      #
-      # Move your focus around
-      bindsym $mod+$left focus left
-      bindsym $mod+$down focus down
-      bindsym $mod+$up focus up
-      bindsym $mod+$right focus right
-      # Or use $mod+[up|down|left|right]
-      bindsym $mod+Left focus left
-      bindsym $mod+Down focus down
-      bindsym $mod+Up focus up
-      bindsym $mod+Right focus right
-
-      # Move the focused window with the same, but add Shift
-      bindsym $mod+Shift+$left move left
-      bindsym $mod+Shift+$down move down
-      bindsym $mod+Shift+$up move up
-      bindsym $mod+Shift+$right move right
-      # Ditto, with arrow keys
-      bindsym $mod+Shift+Left move left
-      bindsym $mod+Shift+Down move down
-      bindsym $mod+Shift+Up move up
-      bindsym $mod+Shift+Right move right
-
-      #
-      # Workspaces:
-      #
-      # Switch to workspace
-      bindsym $mod+1 workspace number 1
-      bindsym $mod+KP_1 workspace number 1
-      bindsym $mod+2 workspace number 2
-      bindsym $mod+KP_2 workspace number 2
-      bindsym $mod+3 workspace number 3
-      bindsym $mod+KP_3 workspace number 3
-      bindsym $mod+4 workspace number 4
-      bindsym $mod+KP_4 workspace number 4
-      bindsym $mod+5 workspace number 5
-      bindsym $mod+KP_5 workspace number 5
-      bindsym $mod+6 workspace number 6
-      bindsym $mod+KP_6 workspace number 6
-      bindsym $mod+7 workspace number 7
-      bindsym $mod+KP_7 workspace number 7
-      bindsym $mod+8 workspace number 8
-      bindsym $mod+KP_8 workspace number 8
-      bindsym $mod+9 workspace number 9
-      bindsym $mod+KP_9 workspace number 9
-      bindsym $mod+0 workspace number 10
-      bindsym $mod+KP_0 workspace number 10
-
-      # Move workspaces with ctrl+mod
-      bindsym $mod+Ctrl+$left workspace prev
-      bindsym $mod+Ctrl+$right workspace next
-      bindsym $mod+Ctrl+Left workspace prev
-      bindsym $mod+Ctrl+Right workspace next
-
-      # Move focused container to workspace
-      bindsym $mod+Shift+1 move container to workspace number 1
-      bindsym $mod+Shift+2 move container to workspace number 2
-      bindsym $mod+Shift+3 move container to workspace number 3
-      bindsym $mod+Shift+4 move container to workspace number 4
-      bindsym $mod+Shift+5 move container to workspace number 5
-      bindsym $mod+Shift+6 move container to workspace number 6
-      bindsym $mod+Shift+7 move container to workspace number 7
-      bindsym $mod+Shift+8 move container to workspace number 8
-      bindsym $mod+Shift+9 move container to workspace number 9
-      bindsym $mod+Shift+0 move container to workspace number 10
-
-      bindsym $mod+Ctrl+Shift+$left move container to workspace prev
-      bindsym $mod+Ctrl+Shift+$right move container to workspace next
-      bindsym $mod+Ctrl+Shift+Left move container to workspace prev
-      bindsym $mod+Ctrl+Shift+Right move container to workspace next
-
-      # Note: workspaces can have any name you want, not just numbers.
-      # We just use 1-10 as the default.
-
-      #
-      # Layout stuff:
-      #
-      # You can "split" the current object of your focus with
-      # $mod+b or $mod+v, for horizontal and vertical splits
-      # respectively.
-      bindsym $mod+b splith
-      bindsym $mod+v splitv
-
-      # Switch the current container between different layout styles
-      bindsym $mod+s layout stacking
-      bindsym $mod+w layout tabbed
-      bindsym $mod+e layout toggle split
-
-      # Make the current focus fullscreen
-      bindsym $mod+f fullscreen
-
-      # Toggle the current focus between tiling and floating mode
-      bindsym $mod+Shift+space floating toggle
-
-      # Swap focus between the tiling area and the floating area
-      bindsym $mod+space focus mode_toggle
-
-      # Move focus to the parent container
-      bindsym $mod+a exec $web
-
-      # Create a lockscreen bind
-      bindsym $mod+o exec $lockscreen
-
-      default_border pixel 1
-      hide_edge_borders smart
-
-      #
-      # Status Bar:
-      #
-      # Read `man 5 sway-bar` for more information about this section.
-      bar {
-        position top
-
-        # Run waybar instead of swaybar
-        swaybar_command ${user-bins.waybar}
-      }
-
-      #\                               /#
-      # |  Resize Mode Configuration  | #
-      #/                               \#
-
-      set $mode_resize "<span foreground='$base0A'></span>  \
-        <span foreground='$base05'><b>Resize</b></span> <span foreground='$base0A'>(<b>h/j/k/l</b>)</span> \
-        <span foreground='$base01'>—</span> \
-        <span foreground='$base05'><b>Increase Gaps</b></span> <span foreground='$base0A'>(<b>+</b>)</span> \
-        <span foreground='$base01'>—</span> \
-        <span foreground='$base05'><b>Decrease Gaps</b></span> <span foreground='$base0A'>(<b>-</b>)</span>"
-
-      mode --pango_markup $mode_resize {
-        # left will shrink the containers width
-        # right will grow the containers width
-        # up will shrink the containers height
-        # down will grow the containers height
-        bindsym $left resize shrink width 10px
-        bindsym $down resize grow height 10px
-        bindsym $up resize shrink height 10px
-        bindsym $right resize grow width 10px
-        bindsym Shift+$left resize shrink width 20px
-        bindsym Shift+$down resize grow height 20px
-        bindsym Shift+$up resize shrink height 20px
-        bindsym Shift+$right resize grow width 20px
-
-        # Ditto, with arrow keys
-        bindsym Left resize shrink width 10px
-        bindsym Down resize grow height 10px
-        bindsym Up resize shrink height 10px
-        bindsym Right resize grow width 10px
-        bindsym Shift+Left resize shrink width 20px
-        bindsym Shift+Down resize grow height 20px
-        bindsym Shift+Up resize shrink height 20px
-        bindsym Shift+Right resize grow width 20px
-
-        ## Resize // Window Gaps // + - ##
-        bindsym minus gaps inner current minus 5px
-        bindsym plus gaps inner current plus 5px
-
-        # Return to default mode
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-      }
-      bindsym $mod+r mode $mode_resize
-
-      #\                                   /#
-      # |  Screenshot Mode Configuration  | #
-      #/                                   \#
-
-      set $mode_screenshot "<span foreground='$base0A'></span>  \
-        <span foreground='$base05'><b>Fullscreen</b></span> <span foreground='$base0A'>(<b>f</b>)</span> \
-        <span foreground='$base01'>—</span> \
-        <span foreground='$base05'><b>Window</b></span> <span foreground='$base0A'>(<b>w</b>)</span> \
-        <span foreground='$base01'>—</span> \
-        <span foreground='$base05'><b>Region</b></span> <span foreground='$base0A'>(<b>r</b>)</span>"
-
-      mode --pango_markup $mode_screenshot {
-        bindsym f exec --no-startup-id ${user-bins.grimshot} --notify copy screen, mode "default"
-        bindsym Shift+f exec --no-startup-id ${user-bins.grimshot} --notify save screen ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
-        bindsym w exec --no-startup-id ${user-bins.grimshot} --notify copy win, mode "default"
-        bindsym Shift+w exec --no-startup-id ${user-bins.grimshot} --notify save win ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
-        bindsym r exec --no-startup-id grimshot --notify copy area, mode "default"
-        bindsym Shift+r exec --no-startup-id ${user-bins.grimshot} --notify save area ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
-
-        # Return to default mode.
-        bindsym Escape mode "default"
-        bindsym Return mode "default"
-      }
-      bindsym $mod+Shift+s mode $mode_screenshot
-
-      #\                                  /#
-      # |  Recording Mode Configuration  | #
-      #/                                  \#
-
-      set $mode_recording "<span foreground='$base0A'>雷</span>  \
-      <span foreground='$base05'><b>Screen</b></span> <span foreground='$base0A'>(<b>w</b>)</span> \
-      <span foreground='$base01'>—</span> \
-      <span foreground='$base05'><b>Screen (+ Mic)</b></span> <span foreground='$base0A'>(<b>Shift+w</b>)</span> \
-      <span foreground='$base01'>—</span> \
-      <span foreground='$base05'><b>Region</b></span> <span foreground='$base0A'>(<b>r</b>)</span> \
-      <span foreground='$base01'>—</span> \
-      <span foreground='$base05'><b>Region (+ Mic)</b></span> <span foreground='$base0A'>(<b>Shift+r</b>)</span>"
-
-      set $mode_recording_on "<span foreground='$base0A'>壘</span>  \
-      <span foreground='$base05'><b>Exit</b></span> <span foreground='$base0A'>(<b>ESC</b>)</span>"
-
-      mode --pango_markup $mode_recording_on {
-          bindsym Escape exec ${user-bins.pkill} wf-recorder, mode "default"
-      }
-
-      mode --pango_markup $mode_recording {
-          bindsym w exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio=0 -o $(${user-bins.swaymsg} -t get_outputs | ${user-bins.jq} -r '.[] | select(.focused) | .name') \
-                  -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
-          bindsym Shift+w exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio -o $(${user-bins.swaymsg} -t get_outputs | ${user-bins.jq} -r '.[] | select(.focused) | .name') \
-                  -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
-          bindsym r exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio=0 -g "$(slurp -d)" \
-                  -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
-          bindsym Shift+r exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio -g "$(slurp -d)" \
-                  -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
-
-          # Return to default mode.
-          bindsym Escape mode "default"
-          bindsym Return mode "default"
-      }
-      bindsym $mod+Shift+r mode $mode_recording
-
-      #
-      # Scratchpad:
-      #
-      # Sway has a "scratchpad", which is a bag of holding for windows.
-      # You can send windows there and get them back later.
-
-      # Move the currently focused window to the scratchpad
-      bindsym $mod+Shift+minus move scratchpad
-
-      # Show the next scratchpad window or hide the focused scratchpad window.
-      # If there are multiple scratchpad windows, this command cycles through them.
-      bindsym $mod+minus scratchpad show
 
       ###########################################################################
       #                                                                         #
