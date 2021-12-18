@@ -1,16 +1,32 @@
 { config, pkgs, lib, ... }:
 let
   user-bins = {
+    grimshot = "${pkgs.sway-contrib.grimshot}/bin/grimshot";
+    jq = "${pkgs.jq}/bin/jq";
     kitty = "${pkgs.kitty}/bin/kitty";
+    light = "${pkgs.light}/bin/light";
+    loginctl = "${pkgs.systemd}/bin/loginctl";
+    mako = "${pkgs.mako}/bin/mako";
     qutebrowser = "${pkgs.qutebrowser}/bin/qutebrowser";
     pamixer = "${pkgs.pamixer}/bin/pamixer";
+    pkill = "${pkgs.procps}/bin/pkill";
     playerctl = "${pkgs.playerctl}/bin/playerctl";
     swayidle = "${pkgs.swayidle}/bin/swayidle";
     swaylock = "${pkgs.swaylock-effects}/bin/swaylock";
     swaymsg = "${pkgs.sway}/bin/swaymsg";
+    systemctl = "${pkgs.systemd}/bin/systemd";
+    waybar = "${pkgs.waybar}/bin/waybar";
+    wf-recorder = "${pkgs.wf-recorder}/bin/wf-recorder";
+    wlogout = "${pkgs.wlogout}/bin/wlogout";
     wofi = "${pkgs.wofi}/bin/wofi";
+    workstyle = "${pkgs.workstyle}/bin/workstyle";
     xargs = "${pkgs.findutils}/bin/xargs";
   };
+
+  ### Lockscreen Configuration
+  # This will configure how your screen looks when you lock it, setting the
+  #   colors, effects, indicators, and fade.
+  #
   lockscreen = lib.concatStringsSep " " [
     "${user-bins.swaylock}"
     "--daemonize"
@@ -23,7 +39,7 @@ let
     "--fade-in 0.2"
   ];
 
-  ### Idle configuration
+  ### Idle Configuration
   # This will lock your screen after 15 minutes of inactivity, then turn off
   #   your displays after another minute, and turn your screens back on when
   #   resumed. It will also lock your screen before your computer goes to sleep.
@@ -77,13 +93,10 @@ in {
       set $appmenu ${user-bins.wofi} --show drun | ${user-bins.xargs} ${user-bins.swaymsg} exec --
       set $menu ${user-bins.wofi} --show run --exec-search | ${user-bins.xargs} ${user-bins.swaymsg} exec --
 
-      set $notifications mako --default-timeout 15000
-
-      # statusbar command
-      set $statusbar waybar
+      set $notifications ${user-bins.mako} --default-timeout 15000
 
       # shutdown command
-      set $shutdown wlogout --buttons-per-row 3
+      set $shutdown ${user-bins.wlogout} --buttons-per-row 3
 
       ###########################################################################
       #                                                                         #
@@ -121,13 +134,13 @@ in {
 
       # Run if-exists
       exec_always {
-          '[ -x "$(command -v workstyle)" ] && pkill workstyle; workstyle &> ~/tmp/workstyle.log'
+          '[ -x "$(command -v workstyle)" ] && ${user-bins.pkill} workstyle; ${user-bins.workstyle} &> ${config.home.sessionVariables."XDG_RUNTIME_DIR"}/workstyle.log'
       }
 
       # https://github.com/Alexays/Waybar/issues/1093#issuecomment-841846291
-      exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
-      exec hash dbus-update-activation-environment 2>/dev/null && \
-          dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+      # exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+      # exec hash dbus-update-activation-environment 2>/dev/null && \
+      #     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
 
       ###########################################################################
       #                                                                         #
@@ -179,8 +192,8 @@ in {
 
 
       # Screen brightness bindings
-      bindsym XF86MonBrightnessDown exec light -U 5
-      bindsym XF86MonBrightnessUp exec light -A 5
+      bindsym XF86MonBrightnessDown exec ${user-bins.light} -U 5
+      bindsym XF86MonBrightnessUp exec ${user-bins.light} -A 5
 
       # capture PowerOff key
       bindsym XF86PowerOff exec $shutdown
@@ -301,7 +314,7 @@ in {
         position top
 
         # Run waybar instead of swaybar
-        swaybar_command $statusbar
+        swaybar_command ${user-bins.waybar}
       }
 
       #\                               /#
@@ -361,12 +374,12 @@ in {
         <span foreground='$base05'><b>Region</b></span> <span foreground='$base0A'>(<b>r</b>)</span>"
 
       mode --pango_markup $mode_screenshot {
-        bindsym f exec --no-startup-id grimshot --notify copy screen, mode "default"
-        bindsym Shift+f exec --no-startup-id grimshot --notify save screen ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
-        bindsym w exec --no-startup-id grimshot --notify copy win, mode "default"
-        bindsym Shift+w exec --no-startup-id grimshot --notify save win ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
+        bindsym f exec --no-startup-id ${user-bins.grimshot} --notify copy screen, mode "default"
+        bindsym Shift+f exec --no-startup-id ${user-bins.grimshot} --notify save screen ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
+        bindsym w exec --no-startup-id ${user-bins.grimshot} --notify copy win, mode "default"
+        bindsym Shift+w exec --no-startup-id ${user-bins.grimshot} --notify save win ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
         bindsym r exec --no-startup-id grimshot --notify copy area, mode "default"
-        bindsym Shift+r exec --no-startup-id grimshot --notify save area ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
+        bindsym Shift+r exec --no-startup-id ${user-bins.grimshot} --notify save area ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
 
         # Return to default mode.
         bindsym Escape mode "default"
@@ -391,17 +404,17 @@ in {
       <span foreground='$base05'><b>Exit</b></span> <span foreground='$base0A'>(<b>ESC</b>)</span>"
 
       mode --pango_markup $mode_recording_on {
-          bindsym Escape exec killall -s SIGINT wf-recorder, mode "default"
+          bindsym Escape exec ${user-bins.pkill} wf-recorder, mode "default"
       }
 
       mode --pango_markup $mode_recording {
-          bindsym w exec killall -s SIGINT wf-recorder || wf-recorder --audio=0 -o $(${user-bins.swaymsg} -t get_outputs | jq -r '.[] | select(.focused) | .name') \
+          bindsym w exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio=0 -o $(${user-bins.swaymsg} -t get_outputs | ${user-bins.jq} -r '.[] | select(.focused) | .name') \
                   -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
-          bindsym Shift+w exec killall -s SIGINT wf-recorder || wf-recorder --audio -o $(${user-bins.swaymsg} -t get_outputs | jq -r '.[] | select(.focused) | .name') \
+          bindsym Shift+w exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio -o $(${user-bins.swaymsg} -t get_outputs | ${user-bins.jq} -r '.[] | select(.focused) | .name') \
                   -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
-          bindsym r exec killall -s SIGINT wf-recorder || wf-recorder --audio=0 -g "$(slurp -d)" \
+          bindsym r exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio=0 -g "$(slurp -d)" \
                   -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
-          bindsym Shift+r exec killall -s SIGINT wf-recorder || wf-recorder --audio -g "$(slurp -d)" \
+          bindsym Shift+r exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio -g "$(slurp -d)" \
                   -f ~/Videos/recording-$(date +'%Y-%m-%d-%H%M%S').mp4, mode $mode_recording_on
 
           # Return to default mode.
@@ -539,7 +552,7 @@ in {
         "interval": 60,
         "format": "  {:%e %b %Y %H:%M}", // Icon: calendar-alt
         "tooltip": false,
-        "on-click": "wlogout"
+        "on-click": "${user-bins.wlogout}"
       },
 
       "cpu": {
@@ -566,7 +579,6 @@ in {
         "format-ethernet": "  {ifname}: {ipaddr}/{cidr}", // Icon: ethernet
         "format-disconnected": "⚠  Disconnected",
         "tooltip-format": "{ifname}: {ipaddr}",
-        "on-click": "nm-connection-editor"
       },
 
       "sway/mode": {
@@ -588,8 +600,8 @@ in {
       "backlight": {
         "format": "{icon} {percent}%",
         "format-icons": ["", ""],
-        "on-scroll-down": "light -A 1",
-        "on-scroll-up": "light -U 1"
+        "on-scroll-down": "${user-bins.light} -A 5",
+        "on-scroll-up": "${user-bins.light} -U 5"
       },
 
       "pulseaudio": {
@@ -606,7 +618,10 @@ in {
           "car": "",
           "default": ["", ""]
         },
+        "on-scroll-down": "${user-bins.pamixer} -d 2",
+        "on-scroll-up": "${user-bins.pamixer} -i 2",
         "on-click": "pavucontrol"
+
       },
 
       "tray": {
@@ -808,31 +823,31 @@ in {
     }
     {
       "label": "hibernate",
-      "action": "systemctl hibernate",
+      "action": "${user-bins.systemctl} hibernate",
       "text": "Hibernate",
       "keybind": "h"
     }
     {
       "label": "logout",
-      "action": "loginctl terminate-user $USER",
+      "action": "${user-bins.loginctl} terminate-user $USER",
       "text": "Logout",
       "keybind": "e"
     }
     {
       "label" : "shutdown",
-      "action" : "systemctl poweroff",
+      "action" : "${user-bins.systemctl} poweroff",
       "text" : "Shutdown",
       "keybind" : "s"
     }
     {
       "label" : "suspend",
-      "action" : "systemctl suspend",
+      "action" : "${user-bins.systemctl} suspend",
       "text" : "Suspend",
       "keybind" : "u"
     }
     {
       "label" : "reboot",
-      "action" : "systemctl reboot",
+      "action" : "${user-bins.systemctl} reboot",
       "text" : "Reboot",
       "keybind" : "r"
     }
