@@ -75,15 +75,28 @@
   };
 
   hardware.opengl.extraPackages = with pkgs; [
-    vaapiIntel
     intel-media-driver
+    intel-ocl
+    libvdpau-va-gl
+    vaapiIntel
+    vaapiVdpau
   ];
+
+  # Support Xbox One Controller
+  hardware.xpadneo.enable = true;
+
+  # Support Corsiar Keyboard
+  hardware.ckb-next.enable = true;
+
+  # Support ZSA Keyboard
+  hardware.keyboard.zsa.enable = true;
 
   environment.systemPackages = with pkgs; [
     cifs-utils
     htop
     nixos-grub2-theme
     nixos-icons
+    wally-cli
   ];
 
   programs = {

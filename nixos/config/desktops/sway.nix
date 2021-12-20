@@ -67,6 +67,8 @@ in
 
   programs.light.enable = true;
 
+  gtk.iconCache.enable = true;
+
   qt5 = {
     enable = true;
     style = "adwaita-dark";

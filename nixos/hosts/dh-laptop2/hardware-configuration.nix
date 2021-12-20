@@ -79,6 +79,7 @@
 
   hardware.enableRedistributableFirmware = true;
   hardware.cpu.intel.updateMicrocode = true;
+  hardware.cpu.intel.sgx.provision.enable = true;
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "schedutil";
 }
