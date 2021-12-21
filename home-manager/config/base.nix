@@ -24,6 +24,7 @@ in {
 
   home.packages = with pkgs; [
     smbclient
+    nix-index
     mtr
     traceroute
   ];
@@ -44,9 +45,6 @@ in {
     # Set more user information
     "EMAIL" = personal_email;
     "GITHUB_USER" = personal_github;
-
-    # Set runtime dir
-    "XDG_RUNTIME_DIR" = "$HOME/tmp";
   };
 
   home.sessionPath = [
