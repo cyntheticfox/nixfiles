@@ -36,6 +36,7 @@ in
       # Util
       grim
       imv
+      jq
       kanshi
       mako
       pavucontrol
@@ -51,19 +52,22 @@ in
       wl-clipboard
       wlogout
       wofi
-      workstyle
       xwayland
     ];
 
     extraSessionCommands = ''
       export SDL_VIDEODRIVER=wayland
-      export QT_QPA_PLATFORM=wayland
+      export QT_QPA_PLATFORM=wayland-egl
       export WLR_NO_HARDWARE_CURSORS=1
       export XDG_SESSION_TYPE=wayland
     '';
   };
 
-  xdg.portal.enable = true;
+  xdg.portal = {
+    enable = true;
+    gtkUsePortal = true;
+    extraPortals = with pkgs; [ xdg-desktop-portal-wlr ];
+  };
 
   programs.light.enable = true;
 

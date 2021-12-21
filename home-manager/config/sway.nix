@@ -1,5 +1,10 @@
 { config, pkgs, lib, ... }:
 let
+  screens = {
+    builtin = "eDP-1";
+    main = "Samsung Electric Company SMS27A350H 0x00007F36";
+    sub = "ViewSonic Corporation VP211b A22050300003";
+  };
   user-bins = {
     grimshot = "${pkgs.sway-contrib.grimshot}/bin/grimshot";
     jq = "${pkgs.jq}/bin/jq";
@@ -20,7 +25,6 @@ let
     wf-recorder = "${pkgs.wf-recorder}/bin/wf-recorder";
     wlogout = "${pkgs.wlogout}/bin/wlogout";
     wofi = "${pkgs.wofi}/bin/wofi";
-    workstyle = "${pkgs.workstyle}/bin/workstyle";
     xargs = "${pkgs.findutils}/bin/xargs";
   };
 
@@ -61,6 +65,21 @@ let
     "${user-bins.mako}"
     "--default-timeout 15000"
   ];
+
+  ### Workspace Configuration
+  # Set a name for workspaces
+  #
+  workspaces = {
+    _1 = "1:   Web";
+    _2 = "2:   Teams";
+    _3 = "3:   Element";
+    _4 = "4:   Discord";
+    _5 = "5:   Email";
+    _6 = "6:   Etc 1";
+    _7 = "7:   Etc 2";
+    _8 = "8:   Etc 3";
+    _9 = "9:   Etc 4";
+  };
 in {
   imports = [ ./base-desktop.nix ];
 
@@ -120,6 +139,27 @@ in {
         # Define our own shutdown command
         "${modifier}+Shift+e" = "exec ${shutdown}";
 
+        # Define our own workspace switchers
+        "${modifier}+1" = "workspace \"${workspaces._1}\"";
+        "${modifier}+2" = "workspace \"${workspaces._2}\"";
+        "${modifier}+3" = "workspace \"${workspaces._3}\"";
+        "${modifier}+4" = "workspace \"${workspaces._4}\"";
+        "${modifier}+5" = "workspace \"${workspaces._5}\"";
+        "${modifier}+6" = "workspace \"${workspaces._6}\"";
+        "${modifier}+7" = "workspace \"${workspaces._7}\"";
+        "${modifier}+8" = "workspace \"${workspaces._8}\"";
+        "${modifier}+9" = "workspace \"${workspaces._9}\"";
+
+        "${modifier}+Shift+1" = "move container to workspace \"${workspaces._1}\"";
+        "${modifier}+Shift+2" = "move container to workspace \"${workspaces._2}\"";
+        "${modifier}+Shift+3" = "move container to workspace \"${workspaces._3}\"";
+        "${modifier}+Shift+4" = "move container to workspace \"${workspaces._4}\"";
+        "${modifier}+Shift+5" = "move container to workspace \"${workspaces._5}\"";
+        "${modifier}+Shift+6" = "move container to workspace \"${workspaces._6}\"";
+        "${modifier}+Shift+7" = "move container to workspace \"${workspaces._7}\"";
+        "${modifier}+Shift+8" = "move container to workspace \"${workspaces._8}\"";
+        "${modifier}+Shift+9" = "move container to workspace \"${workspaces._9}\"";
+
         # Move workspaces with ctrl+mod
         "${modifier}+Ctrl+${left}" = "workspace prev";
         "${modifier}+Ctrl+${right}" = "workspace next";
@@ -163,10 +203,9 @@ in {
       startup = [
         { command = "${idle}"; }
         { command = "${notifications}"; }
-        {
-          command = "[ -x \"$(command -v workstyle)\" ] && ${user-bins.pkill} workstyle; ${user-bins.workstyle} &> ${config.home.sessionVariables."XDG_RUNTIME_DIR"}/workstyle.log";
-          always = true;
-        }
+        { command = "${user-bins.qutebrowser}"; }
+        { command = "${pkgs.teams}/bin/teams"; }
+        { command = "${pkgs.element-desktop-wayland}/bin/element-desktop"; }
       ];
 
       bars = [{
@@ -271,6 +310,17 @@ in {
     };
 
     extraConfig = ''
+      # Default to outputting some workspaces on other monitors if available
+      workspace "${workspaces._1}" output "${screens.main}" "${screens.sub}" "${screens.builtin}"
+      workspace "${workspaces._2}" output "${screens.sub}" "${screens.builtin}"
+      workspace "${workspaces._3}" output "${screens.sub}" "${screens.builtin}"
+      workspace "${workspaces._4}" output "${screens.sub}" "${screens.builtin}"
+      workspace "${workspaces._5}" output "${screens.main}" "${screens.sub}" "${screens.builtin}"
+      workspace "${workspaces._6}" output "${screens.main}" "${screens.sub}" "${screens.builtin}"
+      workspace "${workspaces._7}" output "${screens.main}" "${screens.sub}" "${screens.builtin}"
+      workspace "${workspaces._8}" output "${screens.main}" "${screens.sub}" "${screens.builtin}"
+      workspace "${workspaces._9}" output "${screens.main}" "${screens.sub}" "${screens.builtin}"
+
       # https://github.com/Alexays/Waybar/issues/1093#issuecomment-841846291
       # exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
       # exec hash dbus-update-activation-environment 2>/dev/null && \
@@ -514,7 +564,7 @@ in {
       min-height: 0;
       margin: 0;
       padding: 0;
-      font-family: "FontAwesome 5 Free Solid", "Noto Sans", Roboto, sans-serif;
+      font-family: "Noto Sans", Roboto, sans-serif;
     }
 
     /* The whole bar */
@@ -535,6 +585,7 @@ in {
     #network,
     #pulseaudio,
     #tray {
+      font-family: "FontAwesome 5 Free Solid", "Noto Sans", Roboto, sans-serif;
       padding-left: 10px;
       padding-right: 10px;
     }
@@ -698,69 +749,23 @@ in {
 
     profiles = {
       undocked.outputs = [{
-        criteria = "eDP-1";
+        criteria = screens.builtin;
         status = "enable";
       }];
       docked.outputs = [
         {
-          criteria = "eDP-1";
+          criteria = screens.builtin;
           status = "disable";
         }
         {
-          criteria = "ViewSonic Corporation VP211b A22050300003";
+          criteria = screens.sub;
           status = "enable";
         }
         {
-          criteria = "Samsung Electric Company SMS27A350H 0x00007F36";
+          criteria = screens.main;
           status = "enable";
         }
       ];
     };
   };
-
-  # Config for workstyle
-  #
-  # Format:
-  # "pattern" = "icon"
-  #
-  # The pattern will be used to match against the application name.
-  # The icon will be used to represent that application.
-  #
-  # Note if multiple patterns are present in the same application name,
-  # precedence is given in order of apparition in this file.
-  xdg.configFile."workstyle/config.toml".text = ''
-    "alacritty" = ""
-    "kitty" = ""
-    "github" = ""
-    "rust" = ""
-    "google" = ""
-    "private browsing" = ""
-    "firefox" = ""
-    "thunderbird" = ""
-    "chrome" = ""
-    "file manager" = ""
-    "libreoffice calc" = ""
-    "libreoffice writer" = ""
-    "libreoffice" = ""
-    "bash" = ""
-    "nvim" = ""
-    "gthumb" = ""
-    "menu" = ""
-    "calculator" = ""
-    "transmission" = ""
-    "videostream" = ""
-    "mpv" = ""
-    "music" = ""
-    "disk usage" = ""
-    ".pdf" = ""
-    "remmina" = ""
-    "microsoft teams" = ""
-    "element" = ""
-    "discord" = ""
-    "obsidian" = ""
-    "qutebrowser" = ""
-
-    [other]
-    "fallback_icon" = "🤨"
-  '';
 }
