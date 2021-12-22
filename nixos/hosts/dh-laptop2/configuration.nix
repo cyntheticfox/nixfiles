@@ -28,10 +28,22 @@
       sshKeyPaths = [ ];
     };
 
-    secrets."wireless" = {
-      sopsFile = ./secrets.yml;
-      restartUnits = [ "supplicant-wlp0s20f3.service" ];
+    secrets = {
+      wireless = {
+        sopsFile = ./secrets.yml;
+        restartUnits = [ "supplicant-wlp0s20f3.service" ];
+      };
+
+      root-password = {
+        sopsFile = ./secrets.yml;
+        neededForUsers = true;
+      };
     };
+  };
+
+  users = {
+    mutableUsers = false;
+    users.root.passwordFile = config.sops.secrets.root-password.path;
   };
 
   boot = {

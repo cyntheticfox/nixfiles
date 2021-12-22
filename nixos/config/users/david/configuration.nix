@@ -4,6 +4,11 @@
 
 { config, pkgs, lib, outputs, ... }: {
 
+  sops.secrets.david-password = {
+    sopsFile = ./secrets.yml;
+    neededForUsers = true;
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."david" = {
     isNormalUser = true;
@@ -12,6 +17,7 @@
     extraGroups = [ "wheel" "networkmanager" "audio" ]; # Enable ‘sudo’ for the user.
     uid = 1000;
     shell = pkgs.zsh;
+    passwordFile = config.sops.secrets.david-password.path;
   };
 
   environment.etc."lxc/default.conf" = lib.mkIf config.virtualisation.lxc.enable {
