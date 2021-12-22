@@ -1,4 +1,9 @@
 { config, pkgs, inputs, ... }: {
+  home.sessionVariables = {
+    "EDITOR" = "nvim";
+    "VISUAL" = "nvim -R";
+  };
+
   programs.neovim = {
     enable = true;
 
