@@ -6,6 +6,11 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -57,6 +62,7 @@
               ./nixos/config/base.nix
               # Add home-manager to all configurations
               home-manager.nixosModules.home-manager
+              sops-nix.nixosModules.sops
               {
                 config._module.args = {
                   inherit self;
@@ -136,6 +142,25 @@
         inherit self;
         inherit (self) inputs outputs;
         inherit system;
+      });
+
+      devShell = forAllSystems (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ sops-nix.overlay ];
+        };
+      in
+      pkgs.mkShell {
+        nativeBuildInputs = with pkgs; [
+          sops
+          sops-init-gpg-key
+          sops-import-keys-hook
+        ];
+        sopsPGPKeyDirs = [
+          ./keys/hosts
+          ./keys/users
+        ];
       });
     };
 }

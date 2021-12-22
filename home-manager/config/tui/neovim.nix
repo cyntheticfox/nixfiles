@@ -513,7 +513,7 @@
           nvim_lsp.yamlls.setup({
             capabilities = capabilities_var,
             cmd = {
-              "${pkgs.nodePackages.yaml-language-server}/bin/yaml-languag-server",
+              "${pkgs.nodePackages.yaml-language-server}/bin/yaml-language-server",
               "--stdio"
             },
             on_attach = on_attach_func

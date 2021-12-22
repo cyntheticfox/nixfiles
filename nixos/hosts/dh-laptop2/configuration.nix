@@ -8,13 +8,31 @@
   # Import other configuration files
   imports = [
     ./hardware-configuration.nix
-    ../../config/users/david.nix
+
+    # Users
+    ../../config/users/david/configuration.nix
+
+    # Desktop
     ../../config/desktops/sway.nix
+
+    # Services
     ../../config/services/libvirtd.nix
     ../../config/services/cupsd.nix
     ../../config/services/podman.nix
     ../../config/services/clamav.nix
   ];
+
+  sops = {
+    gnupg = {
+      home = "/var/lib/sops";
+      sshKeyPaths = [ ];
+    };
+
+    secrets."wireless" = {
+      sopsFile = ./secrets.yml;
+      restartUnits = [ "supplicant-wlp0s20f3.service" ];
+    };
+  };
 
   boot = {
     loader = {
@@ -44,6 +62,15 @@
     interfaces = {
       enp1s0.useDHCP = true;
       wlp0s20f3.useDHCP = true;
+    };
+
+    supplicant.wlp0s20f3 = {
+      driver = "nl80211";
+      extraConf = ''
+        p2p_disabled=1
+      '';
+      configFile.path = config.sops.secrets.wireless.path;
+      userControlled.enable = true;
     };
 
     enableIPv6 = true;
