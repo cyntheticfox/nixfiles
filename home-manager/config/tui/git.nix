@@ -14,10 +14,16 @@
       signByDefault = true;
     };
     ignores = [
+      # Vim backups/swaps
       "*~"
       ".*.swp"
+
+      # MacOS DS_Store
       ".DS_Store"
+
+      # direnv
       ".envrc"
+      ".direnv/"
     ];
 
     lfs.enable = true;
