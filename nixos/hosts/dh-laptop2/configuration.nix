@@ -47,6 +47,7 @@
   };
 
   boot = {
+    # Use grub for theming and recoverability
     loader = {
       efi.canTouchEfiVariables = true;
 
@@ -58,6 +59,8 @@
         device = "nodev";
       };
     };
+
+    # Use latest release kernel
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       "intel_iommu=on"
@@ -65,6 +68,13 @@
       "vga=current"
     ];
     plymouth.enable = true;
+
+    # Add Video4Linux loopback support
+    extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+    extraModprobeConfig = ''
+      options v4l2looback video_nr=63
+    '';
+    kernelModules = [ "v4l2loopback" ];
   };
 
   networking = {
@@ -85,16 +95,12 @@
       userControlled.enable = true;
     };
 
-    enableIPv6 = true;
-    useDHCP = false;
-
     networkmanager = {
       enable = true;
-      wifi = {
-        powersave = true;
-        scanRandMacAddress = true;
-      };
+      wifi.powersave = true;
     };
+
+    enableIPv6 = true;
 
     firewall = {
       enable = true;
@@ -120,6 +126,8 @@
     vaapiIntel
     vaapiVdpau
   ];
+
+  security.tpm2.enable = true;
 
   # Support Xbox One Controller
   hardware.xpadneo.enable = true;
@@ -153,6 +161,7 @@
   services.tlp.enable = true;
 
   # Sound config
+  security.rtkit.enable = true;
   sound.enable = true;
   services.pipewire = {
     enable = true;
