@@ -2,6 +2,33 @@
   home-manager = {
     useUserPackages = true;
     useGlobalPkgs = true;
+    sharedModules = [
+      ({ pkgs, ... }: {
+        programs.nix-index.enable = true;
+
+        systemd.user = {
+          services.nix-index = {
+            Unit.Description = "Update nix-index cache";
+
+            Service = {
+              Type = "oneshot";
+              ExecStart = "${pkgs.nix-index}/bin/nix-index";
+            };
+          };
+
+          timers.nix-index = {
+            Install.WantedBy = [ "timers.target" ];
+
+            Unit.Description = "Update nix-index cache";
+
+            Timer = {
+              OnCalendar = "weekly";
+              Persistent = true;
+            };
+          };
+        };
+      })
+    ];
   };
 
   nix = {
@@ -41,9 +68,31 @@
     overlays = lib.attrValues outputs.overlays;
   };
 
-  environment.systemPackages = with pkgs; [
-    git gnupg neofetch
-  ];
+  environment.etc."nix/nixpkgs-config.nix".text = lib.mkDefault ''
+    {
+      allowUnfree = ${lib.boolToString config.nixpkgs.config.allowUnfree};
+    }
+  '';
+
+  environment = {
+    defaultPackages = with pkgs; [
+      bc file tree unzip
+      cachix
+      git gnupg neofetch
+      progress
+    ];
+
+    homeBinInPath = true;
+    localBinInPath = true;
+  };
+
+  networking.useDHCP = false;
+
+  i18n.defaultLocale = "en_US.UTF-8";
+  console = {
+    font = "Lat2-Terminus16";
+    useXkbConfig = true;
+  };
 
   system.stateVersion = "22.05";
 }

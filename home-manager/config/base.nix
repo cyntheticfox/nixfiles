@@ -47,9 +47,5 @@ in {
     "GITHUB_USER" = personal_github;
   };
 
-  home.sessionPath = [
-    "$HOME/bin"
-    "$HOME/.local/bin"
-    "$HOME/.cargo/bin"
-  ];
+  home.sessionPath = [ "$HOME/.cargo/bin" ];
 }
