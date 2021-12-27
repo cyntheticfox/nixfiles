@@ -1,11 +1,9 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
-    ansible
     cargo
     cloc
     gcc_latest
     deno
-    github-cli
     hexyl
     hyperfine
     openjdk
@@ -21,11 +19,18 @@
     git-secrets
   ];
 
-  xdg.configFile."gh/config.yml".text = ''
-    git_protocol: ssh
-    prompt: enable
-    pager: less
-    aliases:
-      co: pr checkout
-  '';
+  programs.gh = {
+    enable = true;
+
+    settings = {
+      git_protocol = "ssh";
+      prompt = "enabled";
+      pager = "less";
+      editor = config.home.sessionVariables.EDITOR;
+      aliases = {
+        co = "pr checkout";
+        pv = "pr view";
+      };
+    };
+  };
 }
