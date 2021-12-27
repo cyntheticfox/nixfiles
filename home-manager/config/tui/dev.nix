@@ -5,6 +5,7 @@
     cloc
     gcc_latest
     deno
+    github-cli
     hexyl
     hyperfine
     openjdk
@@ -19,4 +20,12 @@
     pre-commit
     git-secrets
   ];
+
+  xdg.configFile."gh/config.yml".text = ''
+    git_protocol: ssh
+    prompt: enable
+    pager: less
+    aliases:
+      co: pr checkout
+  '';
 }

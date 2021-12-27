@@ -4,10 +4,22 @@
 
 { config, pkgs, lib, outputs, ... }: {
 
-  sops.secrets.david-password = {
-    sopsFile = ./secrets.yml;
-    neededForUsers = true;
+  sops.secrets = {
+    david-password = {
+      sopsFile = ./secrets.yml;
+      neededForUsers = true;
+    };
+
+    gh-config = {
+      inherit (config.users.users.david) group;
+
+      sopsFile = ./secrets.yml;
+      mode = "0440";
+      owner = config.users.users.david.name;
+      path = "${config.users.users.david.home}/.config/gh/hosts.yml";
+    };
   };
+
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."david" = {
