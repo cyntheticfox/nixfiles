@@ -13,6 +13,11 @@
     remmina
   ];
 
+  services.gnome-keyring = {
+    enable = true;
+    components = [ "secrets" ];
+  };
+
   qt = {
     enable = true;
     platformTheme = "gnome";
