@@ -33,7 +33,7 @@
       credential.helper = "cache --timeout 600";
       help.autocorrect = true;
       core = {
-        editor = "nvim";
+        editor = config.home.sessionVariables.EDITOR;
         filemode = false;
         autocrlf = "input";
         hideDotFiles = true;
