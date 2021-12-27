@@ -80,6 +80,7 @@
       cachix
       git gnupg neofetch
       progress
+      strace
     ];
 
     homeBinInPath = true;
