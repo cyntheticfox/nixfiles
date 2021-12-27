@@ -16,6 +16,7 @@
 
     # Terminal modules
     ../../config/tui/dev.nix
+    ../../config/tui/cloud.nix
     ../../config/tui/documents.nix
   ];
 
