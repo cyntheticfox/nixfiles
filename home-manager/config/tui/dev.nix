@@ -6,9 +6,7 @@
     deno
     hexyl
     hyperfine
-    openjdk
     jq
-    libnotify
     nodejs_latest
     poetry
     python
@@ -18,6 +16,11 @@
     pre-commit
     git-secrets
   ];
+
+  programs.java = {
+    enable = true;
+    package = pkgs.openjdk;
+  };
 
   programs.gh = {
     enable = true;
