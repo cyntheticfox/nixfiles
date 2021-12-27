@@ -31,14 +31,14 @@ in {
 
   xdg.userDirs = {
     enable = true;
-    desktop = "$HOME";
-    documents = "$HOME/docs";
-    download = "$HOME/tmp";
-    music = "$HOME/music";
-    pictures = "$HOME/pics";
-    publicShare = "$HOME/public";
-    templates = "$HOME/.templates";
-    videos = "$HOME/videos";
+    desktop = "${config.home.homeDirectory}";
+    documents = "${config.home.homeDirectory}/docs";
+    download = "${config.home.homeDirectory}/tmp";
+    music = "${config.home.homeDirectory}/music";
+    pictures = "${config.home.homeDirectory}/pics";
+    publicShare = "${config.home.homeDirectory}/public";
+    templates = "${config.home.homeDirectory}/.templates";
+    videos = "${config.home.homeDirectory}/videos";
   };
 
   home.sessionVariables = {
@@ -47,5 +47,5 @@ in {
     "GITHUB_USER" = personal_github;
   };
 
-  home.sessionPath = [ "$HOME/.cargo/bin" ];
+  home.sessionPath = [ "${config.home.homeDirectory}/.cargo/bin" ];
 }
