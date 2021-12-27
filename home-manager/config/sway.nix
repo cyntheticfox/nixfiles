@@ -218,6 +218,15 @@ in {
         command = "${user-bins.waybar}";
       }];
 
+      floating = {
+        border = 1;
+        criteria = [
+          { "title" = "Steam - News"; }
+          { "title" = "Friends List"; }
+          { "class" = "Pavucontrol"; }
+        ];
+      };
+
       window = {
         border = 1;
         hideEdgeBorders = "smart";

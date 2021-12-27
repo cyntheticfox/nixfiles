@@ -119,13 +119,29 @@
     settings.General.Name = "${config.networking.hostName}";
   };
 
-  hardware.opengl.extraPackages = with pkgs; [
-    intel-media-driver
-    intel-ocl
-    libvdpau-va-gl
-    vaapiIntel
-    vaapiVdpau
-  ];
+
+  hardware.opengl = {
+    enable = true;
+    driSupport32Bit = true;
+
+    extraPackages = with pkgs; [
+      beignet
+      intel-media-driver
+      intel-ocl
+      libvdpau-va-gl
+      mesa
+      vaapiIntel
+      vaapiVdpau
+    ];
+
+    extraPackages32 = with pkgs.driversi686Linux; [
+      beignet
+      libvdpau-va-gl
+      mesa
+      vaapiIntel
+      vaapiVdpau
+    ];
+  };
 
   security.tpm2.enable = true;
 

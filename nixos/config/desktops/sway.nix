@@ -54,13 +54,13 @@ in
       wofi
       xwayland
     ];
+  };
 
-    extraSessionCommands = ''
-      export SDL_VIDEODRIVER=wayland
-      export QT_QPA_PLATFORM=wayland-egl
-      export WLR_NO_HARDWARE_CURSORS=1
-      export XDG_SESSION_TYPE=wayland
-    '';
+  environment.sessionVariables = {
+    SDL_VIDEODRIVER = "wayland";
+    QT_QPA_PLATFORM = "wayland-egl";
+    WLR_NO_HARDWARE_CURSORS = "1";
+    XDG_SESSION_TYPE = "wayland";
   };
 
   xdg.portal = {
