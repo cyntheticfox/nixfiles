@@ -1,9 +1,4 @@
-{ config, pkgs, ... }:
-
-let
-  personal_email = "houstdav000@gmail.com";
-  personal_github = "houstdav000";
-in {
+{ config, pkgs, ... }: {
   # Enable home-manager
   programs.home-manager.enable = true;
 
@@ -39,12 +34,6 @@ in {
     publicShare = "${config.home.homeDirectory}/public";
     templates = "${config.home.homeDirectory}/.templates";
     videos = "${config.home.homeDirectory}/videos";
-  };
-
-  home.sessionVariables = {
-    # Set more user information
-    "EMAIL" = personal_email;
-    "GITHUB_USER" = personal_github;
   };
 
   home.sessionPath = [ "${config.home.homeDirectory}/.cargo/bin" ];
