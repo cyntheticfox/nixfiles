@@ -1,25 +1,20 @@
-# libvirt-configuration.nix
-#
-# Uhhhh, TODO: ?
-
 { config, pkgs, lib, ... }: {
-
-  # environment.systemPackages = with pkgs; [
-  #   qemu
-  #   qemu-utils
-  #   qemu_kvm
-  # ];
 
   boot.kernelModules = [ "kvm-amd" "kvm-intel" ];
   virtualisation = {
+    kvmgt.enable = true;
     libvirtd = {
       enable = true;
       onBoot = "ignore";
       onShutdown = "suspend";
-      qemu.ovmf.enable = true;
-      qemu.runAsRoot = true;
+      qemu = {
+        package = pkgs.qemu_kvm;
+        ovmf.enable = true;
+        runAsRoot = true;
+      };
     };
   };
+
   environment.etc."pam.d/system-login" = {
     mode = "0644";
     text = ''
