@@ -19,10 +19,11 @@
 
   home.packages = with pkgs; [
     smbclient
-    nix-index
     mtr
     traceroute
   ];
+
+  programs.nix-index.enable = true;
 
   xdg.userDirs = {
     enable = true;

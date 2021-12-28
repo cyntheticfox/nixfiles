@@ -9,21 +9,13 @@
   ];
 
   virtualisation = {
+    containers = {
+      enable = true;
+      registries.search = [ "docker.io" "quay.io" ];
+    };
+
     podman = {
       enable = true;
-      dockerCompat = true;
     };
-
-    oci-containers = {
-      backend = "podman";
-    };
-  };
-
-  environment.etc."containers/registry.conf" = {
-    mode = "0644";
-    text = ''
-      [registries.search]
-      registries = ['docker.io', 'quay.io']
-    '';
   };
 }

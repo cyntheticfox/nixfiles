@@ -129,7 +129,7 @@
       setopt AUTO_MENU
       setopt COMPLETE_IN_WORD
       setopt FLOW_CONTROL
-      '';
+    '';
   };
 
   programs.starship = {

@@ -15,9 +15,10 @@
     ../../config/gui/work.nix
 
     # Terminal modules
-    ../../config/tui/dev.nix
     ../../config/tui/cloud.nix
+    ../../config/tui/dev.nix
     ../../config/tui/documents.nix
+    ../../config/tui/music.nix
   ];
 
   home.stateVersion = "22.05";

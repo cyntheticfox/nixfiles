@@ -126,8 +126,8 @@ in {
         "XF86AudioStop" = "exec ${user-bins.playerctl} stop";
 
         # Screen brightness bindings
-        "XF86MonBrightnessDown" = "exec ${user-bins.light} -U 5";
-        "XF86MonBrightnessUp" = "exec ${user-bins.light} -A 5";
+        "XF86MonBrightnessDown" = "exec '${user-bins.light} -U 5'";
+        "XF86MonBrightnessUp" = "exec '${user-bins.light} -A 5'";
 
         # Capture PowerOff key
         "XF86PowerOff" = "exec ${shutdown}";

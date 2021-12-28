@@ -1,10 +1,9 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
-    minitube
+    ffmpeg-full
+    mpv
     openshot-qt
     obs-studio
-    tartube
-    vlc
-    youtube-dl
+    yt-dlp
   ];
 }

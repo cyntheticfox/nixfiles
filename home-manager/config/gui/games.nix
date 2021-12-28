@@ -1,11 +1,16 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
+    # Emulation
     flips
-    minecraft
-    protontricks
     retroarchFull
+
+    # Steam
     steam
     winetricks
     wine
+    protontricks
+
+    # Other games
+    minecraft
   ];
 }

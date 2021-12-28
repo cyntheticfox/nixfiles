@@ -21,41 +21,62 @@ let
 
     ${pkgs.glib.dev}/bin/glib-compile-schemas $out/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas/
   '';
-in
-{
+in {
+  ### Force above GTK Theming
+  #
   environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${sway-gsettings-desktop-schemas}/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas";
 
-  programs.sway = {
-    enable = true;
-    extraPackages = with pkgs; [
-      # Theming
-      adapta-gtk-theme
-      gnome_themes_standard
-      papirus-icon-theme
+  programs = {
+    ### Enable Sway window-manager
+    #
+    sway = {
+      enable = true;
+      wrapperFeatures.gtk = true;
+      extraPackages = with pkgs; [
+        # Theming
+        adapta-gtk-theme
+        gnome_themes_standard
+        papirus-icon-theme
 
-      # Util
-      grim
-      imv
-      jq
-      kanshi
-      mako
-      pavucontrol
-      playerctl
-      polkit_gnome
-      qt5.qtwayland
-      slurp
-      swayidle
-      swaylock-effects
-      sway-contrib.grimshot
-      waybar
-      wf-recorder
-      wl-clipboard
-      wlogout
-      wofi
-      xwayland
-    ];
+        # Util
+        grim
+        imv
+        jq
+        kanshi
+        mako
+        pavucontrol
+        playerctl
+        polkit_gnome
+        qt5.qtwayland
+        slurp
+        swayidle
+        swaylock-effects
+        sway-contrib.grimshot
+        wf-recorder
+        wl-clipboard
+        wlogout
+        wofi
+      ];
+    };
+
+    ### Add a better bar for Sway
+    #
+    waybar.enable = true;
+
+    ### Add X11 Compatibility
+    #
+    xwayland.enable = true;
+
+    ### Enable backlight control
+    # Users must be added to the "video" group
+    #
+    light.enable = true;
   };
 
+  ### Define compatibility variables
+  # Some Programs don't use wayland by default and have to be told, so tell
+  #  them.
+  #
   environment.sessionVariables = {
     SDL_VIDEODRIVER = "wayland";
     QT_QPA_PLATFORM = "wayland-egl";
@@ -69,9 +90,9 @@ in
     extraPortals = with pkgs; [ xdg-desktop-portal-wlr ];
   };
 
-  programs.light.enable = true;
-
   gtk.iconCache.enable = true;
+
+  fonts.enableDefaultFonts = true;
 
   qt5 = {
     enable = true;
@@ -79,6 +100,9 @@ in
     platformTheme = "gnome";
   };
 
+  ### Add a login manager
+  # Provides greetd as a login manager
+  #
   services.greetd = {
     enable = true;
     settings = {

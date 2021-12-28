@@ -119,7 +119,6 @@
     settings.General.Name = "${config.networking.hostName}";
   };
 
-
   hardware.opengl = {
     enable = true;
     driSupport32Bit = true;
@@ -171,6 +170,9 @@
       enableSSHSupport = true;
     };
   };
+
+  # Enable Docker
+  virtualisation.docker.enable = true;
 
   # Enable Steam for gaming
   programs.steam.enable = true;

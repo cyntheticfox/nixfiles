@@ -18,7 +18,7 @@
   users.users."david" = {
     isNormalUser = true;
     home = "/home/david";
-    extraGroups = [ "wheel" "networkmanager" "audio" ];
+    extraGroups = [ "wheel" "networkmanager" "audio" "video" "docker" "podman" "kvm" "libvirtd" ];
     uid = 1000;
     shell = pkgs.zsh;
     passwordFile = config.sops.secrets.david-password.path;
