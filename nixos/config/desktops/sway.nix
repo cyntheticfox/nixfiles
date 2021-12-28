@@ -59,10 +59,6 @@ in {
       ];
     };
 
-    ### Add a better bar for Sway
-    #
-    waybar.enable = true;
-
     ### Add X11 Compatibility
     #
     xwayland.enable = true;
