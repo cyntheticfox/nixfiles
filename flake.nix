@@ -16,11 +16,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixpkgs-wayland = {
-      url = "github:nix-community/nixpkgs-wayland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
@@ -116,7 +111,6 @@
       };
 
       overlays.foosteros = foosteros.overlay;
-      overlays.nixpkgs-wayland = nixpkgs-wayland.overlay;
       overlays.ospkgs = final: prev: import ./pkgs {
         pkgs = prev;
         outpkgs = final;
