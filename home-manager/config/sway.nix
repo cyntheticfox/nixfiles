@@ -174,7 +174,6 @@ in {
 
         # Allow loading web browser with $modifier+a
         "${modifier}+a" = "exec ${user-bins.qutebrowser}";
-        "${modifier}+c" = "exec ${user-bins.rofi} -show calc";
 
         # Create a binding for the lock screen. Something close to $modifier+l
         "${modifier}+o" = "exec ${lockscreen}";
@@ -757,11 +756,10 @@ in {
   programs.rofi = {
     enable = true;
     package = pkgs.rofi-wayland;
-    plugins = with pkgs; [ rofi-calc rofi-emoji ];
     terminal = user-bins.kitty;
     font = "Noto Sans 12";
     theme = "android_notification";
-    extraConfig.modi = "drun,run,calc,emoji";
+    extraConfig.modi = "drun,run";
   };
 
   services.kanshi = {

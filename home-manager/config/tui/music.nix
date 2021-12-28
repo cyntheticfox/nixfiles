@@ -5,6 +5,12 @@
     enable = true;
     musicDirectory = config.xdg.userDirs.music;
     playlistDirectory = "${config.services.mpd.musicDirectory}/_playlists";
+    extraConfig = ''
+      audio_output {
+        type "pipewire"
+        name "PipeWire Sound Server"
+      }
+    '';
   };
 
   services.mpdris2 = {
