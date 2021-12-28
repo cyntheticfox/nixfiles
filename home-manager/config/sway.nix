@@ -12,10 +12,11 @@ let
     light = "${pkgs.light}/bin/light";
     loginctl = "${pkgs.systemd}/bin/loginctl";
     mako = "${pkgs.mako}/bin/mako";
-    qutebrowser = "${pkgs.qutebrowser}/bin/qutebrowser";
     pamixer = "${pkgs.pamixer}/bin/pamixer";
     pkill = "${pkgs.procps}/bin/pkill";
     playerctl = "${pkgs.playerctl}/bin/playerctl";
+    qutebrowser = "${pkgs.qutebrowser}/bin/qutebrowser";
+    rofi = "${pkgs.rofi-wayland}/bin/rofi";
     slurp = "${pkgs.slurp}/bin/slurp";
     swayidle = "${pkgs.swayidle}/bin/swayidle";
     swaylock = "${pkgs.swaylock-effects}/bin/swaylock";
@@ -24,7 +25,6 @@ let
     waybar = "${pkgs.waybar}/bin/waybar";
     wf-recorder = "${pkgs.wf-recorder}/bin/wf-recorder";
     wlogout = "${pkgs.wlogout}/bin/wlogout";
-    wofi = "${pkgs.wofi}/bin/wofi";
     xargs = "${pkgs.findutils}/bin/xargs";
   };
 
@@ -103,8 +103,10 @@ in {
       # Your preferred application launcher
       # Note: pass the final command to swaymsg so that the resulting window can be opened
       #   on the original workspace that the command was run on.
-      appmenu = "${user-bins.wofi} --show drun | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
-      menu = "${user-bins.wofi} --show run --exec-search | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
+      appmenu = "${user-bins.rofi} -show drun | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
+      menu = "${user-bins.rofi} -show run | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
+      # appmenu = "${user-bins.rofi} -show drun";
+      # menu = "${user-bins.rofi} -show run";
 
       # Shutdown command
       shutdown = "${user-bins.wlogout} --buttons-per-row 3";
@@ -752,6 +754,13 @@ in {
       "keybind" : "r"
     }
   '';
+
+  programs.rofi = {
+    enable = true;
+    package = pkgs.rofi-wayland;
+    terminal = user-bins.kitty;
+    font = "Noto Sans 12";
+  };
 
   services.kanshi = {
     enable = true;

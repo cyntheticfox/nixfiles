@@ -25,6 +25,16 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+
+    foosteros = {
+      url = "github:lilyinstarlight/foosteros";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+        sops-nix.follows = "sops-nix";
+        flake-compat.follows = "flake-compat";
+      };
+    };
   };
 
   outputs = { self, ... }@inputs:
@@ -75,12 +85,6 @@
 
       nixosModules = {
         dh-laptop2.imports = [
-          {
-            nixpkgs.overlays = [
-              self.overlay
-              nixpkgs-wayland.overlay
-            ];
-          }
           ./home-manager/hosts/dh-laptop2/home.nix
         ];
       };
@@ -111,6 +115,8 @@
         };
       };
 
+      overlays.foosteros = foosteros.overlay;
+      overlays.nixpkgs-wayland = nixpkgs-wayland.overlay;
       overlays.ospkgs = final: prev: import ./pkgs {
         pkgs = prev;
         outpkgs = final;

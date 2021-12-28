@@ -5,7 +5,6 @@
     enable = true;
     musicDirectory = config.xdg.userDirs.music;
     playlistDirectory = "${config.services.mpd.musicDirectory}/_playlists";
-    network.startWhenNeeded = true;
   };
 
   programs.beets = {
