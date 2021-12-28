@@ -105,8 +105,6 @@ in {
       #   on the original workspace that the command was run on.
       appmenu = "${user-bins.rofi} -show drun | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
       menu = "${user-bins.rofi} -show run | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
-      # appmenu = "${user-bins.rofi} -show drun";
-      # menu = "${user-bins.rofi} -show run";
 
       # Shutdown command
       shutdown = "${user-bins.wlogout} --buttons-per-row 3";
@@ -500,9 +498,9 @@ in {
 
       "backlight": {
         "format": "{icon} {percent}%",
-        "format-icons": ["", ""],
-        "on-scroll-down": "${user-bins.light} -A 5",
-        "on-scroll-up": "${user-bins.light} -U 5"
+        "format-icons": ["", "◐", ""],
+        "on-scroll-down": "${user-bins.light} -U 5",
+        "on-scroll-up": "${user-bins.light} -A 5"
       },
 
       "pulseaudio": {
