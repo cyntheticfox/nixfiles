@@ -79,6 +79,7 @@
       bc file tree unzip
       cachix
       git gnupg neofetch
+      nix-index nix-alien
       progress
       strace
     ];

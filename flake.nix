@@ -6,6 +6,8 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
+    flake-utils.url = "github:numtide/flake-utils";
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,13 +23,23 @@
       flake = false;
     };
 
+    nix-alien = {
+      url = "github:thiagokokada/nix-alien";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
+
     foosteros = {
       url = "github:lilyinstarlight/foosteros";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-        sops-nix.follows = "sops-nix";
         flake-compat.follows = "flake-compat";
+        flake-utils.follows = "flake-utils";
+        home-manager.follows = "home-manager";
+        nix-alien.follows = "nix-alien";
+        nixpkgs.follows = "nixpkgs";
+        sops-nix.follows = "sops-nix";
       };
     };
   };
@@ -78,11 +90,9 @@
           };
       };
 
-      nixosModules = {
-        dh-laptop2.imports = [
-          ./home-manager/hosts/dh-laptop2/home.nix
-        ];
-      };
+      nixosModules.dh-laptop2.imports = [
+        ./home-manager/hosts/dh-laptop2/home.nix
+      ];
 
       homeConfigurations = {
         wsl = self.lib.hmConfig {
@@ -110,20 +120,24 @@
         };
       };
 
-      overlays.foosteros = foosteros.overlay;
-      overlays.ospkgs = final: prev: import ./pkgs {
-        pkgs = prev;
-        outpkgs = final;
-        isOverlay = true;
+      overlays = {
+        nix-alien = nix-alien.overlay;
+        foosteros = foosteros.overlay;
+
+        ospkgs = final: prev: import ./pkgs {
+          pkgs = prev;
+          ospkgs = final;
+          isOverlay = true;
+        };
       };
       overlay = self.overlays.ospkgs;
 
-      legacyPackages = forAllSystems (system: import ./pkgs {
+      legacyPackages = flake-utils.lib.eachDefaultSystem (system: import ./pkgs {
         pkgs = systempkgs { inherit system; };
         isOverlay = false;
       });
 
-      defaultPackage = forAllSystems (system:
+      defaultPackage = flake-utils.lib.eachDefaultSystem (system:
         let
           pkgs = systempkgs { inherit system; };
         in

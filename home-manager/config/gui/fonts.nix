@@ -1,17 +1,13 @@
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, ... }: {
   home.packages = with pkgs; [
     dejavu_fonts
     fira
-    fira-code
-    fira-code-symbols
+    firacode-nerdfont
     fira-mono
     font-awesome
-    nerdfonts
     noto-fonts-emoji
     rictydiminished-with-firacode
   ];
 
-  fonts.fontconfig = {
-    enable = true;
-  };
+  fonts.fontconfig.enable = true;
 }

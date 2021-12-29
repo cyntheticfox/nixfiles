@@ -6,6 +6,8 @@ let
     sub = "ViewSonic Corporation VP211b A22050300003";
   };
   user-bins = {
+    date = "${pkgs.coreutils}/bin/date";
+    element = "${pkgs.element-desktop-wayland}/bin/element-desktop";
     grimshot = "${pkgs.sway-contrib.grimshot}/bin/grimshot";
     jq = "${pkgs.jq}/bin/jq";
     kitty = "${pkgs.kitty}/bin/kitty";
@@ -13,15 +15,17 @@ let
     loginctl = "${pkgs.systemd}/bin/loginctl";
     mako = "${pkgs.mako}/bin/mako";
     pamixer = "${pkgs.pamixer}/bin/pamixer";
+    pavucontrol = "${pkgs.pavucontrol}/bin/pavucontrol";
     pkill = "${pkgs.procps}/bin/pkill";
     playerctl = "${pkgs.playerctl}/bin/playerctl";
-    qutebrowser = "${pkgs.qutebrowser}/bin/qutebrowser";
+    qutebrowser = "${config.programs.qutebrowser.package}/bin/qutebrowser";
     rofi = "${pkgs.rofi-wayland}/bin/rofi";
     slurp = "${pkgs.slurp}/bin/slurp";
     swayidle = "${pkgs.swayidle}/bin/swayidle";
     swaylock = "${pkgs.swaylock-effects}/bin/swaylock";
     swaymsg = "${pkgs.sway}/bin/swaymsg";
-    systemctl = "${pkgs.systemd}/bin/systemd";
+    systemctl = config.systemd.user.systemctlPath;
+    teams = "${pkgs.teams}/bin/teams";
     waybar = "${pkgs.waybar}/bin/waybar";
     wf-recorder = "${pkgs.wf-recorder}/bin/wf-recorder";
     wlogout = "${pkgs.wlogout}/bin/wlogout";
@@ -201,29 +205,29 @@ in {
       };
 
       startup = [
-        { command = "${idle}"; }
-        { command = "${notifications}"; }
-        { command = "${user-bins.qutebrowser}"; }
-        { command = "${pkgs.teams}/bin/teams"; }
-        { command = "${pkgs.element-desktop-wayland}/bin/element-desktop"; }
+        { command = idle; }
+        { command = notifications; }
+        { command = user-bins.qutebrowser; }
+        { command = user-bins.teams; }
+        { command = user-bins.element; }
       ];
 
       bars = [{
         fonts = {
-          names = [ "FontAwesome5Free" "Noto Sans" "Roboto" "sans-serif" ];
+          names = [ "FontAwesome5Free" "Fira Sans" "sans-serif" ];
           style = "Bold Semi-Condensed";
           size = 11.0;
         };
         position = "top";
-        command = "${user-bins.waybar}";
+        command = user-bins.waybar;
       }];
 
       floating = {
         border = 1;
         criteria = [
-          { "title" = "Steam - News"; }
-          { "title" = "Friends List"; }
-          { "class" = "Pavucontrol"; }
+          { title = "Steam - News"; }
+          { title = "Friends List"; }
+          { class = "pavucontrol"; }
         ];
       };
 
@@ -273,7 +277,7 @@ in {
         screenshot =
         let
           exit-mode = "mode \"default\"";
-          screenshot-file = "${config.xdg.userDirs.pictures}/screenshot-$(${pkgs.coreutils}/bin/date +'%Y-%m-%d-%H%M%S').png";
+          screenshot-file = "${config.xdg.userDirs.pictures}/screenshot-$(${user-bins.date} +'%Y-%m-%d-%H%M%S').png";
         in {
           # Fullscreen screenshot
           "f" =  "exec --no-startup-id ${user-bins.grimshot} --notify copy screen, ${exit-mode}";
@@ -300,7 +304,7 @@ in {
         let
           exit-mode = "mode \"default\"";
           recording-mode = "mode \"recording_on\"";
-          recording-file = "${config.xdg.userDirs.videos}/recording-$(${pkgs.coreutils}/bin/date +'%Y-%m-%d-%H%M%S').mp4";
+          recording-file = "${config.xdg.userDirs.videos}/recording-$(${user-bins.date} +'%Y-%m-%d-%H%M%S').mp4";
           subcommand = "${user-bins.swaymsg} -t get_outputs | ${user-bins.jq} -r '.[] | select(.focused) | .name'";
         in {
           # Window recording
@@ -343,12 +347,6 @@ in {
 
       set $background ~/wallpaper.png
       set $backup-color #000000
-      set $gtk-theme Matcha-dark-sea
-      set $icon-theme Papirus-Dark-Maia
-      set $cursor-theme xcursor-breeze
-      set $gui-font Noto Sans 11
-      set $term-font TerminessTTF Nerd Font Mono 14
-      set $kvantum-theme Matchama-Dark
 
       # a theme specific color map
       set $base00 #141a1b
@@ -393,141 +391,133 @@ in {
   # Waybar configuration
   #
   # Ref: https://github.com/Alexays/Waybar/wiki/Configuration
-  xdg.configFile."waybar/config".text = ''
-    {
-      // -------------------------------------------------------------------------
-      // Global configuration
-      // -------------------------------------------------------------------------
+  xdg.configFile."waybar/config".source = (pkgs.formats.json {}).generate "config" {
+    # -------------------------------------------------------------------------
+    # Global configuration
+    # -------------------------------------------------------------------------
 
-      "layer": "top",
+    layer = "top";
+    position = "top";
 
-      "position": "top",
+    # If height property would be not present, it'd be calculated dynamically
+    height = 30;
 
-      // If height property would be not present, it'd be calculated dynamically
-      "height": 30,
+    modules-left = [
+      "sway/workspaces"
+      "sway/mode"
+    ];
+    modules-center = [
+      "sway/window"
+    ];
+    modules-right = [
+      "network"
+      "cpu"
+      "memory"
+      "battery"
+      "backlight"
+      "pulseaudio"
+      "tray"
+      "clock"
+    ];
 
-      "modules-left": [
-        "sway/workspaces",
-        "sway/mode"
-      ],
-      "modules-center": [
-        "sway/window"
-      ],
-      "modules-right": [
-        "network",
-        "cpu",
-        "memory",
-        "battery",
-        "backlight",
-        "pulseaudio",
-        "tray",
-        "clock"
-      ],
+    # -------------------------------------------------------------------------
+    # Modules
+    # -------------------------------------------------------------------------
 
+    battery = {
+      interval = 30;
+      states = {
+        warning = 30;
+        critical = 15;
+      };
+      format-charging = "  {icon}  {capacity}%"; # Icon: bolt
+      format = "{icon}  {capacity}%";
+      format-icons = [
+        ""  # Icon: battery-empty
+        ""  # Icon: battery-quarter
+        ""  # Icon: battery-half
+        ""  # Icon: battery-three-quarters
+        ""  # Icon: battery-full
+      ];
+      tooltip = false;
+    };
 
-      // -------------------------------------------------------------------------
-      // Modules
-      // -------------------------------------------------------------------------
+    clock = {
+      interval = 60;
+      format = "  {:%e %b %Y %H:%M}"; # Icon: calendar-alt
+      tooltip = false;
+      on-click = user-bins.wlogout;
+    };
 
-      "battery": {
-        "interval": 30,
-        "states": {
-          "warning": 30,
-          "critical": 15
-        },
-        "format-charging": "  {icon}  {capacity}%", // Icon: bolt
-        "format": "{icon}  {capacity}%",
-        "format-icons": [
-          "", // Icon: battery-empty
-          "", // Icon: battery-quarter
-          "", // Icon: battery-half
-          "", // Icon: battery-three-quarters
-          ""  // Icon: battery-full
-        ],
-        "tooltip": false,
-      },
+    cpu = {
+      interval = 5;
+      format = "  {usage}%"; # Icon: microchip
+      states = {
+        warning = 70;
+        critical = 90;
+      };
+    };
 
-      "clock": {
-        "interval": 60,
-        "format": "  {:%e %b %Y %H:%M}", // Icon: calendar-alt
-        "tooltip": false,
-        "on-click": "${user-bins.wlogout}"
-      },
+    memory = {
+      interval = 5;
+      format = "  {}%"; # Icon: memory
+      states = {
+        warning = 70;
+        critical = 90;
+      };
+    };
 
-      "cpu": {
-        "interval": 5,
-        "format": "  {usage}%", // Icon: microchip
-        "states": {
-          "warning": 70,
-          "critical": 90
-        }
-      },
+    network = {
+      interval = 5;
+      format-wifi = "  {essid} ({signalStrength}%)"; # Icon: wifi
+      format-ethernet = "  {ifname}: {ipaddr}/{cidr}"; # Icon: ethernet
+      format-disconnected = "⚠  Disconnected";
+      tooltip-format = "{ifname}: {ipaddr}";
+    };
 
-      "memory": {
-        "interval": 5,
-        "format": "  {}%", // Icon: memory
-        "states": {
-          "warning": 70,
-          "critical": 90
-        }
-      },
+    "sway/mode" = {
+      format = "<span style=\"italic\">{}</span>";
+      tooltip = false;
+    };
 
-      "network": {
-        "interval": 5,
-        "format-wifi": "  {essid} ({signalStrength}%)", // Icon: wifi
-        "format-ethernet": "  {ifname}: {ipaddr}/{cidr}", // Icon: ethernet
-        "format-disconnected": "⚠  Disconnected",
-        "tooltip-format": "{ifname}: {ipaddr}",
-      },
+    "sway/window" = {
+      format = "{}";
+      max-length = 120;
+    };
 
-      "sway/mode": {
-        "format": "<span style=\"italic\">{}</span>",
-        "tooltip": false
-      },
+    "sway/workspaces" = {
+      all-outputs = false;
+      disable-scroll = true;
+      format = "{}";
+    };
 
-      "sway/window": {
-        "format": "{}",
-        "max-length": 120
-      },
+    backlight = {
+      format = "{icon} {percent}%";
+      format-icons = [ "" "◐" "" ];
+      on-scroll-down = "${user-bins.light} -U 5";
+      on-scroll-up = "${user-bins.light} -A 5";
+    };
 
-      "sway/workspaces": {
-        "all-outputs": false,
-        "disable-scroll": true,
-        "format": "{}"
-      },
+    pulseaudio = {
+      format = "{icon}  {volume}%";
+      format-bluetooth = "{icon}  {volume}%";
+      format-muted = "";
+      format-icons = {
+        headphones = "";
+        handsfree = "";
+        headset = "";
+        phone = "";
+        portable = "";
+        car = "";
+        default = [ "" "" ];
+      };
+      on-scroll-down = "${user-bins.pamixer} -d 2";
+      on-scroll-up = "${user-bins.pamixer} -i 2";
+      on-click = user-bins.pavucontrol;
+    };
 
-      "backlight": {
-        "format": "{icon} {percent}%",
-        "format-icons": ["", "◐", ""],
-        "on-scroll-down": "${user-bins.light} -U 5",
-        "on-scroll-up": "${user-bins.light} -A 5"
-      },
-
-      "pulseaudio": {
-        //"scroll-step": 1,
-        "format": "{icon}  {volume}%",
-        "format-bluetooth": "{icon}  {volume}%",
-        "format-muted": "",
-        "format-icons": {
-          "headphones": "",
-          "handsfree": "",
-          "headset": "",
-          "phone": "",
-          "portable": "",
-          "car": "",
-          "default": ["", ""]
-        },
-        "on-scroll-down": "${user-bins.pamixer} -d 2",
-        "on-scroll-up": "${user-bins.pamixer} -i 2",
-        "on-click": "pavucontrol"
-
-      },
-
-      "tray": {
-        "icon-size": 21
-      }
-    }
-  '';
+    tray.icon-size = 21;
+  };
 
   # Waybar Style configuration
   #
@@ -573,14 +563,14 @@ in {
       min-height: 0;
       margin: 0;
       padding: 0;
-      font-family: "Noto Sans", Roboto, sans-serif;
+      font-family: "Fira Sans", Roboto, sans-serif;
     }
 
     /* The whole bar */
     #waybar {
       background: #141a1b;
       color: #eeeeee;
-      font-family: "Noto Sans", Roboto, sans-serif;
+      font-family: "Fira Sans", Roboto, sans-serif;
       font-size: 13px;
     }
 
@@ -594,7 +584,7 @@ in {
     #network,
     #pulseaudio,
     #tray {
-      font-family: "FontAwesome 5 Free Solid", "Noto Sans", Roboto, sans-serif;
+      font-family: "FontAwesome 5 Free Solid", "Fira Sans", Roboto, sans-serif;
       padding-left: 10px;
       padding-right: 10px;
     }
@@ -690,7 +680,7 @@ in {
 
     #window {
       font-weight: bold;
-      font-family: "Noto Sans", Roboto, sans-serif;
+      font-family: "Fira Sans", Roboto, sans-serif;
     }
 
     #workspaces button {
@@ -757,7 +747,7 @@ in {
     enable = true;
     package = pkgs.rofi-wayland;
     terminal = user-bins.kitty;
-    font = "Noto Sans 12";
+    font = "Fira Sans 12";
     theme = "android_notification";
     extraConfig.modi = "drun,run";
   };

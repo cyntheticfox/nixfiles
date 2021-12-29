@@ -11,6 +11,7 @@
   home.packages = with pkgs; [
     pcmanfm
     remmina
+    xdg_utils
   ];
 
   services.gnome-keyring = {

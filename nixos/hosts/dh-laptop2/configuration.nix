@@ -154,7 +154,13 @@
   hardware.keyboard.zsa.enable = true;
 
   environment.systemPackages = with pkgs; [
+    # FS tools
     cifs-utils
+    lethe
+    ntfs3g
+    parted
+    udiskie
+
     htop
     nixos-grub2-theme
     nixos-icons
