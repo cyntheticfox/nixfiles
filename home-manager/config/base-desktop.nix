@@ -18,6 +18,8 @@
     components = [ "secrets" ];
   };
 
+  services.udiskie.enable = true;
+
   qt = {
     enable = true;
     platformTheme = "gnome";
