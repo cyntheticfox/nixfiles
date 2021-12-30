@@ -30,7 +30,7 @@
     '';
   };
 
-  xdg.configFile."kitty/nord.conf".source = builtins.fetchurl {
+  xdg.configFile."kitty/nord.conf".source = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/connorholyday/nord-kitty/3a819c1f207cd2f98a6b7c7f9ebf1c60da91c9e9/nord.conf";
     sha256 = "sha256:1fbnc6r9mbqb6wxqqi9z8hjhfir44rqd6ynvbc49kn6gd8v707p1";
   };
