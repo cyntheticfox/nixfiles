@@ -1,11 +1,13 @@
 { config, pkgs, ... }: {
+  home.sessionVariables.TERMINAL = "kitty";
+
   programs.kitty = {
     enable = true;
 
     settings = {
       # Set font settings
       font_family = "FiraCodeNerdFontComplete-Retina";
-      font_size = 11;
+      font_size = 10;
       font_features = "FiraCodeNerdFontComplete-Retina +zero +onum";
 
       # Set terminal bell to off

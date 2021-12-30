@@ -1,16 +1,16 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }: {
   imports = [
     ./base.nix
 
     # Modules
     ./gui/kitty.nix
     ./gui/fonts.nix
+    ./gui/remmina.nix
     ./gui/web.nix
   ];
 
   home.packages = with pkgs; [
     pcmanfm
-    remmina
     xdg_utils
   ];
 
@@ -30,7 +30,14 @@
     };
   };
 
+  xdg.mime.enable = true;
   xdg.mimeApps.enable = true;
+
+  # Reload mime type associations on activation
+  home.activation.reload-mimetypes = lib.hm.dag.entryAfter [ "writeBoundary" "checkLinkTargets" ] ''
+    $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p $VERBOSE_ARG ${config.xdg.dataHome}/mime/packages
+    $DRY_RUN_CMD ${pkgs.shared-mime-info}/bin/update-mime-database $VERBOSE_ARG ${config.xdg.dataHome}/mime
+  '';
 
   home.file."wallpaper.png".source = builtins.fetchurl {
     url = "https://github.com/NixOS/nixos-artwork/raw/03c6c20be96c38827037d2238357f2c777ec4aa5/wallpapers/nix-wallpaper-nineish-dark-gray.png";

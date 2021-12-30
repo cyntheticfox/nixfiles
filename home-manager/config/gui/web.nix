@@ -4,7 +4,7 @@ let
   font = "FiraMono Nerd Font";
 in
 {
-  home.sessionVariables."BROWSER" = "qutebrowser";
+  home.sessionVariables.BROWSER = "qutebrowser";
 
   programs.chromium = {
     enable = true;
@@ -21,12 +21,29 @@ in
     loadAutoconfig = true;
     settings = {
       auto_save.session = true;
-      colors.webpage.preferred_color_scheme = "dark";
-      colors.webpage.darkmode.enabled = true;
-      colors.webpage.darkmode.grayscale.images = 0.1;
-      content.pdfjs = true;
-      downloads.location.prompt = false;
-      editor.command = [ "${pkgs.kitty}/bin/kitty" "-e" "vi" "{}" ];
+      colors.webpage = {
+        preferred_color_scheme = "dark";
+        darkmode = {
+          enabled = true;
+          grayscale.images = 0.1;
+        };
+      };
+      content = {
+        cookies.accept = "no-3rdparty";
+        default_encoding = "utf-8";
+        headers.do_not_track = true;
+        pdfjs = true;
+      };
+      downloads = {
+        location = {
+          directory = config.xdg.userDirs.download;
+          prompt = false;
+        };
+
+        open_dispatcher = "${pkgs.xdg_utils}/bin/xdg-open";
+        remove_finished = 60 * 1000; # 60 seconds * 1000 ms per second
+      };
+      editor.command = [ config.home.sessionVariables.TERMINAL "-e" config.home.sessionVariables.EDITOR "{}" ];
       fonts = {
         default_family = font;
         default_size = "10pt";

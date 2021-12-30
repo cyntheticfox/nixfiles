@@ -25,16 +25,27 @@
 
   programs.nix-index.enable = true;
 
-  xdg.userDirs = {
+  xdg = {
     enable = true;
-    desktop = "${config.home.homeDirectory}";
-    documents = "${config.home.homeDirectory}/docs";
-    download = "${config.home.homeDirectory}/tmp";
-    music = "${config.home.homeDirectory}/music";
-    pictures = "${config.home.homeDirectory}/pics";
-    publicShare = "${config.home.homeDirectory}/public";
-    templates = "${config.home.homeDirectory}/.templates";
-    videos = "${config.home.homeDirectory}/videos";
+    cacheHome = "${config.home.homeDirectory}/.cache";
+    configHome = "${config.home.homeDirectory}/.config";
+    dataHome = "${config.home.homeDirectory}/.local/share";
+    stateHome = "${config.home.homeDirectory}/.local/state";
+
+    userDirs = {
+      enable = true;
+
+      createDirectories = true;
+
+      desktop = "${config.home.homeDirectory}";
+      documents = "${config.home.homeDirectory}/docs";
+      download = "${config.home.homeDirectory}/tmp";
+      music = "${config.home.homeDirectory}/music";
+      pictures = "${config.home.homeDirectory}/pics";
+      publicShare = "${config.home.homeDirectory}/public";
+      templates = "${config.home.homeDirectory}/.templates";
+      videos = "${config.home.homeDirectory}/videos";
+    };
   };
 
   home.sessionPath = [ "${config.home.homeDirectory}/.cargo/bin" ];
