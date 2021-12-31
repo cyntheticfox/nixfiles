@@ -87,8 +87,8 @@
     };
 
     supplicant.wlp0s20f3 = {
-      driver = "nl80211";
       extraConf = ''
+        ap_scan=1
         p2p_disabled=1
       '';
       configFile.path = config.sops.secrets.wireless.path;
