@@ -17,6 +17,7 @@
     ../../config/tui/dev.nix
     ../../config/tui/documents.nix
     ../../config/tui/music.nix
+    ../../config/tui/rss.nix
   ];
 
   home.stateVersion = "22.05";
