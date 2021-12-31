@@ -13,7 +13,6 @@ let
     kitty = "${pkgs.kitty}/bin/kitty";
     light = "${pkgs.light}/bin/light";
     loginctl = "${pkgs.systemd}/bin/loginctl";
-    mako = "${pkgs.mako}/bin/mako";
     pamixer = "${pkgs.pamixer}/bin/pamixer";
     pavucontrol = "${pkgs.pavucontrol}/bin/pavucontrol";
     pkill = "${pkgs.procps}/bin/pkill";
@@ -62,14 +61,6 @@ let
     "before-sleep 'exec ${lockscreen}'"
   ];
 
-  ### Notifications Configuration
-  # Sets a default timeout of 15 seconds
-  #
-  notifications = lib.concatStringsSep " " [
-    "${user-bins.mako}"
-    "--default-timeout 15000"
-  ];
-
   ### Workspace Configuration
   # Set a name for workspaces
   #
@@ -86,6 +77,10 @@ let
   };
 in {
   imports = [ ./base-desktop.nix ];
+
+  home.packages = with pkgs; [
+    libnotify
+  ];
 
   services.playerctld.enable = true;
 
@@ -206,7 +201,6 @@ in {
 
       startup = [
         { command = idle; }
-        { command = notifications; }
         { command = user-bins.qutebrowser; }
         { command = user-bins.teams; }
         { command = user-bins.element; }
@@ -774,6 +768,36 @@ in {
           status = "enable";
         }
       ];
+    };
+  };
+
+  programs.mako = {
+    enable = true;
+    defaultTimeout = 15 * 1000;
+    iconPath = lib.concatStringsSep ":" [
+      "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark"
+      "${pkgs.papirus-icon-theme}/share/icons/Papirus"
+      "${pkgs.hicolor-icon-theme}/share/icons/hicolor"
+    ];
+  };
+
+  systemd.user.services.mako =
+  let
+    configFile = "${config.xdg.configHome}/mako/config";
+  in {
+    Unit = {
+      Description = "mako notification daemon for Sway";
+      Documentation = "man:mako(1)";
+      PartOf = [ "sway-session.target" ];
+      ConditionPathExists = configFile;
+    };
+
+    Install.WantedBy = [ "sway-session.target" ];
+
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.mako}/bin/mako --config ${configFile}";
+      BusName = "org.freedesktop.Notifications";
     };
   };
 
