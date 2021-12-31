@@ -97,6 +97,7 @@
 
     networkmanager = {
       enable = true;
+      insertNameservers = [ "9.9.9.9" ];
       wifi.powersave = true;
     };
 
