@@ -24,9 +24,12 @@
   };
 
   # For some reason, notmuch doesn't work if the base dir doesn't exist, and it
-  #   doesn't automatically get created.
+  #   doesn't automatically get created. It also doesn't like to work if you
+  #   don't use its setup command, and so won't create the Xapian database.
+  #
   home.activation.create-maildir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p ${config.accounts.email.maildirBasePath}
+    $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p $VERBOSE_ARG ${config.accounts.email.maildirBasePath}
+    $DRY_RUN_CMD test -d ${config.accounts.email.maildirBasePath}/.notmuch/xapian
   '';
 
   ### Add a system for sending mail
