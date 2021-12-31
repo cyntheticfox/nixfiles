@@ -63,7 +63,7 @@
   systemd.user.timers.mail-sync = {
     Unit.Description = "offlineimap mail synchronization";
     Timer = {
-      OnCalendar = "*:0/5";
+      OnCalendar = "*:0/15";
       Unit = "mail-sync.service";
     };
     Install.WantedBy = [ "timers.target" ];
