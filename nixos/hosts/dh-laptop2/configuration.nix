@@ -98,6 +98,7 @@
     networkmanager = {
       enable = true;
       insertNameservers = [ "9.9.9.9" ];
+      unmanaged = [ "wlp0s20f3" ];
       wifi.powersave = true;
     };
 

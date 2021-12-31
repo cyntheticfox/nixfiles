@@ -65,6 +65,17 @@
       # Start with a refresh
       refresh-on-startup yes
 
+      # Change keybindings
+      unbind-key j
+      unbind-key J
+      unbind-key k
+      unbind-key K
+
+      bind-key j next
+      bind-key k prev
+      bind-key J next-feed
+      bind-key K prev-feed
+
       # Set the colors to be less jarring
       color background          white   default
       color listnormal          white   default
