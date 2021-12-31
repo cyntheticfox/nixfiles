@@ -9,9 +9,16 @@
       inherit (config.users.users.david) group;
 
       sopsFile = ./secrets.yml;
-      mode = "0440";
+      mode = "0400";
       owner = config.users.users.david.name;
       path = "${config.users.users.david.home}/.config/gh/hosts.yml";
+    };
+
+    work-email-pw = {
+      sopsFile = ./secrets.yml;
+      mode = "0400";
+      owner = config.users.users.david.name;
+      path = "${config.users.users.david.home}/.secrets/work-email";
     };
   };
 

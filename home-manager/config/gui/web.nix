@@ -43,7 +43,7 @@ in
         open_dispatcher = "${pkgs.xdg_utils}/bin/xdg-open";
         remove_finished = 60 * 1000; # 60 seconds * 1000 ms per second
       };
-      editor.command = [ config.home.sessionVariables.TERMINAL "-e" config.home.sessionVariables.EDITOR "{}" ];
+      editor.command = [ config.home.sessionVariables.EDITOR_GRAPHICAL "--" "{}" ];
       fonts = {
         default_family = font;
         default_size = "10pt";

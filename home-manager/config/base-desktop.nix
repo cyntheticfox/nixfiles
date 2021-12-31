@@ -3,8 +3,9 @@
     ./base.nix
 
     # Modules
-    ./gui/kitty.nix
     ./gui/fonts.nix
+    ./gui/email.nix
+    ./gui/kitty.nix
     ./gui/remmina.nix
     ./gui/web.nix
   ];
