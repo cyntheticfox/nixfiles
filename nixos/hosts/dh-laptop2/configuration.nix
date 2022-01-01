@@ -146,6 +146,7 @@
 
   # Support Xbox One Controller
   hardware.xpadneo.enable = true;
+  services.hardware.xow.enable = true;
 
   # Support Corsiar Keyboard
   hardware.ckb-next.enable = true;
@@ -164,6 +165,7 @@
     htop
     nixos-icons
     wally-cli
+    xboxdrv
   ];
 
   programs = {
