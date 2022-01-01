@@ -73,6 +73,8 @@
     kernelModules = [ "v4l2loopback" ];
   };
 
+  zramSwap.enable = true;
+
   networking = {
     hostName = "dh-laptop2";
     domain = "gh0st.network";

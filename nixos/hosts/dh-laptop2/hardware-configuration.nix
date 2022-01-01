@@ -75,7 +75,10 @@
     };
   };
 
-  swapDevices = [{ device = "/dev/disk/by-label/swap"; }];
+  swapDevices = [{
+    device = "/dev/disk/by-label/swap";
+    priority = 2048;
+  }];
 
   hardware.enableRedistributableFirmware = true;
   hardware.cpu.intel.updateMicrocode = true;
