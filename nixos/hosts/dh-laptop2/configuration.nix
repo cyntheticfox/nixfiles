@@ -47,16 +47,12 @@
   };
 
   boot = {
-    # Use grub for theming and recoverability
     loader = {
       efi.canTouchEfiVariables = true;
-
-      grub = {
+      systemd-boot = {
         enable = true;
-        version = 2;
-        efiSupport = true;
-
-        device = "nodev";
+        configurationLimit = 10;
+        editor = false;
       };
     };
 
@@ -164,7 +160,6 @@
     udiskie
 
     htop
-    nixos-grub2-theme
     nixos-icons
     wally-cli
   ];
