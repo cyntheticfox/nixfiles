@@ -4,7 +4,7 @@
     offlineimap = {
       enable = true;
       postSyncHookCommand = ''
-        ${pkgs.notmuch}/bin/notmuch new
+        ${pkgs.notmuch}/bin/notmuch --config=${config.xdg.configHome}/notmuch/notmuchrc -- new
       '';
     };
     msmtp.enable = true;
