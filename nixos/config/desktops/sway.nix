@@ -86,6 +86,8 @@ in {
     extraPortals = with pkgs; [ xdg-desktop-portal-wlr ];
   };
 
+  services.gnome.gnome-keyring.enable = true;
+
   gtk.iconCache.enable = true;
 
   fonts.enableDefaultFonts = true;
