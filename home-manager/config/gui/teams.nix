@@ -8,9 +8,14 @@
   # For whatever reason, teams likes to overwrite the mimetypes, even if it's
   #   fine. So, add a step to activation to remove the file if it's not a link.
   #
-  home.activation.remove-mimeapps = lib.hm.dag.entryBetween [ "writeBoundary" ] [ "checkLinkTargets" ] ''
-    if [ ! -L ${config.xdg.configHome}/mimeapps.list ]; then
-        $DRY_RUN_CMD rm $VERBOSE_ARG ${config.xdg.configHome}/mimeapps.list
+  home.activation.remove-mimeapps =
+  let
+    filename = "${config.xdg.configHome}/mimeapps.list";
+  in lib.hm.dag.entryBetween [ "writeBoundary" ] [ "checkLinkTargets" ] ''
+    if [ -e ${filename} ]; then
+      if [ ! -L ${filename} ]; then
+        $DRY_RUN_CMD rm $VERBOSE_ARG ${filename}
+      fi
     fi
   '';
 }
