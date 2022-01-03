@@ -132,12 +132,14 @@
       };
       overlay = self.overlays.ospkgs;
 
-      legacyPackages = flake-utils.lib.eachDefaultSystem (system: import ./pkgs {
-        pkgs = systempkgs { inherit system; };
-        isOverlay = false;
-      });
+      legacyPackages = forAllSystems (system:
+        import ./pkgs {
+          pkgs = systempkgs { inherit system; };
+          isOverlay = false;
+        }
+      );
 
-      defaultPackage = flake-utils.lib.eachDefaultSystem (system:
+      defaultPackage = forAllSystems (system:
         let
           pkgs = systempkgs { inherit system; };
         in

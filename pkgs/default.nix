@@ -7,22 +7,35 @@
 
 with pkgs;
 
-let
+let result = let
   hasPath = attrset: path: lib.hasAttrByPath (lib.splitString "." path) attrset;
   resolvePath = attrset: path: lib.getAttrFromPath (lib.splitString "." path) attrset;
-  resolveDep = path: if isOverlay then (resolvePath outpkgs path) else if (hasPath mypkgs path) then (resolvePath mypkgs path) else (resolvePath pkgs path);
+  resolveDep = path: if isOverlay then (resolvePath outpkgs path) else if (hasPath result path) then (resolvePath result path) else (resolvePath pkgs path);
 
   python3 = pkgs.python3.override {
     packageOverrides = self: super: super.pkgs.callPackage ./python-modules { };
   };
 
   python3Packages = recurseIntoAttrs python3.pkgs;
-in
-{
+in {
   koneko = python3Packages.callPackage ./koneko { };
 
   # Overrides
   firacode-nerdfont = nerdfonts.override { fonts = [ "FiraCode" ];};
+  xow = xow.override {
+    libusb1 = libusb1.overrideAttrs (oldAttrs: rec {
+      version = "2022-01-03";
+
+      src = fetchFromGitHub {
+        owner = "libusb";
+        repo = "libusb";
+        rev = "f2b218b61867f27568ba74fa38e156e5f55ed825";
+        sha256 = "sha256-P9nPP5fB43WI4TGKsztb2+Kye2G6KGZpj/Cr+btJSEc=";
+      };
+
+      patches = [ ];
+    });
+  };
   pass-wayland-ext = pass-wayland.withExtensions (e: with e; [ pass-otp pass-tomb ]);
 } // (if isOverlay then {
   inherit python3Packages;
@@ -30,4 +43,5 @@ in
   python3Packages = recurseIntoAttrs (callPackage ./python-modules { });
 }) // (lib.optionalAttrs allowUnfree {
   hyperchroma = callPackage ./hyperchroma { };
-})
+});
+in result
