@@ -1,4 +1,5 @@
-{ pkgs
+{ inputs
+, pkgs
 , outpkgs ? pkgs
 , allowUnfree ? (!(builtins.getEnv "NIXOS_EXCLUDE_UNFREE" == "1"))
 , isOverlay ? false
@@ -19,6 +20,9 @@ let result = let
   python3Packages = recurseIntoAttrs python3.pkgs;
 in {
   koneko = python3Packages.callPackage ./koneko { };
+
+  # Add non-flakes
+  comma = callPackage inputs.comma { };
 
   # Overrides
   firacode-nerdfont = nerdfonts.override { fonts = [ "FiraCode" ];};

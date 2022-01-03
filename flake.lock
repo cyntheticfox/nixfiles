@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "comma": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1641144035,
+        "narHash": "sha256-8k6yd95erzjN/ALYQguBL7QD2kU8iC2VqpFbdue0LDY=",
+        "owner": "nix-community",
+        "repo": "comma",
+        "rev": "c9b070ca6d1e857d96765a435c455e79afb5b490",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "comma",
+        "rev": "c9b070ca6d1e857d96765a435c455e79afb5b490",
+        "type": "github"
+      }
+    },
     "envfs": {
       "inputs": {
         "nixpkgs": "nixpkgs",
@@ -313,6 +330,7 @@
     },
     "root": {
       "inputs": {
+        "comma": "comma",
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
         "foosteros": "foosteros",

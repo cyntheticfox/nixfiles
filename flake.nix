@@ -42,6 +42,11 @@
         sops-nix.follows = "sops-nix";
       };
     };
+
+    comma = {
+      url = "github:nix-community/comma?rev=c9b070ca6d1e857d96765a435c455e79afb5b490";
+      flake = false;
+    };
   };
 
   outputs = { self, ... }@inputs:
@@ -125,6 +130,7 @@
         foosteros = foosteros.overlay;
 
         ospkgs = final: prev: import ./pkgs {
+          inherit inputs;
           pkgs = prev;
           ospkgs = final;
           isOverlay = true;
@@ -134,6 +140,7 @@
 
       legacyPackages = forAllSystems (system:
         import ./pkgs {
+          inherit inputs;
           pkgs = systempkgs { inherit system; };
           isOverlay = false;
         }
@@ -145,7 +152,7 @@
         in
         pkgs.linkFarmFromDrvs "ospkgs" (nixpkgs.lib.filter (drv: !drv.meta.unsupported) (nixpkgs.lib.collect nixpkgs.lib.isDerivation (
           import ./pkgs {
-            inherit pkgs;
+            inherit pkgs inputs;
             allowUnfree = false;
             isOverlay = false;
           }
