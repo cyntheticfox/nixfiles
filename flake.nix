@@ -2,11 +2,9 @@
   description = "Personal dotfiles";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
-
-    flake-utils.url = "github:numtide/flake-utils";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -26,18 +24,26 @@
     nix-alien = {
       url = "github:thiagokokada/nix-alien";
       inputs = {
+      #   poetry2nix = {
+      #     url = "github:nix-community/poetry2nix";
+      #     inputs = {
+      #       nixpkgs.follows = "nix-alien/nixpkgs";
+      #       flake-utils.follows = "nix-alien/flake-utils";
+      #     };
+      #   };
+        flake-utils.url = "github:numtide/flake-utils";
         nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
       };
     };
 
     foosteros = {
       url = "github:lilyinstarlight/foosteros";
       inputs = {
+        envfs.follows = "";
         flake-compat.follows = "flake-compat";
-        flake-utils.follows = "flake-utils";
         home-manager.follows = "home-manager";
         nix-alien.follows = "nix-alien";
+        nix-ld.follows = "";
         nixpkgs.follows = "nixpkgs";
         sops-nix.follows = "sops-nix";
       };
@@ -47,6 +53,24 @@
       url = "github:nix-community/comma?rev=c9b070ca6d1e857d96765a435c455e79afb5b490";
       flake = false;
     };
+
+    ### FIXME: Include support flakes due to busted nix locking
+    # See https://github.com/NixOS/nix/issues/5728
+    #
+    flake-utils.url = "github:numtide/flake-utils";
+
+    poetry2nix = {
+      url = "github:nix-community/poetry2nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
+
+    foosteros.inputs.flake-utils.follows = "flake-utils";
+    foosteros.inputs.poetry2nix.follows = "poetry2nix";
+    nix-alien.inputs.flake-utils.follows = "flake-utils";
+    nix-alien.inputs.poetry2nix.follows = "poetry2nix";
   };
 
   outputs = { self, ... }@inputs:
