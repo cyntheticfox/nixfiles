@@ -27,6 +27,12 @@ in {
   # Overrides
   firacode-nerdfont = nerdfonts.override { fonts = [ "FiraCode" ];};
   xow = xow.override {
+    ### Override libusb1
+    # Add a temporary workaround for high CPU use. I _could_ use a patch, but
+    #   that's a lot of work.
+    #
+    # See https://github.com/medusalix/xow/issues/141
+    #
     libusb1 = libusb1.overrideAttrs (oldAttrs: rec {
       version = "2022-01-03";
 
