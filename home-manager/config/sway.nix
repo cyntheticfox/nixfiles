@@ -10,19 +10,17 @@ let
     element = "${pkgs.element-desktop-wayland}/bin/element-desktop";
     grimshot = "${pkgs.sway-contrib.grimshot}/bin/grimshot";
     jq = "${pkgs.jq}/bin/jq";
-    kitty = "${pkgs.kitty}/bin/kitty";
     light = "${pkgs.light}/bin/light";
     loginctl = "${pkgs.systemd}/bin/loginctl";
     pamixer = "${pkgs.pamixer}/bin/pamixer";
     pavucontrol = "${pkgs.pavucontrol}/bin/pavucontrol";
     pkill = "${pkgs.procps}/bin/pkill";
-    playerctl = "${pkgs.playerctl}/bin/playerctl";
-    qutebrowser = "${config.programs.qutebrowser.package}/bin/qutebrowser";
-    rofi = "${pkgs.rofi-wayland}/bin/rofi";
+    playerctl = "${config.services.playerctld.package}/bin/playerctl";
+    rofi = "${config.programs.rofi.package}/bin/rofi";
     slurp = "${pkgs.slurp}/bin/slurp";
-    swayidle = "${pkgs.swayidle}/bin/swayidle";
+    swayidle = "${config.services.swayidle.package}/bin/swayidle";
     swaylock = "${pkgs.swaylock-effects}/bin/swaylock";
-    swaymsg = "${pkgs.sway}/bin/swaymsg";
+    swaymsg = "${config.wayland.windowManager.sway.package}/bin/swaymsg";
     systemctl = config.systemd.user.systemctlPath;
     teams = "${pkgs.teams}/bin/teams";
     waybar = "${pkgs.waybar}/bin/waybar";
@@ -30,36 +28,6 @@ let
     wlogout = "${pkgs.wlogout}/bin/wlogout";
     xargs = "${pkgs.findutils}/bin/xargs";
   };
-
-  ### Lockscreen Configuration
-  # This will configure how your screen looks when you lock it, setting the
-  #   colors, effects, indicators, and fade.
-  #
-  lockscreen = lib.concatStringsSep " " [
-    "${user-bins.swaylock}"
-    "--daemonize"
-    "--show-failed-attempts"
-    "--screenshots"
-    "--clock"
-    "--indicator"
-    "--effect-blur 7x5"
-    "--effect-vignette 0.5:0.5"
-    "--fade-in 0.2"
-  ];
-
-  ### Idle Configuration
-  # This will lock your screen after 15 minutes of inactivity, then turn off
-  #   your displays after another minute, and turn your screens back on when
-  #   resumed. It will also lock your screen before your computer goes to sleep.
-  #
-  idle = lib.concatStringsSep " " [
-    "${user-bins.swayidle} -w "
-    "timeout 900 'exec ${lockscreen}' "
-    "timeout 960 '${user-bins.swaymsg} \"output * dpms off\"' "
-    "resume '${user-bins.swaymsg} \"output * dpms on\"' "
-    "before-sleep '${user-bins.playerctl} pause' "
-    "before-sleep 'exec ${lockscreen}'"
-  ];
 
   ### Workspace Configuration
   # Set a name for workspaces
@@ -111,7 +79,7 @@ in {
       inherit modifier left right up down;
 
       # Set the terminal
-      terminal = user-bins.kitty;
+      terminal = config.home.sessionVariables.TERMINAL;
 
       # Use some of the default keybindings
       keybindings = lib.mkOptionDefault {
@@ -172,10 +140,10 @@ in {
         "${modifier}+Ctrl+Shift+Right" = "move container to workspace next";
 
         # Allow loading web browser with $modifier+a
-        "${modifier}+a" = "exec ${user-bins.qutebrowser}";
+        "${modifier}+a" = "exec ${config.home.sessionVariables.BROWSER}";
 
         # Create a binding for the lock screen. Something close to $modifier+l
-        "${modifier}+o" = "exec ${lockscreen}";
+        "${modifier}+o" = "exec ${user-bins.swaylock}";
 
         # Create bindings for modes
         "${modifier}+r" = "mode \"resize\"";
@@ -200,8 +168,7 @@ in {
       };
 
       startup = [
-        { command = idle; }
-        { command = user-bins.qutebrowser; }
+        { command = config.home.sessionVariables.BROWSER; }
         { command = user-bins.teams; }
         { command = user-bins.element; }
       ];
@@ -701,7 +668,7 @@ in {
   xdg.configFile."wlogout/layout".text = ''
     {
       "label": "lock",
-      "action": "${lockscreen}",
+      "action": "${user-bins.swaylock}",
       "text" : "Lock",
       "keybind": "1"
     }
@@ -740,7 +707,7 @@ in {
   programs.rofi = {
     enable = true;
     package = pkgs.rofi-wayland;
-    terminal = user-bins.kitty;
+    terminal = config.home.sessionVariables.TERMINAL;
     font = "Fira Sans 12";
     theme = "android_notification";
     extraConfig.modi = "drun,run";
@@ -788,11 +755,11 @@ in {
     Unit = {
       Description = "mako notification daemon for Sway";
       Documentation = "man:mako(1)";
-      PartOf = [ "sway-session.target" ];
+      PartOf = [ "graphical-session.target" ];
       ConditionPathExists = configFile;
     };
 
-    Install.WantedBy = [ "sway-session.target" ];
+    Install.WantedBy = [ "graphical-session.target" ];
 
     Service = {
       Type = "simple";
@@ -800,6 +767,42 @@ in {
       BusName = "org.freedesktop.Notifications";
     };
   };
+
+  services.swayidle = {
+    enable = true;
+    timeouts = [
+      {
+        timeout = 900;
+        command = "exec ${user-bins.swaylock}";
+      }
+      {
+        timeout = 960;
+        command = "${user-bins.swaymsg} \"output * dpms off\"";
+        resumeCommand = "${user-bins.swaymsg} \"output * dpms on\"";
+      }
+    ];
+    events = [
+      {
+        event = "before-sleep";
+        command = "${user-bins.playerctl} pause";
+      }
+      {
+        event = "before-sleep";
+        command = "exec ${user-bins.swaylock}";
+      }
+    ];
+  };
+
+  xdg.configFile."swaylock/config".text = ''
+    daemonize
+    show-failed-attempts
+    screenshots
+    clock
+    indicator
+    effect-blur="7x5"
+    effect-vignette="0.5:0.5"
+    fade-in="0.2"
+  '';
 
   ### Tray Target
   # Since we use wayland instead of xsession, we have to manually create a

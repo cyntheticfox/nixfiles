@@ -11,7 +11,7 @@
   home.activation.remove-mimeapps =
   let
     filename = "${config.xdg.configHome}/mimeapps.list";
-  in lib.hm.dag.entryBetween [ "writeBoundary" ] [ "checkLinkTargets" ] ''
+  in lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
     if [ -e ${filename} ]; then
       if [ ! -L ${filename} ]; then
         $DRY_RUN_CMD rm $VERBOSE_ARG ${filename}

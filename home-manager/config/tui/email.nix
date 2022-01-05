@@ -48,6 +48,7 @@
   in {
     Unit = {
       Description = "offlineimap mail synchronization";
+      Documentation = "man:offlineimap(1)";
       ConditionPathExists = configFile;
     };
 
@@ -61,7 +62,10 @@
   };
 
   systemd.user.timers.mail-sync = {
-    Unit.Description = "offlineimap mail synchronization";
+    Unit = {
+      Description = "offlineimap mail synchronization";
+      Documentation = "man:offlineimap(1)";
+    };
     Timer = {
       OnCalendar = "*:0/15";
       Unit = "mail-sync.service";

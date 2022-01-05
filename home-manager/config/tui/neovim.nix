@@ -1,7 +1,7 @@
 { config, pkgs, inputs, ... }: {
   home.sessionVariables = {
-    "EDITOR" = "nvim";
-    "VISUAL" = "nvim -R";
+    "EDITOR" = "${config.programs.neovim.finalPackage}/bin/nvim";
+    "VISUAL" = "${config.home.sessionVariables.EDITOR} -R";
   };
 
   programs.neovim = {
@@ -615,42 +615,42 @@
 
   # Load editorconfig file as well
   home.file.".editorconfig".text = ''
-      # .editorconfig
-      #
-      # Source for controlling tabulation and formatting of files by name
-      #
-      # https://editorconfig.org
-      #
-      # Plugins required for...
-      #
-      # Vim: https://github.com/editorconfig/editorconfig-vim
-      # VSCode/VSCodium: https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig
+    # .editorconfig
+    #
+    # Source for controlling tabulation and formatting of files by name
+    #
+    # https://editorconfig.org
+    #
+    # Plugins required for...
+    #
+    # Vim: https://github.com/editorconfig/editorconfig-vim
+    # VSCode/VSCodium: https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig
 
-      root = true
+    root = true
 
-      # Set file defaults
-      [*]
-      end_of_line = lf
-      insert_final_newline = true
-      trim_trailing_whitespace = true
-      indent_style = space
-      indent_size = 4
-      charset = utf-8
+    # Set file defaults
+    [*]
+    end_of_line = lf
+    insert_final_newline = true
+    trim_trailing_whitespace = true
+    indent_style = space
+    indent_size = 4
+    charset = utf-8
 
-      [*.md]
-      trim_trailing_whitespace = false
+    [*.md]
+    trim_trailing_whitespace = false
 
-      [Makefile]
-      indent_style = tab
-      indent_size = 8
+    [Makefile]
+    indent_style = tab
+    indent_size = 8
 
-      # Default to two spaces for data languages
-      [*.{c,cpp,css,h,hpp,htm,html,js,json,lua,nix,tf,ts,yml,yaml,xml,xhtml}]
-      indent_style = space
-      indent_size = 2
+    # Default to two spaces for data languages
+    [*.{c,cpp,css,h,hpp,htm,html,js,json,lua,nix,tf,ts,yml,yaml,xml,xhtml}]
+    indent_style = space
+    indent_size = 2
 
-      [flake.lock]
-      indent_style = space
-      indent_size = 2
+    [flake.lock]
+    indent_style = space
+    indent_size = 2
   '';
 }

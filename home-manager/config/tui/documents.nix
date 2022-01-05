@@ -2,7 +2,12 @@
   home.packages = with pkgs; [
     glow
     pandoc
-    texlive.combined.scheme-basic
     xsv
   ];
+
+  programs.texlive = {
+    enable = true;
+
+    extraPackages = p: { inherit (p) collection-fontsrecommended; };
+  };
 }

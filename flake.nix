@@ -50,7 +50,7 @@
     };
 
     comma = {
-      url = "github:nix-community/comma?rev=c9b070ca6d1e857d96765a435c455e79afb5b490";
+      url = "github:nix-community/comma";
       flake = false;
     };
 

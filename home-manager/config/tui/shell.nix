@@ -5,7 +5,7 @@
 
     shellAliases = {
       # Editor aliases
-      "v" = "${pkgs.neovim}/bin/nvim";
+      "v" = config.home.sessionVariables.EDITOR;
 
       # List Aliases
       "l" = "ls";
@@ -219,12 +219,14 @@
 
   programs.direnv = {
     enable = true;
+
     nix-direnv.enable = true;
     enableZshIntegration = true;
   };
 
   programs.z-lua = {
     enable = true;
+
     enableZshIntegration = true;
     enableAliases = true;
   };

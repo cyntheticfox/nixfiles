@@ -4,7 +4,7 @@ let
   font = "FiraMono Nerd Font";
 in
 {
-  home.sessionVariables.BROWSER = "qutebrowser";
+  home.sessionVariables.BROWSER = "${config.programs.qutebrowser.package}/bin/qutebrowser";
 
   programs.chromium = {
     enable = true;
