@@ -107,7 +107,7 @@ in {
       terminal.vt = 7;
       default_session.command = lib.concatStringsSep " " [
         "${pkgs.greetd.tuigreet}/bin/tuigreet"
-        "--cmd \"${pkgs.sway}\""
+        "--cmd \"${pkgs.sway}/bin/sway\""
         "--time"
         "--asterisks"
         "--remember"
