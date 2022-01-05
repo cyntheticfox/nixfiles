@@ -105,7 +105,13 @@ in {
     enable = true;
     settings = {
       terminal.vt = 7;
-      default_session.command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd ${pkgs.sway}/bin/sway --time --asterisks --remember";
+      default_session.command = lib.concatStringsSep " " [
+        "${pkgs.greetd.tuigreet}/bin/tuigreet"
+        "--cmd \"${pkgs.sway}\""
+        "--time"
+        "--asterisks"
+        "--remember"
+      ];
     };
   };
 }

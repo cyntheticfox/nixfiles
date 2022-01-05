@@ -71,8 +71,10 @@ in
 
   wayland.windowManager.sway = {
     enable = true;
+
     wrapperFeatures.gtk = true;
     systemdIntegration = true;
+
     config =
       let
         # Use start/logo key for modifiers
@@ -98,6 +100,8 @@ in
 
         # Set the terminal
         terminal = config.home.sessionVariables.TERMINAL;
+
+        seat.seat0.hide_cursor = "when-typing enable";
 
         # Use some of the default keybindings
         keybindings = lib.mkOptionDefault {
@@ -189,17 +193,29 @@ in
           { command = config.home.sessionVariables.BROWSER; }
           { command = user-bins.teams; }
           { command = user-bins.element; }
-          { command = user-bins.discord; }
+          # { command = user-bins.discord; }
           { command = user-bins.astroid; }
         ];
 
-        # assigns = {
-        #   "${workspaces._1}" = [{ app_id = "^org.qutebrowser.qutebrowser$"; }];
-        #   "${workspaces._2}" = [{ class = "^Microsoft Teams - Preview"; }];
-        #   "${workspaces._3}" = [{ app_id = "^Element$"; }];
-        #   "${workspaces._4}" = [{ class = "^discord$"; }];
-        #   "${workspaces._5}" = [{ app_id = "^astroid$"; }];
-        # };
+        ### Organize startup programs
+        # For how the home-manager module is written as of 2022-01-05, the
+        #   workspace argument isn't quoted, technically allowing for using
+        #   number name syntax, but unfortunately causing workspaces with
+        #   spaces in their name to not load correctly. Workaround is quoting
+        #   the workspace name.
+        #
+        # See https://github.com/houstdav000/home-manager/blob/master/modules/services/window-managers/i3-sway/lib/functions.nix#L55
+        #
+        assigns = {
+          "\"${workspaces._1}\"" = [{ app_id = "^org.qutebrowser.qutebrowser$"; }];
+          "\"${workspaces._2}\"" = [{ class = "^Microsoft Teams - Preview"; }];
+          "\"${workspaces._3}\"" = [{ app_id = "^Element$"; }];
+          # "\"${workspaces._4}\"" = [
+          #   { instance = "^discord$"; }
+          #   { title = "^Discord$"; }
+          # ];
+          "\"${workspaces._5}\"" = [{ app_id = "^astroid$"; }];
+        };
 
         bars = [{
           fonts = {
