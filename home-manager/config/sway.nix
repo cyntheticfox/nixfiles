@@ -29,6 +29,18 @@ let
     xargs = "${pkgs.findutils}/bin/xargs";
   };
 
+  lockscreen = lib.concatStringsSep " " [
+    "${user-bins.swaylock}"
+    "--daemonize"
+    "--show-failed-attempts"
+    "--screenshots"
+    "--clock"
+    "--indicator"
+    "--effect-blur 7x5"
+    "--effect-vignette 0.5:0.5"
+    "--fade-in 0.2"
+  ];
+
   ### Workspace Configuration
   # Set a name for workspaces
   #
@@ -143,7 +155,7 @@ in {
         "${modifier}+a" = "exec ${config.home.sessionVariables.BROWSER}";
 
         # Create a binding for the lock screen. Something close to $modifier+l
-        "${modifier}+o" = "exec ${user-bins.swaylock}";
+        "${modifier}+o" = "exec ${lockscreen}";
 
         # Create bindings for modes
         "${modifier}+r" = "mode \"resize\"";
@@ -668,7 +680,7 @@ in {
   xdg.configFile."wlogout/layout".text = ''
     {
       "label": "lock",
-      "action": "${user-bins.swaylock}",
+      "action": "${lockscreen}",
       "text" : "Lock",
       "keybind": "1"
     }
@@ -773,7 +785,7 @@ in {
     timeouts = [
       {
         timeout = 900;
-        command = "exec ${user-bins.swaylock}";
+        command = "exec ${lockscreen}";
       }
       {
         timeout = 960;
@@ -788,21 +800,10 @@ in {
       }
       {
         event = "before-sleep";
-        command = "exec ${user-bins.swaylock}";
+        command = "exec ${lockscreen}";
       }
     ];
   };
-
-  xdg.configFile."swaylock/config".text = ''
-    daemonize
-    show-failed-attempts
-    screenshots
-    clock
-    indicator
-    effect-blur="7x5"
-    effect-vignette="0.5:0.5"
-    fade-in="0.2"
-  '';
 
   ### Tray Target
   # Since we use wayland instead of xsession, we have to manually create a
