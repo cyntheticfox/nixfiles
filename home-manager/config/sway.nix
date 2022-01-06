@@ -8,6 +8,7 @@ let
     # Functions
     screenOrder = lib.escapeShellArgs;
   };
+
   user-bins = {
     astroid = "${pkgs.astroid}/bin/astroid";
     date = "${pkgs.coreutils}/bin/date";
@@ -67,6 +68,7 @@ in
     libnotify
   ];
 
+  # Enable controlling players with media keys with playerctld
   services.playerctld.enable = true;
 
   wayland.windowManager.sway = {
@@ -80,15 +82,15 @@ in
         # Use start/logo key for modifiers
         modifier = "Mod4";
 
-        # Use vim-like keybindings
+        # Use (n)vim-like keybindings
         left = "h";
         right = "l";
         up = "j";
         down = "k";
 
         # Your preferred application launcher
-        # Note: pass the final command to swaymsg so that the resulting window can be opened
-        #   on the original workspace that the command was run on.
+        # NOTE: pass the final command to swaymsg so that the resulting window
+        #   can be opened on the original workspace that the command was run on.
         appmenu = "${user-bins.rofi} -show drun | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
         menu = "${user-bins.rofi} -show run | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
 
@@ -101,9 +103,10 @@ in
         # Set the terminal
         terminal = config.home.sessionVariables.TERMINAL;
 
+        # Configure XWayland seat
         seat.seat0.hide_cursor = "when-typing enable";
 
-        # Use some of the default keybindings
+        # Use some of the default keybindings w/ `lib.mkOptionDefault`
         keybindings = lib.mkOptionDefault {
           # Media key bindings
           "XF86AudioMute" = "exec ${user-bins.pamixer} -t";
@@ -204,7 +207,9 @@ in
         #   spaces in their name to not load correctly. Workaround is quoting
         #   the workspace name.
         #
-        # See https://github.com/houstdav000/home-manager/blob/master/modules/services/window-managers/i3-sway/lib/functions.nix#L55
+        # NOTE: See https://github.com/houstdav000/home-manager/blob/master/modules/services/window-managers/i3-sway/lib/functions.nix#L55
+        #
+        # TODO: Replace DiscordCanary with a wayland-compatible electron app
         #
         assigns = {
           "\"${workspaces._1}\"" = [{ app_id = "^org.qutebrowser.qutebrowser$"; }];
@@ -303,9 +308,7 @@ in
               "Return" = exit-mode;
             };
 
-          recording_on = {
-            "Escape" = "exec ${user-bins.pkill} wf-recorder, mode \"default\"";
-          };
+          recording_on."Escape" = "exec ${user-bins.pkill} wf-recorder, mode \"default\"";
 
           recording =
             let
@@ -382,6 +385,7 @@ in
           ];
       };
 
+    # TODO: Change color configuration, pull out output configuration
     extraConfig = ''
       ###########################################################################
       #                                                                         #
@@ -410,8 +414,6 @@ in
       set $base0E #a074c4
       set $base0F #8a553f
 
-      set $transparent-background-color rgba(20, 26, 27, 0.9)
-
       # Basic color configuration using the Base16 variables for windows and borders.
       # Property Name         Border  BG      Text    Indicator Child Border
       client.focused          $base05 $base0C $base00 $base0C $base0C
@@ -432,14 +434,12 @@ in
     '';
   };
 
-  # Waybar configuration
+  ### Waybar configuration
+  # Configuration for a status bar provided by waybar.
   #
-  # Ref: https://github.com/Alexays/Waybar/wiki/Configuration
+  # NOTE: See https://github.com/Alexays/Waybar/wiki/Configuration
+  #
   xdg.configFile."waybar/config".source = (pkgs.formats.json { }).generate "config" {
-    # -------------------------------------------------------------------------
-    # Global configuration
-    # -------------------------------------------------------------------------
-
     layer = "top";
     position = "top";
 
@@ -463,10 +463,6 @@ in
       "tray"
       "clock"
     ];
-
-    # -------------------------------------------------------------------------
-    # Modules
-    # -------------------------------------------------------------------------
 
     battery = {
       interval = 30;
@@ -563,15 +559,11 @@ in
     tray.icon-size = 21;
   };
 
-  # Waybar Style configuration
+  ### Waybar Style configuration
+  # NOTE: See https://github.com/Alexays/Waybar/wiki/Configuration
   #
-  # Ref: https://github.com/Alexays/Waybar/wiki/Configuration
   xdg.configFile."waybar/style.css".text = ''
-    /* -----------------------------------------------------------------------------
-     * Keyframes
-     * -----------------------------------------------------------------------------
-     */
-
+    /*** Keyframes ***/
     @keyframes blink-warning {
       70% {
         color: #eeeeee;
@@ -595,12 +587,7 @@ in
     }
 
 
-    /* -----------------------------------------------------------------------------
-     * Base styles
-     * -----------------------------------------------------------------------------
-     */
-
-    /* Reset all styles */
+    /*** Base Styles ***/
     * {
       border: none;
       border-radius: 0;
@@ -633,11 +620,7 @@ in
       padding-right: 10px;
     }
 
-    /* -----------------------------------------------------------------------------
-     * Module styles
-     * -----------------------------------------------------------------------------
-     */
-
+    /*** Module Styles ***/
     #battery {
       animation-timing-function: linear;
       animation-iteration-count: infinite;
@@ -748,6 +731,11 @@ in
     }
   '';
 
+  ### Power Menu
+  # Provide a power/logout menu.
+  #
+  # TODO: Make into a home-manager module?
+  #
   xdg.configFile."wlogout/layout".text = ''
     {
       "label": "lock",
@@ -796,6 +784,10 @@ in
     extraConfig.modi = "drun,run";
   };
 
+  ### Kanshi Dynamic Output Daemon
+  # Configure screens dynamically, since my current workstation is a laptop I
+  #   may or may not have docked at the time.
+  #
   services.kanshi = {
     enable = true;
 
@@ -821,8 +813,20 @@ in
     };
   };
 
+  # Have kanshi restart to ensure
+  home.activation.restart-kanshi = lib.hm.dag.entryAfter [ "reloadSystemd" ] ''
+    $DRY_RUN_CMD ${user-bins.systemctl} restart $VERBOSE_ARG --user kanshi.service
+  '';
+
+  ### Mako Notification Daemon
+  # Configure a notification daemon for Sway, providing
+  #   `org.freedesktop.Notifications`.
+  #
+  # TODO: Add systemd service to home-manager module?
+  #
   programs.mako = {
     enable = true;
+
     defaultTimeout = 15 * 1000;
     iconPath = lib.concatStringsSep ":" [
       "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark"
@@ -852,8 +856,13 @@ in
       };
     };
 
+  ### Idle Daemon
+  # Need an idle daemon to lock the system and turn off the screen if I step
+  #   away.
+  #
   services.swayidle = {
     enable = true;
+
     timeouts = [
       {
         timeout = 900;
@@ -881,7 +890,7 @@ in
   # Since we use wayland instead of xsession, we have to manually create a
   #   "tray" systemd target.
   #
-  # See https://github.com/nix-community/home-manager/issues/2064
+  # NOTE: See https://github.com/nix-community/home-manager/issues/2064
   #
   systemd.user.targets.tray.Unit = {
     Description = "Home Manager System Tray";

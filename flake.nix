@@ -24,13 +24,13 @@
     nix-alien = {
       url = "github:thiagokokada/nix-alien";
       inputs = {
-      #   poetry2nix = {
-      #     url = "github:nix-community/poetry2nix";
-      #     inputs = {
-      #       nixpkgs.follows = "nix-alien/nixpkgs";
-      #       flake-utils.follows = "nix-alien/flake-utils";
-      #     };
-      #   };
+        #   poetry2nix = {
+        #     url = "github:nix-community/poetry2nix";
+        #     inputs = {
+        #       nixpkgs.follows = "nix-alien/nixpkgs";
+        #       flake-utils.follows = "nix-alien/flake-utils";
+        #     };
+        #   };
         flake-utils.url = "github:numtide/flake-utils";
         nixpkgs.follows = "nixpkgs";
       };
@@ -192,22 +192,22 @@
       });
 
       devShell = forAllSystems (system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ sops-nix.overlay ];
-        };
-      in
-      pkgs.mkShell {
-        nativeBuildInputs = with pkgs; [
-          sops
-          sops-init-gpg-key
-          sops-import-keys-hook
-        ];
-        sopsPGPKeyDirs = [
-          ./keys/hosts
-          ./keys/users
-        ];
-      });
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ sops-nix.overlay ];
+          };
+        in
+        pkgs.mkShell {
+          nativeBuildInputs = with pkgs; [
+            sops
+            sops-init-gpg-key
+            sops-import-keys-hook
+          ];
+          sopsPGPKeyDirs = [
+            ./keys/hosts
+            ./keys/users
+          ];
+        });
     };
 }

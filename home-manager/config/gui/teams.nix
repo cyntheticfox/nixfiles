@@ -9,13 +9,14 @@
   #   fine. So, add a step to activation to remove the file if it's not a link.
   #
   home.activation.remove-mimeapps =
-  let
-    filename = "${config.xdg.configHome}/mimeapps.list";
-  in lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
-    if [ -e ${filename} ]; then
-      if [ ! -L ${filename} ]; then
-        $DRY_RUN_CMD rm $VERBOSE_ARG ${filename}
+    let
+      filename = "${config.xdg.configHome}/mimeapps.list";
+    in
+    lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+      if [ -e ${filename} ]; then
+        if [ ! -L ${filename} ]; then
+          $DRY_RUN_CMD rm $VERBOSE_ARG ${filename}
+        fi
       fi
-    fi
-  '';
+    '';
 }

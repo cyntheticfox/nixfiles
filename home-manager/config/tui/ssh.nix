@@ -8,7 +8,7 @@
       identityFile = "~/.ssh/id_ed25519";
     };
 
-    includes= [ "config.d/*" ];
+    includes = [ "config.d/*" ];
 
     matchBlocks = {
       "github.com" = {

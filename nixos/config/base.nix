@@ -76,10 +76,16 @@
 
   environment = {
     defaultPackages = with pkgs; [
-      bc file tree unzip
+      bc
+      file
+      tree
+      unzip
       cachix
-      git gnupg neofetch
-      nix-index nix-alien
+      git
+      gnupg
+      neofetch
+      nix-index
+      nix-alien
       progress
       strace
     ];

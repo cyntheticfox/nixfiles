@@ -59,18 +59,19 @@ in
   };
 
   xdg.mimeApps.defaultApplications =
-  let
-    quteBrowser = "org.qutebrowser.qutebrowser.desktop";
-  in {
-    "text/html" = quteBrowser;
-    "text/xml" = quteBrowser;
-    "application/xhtml+xml" = quteBrowser;
-    "application/xml" = quteBrowser;
-    "application/rdf+xml" = quteBrowser;
-    "image/gif" = quteBrowser;
-    "image/jpeg" = quteBrowser;
-    "image/png" = quteBrowser;
-    "x-scheme-handler/http" = quteBrowser;
-    "x-scheme-handler/https" = quteBrowser;
-  };
+    let
+      quteBrowser = "org.qutebrowser.qutebrowser.desktop";
+    in
+    {
+      "text/html" = quteBrowser;
+      "text/xml" = quteBrowser;
+      "application/xhtml+xml" = quteBrowser;
+      "application/xml" = quteBrowser;
+      "application/rdf+xml" = quteBrowser;
+      "image/gif" = quteBrowser;
+      "image/jpeg" = quteBrowser;
+      "image/png" = quteBrowser;
+      "x-scheme-handler/http" = quteBrowser;
+      "x-scheme-handler/https" = quteBrowser;
+    };
 }

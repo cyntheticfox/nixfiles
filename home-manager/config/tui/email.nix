@@ -43,23 +43,24 @@
   programs.offlineimap.enable = true;
 
   systemd.user.services.mail-sync =
-  let
-    configFile = "${config.xdg.configHome}/offlineimap/config";
-  in {
-    Unit = {
-      Description = "offlineimap mail synchronization";
-      Documentation = "man:offlineimap(1)";
-      ConditionPathExists = configFile;
-    };
+    let
+      configFile = "${config.xdg.configHome}/offlineimap/config";
+    in
+    {
+      Unit = {
+        Description = "offlineimap mail synchronization";
+        Documentation = "man:offlineimap(1)";
+        ConditionPathExists = configFile;
+      };
 
-    Service = {
-      Type = "oneshot";
-      ExecStart = lib.concatStringsSep " " [
-        "${pkgs.offlineimap}/bin/offlineimap"
-        "-c ${configFile}"
-      ];
+      Service = {
+        Type = "oneshot";
+        ExecStart = lib.concatStringsSep " " [
+          "${pkgs.offlineimap}/bin/offlineimap"
+          "-c ${configFile}"
+        ];
+      };
     };
-  };
 
   systemd.user.timers.mail-sync = {
     Unit = {

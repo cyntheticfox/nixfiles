@@ -28,24 +28,25 @@
   accounts.email = {
     maildirBasePath = "${config.home.homeDirectory}/.mail";
     accounts.work =
-    let
-      realName = "David Houston";
-      address = "houstdav000@gmail.com";
-    in {
-      inherit realName address;
-      primary = true;
-      flavor = "gmail.com";
-      passwordCommand = lib.concatStringsSep " " [
-        "${pkgs.coreutils-full}/bin/cat"
-        "${config.xdg.userDirs.extraConfig.XDG_SECRETS_DIR}/work-email"
-      ];
-      signature.text = ''
-        --
-        ${realName}
-        <a href="mailto:${address}">${address}</a>
+      let
+        realName = "David Houston";
+        address = "houstdav000@gmail.com";
+      in
+      {
+        inherit realName address;
+        primary = true;
+        flavor = "gmail.com";
+        passwordCommand = lib.concatStringsSep " " [
+          "${pkgs.coreutils-full}/bin/cat"
+          "${config.xdg.userDirs.extraConfig.XDG_SECRETS_DIR}/work-email"
+        ];
+        signature.text = ''
+          --
+          ${realName}
+          <a href="mailto:${address}">${address}</a>
         '';
-      gpg.key = "5960278CE235F821";
-    };
+        gpg.key = "5960278CE235F821";
+      };
   };
 
   programs.nix-index.enable = true;
