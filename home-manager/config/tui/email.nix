@@ -5,6 +5,8 @@
       enable = true;
       postSyncHookCommand = ''
         ${pkgs.notmuch}/bin/notmuch --config=${config.xdg.configHome}/notmuch/notmuchrc -- new
+        ${pkgs.libnotify}/bin/notify-send --icon=mail-unread -- 'Mail Sync' "Mail synchronized; $(${pkgs.notmuch}/bin/notmuch --config=${config.xdg.configHome}/notmuch/notmuchrc -- count 'tag:unread') unread messages"
+
       '';
     };
     msmtp.enable = true;
@@ -16,11 +18,9 @@
   #
   programs.notmuch = {
     enable = true;
-    hooks = {
-      postNew = ''
-        ${pkgs.notmuch}/bin/notmuch tag +nixos -- tag:new and from:nixos1@discourcemail.com
-      '';
-    };
+    hooks.postNew = ''
+      ${pkgs.notmuch}/bin/notmuch tag +nixos -- tag:new and from:nixos1@discourcemail.com
+    '';
   };
 
   # For some reason, notmuch doesn't work if the base dir doesn't exist, and it
