@@ -56,6 +56,10 @@ in
       window.title_format = "Qutebrowser - {perc}{private}{current_title}";
       zoom.default = "90%";
     };
+    keyBindings.normal = {
+      "J" = "tab-prev";
+      "K" = "tab-next";
+    };
   };
 
   xdg.mimeApps.defaultApplications =
