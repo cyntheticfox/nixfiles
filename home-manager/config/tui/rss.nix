@@ -75,6 +75,7 @@
       bind-key k prev
       bind-key J next-feed
       bind-key K prev-feed
+      bind-key d prev-dialog
 
       # Set the colors to be less jarring
       color background          white   default
