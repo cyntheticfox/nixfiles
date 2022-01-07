@@ -95,7 +95,16 @@
       confirm-exit yes
 
       # Set up notifications
-      notify-program "${pkgs.libnotify}/bin/notify-send --icon=network-wireless -- 'NewsBoat RSS'"
+      notify-program ${config.xdg.configHome}/newsboat/notify.sh
+      notify-format "%d new articles (%n unread articles, %f unread feeds)"
+    '';
+  };
+
+  xdg.configFile."newsboat/notify.sh" = {
+    executable = true;
+    text = ''
+      #!${pkgs.bashInteractive}/bin/bash
+      ${pkgs.libnotify}/bin/notify-send --icon=network-wireless -- 'NewsBoat RSS' "$1"
     '';
   };
 }
