@@ -58,9 +58,13 @@
         tags = [ "blogs" "companies" "cloudflare" ];
         title = "The Cloudflare Blog";
       }
+      {
+        url = "https://www.linode.com/blog/feed/";
+        tags = [ "blogs" "companies" "linode" ];
+        title = "Linode Blog";
+      }
     ];
 
-    # FIXME
     extraConfig = ''
       # Start with a refresh
       refresh-on-startup yes
