@@ -21,6 +21,9 @@
     set seekbar
     set singlequit
     set smartcase
+
+    map J :tabprevious<C-M>
+    map K :tabnext<C-M>
   '';
 
   services.mpd = {
