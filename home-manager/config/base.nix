@@ -16,6 +16,7 @@
     ./tui/shell.nix
     ./tui/ssh.nix
     ./tui/tmux.nix
+    ./tui/todo.nix
   ];
 
   home.packages = with pkgs; [

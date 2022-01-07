@@ -93,6 +93,7 @@ in
         #   can be opened on the original workspace that the command was run on.
         appmenu = "${user-bins.rofi} -show drun | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
         menu = "${user-bins.rofi} -show run | ${user-bins.xargs} ${user-bins.swaymsg} exec --";
+        todomenu = "${pkgs.todofi-sh}/bin/todofi.sh";
 
         # Shutdown command
         shutdown = "${user-bins.wlogout} --buttons-per-row 3";
@@ -127,6 +128,7 @@ in
           # Redefine menu bindings
           "${modifier}+d" = "exec ${appmenu}";
           "${modifier}+Shift+d" = "exec ${menu}";
+          "${modifier}+t" = "exec ${todomenu}";
 
           # Define our own shutdown command
           "${modifier}+Shift+e" = "exec ${shutdown}";
