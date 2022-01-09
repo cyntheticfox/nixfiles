@@ -39,6 +39,11 @@
         title = "Xe's Blog";
       }
       {
+        url = "https://www.copetti.org/index.xml";
+        tags = [ "blogs" "people" "gaming" ];
+        title = "Rodrigo's Stuff";
+      }
+      {
         url = "https://fasterthanli.me/index.xml";
         tags = [ "blogs" "people" "rust" ];
         title = "FasterThanLime Blog";
