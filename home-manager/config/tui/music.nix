@@ -50,6 +50,11 @@
       directory = config.xdg.userDirs.music;
       library = "${config.xdg.dataHome}/musiclibrary.db";
       import.move = "yes";
+      paths = {
+        default = "$albumartist - $album%aunique{}/$track $title";
+        singleton = "Non-Album/$artist - $title";
+        comp = "Compilations/$album%aunique{}/$track $title";
+      };
     };
   };
 }
