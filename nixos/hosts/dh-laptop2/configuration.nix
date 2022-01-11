@@ -28,16 +28,9 @@
       sshKeyPaths = [ ];
     };
 
-    secrets = {
-      wireless = {
-        sopsFile = ./secrets.yml;
-        restartUnits = [ "supplicant-wlp0s20f3.service" ];
-      };
-
-      root-password = {
-        sopsFile = ./secrets.yml;
-        neededForUsers = true;
-      };
+    secrets.root-password = {
+      sopsFile = ./secrets.yml;
+      neededForUsers = true;
     };
   };
 
@@ -84,19 +77,12 @@
       wlp0s20f3.useDHCP = true;
     };
 
-    supplicant.wlp0s20f3 = {
-      extraConf = ''
-        ap_scan=1
-        p2p_disabled=1
-      '';
-      configFile.path = config.sops.secrets.wireless.path;
-      userControlled.enable = true;
-    };
-
+    # TODO: Add Keyfile configurations
     networkmanager = {
       enable = true;
+
+      packages = with pkgs; [ networkmanager-openvpn ];
       insertNameservers = [ "9.9.9.9" ];
-      unmanaged = [ "wlp0s20f3" ];
       wifi.powersave = true;
     };
 
