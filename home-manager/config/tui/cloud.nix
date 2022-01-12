@@ -8,6 +8,7 @@
     # Provisioning Tools
     ansible
     kubectl
+    packer
     terraform
   ];
 }
