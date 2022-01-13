@@ -1,4 +1,11 @@
 { config, pkgs, ... }: {
+  home.packages = with pkgs; [
+    git-ignore
+    octofetch
+    onefetch
+    tig
+  ];
+
   programs.git = {
     enable = true;
     userName = "David Houston";
