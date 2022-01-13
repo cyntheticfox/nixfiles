@@ -128,8 +128,6 @@
     ];
   };
 
-  security.tpm2.enable = true;
-
   # Support Xbox One Controller
   hardware.xpadneo.enable = true;
   services.hardware.xow.enable = true;
@@ -163,6 +161,9 @@
       enableSSHSupport = true;
     };
   };
+
+  # Enable updating firmware
+  services.fwupd.enable = true;
 
   # Enable Docker
   virtualisation.docker.enable = true;
