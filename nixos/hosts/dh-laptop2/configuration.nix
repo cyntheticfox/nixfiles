@@ -117,7 +117,6 @@
     extraPackages = with pkgs; [
       beignet
       intel-media-driver
-      intel-ocl
       libvdpau-va-gl
       mesa
       vaapiIntel
