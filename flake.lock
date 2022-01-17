@@ -74,11 +74,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1642379100,
-        "narHash": "sha256-3ZIObdpm2YrB6YkKdRZ2b/XS9IpmIj1OPDq2f8zHPZE=",
+        "lastModified": 1642446166,
+        "narHash": "sha256-mZnvZ02jsOFLevhLNGZDwlAJEE8piiqnirw/XpOs1Fw=",
         "owner": "lilyinstarlight",
         "repo": "foosteros",
-        "rev": "1dd58ed3f2ceacc1410825cdb3ec11bd54ab64ac",
+        "rev": "38f864f84432702884bfdbc23979ba0880a6950a",
         "type": "github"
       },
       "original": {
@@ -94,11 +94,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1642379981,
-        "narHash": "sha256-FE0RIZmrG2ScKGRthNzcFAssLW7MgMLun0g7Qg2zZMA=",
+        "lastModified": 1642455502,
+        "narHash": "sha256-tqz6MsyEgiFQUUDEfKdTJmog19R78WRxi0ZdC33biM8=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "f71d41ba360cd49b3647bf91402c7479e859fd2e",
+        "rev": "9bceb8292e9a2c84db999cb5817d77fb8d6b83fe",
         "type": "github"
       },
       "original": {
@@ -175,11 +175,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1642413744,
-        "narHash": "sha256-wksmAq8q08Rn/4I/ZYnoM6uvOVJeIaWqg2kcRIe/ki0=",
+        "lastModified": 1642457096,
+        "narHash": "sha256-Jmwx78XFeXv0/I5jY6PdfraQdbHYQmgMP1tGLy5zVF0=",
         "owner": "nix-community",
         "repo": "poetry2nix",
-        "rev": "83a135e78177275bbfb097cb1619f47d2c7e8893",
+        "rev": "6f31c4ed1dafdd1fa9930d5157576abdf6e0b370",
         "type": "github"
       },
       "original": {
