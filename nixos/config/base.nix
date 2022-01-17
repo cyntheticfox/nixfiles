@@ -94,6 +94,12 @@
     localBinInPath = true;
   };
 
+  programs.vim.defaultEditor = true;
+
+  programs.tmux.enable = true;
+
+  programs.mtr.enable = true;
+
   networking.useDHCP = false;
 
   i18n.defaultLocale = "en_US.UTF-8";

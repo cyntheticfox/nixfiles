@@ -4,7 +4,7 @@
 #  your system.  Help is available in the configuration.nix(5) man page
 #  and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }: {
+{ config, lib, pkgs, ... }: {
   # Import other configuration files
   imports = [
     ./hardware-configuration.nix
@@ -59,7 +59,7 @@
     plymouth.enable = true;
 
     # Add Video4Linux loopback support
-    extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+    extraModulePackages = with config.boot.kernelPackages; (lib.singleton v4l2loopback);
     extraModprobeConfig = ''
       options v4l2looback video_nr=63
     '';
@@ -81,8 +81,11 @@
     networkmanager = {
       enable = true;
 
-      packages = with pkgs; [ networkmanager-openvpn ];
-      insertNameservers = [ "9.9.9.9" ];
+      packages = with pkgs; (lib.singleton networkmanager-openvpn);
+      insertNameservers = [
+        "9.9.9.9"
+        "149.112.112.112"
+      ];
       wifi.powersave = true;
     };
 
@@ -100,13 +103,15 @@
 
   hardware.bluetooth = {
     enable = true;
+
     powerOnBoot = false;
     package = pkgs.bluezFull;
-    settings.General.Name = "${config.networking.hostName}";
+    settings.General.Name = config.networking.hostName;
   };
 
   hardware.opengl = {
     enable = true;
+
     driSupport32Bit = true;
 
     extraPackages = with pkgs; [
@@ -130,7 +135,6 @@
 
   # Support Xbox One Controller
   hardware.xpadneo.enable = true;
-  services.hardware.xow.enable = true;
 
   # Support Corsiar Keyboard
   hardware.ckb-next.enable = true;
@@ -146,27 +150,16 @@
     parted
     udiskie
 
+    bluez-tools
     htop
     nixos-icons
     wally-cli
-    xboxdrv
   ];
 
-  programs = {
-    vim.defaultEditor = true;
-    tmux.enable = true;
-    mtr.enable = true;
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-  };
+  programs.gnupg.agent.enable = true;
 
   # Enable updating firmware
   services.fwupd.enable = true;
-
-  # Enable Docker
-  virtualisation.docker.enable = true;
 
   # Enable Steam for gaming
   programs.steam.enable = true;
@@ -180,6 +173,7 @@
   sound.enable = true;
   services.pipewire = {
     enable = true;
+
     alsa.enable = true;
     jack.enable = true;
     pulse.enable = true;
