@@ -85,7 +85,6 @@
       gnupg
       neofetch
       nix-index
-      nix-alien
       progress
       strace
     ];

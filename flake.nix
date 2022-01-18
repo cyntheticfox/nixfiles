@@ -21,28 +21,13 @@
       flake = false;
     };
 
-    nix-alien = {
-      url = "github:thiagokokada/nix-alien";
-      inputs = {
-        #   poetry2nix = {
-        #     url = "github:nix-community/poetry2nix";
-        #     inputs = {
-        #       nixpkgs.follows = "nix-alien/nixpkgs";
-        #       flake-utils.follows = "nix-alien/flake-utils";
-        #     };
-        #   };
-        flake-utils.url = "github:numtide/flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
-
     foosteros = {
       url = "github:lilyinstarlight/foosteros";
       inputs = {
         envfs.follows = "";
         flake-compat.follows = "flake-compat";
         home-manager.follows = "home-manager";
-        nix-alien.follows = "nix-alien";
+        nix-alien.follows = "";
         nix-ld.follows = "";
         nixpkgs.follows = "nixpkgs";
         sops-nix.follows = "sops-nix";
@@ -53,24 +38,6 @@
       url = "github:nix-community/comma";
       flake = false;
     };
-
-    ### FIXME: Include support flakes due to busted nix locking
-    # See https://github.com/NixOS/nix/issues/5728
-    #
-    flake-utils.url = "github:numtide/flake-utils";
-
-    poetry2nix = {
-      url = "github:nix-community/poetry2nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
-
-    foosteros.inputs.flake-utils.follows = "flake-utils";
-    foosteros.inputs.poetry2nix.follows = "poetry2nix";
-    nix-alien.inputs.flake-utils.follows = "flake-utils";
-    nix-alien.inputs.poetry2nix.follows = "poetry2nix";
   };
 
   outputs = { self, ... }@inputs:
@@ -150,10 +117,8 @@
       };
 
       overlays = {
-        nix-alien = nix-alien.overlay;
         foosteros = foosteros.overlay;
-
-        ospkgs = final: prev: import ./pkgs {
+          ospkgs = final: prev: import ./pkgs {
           inherit inputs;
           pkgs = prev;
           ospkgs = final;
