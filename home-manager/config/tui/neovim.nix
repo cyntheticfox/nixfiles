@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }: {
+{ config, pkgs, ... }: {
   home.sessionVariables = {
     "EDITOR" = "${config.programs.neovim.finalPackage}/bin/nvim";
     "VISUAL" = "${config.home.sessionVariables.EDITOR} -R";
@@ -527,7 +527,7 @@
         '';
       }
       {
-        plugin = nvim-treesitter.withPlugins (plugins: pkgs.tree-sitter.allGrammars);
+        plugin = nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars);
         config = ''
           lua << EOF
           require('nvim-treesitter.configs').setup({

@@ -39,35 +39,6 @@
     users.root.passwordFile = config.sops.secrets.root-password.path;
   };
 
-  boot = {
-    loader = {
-      efi.canTouchEfiVariables = true;
-      systemd-boot = {
-        enable = true;
-        configurationLimit = 10;
-        editor = false;
-      };
-    };
-
-    # Use latest release kernel
-    kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [
-      "intel_iommu=on"
-      "quiet"
-      "vga=current"
-    ];
-    plymouth.enable = true;
-
-    # Add Video4Linux loopback support
-    extraModulePackages = with config.boot.kernelPackages; (lib.singleton v4l2loopback);
-    extraModprobeConfig = ''
-      options v4l2looback video_nr=63
-    '';
-    kernelModules = [ "v4l2loopback" ];
-  };
-
-  zramSwap.enable = true;
-
   networking = {
     hostName = "dh-laptop2";
     domain = "gh0st.network";
@@ -103,46 +74,6 @@
 
   time.timeZone = "America/New_York";
 
-  hardware.bluetooth = {
-    enable = true;
-
-    powerOnBoot = false;
-    package = pkgs.bluezFull;
-    settings.General.Name = config.networking.hostName;
-  };
-
-  hardware.opengl = {
-    enable = true;
-
-    driSupport32Bit = true;
-
-    extraPackages = with pkgs; [
-      beignet
-      intel-media-driver
-      libvdpau-va-gl
-      mesa
-      vaapiIntel
-      vaapiVdpau
-    ];
-
-    extraPackages32 = with pkgs.driversi686Linux; [
-      beignet
-      libvdpau-va-gl
-      mesa
-      vaapiIntel
-      vaapiVdpau
-    ];
-  };
-
-  # Support Xbox One Controller
-  hardware.xpadneo.enable = true;
-
-  # Support Corsiar Keyboard
-  hardware.ckb-next.enable = true;
-
-  # Support ZSA Keyboard
-  hardware.keyboard.zsa.enable = true;
-
   environment.systemPackages = with pkgs; [
     # FS tools
     cifs-utils
@@ -156,6 +87,8 @@
     nixos-icons
     wally-cli
   ];
+
+  systemd.tmpfiles.packages = with pkgs; [ openvpn podman-unwrapped man-db ];
 
   programs.gnupg.agent.enable = true;
 

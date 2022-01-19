@@ -69,7 +69,7 @@
             username = "david";
             homeDirectory = "/home/${username}";
 
-            configuration = { pkgs, lib, ... }: {
+            configuration = _: {
               imports = modules;
             };
           };
@@ -127,8 +127,8 @@
         foosteros = foosteros.overlay;
         ospkgs = final: prev: import ./pkgs {
           inherit inputs;
-          pkgs = prev;
           ospkgs = final;
+          pkgs = prev;
           isOverlay = true;
         };
       };
@@ -180,6 +180,7 @@
           nativeBuildInputs = with pkgs; [
             pre-commit
             nixpkgs-fmt
+            nix-linter
             sops
             sops-init-gpg-key
             sops-import-keys-hook

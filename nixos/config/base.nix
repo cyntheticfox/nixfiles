@@ -56,9 +56,9 @@
       persistent = true;
     };
     maxJobs = "auto";
-    nixPath = (lib.mapAttrsToList (name: value: name + "=" + value) inputs) ++ [ ("ospkgs=" + "../.") ("nixpkgs-overlays=" + ../. + "/overlays.nix") ];
+    nixPath = (lib.mapAttrsToList (n: v: n + "=" + v) inputs) ++ [ ("ospkgs=" + "../.") ("nixpkgs-overlays=" + ../. + "/overlays.nix") ];
     optimise.automatic = true;
-    registry = (lib.mapAttrs (name: value: { flake = value; }) (lib.filterAttrs (name: value: value ? outputs) inputs)) // { ospkgs = { flake = self; }; };
+    registry = (lib.mapAttrs (_: flake: { inherit flake; }) (lib.filterAttrs (_: v: v ? outputs) inputs)) // { ospkgs = { flake = self; }; };
     requireSignedBinaryCaches = true;
     useSandbox = true;
   };

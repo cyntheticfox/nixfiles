@@ -855,12 +855,12 @@ in
         Type = "simple";
         ExecStart = "${pkgs.mako}/bin/mako --config ${configFile}";
         ExecStartPost =
-        if
-          config.services.mpdris2.enable
-        then
-          "${pkgs.systemd}/bin/systemctl --user -- restart mpdris2.service"
-        else
-          "";
+          if
+            config.services.mpdris2.enable
+          then
+            "${pkgs.systemd}/bin/systemctl --user -- restart mpdris2.service"
+          else
+            "";
         BusName = "org.freedesktop.Notifications";
       };
     };
