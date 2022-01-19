@@ -4,11 +4,11 @@
     offlineimap = {
       enable = true;
       postSyncHookCommand = ''
-      ${pkgs.notmuch}/bin/notmuch --config=${config.xdg.configHome}/notmuch/notmuchrc -- new
-        $NEW_MAIL=$(${pkgs.notmuch}/bin/notmuch --config=${config.xdg.configHome}/notmuch/notmuchrc -- count 'tag:unread')
-        if [ "$NEW_MAIL" -ne "0" ]; then
-          ${pkgs.libnotify}/bin/notify-send --icon=mail-unread -- 'Mail Sync' "Mail synchronized; $NEW_MAIL unread messages"
-        fi
+        ${pkgs.notmuch}/bin/notmuch --config=${config.xdg.configHome}/notmuch/notmuchrc -- new
+          $NEW_MAIL=$(${pkgs.notmuch}/bin/notmuch --config=${config.xdg.configHome}/notmuch/notmuchrc -- count 'tag:unread')
+          if [ "$NEW_MAIL" -ne "0" ]; then
+            ${pkgs.libnotify}/bin/notify-send --icon=mail-unread -- 'Mail Sync' "Mail synchronized; $NEW_MAIL unread messages"
+          fi
       '';
     };
     msmtp.enable = true;

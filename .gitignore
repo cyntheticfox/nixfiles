@@ -1,2 +1,5 @@
 # Nix
 result
+
+# Pre-commit (managed by flake)
+/.pre-commit-config.yaml

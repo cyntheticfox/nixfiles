@@ -40,6 +40,11 @@
       url = "github:nix-community/comma";
       flake = false;
     };
+
+    pre-commit-hooks = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, ... }@inputs:
@@ -120,7 +125,7 @@
 
       overlays = {
         foosteros = foosteros.overlay;
-          ospkgs = final: prev: import ./pkgs {
+        ospkgs = final: prev: import ./pkgs {
           inherit inputs;
           pkgs = prev;
           ospkgs = final;
@@ -151,11 +156,16 @@
         ))
       );
 
-      checks = forAllSystems (system: import ./tests {
+      checks = forAllSystems (system: (import ./tests {
         pkgs = systempkgs { inherit system; };
         inherit self;
         inherit (self) inputs outputs;
         inherit system;
+      }) // {
+        pre-commit-check = pre-commit-hooks.lib."${system}".run {
+          src = ./.;
+          hooks.nixpkgs-fmt.enable = true;
+        };
       });
 
       devShell = forAllSystems (system:
@@ -166,7 +176,10 @@
           };
         in
         pkgs.mkShell {
+          inherit (self.checks."${system}".pre-commit-check) shellHook;
           nativeBuildInputs = with pkgs; [
+            pre-commit
+            nixpkgs-fmt
             sops
             sops-init-gpg-key
             sops-import-keys-hook
