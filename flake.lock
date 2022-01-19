@@ -62,17 +62,16 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "poetry2nix": [],
         "sops-nix": [
           "sops-nix"
         ]
       },
       "locked": {
-        "lastModified": 1642511201,
-        "narHash": "sha256-b24ijQechyjVHLnGbt40KHy6wSxDiT2KmLNs53LAWOA=",
+        "lastModified": 1642612191,
+        "narHash": "sha256-oYSY69hlt7Qd07m8iYHERPm5cKVrvyBKPViFbBdApcQ=",
         "owner": "lilyinstarlight",
         "repo": "foosteros",
-        "rev": "a2b5afa8b3f90290a785b11d6fb3b9ffeefaaf1a",
+        "rev": "8f8638de8590b371dc309caffc829f2ada99fc2f",
         "type": "github"
       },
       "original": {

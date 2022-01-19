@@ -11,8 +11,13 @@
         package = pkgs.qemu_kvm;
         ovmf.enable = true;
         runAsRoot = true;
+
+        # Since Windows 11 requires a tpm:
+        swtpm.enable = true;
       };
     };
+
+    spiceUSBRedirection.enable = true;
   };
 
   environment.etc."pam.d/system-login" = {

@@ -84,7 +84,7 @@ in
   xdg.portal = {
     enable = true;
     gtkUsePortal = true;
-    extraPortals = with pkgs; [ xdg-desktop-portal-wlr ];
+    wlr.enable = true;
   };
 
   services.gnome.gnome-keyring.enable = true;
