@@ -26,10 +26,12 @@
       inputs = {
         envfs.follows = "";
         flake-compat.follows = "flake-compat";
+        flake-utils.follows = "";
         home-manager.follows = "home-manager";
         nix-alien.follows = "";
         nix-ld.follows = "";
         nixpkgs.follows = "nixpkgs";
+        poetry2nix.follows = "";
         sops-nix.follows = "sops-nix";
       };
     };
