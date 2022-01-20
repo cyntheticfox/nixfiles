@@ -21,21 +21,6 @@
       flake = false;
     };
 
-    foosteros = {
-      url = "github:lilyinstarlight/foosteros";
-      inputs = {
-        envfs.follows = "";
-        flake-compat.follows = "flake-compat";
-        flake-utils.follows = "";
-        home-manager.follows = "home-manager";
-        nix-alien.follows = "";
-        nix-ld.follows = "";
-        nixpkgs.follows = "nixpkgs";
-        poetry2nix.follows = "";
-        sops-nix.follows = "sops-nix";
-      };
-    };
-
     comma = {
       url = "github:nix-community/comma";
       flake = false;
@@ -123,14 +108,11 @@
         };
       };
 
-      overlays = {
-        foosteros = foosteros.overlay;
-        ospkgs = final: prev: import ./pkgs {
-          inherit inputs;
-          ospkgs = final;
-          pkgs = prev;
-          isOverlay = true;
-        };
+      overlays.ospkgs = final: prev: import ./pkgs {
+        inherit inputs;
+        ospkgs = final;
+        pkgs = prev;
+        isOverlay = true;
       };
       overlay = self.overlays.ospkgs;
 
