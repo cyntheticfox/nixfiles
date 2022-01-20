@@ -7,7 +7,7 @@
   services.openssh = {
     enable = true;
     allowSFTP = true;
-    challengeResponseAuthentication = true;
+    kbdInteractiveAuthentication = true;
     passwordAuthentication = true;
     forwardX11 = false;
     hostKeys = [
