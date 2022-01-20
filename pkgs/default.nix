@@ -24,9 +24,6 @@ let result =
     # WIP
     #koneko = python3Packages.callPackage ./koneko { };
 
-    # Add non-flakes
-    comma = callPackage inputs.comma { };
-
     # Overrides
     firacode-nerdfont = nerdfonts.override { fonts = [ "FiraCode" ]; };
     pass-wayland-ext = pass-wayland.withExtensions (e: with e; [ pass-otp pass-tomb ]);

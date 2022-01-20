@@ -21,11 +21,6 @@
       flake = false;
     };
 
-    comma = {
-      url = "github:nix-community/comma";
-      flake = false;
-    };
-
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
