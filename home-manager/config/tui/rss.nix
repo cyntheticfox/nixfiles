@@ -54,9 +54,19 @@
         title = "This Week in Rust";
       }
       {
+        url = "http://feeds.feedburner.com/PythonInsider";
+        tags = [ "blogs" "projects" "python" ];
+        title = "Python Insider";
+      }
+      {
         url = "https://matrix.org/blog/feed";
         tags = [ "blogs" "companies" "matrix" ];
         title = "Matrix.org Blog";
+      }
+      {
+        url = "https://www.pine64.org/feed/";
+        tags = [ "blogs" "companies" "pine64" ];
+        title = "PINE64 Blog";
       }
       {
         url = "https://blog.cloudflare.com/rss/";
