@@ -38,7 +38,7 @@ let
     "${user-bins.swaylock}"
     "--daemonize"
     "--show-failed-attempts"
-    "--screenshots"
+    "--image ${config.home.homeDirectory}/wallpaper.png"
     "--clock"
     "--indicator"
     "--effect-blur 7x5"
@@ -804,12 +804,14 @@ in
           status = "disable";
         }
         {
-          criteria = screens.sub;
-          status = "enable";
-        }
-        {
           criteria = screens.main;
           status = "enable";
+          position = "0,0";
+        }
+        {
+          criteria = screens.sub;
+          status = "enable";
+          position = "1920,0";
         }
       ];
     };
