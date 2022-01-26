@@ -16,11 +16,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
-
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -34,11 +29,6 @@
       supportedSystems = with nixpkgs.lib; (intersectLists (platforms.x86_64 ++ platforms.aarch64) platforms.linux);
 
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-
-      systempkgs = { system }: import nixpkgs {
-        inherit system;
-        overlays = nixpkgs.lib.attrValues self.overlays;
-      };
     in
     {
       lib = {
@@ -103,42 +93,10 @@
         };
       };
 
-      overlays.ospkgs = final: prev: import ./pkgs {
-        inherit inputs;
-        ospkgs = final;
-        pkgs = prev;
-        isOverlay = true;
-      };
-      overlay = self.overlays.ospkgs;
 
-      legacyPackages = forAllSystems (system:
-        import ./pkgs {
-          inherit inputs;
-          pkgs = systempkgs { inherit system; };
-          isOverlay = false;
-        }
-      );
-
-      defaultPackage = forAllSystems (system:
-        let
-          pkgs = systempkgs { inherit system; };
-        in
-        pkgs.linkFarmFromDrvs "ospkgs" (nixpkgs.lib.filter (drv: !drv.meta.unsupported) (nixpkgs.lib.collect nixpkgs.lib.isDerivation (
-          import ./pkgs {
-            inherit pkgs inputs;
-            allowUnfree = false;
-            isOverlay = false;
-          }
-        )
-        ))
-      );
-
-      checks = forAllSystems (system: (import ./tests {
-        pkgs = systempkgs { inherit system; };
-        inherit self;
-        inherit (self) inputs outputs;
-        inherit system;
-      }) // {
+      checks = {
+        x86_64-linux = nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel);
+      } // forAllSystems (system: {
         pre-commit-check = pre-commit-hooks.lib."${system}".run {
           src = ./.;
           hooks.nixpkgs-fmt.enable = true;
