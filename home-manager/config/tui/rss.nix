@@ -9,6 +9,16 @@
         title = "Phoronix Linux News";
       }
       {
+        url = "https://blogs.windows.com/windows-insider/feed/";
+        tags = [ "news" "windows" ];
+        title = "Windows Inseider Preview (WIP) News";
+      }
+      {
+        url = "https://blogs.windows.com/windowsdeveloper/feed/";
+        tags = [ "news" "windows" "dev" ];
+        title = "Windows Developer Blog";
+      }
+      {
         url = "https://feeds.arstechnica.com/arstechnica/technology-lab";
         tags = [ "news" "tech" "arstechnica" ];
         title = "arstechnica - Technology Lab";

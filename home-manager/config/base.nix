@@ -21,6 +21,7 @@
 
   home.packages = with pkgs; [
     comma
+    curlie
     smbclient
     traceroute
   ];
