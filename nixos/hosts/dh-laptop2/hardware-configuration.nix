@@ -63,9 +63,16 @@
     plymouth.enable = true;
 
     # Add Video4Linux loopback support
-    extraModprobeConfig = ''
-      options v4l2looback video_nr=63
-    '';
+    extraModprobeConfig =
+      let
+        modopts = list: builtins.concatStringsSep " " ([ "options" ] ++ list);
+      in
+      modopts [
+        "v4l2looback"
+        "video_nr=63"
+        "kvm_intel"
+        "nested=1"
+      ];
     kernelModules = [ "v4l2loopback" ];
     extraModulePackages = with config.boot.kernelPackages; [ acpi_call v4l2loopback ];
   };
