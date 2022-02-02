@@ -10,7 +10,6 @@ let
   };
 
   user-bins = {
-    astroid = "${pkgs.astroid}/bin/astroid";
     date = "${pkgs.coreutils}/bin/date";
     discord = "${pkgs.discord-canary}/bin/discordcanary";
     element = "${pkgs.element-desktop-wayland}/bin/element-desktop";
@@ -199,7 +198,6 @@ in
           { command = user-bins.teams; }
           { command = user-bins.element; }
           # { command = user-bins.discord; }
-          { command = user-bins.astroid; }
         ];
 
         ### Organize startup programs
@@ -221,7 +219,6 @@ in
           #   { instance = "^discord$"; }
           #   { title = "^Discord$"; }
           # ];
-          "\"${workspaces._5}\"" = [{ app_id = "^astroid$"; }];
         };
 
         bars = [{
