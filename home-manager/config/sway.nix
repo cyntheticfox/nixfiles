@@ -245,91 +245,103 @@ in
           hideEdgeBorders = "smart";
         };
 
-        modes = {
-          resize =
-            let
-              small = "10px";
-              large = "20px";
-            in
-            {
-              # left will shrink the containers width
-              # right will grow the containers width
-              # up will shrink the containers height
-              # down will grow the containers height
-              "${left}" = "resize shrink width ${small}";
-              "${down}" = "resize grow height ${small}";
-              "${up}" = "resize shrink height ${small}";
-              "${right}" = "resize grow width ${small}";
-              "Shift+${left}" = "resize shrink width ${large}";
-              "Shift+${down}" = "resize grow height ${large}";
-              "Shift+${up}" = "resize shrink height ${large}";
-              "Shift+${right}" = "resize grow width ${large}";
-
-              # Ditto, with arrow keys
-              "Left" = "resize shrink width ${small}";
-              "Down" = "resize grow height ${small}";
-              "Up" = "resize shrink height ${small}";
-              "Right" = "resize grow width ${small}";
-              "Shift+Left" = "resize shrink width ${large}";
-              "Shift+Down" = "resize grow height ${large}";
-              "Shift+Up" = "resize shrink height ${large}";
-              "Shift+Right" = "resize grow width ${large}";
-
-              ## Resize // Window Gaps // + - ##
-              "minus" = "gaps inner current minus 5px";
-              "plus" = "gaps inner current plus 5px";
-
-              # Return to default mode
-              "Return" = "mode \"default\"";
-              "Escape" = "mode \"default\"";
-            };
-
-          screenshot =
-            let
-              exit-mode = "mode \"default\"";
-              screenshot-file = "${config.xdg.userDirs.pictures}/screenshot-$(${user-bins.date} +'%Y-%m-%d-%H%M%S').png";
-            in
-            {
-              # Fullscreen screenshot
-              "f" = "exec --no-startup-id ${user-bins.grimshot} --notify copy screen, ${exit-mode}";
-              "Shift+f" = "exec --no-startup-id ${user-bins.grimshot} --notify save screen ${screenshot-file}, ${exit-mode}";
-
-              # Window screenshot
-              "w" = "exec --no-startup-id ${user-bins.grimshot} --notify copy win, ${exit-mode}";
-              "Shift+w" = "exec --no-startup-id ${user-bins.grimshot} --notify save win ${screenshot-file}, ${exit-mode}";
-
-              # Region screenshot
-              "r" = "exec --no-startup-id ${user-bins.grimshot} --notify copy area, ${exit-mode}";
-              "Shift+r" = "exec --no-startup-id ${user-bins.grimshot} --notify save area ${screenshot-file}, ${exit-mode}";
-
-              # Return to default mode.
-              "Escape" = exit-mode;
+        modes =
+          let
+            exit-mode = "mode \"default\"";
+            exitModeKeys = {
               "Return" = exit-mode;
-            };
-
-          recording_on."Escape" = "exec ${user-bins.pkill} wf-recorder, mode \"default\"";
-
-          recording =
-            let
-              exit-mode = "mode \"default\"";
-              recording-mode = "mode \"recording_on\"";
-              recording-file = "${config.xdg.userDirs.videos}/recording-$(${user-bins.date} +'%Y-%m-%d-%H%M%S').mp4";
-              subcommand = "${user-bins.swaymsg} -t get_outputs | ${user-bins.jq} -r '.[] | select(.focused) | .name'";
-            in
-            {
-              # Window recording
-              "w" = "exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio=0 -o $(${subcommand}) -f ${recording-file}, ${recording-mode}";
-              "Shift+w" = "exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio -o $(${subcommand}) -f ${recording-file}, ${recording-mode}";
-
-              # Region recording w/ Slurp
-              "r" = "exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio=0 -g \"$(${user-bins.slurp} -d)\" -f ${recording-file}, ${recording-mode}";
-              "Shift+r" = "exec ${user-bins.pkill} wf-recorder || ${user-bins.wf-recorder} --audio -g \"$(${user-bins.slurp} -d)\" -f ${recording-file}, ${recording-mode}";
-
-              # Return to default mode.
               "Escape" = exit-mode;
-              "Return" = exit-mode;
             };
-        };
+            outFile =
+              let
+                timestampFormat = "%Y-%m-%d-%H%M%S";
+                timestampBash = "$(${user-bins.date} + '${timestampFormat}')";
+              in
+              dir: prefix: type: dir + "/" + prefix + "-" + timestampBash + "." + type;
+            killRecorder = "exec ${user-bins.pkill} wf-recorder";
+          in
+          {
+            resize =
+              let
+                sizes = with sizes;{
+                  tiny = 5;
+                  small = tiny * 2;
+                  large = small * 2;
+                };
+                sizeMap = lib.mapAttrs (_: v: "${builtins.toString v}px") sizes;
+              in
+              with sizeMap; {
+                # left will shrink the containers width
+                # right will grow the containers width
+                # up will shrink the containers height
+                # down will grow the containers height
+                "${left}" = "resize shrink width ${small}";
+                "${down}" = "resize grow height ${small}";
+                "${up}" = "resize shrink height ${small}";
+                "${right}" = "resize grow width ${small}";
+                "Shift+${left}" = "resize shrink width ${large}";
+                "Shift+${down}" = "resize grow height ${large}";
+                "Shift+${up}" = "resize shrink height ${large}";
+                "Shift+${right}" = "resize grow width ${large}";
+
+                # Ditto, with arrow keys
+                "Left" = "resize shrink width ${small}";
+                "Down" = "resize grow height ${small}";
+                "Up" = "resize shrink height ${small}";
+                "Right" = "resize grow width ${small}";
+                "Shift+Left" = "resize shrink width ${large}";
+                "Shift+Down" = "resize grow height ${large}";
+                "Shift+Up" = "resize shrink height ${large}";
+                "Shift+Right" = "resize grow width ${large}";
+
+                ## Resize // Window Gaps // + - ##
+                "minus" = "gaps inner current minus ${tiny}";
+                "plus" = "gaps inner current plus ${tiny}";
+
+                # Return to default mode
+              } // exitModeKeys;
+
+            screenshot =
+              let
+                screenshot-file = outFile config.xdg.userDirs.pictures "screenshot" "png";
+                capture = action: area: "exec --no-startup-id ${user-bins.grimshot} --notify ${action} ${area} ${if action == "save" then screenshot-file else ""}, ${exit-mode}";
+                keyMap = {
+                  "f" = "screen";
+                  "w" = "win";
+                  "r" = "area";
+                };
+              in
+              (lib.mapAttrs (_: capture "copy") keyMap) //
+              (lib.mapAttrs' (n: v: lib.nameValuePair "Shift+${n}" (capture "save" v)) keyMap) //
+              exitModeKeys;
+
+            recording_on."Escape" = "${killRecorder}, ${exit-mode}";
+
+            recording =
+              let
+                recording-mode = "mode \"recording_on\"";
+                recording-file = outFile config.xdg.userDirs.videos "recording" "mp4";
+                areas = {
+                  win = {
+                    command = "$(${user-bins.swaymsg} -t get_outputs | ${user-bins.jq} -r '.[] | select(.focused) | .name')";
+                    arg = "-o";
+                  };
+                  area = {
+                    command = "\"$(${user-bins.slurp} -d)\"";
+                    arg = "-g";
+                  };
+                };
+                audioBln = a: "--audio${if a then "" else "=0"}";
+                keyMap = {
+                  "w" = "win";
+                  "r" = "area";
+                };
+                capture = audio: area: "${killRecorder} || ${user-bins.wf-recorder} ${audioBln audio} ${areas."${area}".arg} ${areas."${area}".command} -f ${recording-file}, ${recording-mode}";
+              in
+              (lib.mapAttrs (_: capture true) keyMap) //
+              (lib.mapAttrs' (n: v: lib.nameValuePair "Shift+${n}" (capture false v)) keyMap) //
+              exitModeKeys;
+          };
 
         # Default to outputting some workspaces on other monitors if available
         workspaceOutputAssign =
