@@ -110,15 +110,8 @@
 
   programs.gnupg.agent.enable = true;
 
-  # Enable updating firmware
-  services.fwupd.enable = true;
-
   # Enable Steam for gaming
   programs.steam.enable = true;
-
-  # Power config
-  services.auto-cpufreq.enable = true;
-  services.tlp.enable = true;
 
   # Sound config
   security.rtkit.enable = true;
