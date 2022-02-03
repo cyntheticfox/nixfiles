@@ -56,9 +56,9 @@
     maxJobs = "auto";
     # nixPath = (lib.mapAttrsToList (n: v: n + "=" + v) inputs) ++ [ ("ospkgs=" + "../.") ("nixpkgs-overlays=" + ../. + "/overlays.nix") ];
     optimise.automatic = true;
-    registry = (lib.mapAttrs (_: flake: { inherit flake; }) (lib.filterAttrs (_: v: v ? outputs) inputs)) // { ospkgs = { flake = self; }; };
     requireSignedBinaryCaches = true;
     useSandbox = true;
+    registry = lib.mapAttrs (_: flake: { inherit flake; }) (lib.filterAttrs (_: v: v ? outputs) inputs);
   };
 
   nixpkgs = {
