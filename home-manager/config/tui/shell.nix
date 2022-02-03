@@ -54,7 +54,6 @@
       enable = true;
 
       plugins = [
-        "cargo"
         "command-not-found"
         "git"
         "git-flow"
