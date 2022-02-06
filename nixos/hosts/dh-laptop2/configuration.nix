@@ -29,11 +29,6 @@
     };
 
     secrets = {
-      wireless = {
-        sopsFile = ./secrets.yml;
-        restartUnits = [ "supplicant-wlp0s20f3.service" ];
-      };
-
       root-password = {
         sopsFile = ./secrets.yml;
         neededForUsers = true;
@@ -55,20 +50,11 @@
       wlp0s20f3.useDHCP = true;
     };
 
-    supplicant.wlp0s20f3 = {
-      driver = "nl80211";
-      extraConf = ''
-        p2p_disabled=1
-      '';
-      configFile.path = config.sops.secrets.wireless.path;
-      userControlled.enable = true;
-    };
-
     # TODO: Add Keyfile configurations
     networkmanager = {
       enable = true;
 
-      unmanaged = [ "wlp0s20f3" ];
+      unmanaged = [ ];
 
       packages = with pkgs; (lib.singleton networkmanager-openvpn);
       insertNameservers = [
