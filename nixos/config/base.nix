@@ -43,7 +43,6 @@
     ];
     buildCores = 0;
     checkConfig = true;
-    package = pkgs.nixUnstable;
     extraOptions = ''
       experimental-features = nix-command flakes
     '';

@@ -289,7 +289,7 @@
           require('lint').linters.cspell.cmd = '${pkgs.nodePackages.cspell}/bin/cspell'
           require('lint').linters.flake8.cmd = '${pkgs.python3Packages.flake8}/bin/flake8'
           require('lint').linters.flawfinder.cmd = '${pkgs.flawfinder}/bin/flawfinder'
-          require('lint').linters.nix.cmd = '${pkgs.nixUnstable}/bin/nix-instantiate'
+          require('lint').linters.nix.cmd = '${pkgs.nix}/bin/nix-instantiate'
           require('lint').linters.pylint.cmd = '${pkgs.python3Packages.pylint}/bin/pylint'
           require('lint').linters.shellcheck.cmd = '${pkgs.shellcheck}/bin/shellcheck'
           require('lint').linters.statix.cmd = '${pkgs.statix}/bin/statix'
