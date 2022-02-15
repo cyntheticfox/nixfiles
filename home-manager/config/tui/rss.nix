@@ -11,7 +11,7 @@
       {
         url = "https://blogs.windows.com/windows-insider/feed/";
         tags = [ "news" "windows" ];
-        title = "Windows Inseider Preview (WIP) News";
+        title = "Windows Insider Preview (WIP) News";
       }
       {
         url = "https://blogs.windows.com/windowsdeveloper/feed/";
@@ -87,6 +87,16 @@
         url = "https://www.linode.com/blog/feed/";
         tags = [ "blogs" "companies" "linode" ];
         title = "Linode Blog";
+      }
+      {
+        url = "https://www.ftc.gov/feeds/press-release.xml";
+        tags = [ "news" "government" "ftc" ];
+        title = "FTC Press Releases";
+      }
+      {
+        url = "https://www.consumer.ftc.gov/blog/gd-rss.xml";
+        tags = [ "blogs" "government" "ftc" ];
+        title = "FTC Consumer Blog";
       }
     ];
 
