@@ -9,7 +9,7 @@
     # Steam
     steam
     winetricks
-    wine
+    wine-wayland
     protontricks
 
     # Other games
