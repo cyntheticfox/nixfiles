@@ -99,6 +99,10 @@ in
     platformTheme = "gnome";
   };
 
+  environment.systemPackages = with pkgs; [
+    networkmanagerapplet
+  ];
+
   ### Add a login manager
   # Provides greetd as a login manager
   #
