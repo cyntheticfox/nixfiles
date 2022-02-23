@@ -9,8 +9,9 @@
 
       # List Aliases
       "l" = "ls";
-      "ls" = "${pkgs.exa}/bin/exa -F --color=always --icons";
-      "la" = "ls -abghl";
+      "ls" = "${pkgs.exa}/bin/exa --classify --color=always --icons";
+      "la" = "ls --long --all --binary --group --header --git --color-scale";
+      "tree" = "la --tree";
 
       # Standard program aliases
       "cat" = "${pkgs.bat}/bin/bat";
@@ -54,13 +55,22 @@
       enable = true;
 
       plugins = [
+        "aliases"
         "command-not-found"
+        "docker"
+        "fd"
+        "gh"
         "git"
+        "git-auto-fetch"
+        "git-extras"
         "git-flow"
         "git-lfs"
         "golang"
         "python"
+        "rust"
+        "systemd"
         "systemadmin"
+        "tig"
         "terraform"
       ];
     };
@@ -110,14 +120,12 @@
       ignorePatterns = [
         "rm *"
         "pkill *"
+        "cd *"
       ];
       expireDuplicatesFirst = true;
     };
 
-    sessionVariables = {
-      "ZSH_AUTOSUGGEST_USE_ASYNC" = "1";
-      "ZSH_AUTOSUGGEST_HISTORY_IGNORE" = "cd *";
-    };
+    sessionVariables."ZSH_AUTOSUGGEST_USE_ASYNC" = "1";
 
     initExtraFirst = ''
       setopt AUTO_CD
@@ -133,6 +141,7 @@
 
   programs.starship = {
     enable = true;
+
     settings = {
       add_newline = true;
       scan_timeout = 100;
@@ -184,7 +193,7 @@
         "$battery"
         "$time"
         "$status"
-        "$env_var"
+        "$shell"
         "$character"
       ];
 
@@ -205,15 +214,17 @@
         fish_style_pwd_dir_length = 1;
       };
 
-      env_var = {
-        style = "white bold";
-        format = "[$env_value]($style) ";
-        variable = "STARSHIP_SHELL";
-        default = "?";
+      shell = {
+        disabled = false;
+        bash_indicator = "bash";
+        fish_indicator = "fish";
+        powershell_indicator = "pwsh";
+        elvish_indicator = "elvish";
+        tcsh_indicator = "tcsh";
+        xonsh_indicator = "xonsh";
+        unknown_indicator = "?";
       };
     };
-
-    enableZshIntegration = true;
   };
 
   programs.direnv = {
@@ -223,12 +234,7 @@
     enableZshIntegration = true;
   };
 
-  programs.z-lua = {
-    enable = true;
-
-    enableZshIntegration = true;
-    enableAliases = true;
-  };
+  programs.zoxide.enable = true;
 
   programs.less.enable = true;
   programs.lesspipe.enable = true;

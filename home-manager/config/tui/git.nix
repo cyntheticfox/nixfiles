@@ -1,8 +1,12 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
-    git-ignore
+    git-doc
+    git-extras
+    git-secrets
+    gitflow
     octofetch
     onefetch
+    sops
     tig
   ];
 
