@@ -66,12 +66,18 @@
         "git-flow"
         "git-lfs"
         "golang"
+        "isodate"
         "python"
+        "rbw"
+        "ripgrep"
         "rust"
         "systemd"
         "systemadmin"
         "tig"
         "terraform"
+        "tmux"
+        "urltools"
+        "web-search"
       ];
     };
 
