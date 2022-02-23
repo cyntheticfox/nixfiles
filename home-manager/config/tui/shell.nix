@@ -49,8 +49,6 @@
     };
 
     enableAutosuggestions = true;
-    defaultKeymap = "viins";
-
     oh-my-zsh = {
       enable = true;
 
@@ -58,6 +56,7 @@
         "aliases"
         "command-not-found"
         "docker"
+        "encode64"
         "fd"
         "gh"
         "git"
