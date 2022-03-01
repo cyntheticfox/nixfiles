@@ -107,7 +107,10 @@
       } // forAllSystems (system: {
         pre-commit-check = pre-commit-hooks.lib."${system}".run {
           src = ./.;
-          hooks.nixpkgs-fmt.enable = true;
+          hooks = {
+            nixpkgs-fmt.enable = true;
+            statix.enable = true;
+          };
         };
       });
 
@@ -121,9 +124,19 @@
         pkgs.mkShell {
           inherit (self.checks."${system}".pre-commit-check) shellHook;
           nativeBuildInputs = with pkgs; [
+            # pre-commit
             pre-commit
+
+            # Nix formatter
+            alejandra
+            nixfmt
             nixpkgs-fmt
+
+            # Nix linting
             nix-linter
+            statix
+
+            # sops-nix
             sops
             sops-init-gpg-key
             sops-import-keys-hook
