@@ -21,6 +21,8 @@
   home.packages = with pkgs; [
     comma
     curlie
+    dogdns
+    gping
     smbclient
     traceroute
   ];
