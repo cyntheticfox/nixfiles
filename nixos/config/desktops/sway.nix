@@ -36,7 +36,7 @@ in
       extraPackages = with pkgs; [
         # Theming
         adapta-gtk-theme
-        gnome_themes_standard
+        gnome-themes-extra
         papirus-icon-theme
 
         # Util

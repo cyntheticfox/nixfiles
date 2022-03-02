@@ -1,7 +1,7 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
-    manpages
-    posix_man_pages
+    man-pages
+    man-pages-posix
   ];
 
   programs.man = {

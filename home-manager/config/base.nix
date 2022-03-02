@@ -23,7 +23,7 @@
     curlie
     dogdns
     gping
-    smbclient
+    samba
     traceroute
   ];
 
