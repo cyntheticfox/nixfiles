@@ -9,6 +9,7 @@
     hyperfine
     jq
     nodejs_latest
+    pastel
     poetry
     python
     python3
