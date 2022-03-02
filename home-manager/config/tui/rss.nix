@@ -64,6 +64,11 @@
         title = "This Week in Rust";
       }
       {
+        url = "https://devblogs.microsoft.com/powershell/feed/";
+        tags = [ "blogs" "projects" "powershell" ];
+        title = "PowerShell Team Blog";
+      }
+      {
         url = "http://feeds.feedburner.com/PythonInsider";
         tags = [ "blogs" "projects" "python" ];
         title = "Python Insider";
