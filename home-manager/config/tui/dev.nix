@@ -5,6 +5,7 @@
     gcc_latest
     deno
     hexyl
+    htmlq
     hyperfine
     jq
     nodejs_latest
