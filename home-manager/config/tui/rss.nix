@@ -69,6 +69,11 @@
         title = "PowerShell Team Blog";
       }
       {
+        url = "https://devblogs.microsoft.com/powershell-community/feed/";
+        tags = [ "blogs" "projects" "powershell" ];
+        title = "PowerShell Community Blog";
+      }
+      {
         url = "http://feeds.feedburner.com/PythonInsider";
         tags = [ "blogs" "projects" "python" ];
         title = "Python Insider";
