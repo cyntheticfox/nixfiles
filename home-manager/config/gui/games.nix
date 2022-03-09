@@ -6,6 +6,9 @@
     flips
     retroarchFull
 
+    # itch.io
+    itch
+
     # Steam
     steam
     winetricks
