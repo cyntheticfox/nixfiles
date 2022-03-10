@@ -1,13 +1,26 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
+    # General binary tools
+    bbe
+    bintools
+    bingrep
+    bloaty
+    bsdiff
+    extrude
+    pev
+    poke
+
     # ELF tools
+    chelf
     elf-dissector
     elf-header-real
     elfcat
     elfinfo
     elfkickers
     elfutils
+    elfx86exts
     patchelf
+    statifier
 
     # C/General
     debugedit
