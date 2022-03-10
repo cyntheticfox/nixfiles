@@ -14,6 +14,7 @@
 
     # Terminal modules
     ../../config/tui/cloud.nix
+    ../../config/tui/dbg.nix
     ../../config/tui/dev.nix
     ../../config/tui/documents.nix
     ../../config/tui/music.nix

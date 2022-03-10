@@ -12,7 +12,15 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    nix.url = "github:NixOS/nix";
+
     nixos-hardware.url = "github:NixOS/nixos-hardware";
+
+    dwarffs = {
+      url = "github:edolstra/dwarffs";
+      inputs.nix.follows = "nix";
+      inputs.nixpkgs.follows = "nix/nixpkgs";
+    };
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -92,6 +100,7 @@
             nixos-hardware.nixosModules.common-cpu-intel
             nixos-hardware.nixosModules.common-pc-laptop-ssd
             nixos-hardware.nixosModules.common-pc-laptop
+            dwarffs.nixosModules.dwarffs
             ./nixos/hosts/dh-laptop2/configuration.nix
           ];
         };
