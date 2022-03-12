@@ -123,37 +123,40 @@
         };
       });
 
-      devShell = forAllSystems (system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [ sops-nix.overlay ];
-          };
-        in
-        pkgs.mkShell {
-          inherit (self.checks."${system}".pre-commit-check) shellHook;
-          nativeBuildInputs = with pkgs; [
-            # pre-commit
-            pre-commit
+      devShells = forAllSystems (system:
+        {
+          default =
+            let
+              pkgs = import nixpkgs {
+                inherit system;
+                overlays = [ sops-nix.overlay ];
+              };
+            in
+            pkgs.mkShell {
+              inherit (self.checks."${system}".pre-commit-check) shellHook;
+              nativeBuildInputs = with pkgs; [
+                # pre-commit
+                pre-commit
 
-            # Nix formatter
-            alejandra
-            nixfmt
-            nixpkgs-fmt
+                # Nix formatter
+                alejandra
+                nixfmt
+                nixpkgs-fmt
 
-            # Nix linting
-            nix-linter
-            statix
+                # Nix linting
+                nix-linter
+                statix
 
-            # sops-nix
-            sops
-            sops-init-gpg-key
-            sops-import-keys-hook
-          ];
-          sopsPGPKeyDirs = [
-            ./keys/hosts
-            ./keys/users
-          ];
+                # sops-nix
+                sops
+                sops-init-gpg-key
+                sops-import-keys-hook
+              ];
+              sopsPGPKeyDirs = [
+                ./keys/hosts
+                ./keys/users
+              ];
+            };
         });
     };
 }
