@@ -5,6 +5,7 @@
   imports = [
     ./tui/bat.nix
     ./tui/file.nix
+    ./tui/fuse.nix
     ./tui/git.nix
     ./tui/gnupg.nix
     ./tui/htop.nix
@@ -23,7 +24,6 @@
     curlie
     dogdns
     gping
-    samba
     traceroute
   ];
 
