@@ -44,6 +44,8 @@
       };
     };
 
+    kernel.sysctl."net.ipv4.conf.all.arp_filter" = 1;
+
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot = {
