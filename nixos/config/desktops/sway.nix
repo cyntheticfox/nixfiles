@@ -7,68 +7,71 @@ let
   gtk-theme = "Adapta-Nokto";
   icon-theme = "Adwaita";
   cursor-theme = "Adwaita";
-  sway-gsettings-desktop-schemas = pkgs.runCommand "sway-gsettings-desktop-schemas" { preferLocalBuild = true; } ''
-    mkdir -p $out/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas/
-
-    cp -rf ${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/*/glib-2.0/schemas/*.xml $out/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas/
-
-    cat - >$out/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas/sway-interface.gschema.override <<- EOF
-      [org.gnome.desktop.interface]
+  sway-dconf-settings = pkgs.writeTextFile {
+    name = "sway-dconf-settings";
+    destination = "/dconf/sway-custom";
+    text = ''
+      [org/gnome/desktop/interface]
       gtk-theme='${gtk-theme}'
       icon-theme='${icon-theme}'
       cursor-theme='${cursor-theme}'
-    EOF
+    '';
+  };
 
-    ${pkgs.glib.dev}/bin/glib-compile-schemas $out/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas/
+  sway-dconf-db = pkgs.runCommand "sway-dconf-db" { preferLocalBuild = true; } ''
+    ${pkgs.dconf}/bin/dconf compile $out ${sway-dconf-settings}/dconf
+  '';
+
+  sway-dconf-profile = pkgs.writeText "sway-dconf-profile" ''
+    user-db:user
+    file-db:${sway-dconf-db}
   '';
 in
 {
-  ### Force above GTK Theming
-  #
-  environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${sway-gsettings-desktop-schemas}/share/gsettings-schemas/sway-gsettings-overrides/glib-2.0/schemas";
-
-  programs = {
+  programs.sway = {
     ### Enable Sway window-manager
     #
-    sway = {
-      enable = true;
-      wrapperFeatures.gtk = true;
-      extraPackages = with pkgs; [
-        # Theming
-        adapta-gtk-theme
-        gnome-themes-extra
-        papirus-icon-theme
+    enable = true;
+    wrapperFeatures.gtk = true;
+    extraPackages = with pkgs; [
+      # Theming
+      adapta-gtk-theme
+      gnome-themes-extra
+      papirus-icon-theme
 
-        # Util
-        grim
-        imv
-        jq
-        kanshi
-        mako
-        pavucontrol
-        playerctl
-        polkit_gnome
-        qt5.qtwayland
-        slurp
-        swayidle
-        swaylock-effects
-        sway-contrib.grimshot
-        wf-recorder
-        wl-clipboard
-        wlogout
-        wofi
-      ];
-    };
-
-    ### Add X11 Compatibility
-    #
-    xwayland.enable = true;
-
-    ### Enable backlight control
-    # Users must be added to the "video" group
-    #
-    light.enable = true;
+      # Util
+      grim
+      imv
+      jq
+      kanshi
+      mako
+      pavucontrol
+      playerctl
+      polkit_gnome
+      qt5.qtwayland
+      slurp
+      swayidle
+      swaylock-effects
+      sway-contrib.grimshot
+      wf-recorder
+      wl-clipboard
+      wlogout
+      wofi
+    ];
   };
+
+  ### Force GTK settings via dconf
+  #
+  programs.dconf.profiles.sway = sway-dconf-profile;
+
+  ### Add X11 Compatibility
+  #
+  programs.xwayland.enable = true;
+
+  ### Enable backlight control
+  # Users must be added to the "video" group
+  #
+  programs.light.enable = true;
 
   ### Define compatibility variables
   # Some Programs don't use wayland by default and have to be told, so tell
@@ -79,6 +82,7 @@ in
     QT_QPA_PLATFORM = "wayland-egl";
     WLR_NO_HARDWARE_CURSORS = "1";
     XDG_SESSION_TYPE = "wayland";
+    DCONF_PROFILE = "sway";
   };
 
   xdg.portal = {
@@ -99,10 +103,6 @@ in
     style = "adwaita-dark";
     platformTheme = "gnome";
   };
-
-  environment.systemPackages = with pkgs; [
-    networkmanagerapplet
-  ];
 
   ### Add a login manager
   # Provides greetd as a login manager
