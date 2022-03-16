@@ -905,15 +905,4 @@ in
       }
     ];
   };
-
-  ### Tray Target
-  # Since we use wayland instead of xsession, we have to manually create a
-  #   "tray" systemd target.
-  #
-  # NOTE: See https://github.com/nix-community/home-manager/issues/2064
-  #
-  systemd.user.targets.tray.Unit = {
-    Description = "Home Manager System Tray";
-    Requires = [ "graphical-session-pre.target" ];
-  };
 }
