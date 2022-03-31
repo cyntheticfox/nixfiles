@@ -99,6 +99,31 @@
         title = "Linode Blog";
       }
       {
+        url = "https://developers.redhat.com/blog/feed";
+        tags = [ "blogs" "companies" "redhat" ];
+        title = "RedHat Developer Blog";
+      }
+      {
+        url = "https://www.redhat.com/en/rss/blog/channel/red-hat-enterprise-linux";
+        tags = [ "blogs" "companies" "redhat" ];
+        title = "RHEL Blog";
+      }
+      {
+        url = "https://www.redhat.com/sysadmin/rss.xml";
+        tags = [ "blogs" "companies" "redhat" ];
+        title = "RedHat SysAdmin Blog";
+      }
+      {
+        url = "https://medium.com/feed/mitre-attack";
+        tags = [ "blogs" "companies" "security" "mitre" ];
+        title = "MITRE ATT&CK Blog";
+      }
+      {
+        url = "https://medium.com/feed/mitre-engage";
+        tags = [ "blogs" "companies" "security" "mitre" ];
+        title = "MITRE Engage Blog";
+      }
+      {
         url = "https://www.ftc.gov/feeds/press-release.xml";
         tags = [ "news" "government" "ftc" ];
         title = "FTC Press Releases";
