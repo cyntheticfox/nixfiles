@@ -21,5 +21,9 @@
     ../../config/tui/rss.nix
   ];
 
+  home.packages = with pkgs; [
+    mozwire
+  ];
+
   home.stateVersion = "22.05";
 }
