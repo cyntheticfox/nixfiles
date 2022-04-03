@@ -212,7 +212,7 @@ in
         # TODO: Replace DiscordCanary with a wayland-compatible electron app
         #
         assigns = {
-          "\"${workspaces._1}\"" = [{ app_id = "^org.qutebrowser.qutebrowser$"; }];
+          "\"${workspaces._1}\"" = [{ app_id = "^firefox$"; }];
           "\"${workspaces._2}\"" = [{ class = "^Microsoft Teams - Preview"; }];
           "\"${workspaces._3}\"" = [{ app_id = "^Element$"; }];
           # "\"${workspaces._4}\"" = [
