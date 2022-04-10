@@ -14,7 +14,7 @@
     chelf
     elf-dissector
     elf-header-real
-    elfcat
+    #elfcat
     elfinfo
     elfkickers
     elfutils

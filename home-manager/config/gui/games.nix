@@ -4,7 +4,7 @@
 
     # Emulation
     flips
-    retroarchFull
+    retroarch
 
     # itch.io
     itch
