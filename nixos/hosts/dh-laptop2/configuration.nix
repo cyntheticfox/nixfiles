@@ -56,7 +56,7 @@
 
       unmanaged = [ ];
 
-      packages = with pkgs; (lib.singleton networkmanager-openvpn);
+      plugins = with pkgs; [ networkmanager-openvpn ];
       insertNameservers = [
         "2620:fe::fe"
         "2620:fe::9"
