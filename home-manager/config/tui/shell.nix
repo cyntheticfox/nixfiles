@@ -17,6 +17,8 @@
       "cat" = "${pkgs.bat}/bin/bat";
       "top" = "${pkgs.htop}/bin/htop";
       "ps" = "${pkgs.procs}/bin/procs";
+      "more" = "less";
+      "less" = config.home.sessionVariables.PAGER;
 
       # GCC and Clang coloring
       "gcc" = "gcc -fdiagnostics-color";
