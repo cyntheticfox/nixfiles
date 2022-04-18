@@ -117,6 +117,9 @@
   # Support Corsiar Keyboard
   hardware.ckb-next.enable = true;
 
+  # Support mouse configuration
+  services.ratbagd.enable = true;
+
   # Support ZSA Keyboard
   hardware.keyboard.zsa.enable = true;
 

@@ -89,6 +89,7 @@
     bluez-tools
     htop
     nixos-icons
+    piper
     wally-cli
   ];
 
