@@ -30,7 +30,7 @@
     settings = {
       git_protocol = "ssh";
       prompt = "enabled";
-      pager = "less";
+      pager = config.home.sessionVariables.PAGER;
       editor = config.home.sessionVariables.EDITOR;
       aliases = {
         co = "pr checkout";

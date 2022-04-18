@@ -1,6 +1,11 @@
 { config, pkgs, ... }: {
+  home.packages = with pkgs; [
+    nvimpager
+  ];
+
   home.sessionVariables = {
     "EDITOR" = "${config.programs.neovim.finalPackage}/bin/nvim";
+    "PAGER" = "${pkgs.nvimpager}/bin/nvimpager";
     "VISUAL" = "${config.home.sessionVariables.EDITOR} -R";
   };
 
