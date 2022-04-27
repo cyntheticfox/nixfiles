@@ -33,9 +33,6 @@
     # Bash
     bashdb
 
-    # Python
-    pydb
-
     # Go
     delve
 
