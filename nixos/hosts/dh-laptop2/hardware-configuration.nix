@@ -35,10 +35,14 @@
             keyLength = 64;
             saltLength = 16;
 
-            storage = {
-              inherit (config.fileSystems."/boot") device fsType;
-              path = "/crypt-storage/default";
-            };
+            storage =
+              let
+                inherit (config.fileSystems."/boot") label fsType;
+              in
+              {
+                device = "/dev/disk/by-label/${label}";
+                path = "/crypt-storage/default";
+              };
           };
         };
       };
@@ -82,7 +86,7 @@
   fileSystems =
     let
       fsroot_subvol = subvol: {
-        device = "/dev/disk/by-label/fsroot";
+        label = "fsroot";
         fsType = "btrfs";
         options = [ "subvol=${subvol}" ];
       };
@@ -93,7 +97,7 @@
       "/nix" = fsroot_subvol "nix";
 
       "/boot" = {
-        device = "/dev/disk/by-label/boot";
+        label = "boot";
         fsType = "vfat";
       };
     };
@@ -101,7 +105,7 @@
   zramSwap.enable = true;
 
   swapDevices = [{
-    device = "/dev/disk/by-label/swap";
+    label = "swap";
     priority = 2048;
   }];
 
