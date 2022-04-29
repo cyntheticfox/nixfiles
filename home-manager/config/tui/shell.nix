@@ -44,7 +44,7 @@
       "nfi" = "nix flake init";
       "nfl" = "nix flake lock";
       "nfu" = "nix flake update";
-      "nfsw" = "sudo nixos-rebuild switch --flake .";
+      "nfsw" = "nixos-rebuild switch --flake . --use-remote-sudo";
       "nr" = "nix run";
       "ns" = "nix search";
       "nsn" = "nix search nixpkgs";
