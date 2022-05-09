@@ -1,5 +1,7 @@
 { config, lib, pkgs, self, inputs, outputs, ... }: {
   nix = {
+    package = pkgs.nixos-unstable.nixUnstable;
+
     allowedUsers = [ "@wheel" ];
     autoOptimiseStore = true;
     binaryCachePublicKeys = [
