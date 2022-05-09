@@ -25,5 +25,5 @@
     mozwire
   ];
 
-  home.stateVersion = "22.05";
+  home.stateVersion = "21.11";
 }

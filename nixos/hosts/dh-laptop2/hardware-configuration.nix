@@ -110,10 +110,7 @@
   }];
 
   hardware.enableRedistributableFirmware = true;
-  hardware.cpu.intel = {
-    updateMicrocode = true;
-    sgx.provision.enable = true;
-  };
+  hardware.cpu.intel.updateMicrocode = true;
 
   # Support Xbox One Controller
   hardware.xpadneo.enable = true;

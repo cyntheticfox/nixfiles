@@ -73,6 +73,8 @@ in
   wayland.windowManager.sway = {
     enable = true;
 
+    package = pkgs.nixos-unstable.sway;
+
     wrapperFeatures.gtk = true;
     systemdIntegration = true;
 
@@ -788,7 +790,7 @@ in
 
   programs.rofi = {
     enable = true;
-    package = pkgs.rofi-wayland;
+    package = pkgs.nixos-unstable.rofi-wayland;
     terminal = config.home.sessionVariables.TERMINAL;
     font = "Fira Sans 12";
     theme = "android_notification";
@@ -880,29 +882,52 @@ in
   # Need an idle daemon to lock the system and turn off the screen if I step
   #   away.
   #
-  services.swayidle = {
-    enable = true;
+  # services.swayidle = {
+  #   enable = true;
 
-    timeouts = [
-      {
-        timeout = 900;
-        command = "exec ${lockscreen}";
-      }
-      {
-        timeout = 960;
-        command = "${user-bins.swaymsg} \"output * dpms off\"";
-        resumeCommand = "${user-bins.swaymsg} \"output * dpms on\"";
-      }
-    ];
-    events = [
-      {
-        event = "before-sleep";
-        command = "${user-bins.playerctl} pause";
-      }
-      {
-        event = "before-sleep";
-        command = "exec ${lockscreen}";
-      }
-    ];
-  };
+  #   timeouts = [
+  #     {
+  #       timeout = 900;
+  #       command = "exec ${lockscreen}";
+  #     }
+  #     {
+  #       timeout = 960;
+  #       command = "${user-bins.swaymsg} \"output * dpms off\"";
+  #       resumeCommand = "${user-bins.swaymsg} \"output * dpms on\"";
+  #     }
+  #   ];
+  #   events = [
+  #     {
+  #       event = "before-sleep";
+  #       command = "${user-bins.playerctl} pause";
+  #     }
+  #     {
+  #       event = "before-sleep";
+  #       command = "exec ${lockscreen}";
+  #     }
+  #   ];
+  # };
+  systemd.user.services.swayidle =
+    let
+      args = builtins.concatStringsSep " " [
+        "timeout 900 \"exec ${lockscreen}\""
+        "timeout 960 \"${user-bins.swaymsg} \\\"output * dpms off \\\"\""
+        "resume \"${user-bins.swaymsg} \\\"output * dpms on \\\"\""
+
+      ];
+    in
+    {
+      Unit = {
+        Description = "Idle manager for Wayland";
+        Documentation = "man:swayidle(1)";
+        PartOf = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.swayidle}/bin/swayidle -w ${args}";
+      };
+
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
 }

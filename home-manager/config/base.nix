@@ -20,7 +20,7 @@
   ];
 
   home.packages = with pkgs; [
-    comma
+    nixos-unstable.comma
     curlie
     dogdns
     gping

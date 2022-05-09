@@ -2,7 +2,7 @@
   home.packages = with pkgs; [
     file
     fd
-    fq
+    nixos-unstable.fq
     p7zip
     ripgrep
     unzip

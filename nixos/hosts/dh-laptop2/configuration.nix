@@ -56,7 +56,6 @@
 
       unmanaged = [ ];
 
-      plugins = with pkgs; [ networkmanager-openvpn ];
       insertNameservers = [
         "2620:fe::fe"
         "2620:fe::9"
@@ -64,7 +63,18 @@
         "149.112.112.112"
       ];
       wifi.powersave = true;
-    };
+    } // (
+      if
+        config.system.stateVersion == "21.11"
+      then
+        {
+          packages = with pkgs; [ networkmanager-openvpn ];
+        }
+      else
+        {
+          plugins = with pkgs; [ networkmanager-openvpn ];
+        }
+    );
 
     enableIPv6 = true;
 
@@ -106,11 +116,18 @@
   services.pipewire = {
     enable = true;
 
-    audio.enable = true;
     alsa.enable = true;
     jack.enable = true;
     pulse.enable = true;
-
-    wireplumber.enable = true;
-  };
+  } // (
+    if
+      config.system.stateVersion == "22.05"
+    then
+      {
+        audio.enable = true;
+        wireplumber.enable = true;
+      }
+    else
+      { }
+  );
 }

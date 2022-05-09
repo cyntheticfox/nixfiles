@@ -96,7 +96,20 @@
               then
                 [ ./nixos/config/base-unstable.nix ]
               else
-                [ ./nixos/config/base.nix ];
+                [
+                  ({ config, pkgs, ... }: {
+                    nixpkgs.overlays = [
+                      (final: prev: {
+                        nixos-unstable = import inputs.nixos-unstable {
+                          inherit system;
+
+                          config.allowUnfree = true;
+                        };
+                      })
+                    ];
+                  })
+                  ./nixos/config/base.nix
+                ];
             hmModules =
               if
                 workstation
@@ -139,7 +152,6 @@
 
       nixosConfigurations = {
         dh-laptop2 = self.lib.defFlakeSystem {
-          unstable = true;
           workstation = true;
 
           modules = [
@@ -155,7 +167,6 @@
           modules = [ ./nixos/hosts/ashley/configuration.nix ];
         };
       };
-
 
       checks = {
         x86_64-linux = inputs.nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel);

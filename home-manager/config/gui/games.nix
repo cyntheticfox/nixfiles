@@ -7,12 +7,12 @@
     retroarch
 
     # itch.io
-    itch
+    nixos-unstable.itch
 
     # Steam
     steam
     winetricks
-    wine-wayland
+    nixos-unstable.wine-wayland
     protontricks
 
     # Other games
