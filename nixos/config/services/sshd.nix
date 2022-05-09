@@ -7,7 +7,6 @@
   services.openssh = {
     enable = true;
     allowSFTP = true;
-    kbdInteractiveAuthentication = true;
     passwordAuthentication = true;
     forwardX11 = false;
     hostKeys = [
@@ -23,5 +22,14 @@
       }
     ];
     openFirewall = true;
-  };
+  } // (
+    if
+      config.system.stateVersion == "22.05"
+    then
+      {
+        kbdInteractiveAuthentication = true;
+      }
+    else
+      { }
+  );
 }

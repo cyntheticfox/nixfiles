@@ -10,41 +10,62 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixos.url = "github:NixOS/nixpkgs/nixos-21.11";
+    nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-21.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixos";
+    };
+
+    sops-nix-unstable = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixos-unstable";
     };
 
     home-manager = {
+      url = "github:nix-community/home-manager/release-21.11";
+      inputs.nixpkgs.follows = "nixos";
+    };
+
+    home-manager-unstable = {
       url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixos-unstable";
     };
 
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
 
   outputs = { self, ... }@inputs:
-    with inputs;
-
     let
-      supportedSystems = with nixpkgs.lib; (intersectLists (platforms.x86_64 ++ platforms.aarch64) platforms.linux);
+      supportedSystems = with inputs.nixpkgs.lib; (intersectLists (platforms.x86_64 ++ platforms.aarch64) platforms.linux);
 
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+      forAllSystems = inputs.nixpkgs.lib.genAttrs supportedSystems;
     in
     {
       lib = {
         hmConfig =
-          { system ? "x86_64-linux", modules ? [ ] }:
-          home-manager.lib.homeManagerConfiguration {
-            inherit system;
+          { unstable ? false, system ? "x86_64-linux", modules ? [ ] }:
+          let
             username = "david";
+            home-manager =
+              if
+                unstable
+              then
+                inputs.home-manager-unstable
+              else
+                inputs.home-manager;
+          in
+          home-manager.lib.homeManagerConfiguration {
+            inherit system username;
+
             homeDirectory = "/home/${username}";
 
             configuration = _: {
@@ -53,21 +74,51 @@
           };
 
         defFlakeSystem =
-          { system ? "x86_64-linux", modules ? [ ] }:
+          { unstable ? false, workstation ? false, system ? "x86_64-linux", modules ? [ ] }:
+          let
+            nixpkgs =
+              if
+                unstable
+              then
+                inputs.nixos-unstable
+              else
+                inputs.nixos;
+            home-manager =
+              if
+                unstable
+              then
+                inputs.home-manager-unstable
+              else
+                inputs.home-manager;
+            baseModules =
+              if
+                unstable
+              then
+                [ ./nixos/config/base-unstable.nix ]
+              else
+                [ ./nixos/config/base.nix ];
+            hmModules =
+              if
+                workstation
+              then
+                [
+                  home-manager.nixosModules.home-manager
+                  ./nixos/config/base-hm.nix
+                ]
+              else
+                [ ];
+          in
           nixpkgs.lib.nixosSystem {
             inherit system;
-            modules = [
-              ./nixos/config/base.nix
-              # Add home-manager to all configurations
-              home-manager.nixosModules.home-manager
-              sops-nix.nixosModules.sops
-              {
-                config._module.args = {
-                  inherit self;
-                  inherit (self) inputs outputs;
-                };
-              }
-            ] ++ modules;
+
+            specialArgs = {
+              inherit self;
+              inherit (self) inputs outputs;
+            };
+
+            modules = baseModules
+              ++ hmModules
+              ++ modules;
           };
       };
 
@@ -88,10 +139,14 @@
 
       nixosConfigurations = {
         dh-laptop2 = self.lib.defFlakeSystem {
+          unstable = true;
+          workstation = true;
+
           modules = [
-            nixos-hardware.nixosModules.common-cpu-intel
-            nixos-hardware.nixosModules.common-pc-laptop-ssd
-            nixos-hardware.nixosModules.common-pc-laptop
+            inputs.nixos-hardware.nixosModules.common-cpu-intel
+            inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+            inputs.nixos-hardware.nixosModules.common-pc-laptop
+            inputs.sops-nix.nixosModules.sops
             ./nixos/hosts/dh-laptop2/configuration.nix
           ];
         };
@@ -103,9 +158,9 @@
 
 
       checks = {
-        x86_64-linux = nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel);
+        x86_64-linux = inputs.nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel);
       } // forAllSystems (system: {
-        pre-commit-check = pre-commit-hooks.lib."${system}".run {
+        pre-commit-check = inputs.pre-commit-hooks.lib."${system}".run {
           src = ./.;
           hooks = {
             nixpkgs-fmt.enable = true;
@@ -118,13 +173,14 @@
         {
           default =
             let
-              pkgs = import nixpkgs {
+              pkgs = import inputs.nixpkgs-unstable {
                 inherit system;
-                overlays = [ sops-nix.overlay ];
+                overlays = [ inputs.sops-nix-unstable.overlay ];
               };
             in
             pkgs.mkShell {
               inherit (self.checks."${system}".pre-commit-check) shellHook;
+
               nativeBuildInputs = with pkgs; [
                 # pre-commit
                 pre-commit
@@ -143,6 +199,7 @@
                 sops-init-gpg-key
                 sops-import-keys-hook
               ];
+
               sopsPGPKeyDirs = [
                 ./keys/hosts
                 ./keys/users
