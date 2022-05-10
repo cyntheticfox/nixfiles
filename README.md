@@ -1,6 +1,6 @@
 # dotfiles
 
-A complete NixOS configuration, tailored to how I do things. Set up with some secrets via [sops-nix](https://github.com/Mic92/sops-nix), and splitting out user configuration into a home-manager configuration. Also provides a few packages and an overlay, as inspired by [FoosterOS/2 Warp](https://github.com/lilyinstarlight/foosteros).
+A complete NixOS configuration, tailored to how I do things, usually using some kind of "Nord"-like color scheming. Set up with some secrets via [sops-nix](https://github.com/Mic92/sops-nix), and splitting out user configuration into a home-manager configuration. Also once provided a few packages and an overlay, as inspired by [FoosterOS/2 Warp](https://github.com/lilyinstarlight/foosteros). Currently pending me getting back into that.
 
 ## Initial setup
 
@@ -12,11 +12,10 @@ Here are a few tools I use:
 
 ### Desktop
 
-- [astroid](https://github.com/astroidmail/astroid)
+- [Firefox](https://firefox.com/)
 - [FiraCode Font](https://github.com/tonsky/FiraCode)
 - [kitty](https://github.com/kovidgoyal/kitty)
 - [nerd-fonts](https://github.com/ryanoasis/nerd-fonts)
-- [qutebrowser](https://github.com/qutebrowser/qutebrowser)
 - [remmina](https://gitlab.com/Remmina/Remmina)
 - [rofi -- with wayland support](https://github.com/lbonn/rofi)
 - [sway](https://github.com/swaywm/sway)
@@ -32,14 +31,34 @@ Here are a few tools I use:
 - [mpd](https://musicpd.org/)
 - [neovim](https://github.com/neovim/neovim)
 - [newsboat](https://newsboat.org/)
-- [notmuch](https://notmuchmail.org/)
-- [offlineimap](https://github.com/OfflineIMAP/offlineimap)
 - [qemu](https://www.qemu.org)
 - [starship](https://github.com/starship/starship)
 - [todo.txt](https://github.com/todotxt/todo.txt-cli)
 - [vimpc](https://github.com/boysetsfrog/vimpc)
 - [zsh](https://www.zsh.org/)
-- [z.lua](https://github.com/skywind300/z.lua)
+- [zoxide](https://github.com/ajeetdsouza/zoxide)
+
+## Current Bugs
+
+- `nscd` gives up restarting when systemd tries to restart it a bunch from dhcpcd editing `/etc/resolv.conf` as a result of `wpa_supplicant` repeatedly crashing when it tries to create a p2p device with a name longer than the hardcoded Linux max (16 chars) thanks to the "predictable interface names" system giving some devices really long interface names.
+- gnome-keyring doesn't work. Looking into pass-secret-service as replacement.
+- Something about `PipeWire` not working with JACK?
+- desktop portals failing to load (probably my messy GTK config)
+- udiskie doesn't like my GTK config/icons
+- playerctld crashes mpd frequently
+
+## Future
+
+- Impermanence/emphemeral system
+- bcachefs or zfs instead of btrfs
+- Use [danth/stylix](https://github.com/danth/stylix)
+- Use pass
+- Switch to [nheko](https://github.com/nheko-reborn/nheko) from Element
+- Declarative VMs?
+- TinyTinyRSS over newsboat
+- An actual backup system
+- Declarative Firefox config
+- More work on [terranix-linode-poc](https://github.com/houstdav000/terranix-linode-poc)
 
 ## Other
 
