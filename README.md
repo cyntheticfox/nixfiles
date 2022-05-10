@@ -40,6 +40,9 @@ Here are a few tools I use:
 
 ## Current Bugs
 
+- ACPI device issues on boot
+- some duplicate kernel module loads
+- ModMic doesn't register or something?
 - gnome-keyring doesn't work. Looking into pass-secret-service as replacement.
 - Something about `PipeWire` not working with JACK?
 - desktop portals failing to load (probably my messy GTK config)
