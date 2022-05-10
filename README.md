@@ -40,7 +40,6 @@ Here are a few tools I use:
 
 ## Current Bugs
 
-- `nscd` gives up restarting when systemd tries to restart it a bunch from dhcpcd editing `/etc/resolv.conf` as a result of `wpa_supplicant` repeatedly crashing when it tries to create a p2p device with a name longer than the hardcoded Linux max (16 chars) thanks to the "predictable interface names" system giving some devices really long interface names.
 - gnome-keyring doesn't work. Looking into pass-secret-service as replacement.
 - Something about `PipeWire` not working with JACK?
 - desktop portals failing to load (probably my messy GTK config)

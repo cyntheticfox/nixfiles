@@ -33,6 +33,14 @@
         sopsFile = ./secrets.yml;
         neededForUsers = true;
       };
+
+      wireless = {
+        sopsFile = ./secrets.yml;
+      };
+
+      wired = {
+        sopsFile = ./secrets.yml;
+      };
     };
   };
 
@@ -45,45 +53,87 @@
     hostName = "dh-laptop2";
     domain = "gh0st.network";
 
-    interfaces = {
-      enp1s0.useDHCP = true;
-      wlp0s20f3.useDHCP = true;
-    };
-
-    # TODO: Add Keyfile configurations
-    networkmanager = {
-      enable = true;
-
-      unmanaged = [ ];
-
-      insertNameservers = [
-        "2620:fe::fe"
-        "2620:fe::9"
-        "9.9.9.9"
-        "149.112.112.112"
-      ];
-      wifi.powersave = true;
-    } // (
-      if
-        config.system.stateVersion == "21.11"
-      then
-        {
-          packages = with pkgs; [ networkmanager-openvpn ];
-        }
-      else
-        {
-          plugins = with pkgs; [ networkmanager-openvpn ];
-        }
-    );
-
-    enableIPv6 = true;
-
-    firewall = {
-      enable = true;
-      allowPing = true;
-    };
-
     wireless.scanOnLowSignal = false;
+    useNetworkd = true;
+  };
+
+  networking.supplicant.wlp0s20f3 = {
+    driver = "nl80211";
+    extraConf = ''
+      p2p_disabled=1
+    '';
+    configFile.path = config.sops.secrets.wireless.path;
+    userControlled.enable = true;
+  };
+  networking.interfaces.wlp0s20f3.useDHCP = true;
+  systemd.network.networks."40-wlp0s20f3" = {
+    dhcpV4Config = {
+      ClientIdentifier = "mac";
+      RouteMetric = 600;
+    };
+    dhcpV6Config.RouteMetric = 600;
+  };
+
+  networking.supplicant.enp1s0 = {
+    driver = "wired";
+    extraConf = ''
+      ap_scan=0
+    '';
+    configFile.path = config.sops.secrets.wired.path;
+    userControlled.enable = true;
+  };
+  networking.interfaces.enp1s0.useDHCP = true;
+  systemd.network.networks."40-enp1s0" = {
+    dhcpV4Config = {
+      ClientIdentifier = "mac";
+      RouteMetric = 100;
+    };
+    dhcpV6Config.RouteMetric = 100;
+    linkConfig.RequiredForOnline = "no";
+  };
+
+  # networking.supplicant.enp0s20f0u4u4 = {
+  #   driver = "wired";
+  #   extraConf = ''
+  #     ap_scan=0
+  #   '';
+  #   configFile.path = config.sops.secrets.wired.path;
+  #   userControlled.enable = true;
+  # };
+  # networking.interfaces.enp0s20f0u4u4.useDHCP = true;
+  # systemd.network.networks."40-enp0s20f0u4u4" = {
+  #   dhcpV4Config = {
+  #     ClientIdentifier = "mac";
+  #     RouteMetric = 100;
+  #   };
+  #   dhcpV6Config.RouteMetric = 100;
+  #   linkConfig.RequiredForOnline = "no";
+  # };
+
+  systemd.network.networks."80-wl" = {
+    name = "wl*";
+    DHCP = "yes";
+
+    dhcpV4Config = {
+      ClientIdentifier = "mac";
+      RouteMetric = 700;
+    };
+    dhcpV6Config.RouteMetric = 700;
+    linkConfig.RequiredForOnline = "no";
+    networkConfig.IPv6PrivacyExtensions = "kernel";
+  };
+
+  systemd.network.networks."80-en" = {
+    name = "en*";
+    DHCP = "yes";
+
+    dhcpV4Config = {
+      ClientIdentifier = "mac";
+      RouteMetric = 200;
+    };
+    dhcpV6Config.RouteMetric = 200;
+    linkConfig.RequiredForOnline = "no";
+    networkConfig.IPv6PrivacyExtensions = "kernel";
   };
 
   time.timeZone = "America/New_York";
