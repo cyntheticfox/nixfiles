@@ -36,10 +36,12 @@
 
       wireless = {
         sopsFile = ./secrets.yml;
+        restartUnits = [ "supplicant-wlp0s20f3" ];
       };
 
       wired = {
         sopsFile = ./secrets.yml;
+        restartUnits = [ "supplicant-enp1s0" ];
       };
     };
   };
@@ -91,24 +93,6 @@
     dhcpV6Config.RouteMetric = 100;
     linkConfig.RequiredForOnline = "no";
   };
-
-  # networking.supplicant.enp0s20f0u4u4 = {
-  #   driver = "wired";
-  #   extraConf = ''
-  #     ap_scan=0
-  #   '';
-  #   configFile.path = config.sops.secrets.wired.path;
-  #   userControlled.enable = true;
-  # };
-  # networking.interfaces.enp0s20f0u4u4.useDHCP = true;
-  # systemd.network.networks."40-enp0s20f0u4u4" = {
-  #   dhcpV4Config = {
-  #     ClientIdentifier = "mac";
-  #     RouteMetric = 100;
-  #   };
-  #   dhcpV6Config.RouteMetric = 100;
-  #   linkConfig.RequiredForOnline = "no";
-  # };
 
   systemd.network.networks."80-wl" = {
     name = "wl*";
