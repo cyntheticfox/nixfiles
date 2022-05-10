@@ -1,6 +1,6 @@
 { config, lib, pkgs, self, inputs, outputs, ... }: {
   nix = {
-    package = pkgs.nixos-unstable.nixUnstable;
+    package = pkgs.nixFlakes;
 
     allowedUsers = [ "@wheel" ];
     autoOptimiseStore = true;
