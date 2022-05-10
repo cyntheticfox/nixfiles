@@ -40,6 +40,7 @@ Here are a few tools I use:
 
 ## Current Bugs
 
+- MS Teams likes to crash on boot, garble audio
 - ACPI device issues on boot
 - some duplicate kernel module loads
 - ModMic doesn't register or something?
