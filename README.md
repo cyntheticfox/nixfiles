@@ -51,6 +51,9 @@ Here are a few tools I use:
 
 ## Future
 
+- SELinux?
+- Secure boot
+- Use TPM instead of Yubikey for encryption
 - Impermanence/emphemeral system
 - bcachefs or zfs instead of btrfs
 - Use [danth/stylix](https://github.com/danth/stylix)
