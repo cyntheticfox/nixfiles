@@ -69,7 +69,6 @@
         "golang"
         "isodate"
         "python"
-        "rbw"
         "ripgrep"
         "rust"
         "systemd"
