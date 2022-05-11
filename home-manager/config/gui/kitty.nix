@@ -11,9 +11,9 @@ in
 
     settings = {
       # Set font settings
-      font_family = "FiraCodeNerdFontComplete-Retina";
-      font_size = 10;
-      font_features = "FiraCodeNerdFontComplete-Retina +zero +onum";
+      font_family = "FiraCodeNerdFontCompleteMono-Retina";
+      font_size = 12;
+      font_features = "FiraCodeNerdFontCompleteMono-Retina +zero +onum";
 
       # Set terminal bell to off
       enable_audio_bell = false;

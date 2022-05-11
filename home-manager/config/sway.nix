@@ -225,9 +225,9 @@ in
 
         bars = [{
           fonts = {
-            names = [ "FontAwesome5Free" "Fira Sans" "sans-serif" ];
+            names = [ "Fira Sans" "sans-serif" ];
             style = "Bold Semi-Condensed";
-            size = 11.0;
+            size = 14.0;
           };
           position = "top";
           command = user-bins.waybar;
@@ -483,7 +483,7 @@ in
         warning = 30;
         critical = 15;
       };
-      format-charging = "  {icon}  {capacity}%"; # Icon: bolt
+      format-charging = " {icon} {capacity}%"; # Icon: bolt
       format = "{icon}  {capacity}%";
       format-icons = [
         "" # Icon: battery-empty
@@ -504,7 +504,7 @@ in
 
     cpu = {
       interval = 5;
-      format = "  {usage}%"; # Icon: microchip
+      format = "  {usage}%"; # Icon: microchip
       states = {
         warning = 70;
         critical = 90;
@@ -513,7 +513,7 @@ in
 
     memory = {
       interval = 5;
-      format = "  {}%"; # Icon: memory
+      format = "  {}%"; # Icon: memory
       states = {
         warning = 70;
         critical = 90;
@@ -523,7 +523,7 @@ in
     network = {
       interval = 5;
       format-wifi = "  {essid} ({signalStrength}%)"; # Icon: wifi
-      format-ethernet = "  {ifname}: {ipaddr}/{cidr}"; # Icon: ethernet
+      format-ethernet = "  {ifname}: {ipaddr}/{cidr}"; # Icon: ethernet
       format-disconnected = "⚠  Disconnected";
       tooltip-format = "{ifname}: {ipaddr}";
     };
@@ -583,8 +583,7 @@ in
       }
 
       to {
-        color: #eeeeee;
-        background-color: #db7b55;
+        color: #db7b55;
       }
     }
 
@@ -594,8 +593,7 @@ in
       }
 
       to {
-        color: #eeeeee;
-        background-color: #Cd3f45;
+        color: #cd3f45;
       }
     }
 
@@ -615,7 +613,7 @@ in
       background: #141a1b;
       color: #eeeeee;
       font-family: "Fira Sans", Roboto, sans-serif;
-      font-size: 13px;
+      font-size: 14px;
     }
 
     /* Each module */
@@ -628,7 +626,7 @@ in
     #network,
     #pulseaudio,
     #tray {
-      font-family: "FontAwesome 5 Free Solid", "Fira Sans", Roboto, sans-serif;
+      font-family: "Fira Sans", Roboto, sans-serif;
       padding-left: 10px;
       padding-right: 10px;
     }
@@ -792,7 +790,7 @@ in
     enable = true;
     package = pkgs.nixos-unstable.rofi-wayland;
     terminal = config.home.sessionVariables.TERMINAL;
-    font = "Fira Sans 12";
+    font = "Fira Sans 14";
     theme = "android_notification";
     extraConfig.modi = "drun,run";
   };
