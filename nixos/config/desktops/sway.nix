@@ -51,6 +51,7 @@ in
       swayidle
       swaylock-effects
       sway-contrib.grimshot
+      sway-contrib.inactive-windows-transparency
       wf-recorder
       wl-clipboard
       wlogout

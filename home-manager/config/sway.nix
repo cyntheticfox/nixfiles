@@ -1,5 +1,23 @@
 { config, pkgs, lib, ... }:
 let
+  palletes.nord = {
+    base00 = "#2E3440";
+    base01 = "#3B4252";
+    base02 = "#434C5E";
+    base03 = "#4C566A";
+    base04 = "#D8DEE9";
+    base05 = "#E5E9F0";
+    base06 = "#ECEFF4";
+    base07 = "#8FBCBB";
+    base08 = "#88C0D0";
+    base09 = "#81A1C1";
+    base0A = "#5E81AC";
+    base0B = "#BF616A";
+    base0C = "#D08770";
+    base0D = "#EBCB8B";
+    base0E = "#A3BE8C";
+    base0F = "#B48EAD";
+  };
   screens = {
     builtin = "eDP-1";
     main = "Samsung Electric Company SMS27A350H 0x00007F36";
@@ -396,55 +414,51 @@ in
               output = mainOrSub;
             }
           ];
+
+        colors = with palletes.nord; {
+          background = base07;
+          focused = {
+            border = base05;
+            background = base0C;
+            text = base00;
+            indicator = base0C;
+            childBorder = base0C;
+          };
+
+          focusedInactive = {
+            border = base01;
+            background = base01;
+            text = base05;
+            indicator = base03;
+            childBorder = base01;
+          };
+
+          unfocused = {
+            border = base01;
+            background = base00;
+            text = base05;
+            indicator = base01;
+            childBorder = base01;
+          };
+
+          urgent = {
+            border = base08;
+            background = base08;
+            text = base00;
+            indicator = base08;
+            childBorder = base08;
+          };
+
+          placeholder = {
+            border = base00;
+            background = base00;
+            text = base05;
+            indicator = base00;
+            childBorder = base00;
+          };
+        };
+        output."*".bg = "~/wallpaper.png fill #000000";
       };
-
-    # TODO: Change color configuration, pull out output configuration
-    extraConfig = ''
-      ###########################################################################
-      #                                                                         #
-      #                         Sway Theme Configuration                        #
-      #                                                                         #
-      ###########################################################################
-
-      set $background ~/wallpaper.png
-      set $backup-color #000000
-
-      # a theme specific color map
-      set $base00 #141a1b
-      set $base01 #282a2b
-      set $base02 #3B758C
-      set $base03 #41535B
-      set $base04 #43a5d5
-      set $base05 #d6d6d6
-      set $base06 #eeeeee
-      set $base07 #ffffff
-      set $base08 #Cd3f45
-      set $base09 #db7b55
-      set $base0A #e6cd69
-      set $base0B #9fca56
-      set $base0C #16a085
-      set $base0D #55b5db
-      set $base0E #a074c4
-      set $base0F #8a553f
-
-      # Basic color configuration using the Base16 variables for windows and borders.
-      # Property Name         Border  BG      Text    Indicator Child Border
-      client.focused          $base05 $base0C $base00 $base0C $base0C
-      client.focused_inactive $base01 $base01 $base05 $base03 $base01
-      client.unfocused        $base01 $base00 $base05 $base01 $base01
-      client.urgent           $base08 $base08 $base00 $base08 $base08
-      client.placeholder      $base00 $base00 $base05 $base00 $base00
-      client.background       $base07
-
-      ###########################################################################
-      #                                                                         #
-      #                         Sway Output Configurations                      #
-      #                                                                         #
-      ###########################################################################
-
-      # Default wallpaper
-      output * bg $background fill $backup-color
-    '';
   };
 
   ### Waybar configuration
