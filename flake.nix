@@ -17,6 +17,11 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL";
+      inputs.nixpkgs.follows = "nixos";
+    };
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixos";
@@ -135,9 +140,15 @@
           };
       };
 
-      nixosModules.dh-laptop2.imports = [
-        ./home-manager/hosts/dh-laptop2/home.nix
-      ];
+      nixosModules = {
+        dh-laptop2.imports = [
+          ./home-manager/hosts/dh-laptop2/home.nix
+        ];
+
+        dh-framework.imports = [
+          ./home-manager/hosts/dh-framework/home.nix
+        ];
+      };
 
       homeConfigurations = {
         wsl = self.lib.hmConfig {
@@ -160,6 +171,16 @@
             inputs.nixos-hardware.nixosModules.common-pc-laptop
             inputs.sops-nix.nixosModules.sops
             ./nixos/hosts/dh-laptop2/configuration.nix
+          ];
+        };
+
+        dh-framework = self.lib.defFlakeSystem {
+          workstation = true;
+
+          modules = [
+            inputs.nixos-wsl.nixosModules.wsl
+            inputs.sops-nix.nixosModules.sops
+            ./nixos/hosts/dh-framework/configuration.nix
           ];
         };
 
@@ -193,6 +214,45 @@
               inherit (self.checks."${system}".pre-commit-check) shellHook;
 
               nativeBuildInputs = with pkgs; [
+
+                # pre-commit
+                pre-commit
+
+                # Nix formatter
+                alejandra
+                nixfmt
+                nixpkgs-fmt
+
+                # Nix linting
+                nix-linter
+                statix
+
+                # sops-nix
+                sops
+                sops-init-gpg-key
+                sops-import-keys-hook
+              ];
+
+              sopsPGPKeyDirs = [
+                ./keys/hosts
+                ./keys/users
+              ];
+            };
+          no-env =
+            let
+              pkgs = import inputs.nixpkgs-unstable {
+                inherit system;
+                overlays = [ inputs.sops-nix-unstable.overlay ];
+              };
+            in
+            pkgs.mkShell {
+              inherit (self.checks."${system}".pre-commit-check) shellHook;
+
+              nativeBuildInputs = with pkgs; [
+                git
+                gnupg
+                neovim
+
                 # pre-commit
                 pre-commit
 

@@ -2,12 +2,19 @@
 keys:
   - &david 73C1C5DF51E7BB9285E9A2625960278CE235F821
   - &dh-laptop2 F8F09E1A8E96E4041C32BE674B46F44EF073C77A
+  - &dh-framework F27C2B85BCB81A31C437E6E206EF0EAF6ABCFC44
 creation_rules:
   - path_regex: nixos/hosts/dh-laptop2/[^/]+\.yml$
     key_groups:
     - pgp:
         - *dh-laptop2
+  - path_regex: nixos/hosts/dh-framework/[^/]+\.yml$
+    key_groups:
+    - pgp:
+        - *dh-framework
   - path_regex: nixos/config/users/david/[^/]+\.yml$
     key_groups:
     - pgp:
         - *david
+        - *dh-laptop2
+        - *dh-framework
