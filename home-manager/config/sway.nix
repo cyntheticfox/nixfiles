@@ -576,28 +576,6 @@ in
   # NOTE: See https://github.com/Alexays/Waybar/wiki/Configuration
   #
   xdg.configFile."waybar/style.css".text = ''
-    /*** Keyframes ***/
-    @keyframes blink-warning {
-      70% {
-        color: #eeeeee;
-      }
-
-      to {
-        color: #db7b55;
-      }
-    }
-
-    @keyframes blink-critical {
-      70% {
-        color: #eeeeee;
-      }
-
-      to {
-        color: #cd3f45;
-      }
-    }
-
-
     /*** Base Styles ***/
     * {
       border: none;
@@ -610,8 +588,8 @@ in
 
     /* The whole bar */
     #waybar {
-      background: #141a1b;
-      color: #eeeeee;
+      background: @theme_base_color;
+      color: @theme_text_color;
       font-family: "Fira Sans", Roboto, sans-serif;
       font-size: 14px;
     }
@@ -639,21 +617,11 @@ in
     }
 
     #battery.warning {
-      color: #db7b55;
+      color: @warning_color;
     }
 
     #battery.critical {
-      color: #Cd3f45;
-    }
-
-    #battery.warning.discharging {
-      animation-name: blink-warning;
-      animation-duration: 3s;
-    }
-
-    #battery.critical.discharging {
-      animation-name: blink-critical;
-      animation-duration: 2s;
+      color: @error_color;
     }
 
     #clock {
@@ -665,31 +633,23 @@ in
     }
 
     #cpu.warning {
-      color: #db7b55;
+      color: @warning_color;
     }
 
     #cpu.critical {
-      color: #Cd3f45;
-    }
-
-    #memory {
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-      animation-direction: alternate;
+      color: @error_color;
     }
 
     #memory.warning {
-      color: #db7b55;
+      color: @warning_color;
     }
 
     #memory.critical {
-      color: #Cd3f45;
-      animation-name: blink-critical;
-      animation-duration: 2s;
+      color: @error_color;
     }
 
     #mode {
-      background: #141a1b;
+      background: @theme_focused_fg_color;
     }
 
     #network {
@@ -697,7 +657,7 @@ in
     }
 
     #network.disconnected {
-      color: #db7b55;
+      color: @error_color;
     }
 
     #pulseaudio {
@@ -706,10 +666,6 @@ in
 
     #pulseaudio.muted {
       /* No styles */
-    }
-
-    #custom-spotify {
-      color: #16a085;
     }
 
     #tray {
@@ -727,18 +683,18 @@ in
       padding-bottom: 2px;
       padding-left: 10px;
       padding-right: 10px;
-      color: #d6d6d6;
+      color: @theme_unfocused_text_color;
     }
 
     #workspaces button.focused {
-      border-color: #16a085;
-      color: #eeeeee;
-      background-color: #16a085;
+      border-color: @theme_selected_bg_color;
+      color: @theme_selected_fg_color;
+      background-color: @theme_selected_bg_color;
     }
 
     #workspaces button.urgent {
-      border-color: #Cd3f45;
-      color: #Cd3f45;
+      border-color: @warning_color;
+      color: @warning_color;
     }
   '';
 

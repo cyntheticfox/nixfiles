@@ -4,7 +4,7 @@
 
 { config, pkgs, lib, ... }:
 let
-  gtk-theme = "Adapta-Nokto";
+  gtk-theme = "Adwaita-Dark";
   icon-theme = "Adwaita";
   cursor-theme = "Adwaita";
   sway-dconf-settings = pkgs.writeTextFile {
@@ -35,9 +35,7 @@ in
     wrapperFeatures.gtk = true;
     extraPackages = with pkgs; [
       # Theming
-      adapta-gtk-theme
       gnome-themes-extra
-      papirus-icon-theme
 
       # Util
       grim

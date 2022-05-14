@@ -22,6 +22,20 @@
 
   services.udiskie.enable = true;
 
+  gtk = {
+    enable = true;
+
+    theme = {
+      package = pkgs.nordic;
+      name = "Nordic";
+    };
+
+    iconTheme = {
+      package = pkgs.papirus-icon-theme;
+      name = "Papirus";
+    };
+  };
+
   qt = {
     enable = true;
     platformTheme = "gnome";
