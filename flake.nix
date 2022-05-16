@@ -277,5 +277,8 @@
               ];
             };
         });
+
+      # Legacy Nix flakes support
+      devShell = forAllSystems (system: self.devShells."${system}".default);
     };
 }
