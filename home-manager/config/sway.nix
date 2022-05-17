@@ -69,7 +69,7 @@ let
   workspaces = {
     _1 = "1:   Web";
     _2 = "2:   Teams";
-    _3 = "3:   Element";
+    _3 = "3:   Matrix";
     _4 = "4:   Discord";
     _5 = "5:   Email";
     _6 = "6:   Etc 1";
