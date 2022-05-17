@@ -12,7 +12,7 @@
     ./tui/man.nix
     ./tui/neofetch.nix
     ./tui/neovim.nix
-    ./tui/rbw.nix
+    ./tui/passwords.nix
     ./tui/shell.nix
     ./tui/ssh.nix
     ./tui/tmux.nix
