@@ -16,10 +16,11 @@
     ../../config/desktops/sway.nix
 
     # Services
-    ../../config/services/libvirtd.nix
-    ../../config/services/cupsd.nix
-    ../../config/services/podman.nix
     ../../config/services/clamav.nix
+    ../../config/services/cupsd.nix
+    ../../config/services/docker.nix
+    ../../config/services/libvirtd.nix
+    ../../config/services/podman.nix
   ];
 
   sops = {
