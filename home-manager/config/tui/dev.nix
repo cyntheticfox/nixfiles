@@ -1,5 +1,6 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
+    act
     cargo
     cloc
     gcc_latest
