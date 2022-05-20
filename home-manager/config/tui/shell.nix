@@ -4,6 +4,8 @@
     dotDir = ".config/zsh";
 
     shellAliases = {
+      "h" = "history";
+
       # Editor aliases
       "v" = config.home.sessionVariables.EDITOR;
 
