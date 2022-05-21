@@ -407,15 +407,6 @@
             on_attach = on_attach_func
           })
 
-          nvim_lsp.hls.setup({
-            capabilities = capabilities_var,
-            cmd = {
-              "${pkgs.haskell-language-server}/bin/haskell-language-server",
-              "lsp"
-            },
-            on_attach = on_attach_func
-          })
-
           nvim_lsp.html.setup({
             capabilities = capabilities_var,
             cmd = {
