@@ -1,6 +1,6 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
-    nixpkgs-unstable.discord
+    nixpkgs-master.discord
     nixpkgs-unstable.element-desktop-wayland
   ];
 }
