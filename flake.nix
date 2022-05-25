@@ -12,8 +12,10 @@
   inputs = {
     nixos.url = "github:NixOS/nixpkgs/nixos-21.11";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     nixpkgs.url = "github:NixOS/nixpkgs/release-21.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
@@ -112,6 +114,12 @@
                         };
 
                         nixpkgs-unstable = import inputs.nixpkgs-unstable {
+                          inherit system;
+
+                          config.allowUnfree = true;
+                        };
+
+                        nixpkgs-master = import inputs.nixpkgs-master {
                           inherit system;
 
                           config.allowUnfree = true;
