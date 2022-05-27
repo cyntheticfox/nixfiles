@@ -48,7 +48,7 @@ in
     set searchurls.github https://github.com/search?utf8=✓&q=
     set searchurls.mdn https://developer.mozilla.org/en-US/search?q=
 
-    set searchurls.nixpkgs https://search.nixos.org/packages?channel=21.11&from=0&size=50&sort=relevance&type=packages&query=
+    set searchurls.nixpkgs https://search.nixos.org/packages?channel=22.05&from=0&size=50&sort=relevance&type=packages&query=
 
     set searchurls.wikipedia https://en.wikipedia.org/wiki/Special:Search/
     set searchurls.scholar https://scholar.google.com/scholar?q=

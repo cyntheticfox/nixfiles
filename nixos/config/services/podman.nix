@@ -22,7 +22,6 @@
 
       dockerCompat = if config.virtualisation.docker.enable then false else true;
       dockerSocket.enable = if config.virtualisation.docker.enable then false else true;
-      extraPackages = with pkgs; [ gvisor ];
     };
   };
 }

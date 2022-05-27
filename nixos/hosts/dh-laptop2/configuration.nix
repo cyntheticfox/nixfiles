@@ -154,15 +154,7 @@
     alsa.enable = true;
     jack.enable = true;
     pulse.enable = true;
-  } // (
-    if
-      config.system.stateVersion == "22.05"
-    then
-      {
-        audio.enable = true;
-        wireplumber.enable = true;
-      }
-    else
-      { }
-  );
+    audio.enable = true;
+    wireplumber.enable = true;
+  };
 }
