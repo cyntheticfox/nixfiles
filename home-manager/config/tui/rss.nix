@@ -44,7 +44,7 @@
         title = "Krebs on Security - In-depth Security News and Investigation";
       }
       {
-        url = "https://christine.website/blog.rss";
+        url = "https://xeiaso.net/blog.rss";
         tags = [ "blogs" "people" "NixOS" ];
         title = "Xe's Blog";
       }
