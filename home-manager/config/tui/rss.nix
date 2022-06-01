@@ -34,6 +34,11 @@
         title = "arstechnica - Opposable Thumbs";
       }
       {
+        url = "https://msrc-blog.microsoft.com/feed";
+        tags = [ "news" "security" "windows" ];
+        title = "Microsoft Security Response Center Blog";
+      }
+      {
         url = "https://www.darkreading.com/rss.xml";
         tags = [ "news" "security" ];
         title = "Dark Reading - Protect the Business";
