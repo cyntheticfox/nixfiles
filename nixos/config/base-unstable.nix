@@ -40,6 +40,7 @@
 
   environment = {
     defaultPackages = with pkgs; [
+      aria
       bc
       cachix
       file
