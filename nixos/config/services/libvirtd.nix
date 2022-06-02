@@ -20,6 +20,9 @@
     spiceUSBRedirection.enable = true;
   };
 
+  environment.systemPackages = with pkgs; [ swtpm ];
+
+  # Enable more cgroups control for systemd
   environment.etc."pam.d/system-login" = {
     mode = "0644";
     text = ''
