@@ -12,22 +12,26 @@
 
   programs.git = {
     enable = true;
+
     userName = "David Houston";
     userEmail = "houstdav000@gmail.com";
+
     aliases = {
       l = "log --abrev-commit --pretty=oneline";
       lg = "log --pretty=format:'%h %s' --graph";
       state = "status -sb --";
       unstage = "reset HEAD --";
     };
+
     signing = {
       key = "5960278CE235F821";
       signByDefault = true;
     };
+
     ignores = [
       # Vim backups/swaps
       "*~"
-      ".*.swp"
+      "*.swp"
 
       # MacOS DS_Store
       ".DS_Store"
@@ -50,6 +54,8 @@
         hideDotFiles = true;
         ignoreCase = true;
       };
+
+      url."https://github.com".insteadOf = "git://github.com";
 
       init.defaultBranch = "main";
       pull.ff = "only";
