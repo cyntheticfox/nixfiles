@@ -48,6 +48,11 @@
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
+    napalm = {
+      url = "github:nix-community/napalm";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, ... }@inputs:
@@ -202,6 +207,11 @@
           modules = [ ./nixos/hosts/ashley/configuration.nix ];
         };
       };
+
+      legacyPackages = forAllSystems (system: import ./pkgs {
+        pkgs = inputs.nixpkgs.legacyPackages."${system}";
+        nm = inputs.napalm;
+      });
 
       checks = {
         x86_64-linux = inputs.nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel);
