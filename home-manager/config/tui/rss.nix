@@ -95,13 +95,28 @@
       }
       {
         url = "https://blog.cloudflare.com/rss/";
-        tags = [ "blogs" "companies" "cloudflare" ];
+        tags = [ "blogs" "companies" "cloudflare" "iaas" ];
         title = "The Cloudflare Blog";
       }
       {
         url = "https://www.linode.com/blog/feed/";
-        tags = [ "blogs" "companies" "linode" ];
+        tags = [ "blogs" "companies" "linode" "iaas" ];
         title = "Linode Blog";
+      }
+      {
+        url = "https://azurecomcdn.azureedge.net/en-us/blog/feed/";
+        tags = [ "blogs" "companies" "microsoft" "azure" "iaas" ];
+        title = "Azure Blog";
+      }
+      {
+        url = "https://aws.amazon.com/blogs/aws/feed/";
+        tags = [ "blogs" "companies" "amazon" "aws" "iaas" ];
+        title = "AWS Blog";
+      }
+      {
+        url = "https://cloudblog.withgoogle.com/rss/";
+        tags = [ "blogs" "companies" "google" "gcp" "iaas" ];
+        title = "Google Cloud Blog";
       }
       {
         url = "https://developers.redhat.com/blog/feed";
