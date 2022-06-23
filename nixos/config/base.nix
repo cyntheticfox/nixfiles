@@ -59,7 +59,10 @@
 
   programs.mtr.enable = true;
 
-  networking.useDHCP = false;
+  networking = {
+    useDHCP = false;
+    firewall.pingLimit = lib.mkIf config.networking.firewall.enable "--limit 1/minute --limit-burst 5";
+  };
 
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
