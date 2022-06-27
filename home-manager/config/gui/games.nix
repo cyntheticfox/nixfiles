@@ -7,7 +7,7 @@
     retroarch
 
     # itch.io
-    nixos-unstable.itch
+    #nixpkgs-master.itch
 
     # Steam
     steam
