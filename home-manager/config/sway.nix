@@ -44,7 +44,7 @@ let
     swaylock = "${pkgs.swaylock-effects}/bin/swaylock";
     swaymsg = "${config.wayland.windowManager.sway.package}/bin/swaymsg";
     systemctl = config.systemd.user.systemctlPath;
-    teams = "${pkgs.teams}/bin/teams";
+    teams = "${pkgs.nixpkgs-unstable.teams}/bin/teams";
     waybar = "${pkgs.waybar}/bin/waybar";
     wf-recorder = "${pkgs.wf-recorder}/bin/wf-recorder";
     wlogout = "${pkgs.wlogout}/bin/wlogout";

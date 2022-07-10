@@ -1,6 +1,6 @@
 { pkgs, config, lib, ... }: {
   home.packages = with pkgs; [
-    nixos-unstable.teams
+    nixpkgs-unstable.teams
   ];
 
   xdg.mimeApps.defaultApplications."x-scheme-handler/msteams" = "teams.desktop";
