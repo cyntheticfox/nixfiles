@@ -34,6 +34,11 @@
         title = "arstechnica - Opposable Thumbs";
       }
       {
+        url = "https://www.gamesindustry.biz/rss/gamesindustry_news_feed.rss";
+        tags = [ "news" "gaming" "industry" ];
+        title = "GamesIndustry News Feed";
+      }
+      {
         url = "https://msrc-blog.microsoft.com/feed";
         tags = [ "news" "security" "windows" ];
         title = "Microsoft Security Response Center Blog";
