@@ -260,11 +260,10 @@
               };
             in
             pkgs.mkShell {
-              inherit (self.checks."${system}".pre-commit-check) shellHook;
-
-              nativeBuildInputs = with pkgs; [
+              packages = with pkgs; [
                 git
                 gnupg
+                pinentry-qt
                 neovim
 
                 # pre-commit
@@ -289,6 +288,24 @@
                 ./keys/hosts
                 ./keys/users
               ];
+
+              shellHook = ''
+                              	${self.checks."${system}".pre-commit-check.shellHook}
+
+                		alias g="git"
+                		alias ga="git add"
+                		alias gaa="git add --all"
+                		alias gc="git commit"
+                		alias gcmsg="git commit -m"
+                		alias gd="git diff"
+                		alias gl="git pull"
+                		alias gp="git push"
+                		alias gsb="git status -sb"
+                		alias n="nix"
+                		alias nfu="nix flake update"
+                		alias nosswf="nixos-rebuild switch --use-remote-sudo --flake ."
+                		alias v="nvim"
+                	      '';
             };
         });
     };
