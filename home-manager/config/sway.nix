@@ -20,7 +20,7 @@ let
   };
   screens = {
     builtin = "eDP-1";
-    main = "Samsung Electric Company SMS27A350H 0x00007F36";
+    main = "Unknown VG28UQL1A 0x00000101";
     sub = "ViewSonic Corporation VP211b A22050300003";
 
     # Functions
@@ -785,6 +785,7 @@ in
         {
           criteria = screens.main;
           status = "enable";
+          scale = 2.0;
           position = "0,0";
         }
         {
