@@ -19,11 +19,6 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL";
-      inputs.nixpkgs.follows = "nixos";
-    };
-
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixos";
@@ -192,7 +187,7 @@
           workstation = true;
 
           modules = [
-            inputs.nixos-wsl.nixosModules.wsl
+            inputs.nixos-hardware.nixosModules.framework
             inputs.sops-nix.nixosModules.sops
             ./nixos/hosts/dh-framework/configuration.nix
           ];
@@ -290,22 +285,22 @@
               ];
 
               shellHook = ''
-                              	${self.checks."${system}".pre-commit-check.shellHook}
+                            ${self.checks."${system}".pre-commit-check.shellHook}
 
-                		alias g="git"
-                		alias ga="git add"
-                		alias gaa="git add --all"
-                		alias gc="git commit"
-                		alias gcmsg="git commit -m"
-                		alias gd="git diff"
-                		alias gl="git pull"
-                		alias gp="git push"
-                		alias gsb="git status -sb"
-                		alias n="nix"
-                		alias nfu="nix flake update"
-                		alias nosswf="nixos-rebuild switch --use-remote-sudo --flake ."
-                		alias v="nvim"
-                	      '';
+                alias g="git"
+                alias ga="git add"
+                alias gaa="git add --all"
+                alias gc="git commit"
+                alias gcmsg="git commit -m"
+                alias gd="git diff"
+                alias gl="git pull"
+                alias gp="git push"
+                alias gsb="git status -sb"
+                alias n="nix"
+                alias nfu="nix flake update"
+                alias nosswf="nixos-rebuild switch --use-remote-sudo --flake ."
+                alias v="nvim"
+              '';
             };
         });
     };
