@@ -785,13 +785,13 @@ in
         {
           criteria = screens.main;
           status = "enable";
-          scale = 2.0;
+          scale = 1.75;
           position = "0,0";
         }
         {
           criteria = screens.sub;
           status = "enable";
-          position = "1920,0";
+          position = "2195,0";
         }
       ];
     };
