@@ -8,6 +8,9 @@
     pulumi-bin
     rancher
 
+    # Runners
+    minikube
+
     # Provisioning Tools
     ansible
     nixpkgs-unstable.nodePackages.cdktf-cli
