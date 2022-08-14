@@ -68,20 +68,12 @@ in
     set searchurls.cnrtl http://www.cnrtl.fr/lexicographie/
     set searchurls.qwant https://www.qwant.com/?q=
 
-    " Binds
-    bind O fillcmdline tabopen
-    bind M bmark
-    bind T fillcmdline tab
-    bind b fillcmdline bmarks
+    " Default bindings
     bind ;x hint -F e => { const pos = tri.dom.getAbsoluteCentre(e); tri.excmds.exclaim_quiet("xdotool mousemove --sync " + window.devicePixelRatio * pos.x + " " + window.devicePixelRatio * pos.y + "; xdotool click 1")}
     bind ;X hint -F e => { const pos = tri.dom.getAbsoluteCentre(e); tri.excmds.exclaim_quiet("xdotool mousemove --sync " + window.devicePixelRatio * pos.x + " " + window.devicePixelRatio * pos.y + "; xdotool keydown ctrl+shift; xdotool click 1; xdotool keyup ctrl+shift")}
     bind <A-p> pin
     bind <A-m> mute toggle
     bind <F1> help
-    bind o fillcmdline open
-    unbind w
-    unbind W
-    unbind t
     bind ]] followpage next
     bind [[ followpage prev
     bind [c urlincrement -1
@@ -127,7 +119,6 @@ in
     bind U undo window
     bind r reload
     bind R reloadhard
-    unbind x
     bind gi focusinput -l
     bind g? rot13
     bind g! jumble
@@ -142,13 +133,8 @@ in
     bind ga tabaudio
     bind gr reader
     bind gu urlparent
-    bind gU composite tabduplicate; urlparent
     bind gf viewsource
     bind : fillcmdline_notrail
-    unbind s
-    unbind S
-    bind B fillcmdline bmarks -t
-    unbind ZZ
     bind f hint
     bind F hint -b
     bind gF hint -qb
@@ -162,7 +148,6 @@ in
     bind ;Y hint -cF img i => tri.excmds.yankimage(tri.urlutils.getAbsoluteURL(i.src))
     bind ;p hint -p
     bind ;h hint -h
-    bind v mode visual
     bind ;P hint -P
     bind ;r hint -r
     bind ;s hint -s
@@ -205,8 +190,6 @@ in
     bind <S-Escape> mode ignore
     bind <Escape> composite mode normal ; hidecmdline
     bind <C-[> composite mode normal ; hidecmdline
-    unbind a
-    unbind A
     bind zi zoom 0.1 true
     bind zo zoom -0.1 true
     bind zm zoom 0.5 true
@@ -221,6 +204,23 @@ in
     " Qutebrowser-style keybinds
     unbind pp
     unbind Pp
+    unbind a
+    unbind A
+    unbind w
+    unbind W
+    unbind t
+    unbind x
+    unbind s
+    unbind S
+    unbind ZZ
+    bind o fillcmdline open
+    bind O fillcmdline tabopen
+    bind M bmark
+    bind T fillcmdline tab
+    bind b fillcmdline bmarks
+    bind B fillcmdline bmarks -t
+    bind gU composite tabduplicate; urlparent
+    bind v mode visual
     bind wp clipboard winopen
     bind wo fillcmdline winopen
     bind / fillcmdline find
