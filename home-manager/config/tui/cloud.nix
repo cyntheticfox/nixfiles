@@ -14,12 +14,13 @@
     # Provisioning Tools
     ansible
     nixpkgs-unstable.nodePackages.cdktf-cli
-    helm
     istioctl
     kubectl
+    kubernetes-helm
     ocm
     odo
     packer
+    tektoncd-cli
     terraform
 
     # Generators
