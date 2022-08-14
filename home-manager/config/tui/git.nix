@@ -2,6 +2,7 @@
   home.packages = with pkgs; [
     git-doc
     git-extras
+    git-filter-repo
     git-secrets
     gitflow
     octofetch
