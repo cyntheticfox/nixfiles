@@ -18,6 +18,7 @@ let
     base0E = "#A3BE8C";
     base0F = "#B48EAD";
   };
+
   screens = {
     builtin = "eDP-1";
     main = "Unknown VG28UQL1A 0x00000101";
@@ -104,8 +105,8 @@ in
         # Use (n)vim-like keybindings
         left = "h";
         right = "l";
-        up = "j";
-        down = "k";
+        up = "k";
+        down = "j";
 
         # Your preferred application launcher
         # NOTE: pass the final command to swaymsg so that the resulting window
