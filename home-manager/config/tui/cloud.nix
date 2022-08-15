@@ -5,41 +5,38 @@
     azure-cli
     backblaze-b2
     linode-cli
-    pulumi-bin
-    rancher
 
-    # Runners
-    minikube
-
-    # Provisioning Tools
-    ansible
+    # Terraform/HashiCorp
     nixpkgs-unstable.nodePackages.cdktf-cli
-    istioctl
-    kubectl
-    kubernetes-helm
-    ocm
-    odo
+    infracost
     packer
-    tektoncd-cli
-    terraform
-
-    # Generators
     terracognita
-
-    # Locking tools
-    terragrunt
-
-    # Checking tools
-    chart-testing
-    datree
-    kube-hunter
-    kube-linter
+    terraform
     terrascan
     tflint
     tfsec
 
+    # Kubernetes
+    chart-testing
+    datree
+    istioctl
+    kube-hunter
+    kube-linter
+    kubectl
+    kubernetes-helm
+    kustomize
+    minikube
+    rancher
+
+    # Cloud-Native clis
+    kn
+    tektoncd-cli
+
+    # OpenShift
+    ocm
+    odo
+
     # Cost tools
     cloud-custodian
-    infracost
   ];
 }
