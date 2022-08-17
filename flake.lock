@@ -58,6 +58,21 @@
         "type": "github"
       }
     },
+    "nix-index-database": {
+      "locked": {
+        "lastModified": 1660696652,
+        "narHash": "sha256-SEANsmmmWLsSEreHlAPnBYSlYV22KLAJIlmK5lXrnNA=",
+        "owner": "houstdav000",
+        "repo": "nix-index-database-stable",
+        "rev": "90fc55de40ee6549045b9d6b12b5ad6891c25260",
+        "type": "github"
+      },
+      "original": {
+        "owner": "houstdav000",
+        "repo": "nix-index-database-stable",
+        "type": "github"
+      }
+    },
     "nixos": {
       "locked": {
         "lastModified": 1660581366,
@@ -210,6 +225,7 @@
       "inputs": {
         "home-manager": "home-manager",
         "home-manager-unstable": "home-manager-unstable",
+        "nix-index-database": "nix-index-database",
         "nixos": "nixos",
         "nixos-hardware": "nixos-hardware",
         "nixos-unstable": "nixos-unstable",

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, inputs, ... }: {
   home-manager = {
     sharedModules = [
       ({ pkgs, ... }: {
@@ -25,6 +25,9 @@
             };
           };
         };
+      })
+      ({ pkgs, ... }: {
+        home.file.".cache/nix-index/files".source = inputs.nix-index-database.legacyPackages."${pkgs.stdenv.hostPlatform.system}".database;
       })
     ];
 

@@ -19,6 +19,8 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
+    nix-index-database.url = "github:houstdav000/nix-index-database-stable";
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixos";
