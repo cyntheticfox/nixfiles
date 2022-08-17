@@ -287,7 +287,7 @@
               ];
 
               shellHook = ''
-                            ${self.checks."${system}".pre-commit-check.shellHook}
+                ${self.checks."${system}".pre-commit-check.shellHook}
 
                 alias g="git"
                 alias ga="git add"
