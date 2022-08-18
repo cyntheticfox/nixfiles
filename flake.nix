@@ -58,14 +58,15 @@
         hmConfig =
           { unstable ? false, system ? "x86_64-linux", modules ? [ ] }:
           let
-            username = "david";
-            home-manager =
+            unstableIfElse = unstableFunc: stableFunc:
               if
                 unstable
               then
-                inputs.home-manager-unstable
+                unstableFunc
               else
-                inputs.home-manager;
+                stableFunc;
+            username = "david";
+            home-manager = with inputs; unstableIfElse home-manager-unstable home-manager;
           in
           home-manager.lib.homeManagerConfiguration {
             inherit system username;
@@ -78,7 +79,12 @@
           };
 
         defFlakeSystem =
-          { unstable ? false, workstation ? false, system ? "x86_64-linux", modules ? [ ] }:
+          { unstable ? false
+          , workstation ? false
+          , cpuVendor ? null
+          , system ? "x86_64-linux"
+          , modules ? [ ]
+          }:
           let
             nixpkgs =
               if
@@ -94,13 +100,33 @@
                 inputs.home-manager-unstable
               else
                 inputs.home-manager;
-            baseModules =
+            baseModules = (
               if
                 unstable
               then
-                [ ./nixos/config/base-unstable.nix ]
+                [
+                  ./nixos/config/base-unstable.nix
+                  ({ config, pkgs, ... }: {
+                    nixpkgs.overlays = [
+                      (final: prev: {
+                        nixos-stable = import inputs.nixos {
+                          inherit system;
+
+                          config.allowUnfree = true;
+                        };
+
+                        nixpkgs-stable = import inputs.nixpkgs {
+                          inherit system;
+
+                          config.allowUnfree = true;
+                        };
+                      })
+                    ];
+                  })
+                ]
               else
                 [
+                  ./nixos/config/base.nix
                   ({ config, pkgs, ... }: {
                     nixpkgs.overlays = [
                       (final: prev: {
@@ -109,14 +135,9 @@
 
                           config.allowUnfree = true;
                         };
-
+                      })
+                      (final: prev: {
                         nixpkgs-unstable = import inputs.nixpkgs-unstable {
-                          inherit system;
-
-                          config.allowUnfree = true;
-                        };
-
-                        nixpkgs-master = import inputs.nixpkgs-master {
                           inherit system;
 
                           config.allowUnfree = true;
@@ -124,8 +145,21 @@
                       })
                     ];
                   })
-                  ./nixos/config/base.nix
+                ]
+            ) ++ [
+              ({ config, pkgs, ... }: {
+                nixpkgs.overlays = [
+                  (final: prev: {
+                    nixpkgs-master = import inputs.nixpkgs-master {
+                      inherit system;
+
+                      config.allowUnfree = true;
+                    };
+                  })
                 ];
+              })
+              ./nixos/config/hardware-base.nix
+            ];
             hmModules =
               if
                 workstation
@@ -141,7 +175,7 @@
             inherit system;
 
             specialArgs = {
-              inherit self;
+              inherit self cpuVendor workstation unstable;
               inherit (self) inputs outputs;
             };
 
@@ -173,7 +207,12 @@
       };
 
       nixosConfigurations = {
+        min = self.lib.defFlakeSystem {
+          modules = [ ./nixos/hosts/min/configuration.nix ];
+        };
+
         dh-laptop2 = self.lib.defFlakeSystem {
+          cpuVendor = "intel";
           workstation = true;
 
           modules = [
@@ -186,6 +225,7 @@
         };
 
         dh-framework = self.lib.defFlakeSystem {
+          cpuVendor = "intel";
           workstation = true;
 
           modules = [
