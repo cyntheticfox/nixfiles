@@ -48,10 +48,9 @@
     extraModprobeConfig = ''
       options v4l2loopback video_nr=63
       options kvm_intel nested=1
-      options i915 enable_guc=2 enable_gvt=true
     '';
     kernelModules = [ "v4l2loopback" ];
-    extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
+    extraModulePackages = with config.boot.kernelPackages; [ acpi_call v4l2loopback ];
   };
 
   fileSystems =
