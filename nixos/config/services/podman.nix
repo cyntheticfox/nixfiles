@@ -20,8 +20,8 @@
     podman = {
       enable = true;
 
-      dockerCompat = if config.virtualisation.docker.enable then false else true;
-      dockerSocket.enable = if config.virtualisation.docker.enable then false else true;
+      dockerCompat = !config.virtualisation.docker.enable;
+      dockerSocket.enable = !config.virtualisation.docker.enable;
     };
   };
 }
