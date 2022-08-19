@@ -80,8 +80,6 @@
 
   zramSwap.enable = true;
 
-  swapDevices = [ ];
-
   # Enable firmware upgrades
   hardware.enableRedistributableFirmware = true;
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
