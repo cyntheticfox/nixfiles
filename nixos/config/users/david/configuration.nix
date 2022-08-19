@@ -25,4 +25,61 @@
   };
 
   home-manager.users.david = outputs.nixosModules."${config.networking.hostName}";
+
+  environment.persistence."/state".users.david = {
+    directories = [
+      { directory = ".aws"; mode = "0700"; }
+      { directory = ".azure"; mode = "0700"; }
+      ".config/dconf"
+      ".config/discord"
+      ".config/Element"
+      ".config/libvirt"
+      ".config/Microsoft/Microsoft Teams"
+      ".config/pipewire"
+      ".config/teams"
+      { directory = ".docker"; mode = "0700"; }
+      ".discord"
+      { directory = ".gnupg"; mode = "0700"; }
+      ".mozilla"
+      { directory = ".ssh"; mode = "0700"; }
+      "docs"
+      "emu"
+      "music"
+      "opt"
+      "pics"
+      "repos"
+      "videos"
+    ];
+
+    files = [
+      ".config/pavucontrol.ini"
+    ];
+  };
+
+  environment.persistence."/persist".users.david = {
+    directories = [
+      ".cache/pre-commit"
+      ".cache/fontconfig"
+      ".cache/mesa_shader_cache"
+      ".cache/virt-manager"
+      ".cargo/registry"
+      ".local/share/containers"
+      ".local/share/direnv/allow"
+      ".local/share/mime"
+      ".local/share/mpd"
+      ".local/share/nvim/site"
+      ".local/state/wireplumber"
+      ".minikube/cache"
+      ".terraform.d"
+      "iso"
+      "tmp"
+    ];
+
+    files = [
+      ".config/mimeapps.list"
+      ".local/share/zoxide/db.zo"
+      ".local/share/nix/trusted-settings.json"
+      ".zsh_history"
+    ];
+  };
 }

@@ -15,7 +15,6 @@
       kernelModules = [
         "dm-snapshot"
         "i915"
-        "kvm-intel"
         "nls_cp437"
         "nls_iso8859-1"
         "usbhid"
@@ -29,14 +28,12 @@
     };
 
     kernelPackages = pkgs.linuxPackages_latest;
-    plymouth.enable = true;
 
     extraModprobeConfig = ''
       options v4l2loopback video_nr=63
     '';
     kernelModules = [ "v4l2loopback" ];
     extraModulePackages = with config.boot.kernelPackages; [ acpi_call v4l2loopback ];
-  };
 
   fileSystems =
     let
@@ -57,25 +54,14 @@
       };
     };
 
-  # Enable firmware upgrades
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  services.fwupd.enable = true;
-
   # Support Xbox One Controller
+  hardware.xone.enable = true;
   hardware.xpadneo.enable = true;
 
   # Support mouse configuration
   services.ratbagd.enable = true;
 
   hardware.keyboard.zsa.enable = true;
-
-  hardware.bluetooth = {
-    enable = true;
-
-    powerOnBoot = false;
-    package = pkgs.bluezFull;
-    settings.General.Name = config.networking.hostName;
-  };
 
   hardware.video.hidpi.enable = true;
 
@@ -106,6 +92,7 @@
 
   services.tlp = {
     enable = true;
+
     settings = {
       CPU_SCALING_GOVERNOR_ON_AC = "performance";
       CPU_SCALING_GOVERNOR_ON_BAT = "powersave";

@@ -1,6 +1,6 @@
 { config, lib, workstation, cpuVendor, ... }:
 let
-  amdIntelFunc = i: a:
+  intelAmdFunc = i: a:
     if
       cpuVendor == "intel"
     then
@@ -32,7 +32,7 @@ let
   nologIfWorkstation = if workstation then "quiet" else null;
   iommuKernelParam = intelOnlyFunc "intel_iommu=on";
 
-  kvmModProbeOpt = amdIntelFunc "kvm_intel" "kvm_amd";
+  kvmModProbeOpt = intelAmdFunc "kvm_intel" "kvm_amd";
 
 in
 {
@@ -66,5 +66,20 @@ in
   zramSwap.enable = true;
 
   hardware.enableRedistributableFirmware = true;
+  hardware.cpu.intel.updateMicrocode = cpuVendor == "intel";
   services.fwupd.enable = true;
+
+  hardware.bluetooth =
+    if
+      workstation
+    then
+      {
+        enable = true;
+
+        powerOnBoot = false;
+        package = pkgs.bluezFull;
+        settings.General.Name = config.networking.hostName;
+      }
+    else
+      { };
 }

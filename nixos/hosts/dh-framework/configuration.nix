@@ -42,6 +42,26 @@
     };
   };
 
+  environment.persistence."/state" = {
+    hideMounts = true;
+    directories = [
+      "/var/db/sudo"
+      "/var/lib/bluetooth"
+      "/var/lib/libvirt"
+      "/var/lib/sops"
+      "/var/lib/systemd/coredump"
+      "/var/log"
+    ];
+
+    files = [
+      "/etc/machine-id"
+    ];
+  };
+
+  environment.persistence."/persist" = {
+    hideMounts = true;
+  };
+
   users = {
     mutableUsers = false;
     users.root.passwordFile = config.sops.secrets.root-password.path;
