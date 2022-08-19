@@ -103,6 +103,8 @@
     settings.General.Name = config.networking.hostName;
   };
 
+  hardware.video.hidpi.enable = true;
+
   hardware.opengl = {
     enable = true;
 
