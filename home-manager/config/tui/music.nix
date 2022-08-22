@@ -49,11 +49,11 @@
     settings = {
       directory = config.xdg.userDirs.music;
       library = "${config.xdg.dataHome}/musiclibrary.db";
-      import.move = "yes";
+      import.move = true;
       paths = {
-        default = "$albumartist - $album%aunique{}/$track $title";
-        singleton = "Non-Album/$artist - $title";
-        comp = "Compilations/$album%aunique{}/$track $title";
+        default = "$albumartist - $album%aunique{}/$track - $title";
+        singleton = "etc/$artist - $title";
+        comp = "Various Artists - $album%aunique{}/$track - $title ($artist)";
       };
     };
   };
