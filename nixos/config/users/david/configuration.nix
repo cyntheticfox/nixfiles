@@ -38,14 +38,12 @@
       ".config/pipewire"
       ".config/teams"
       { directory = ".docker"; mode = "0700"; }
-      ".discord"
       { directory = ".gnupg"; mode = "0700"; }
       ".mozilla"
       { directory = ".ssh"; mode = "0700"; }
       "docs"
       "emu"
       "music"
-      "opt"
       "pics"
       "repos"
       "videos"
@@ -73,6 +71,7 @@
       ".minikube/cache"
       ".terraform.d"
       "iso"
+      "opt"
       "tmp"
     ];
 

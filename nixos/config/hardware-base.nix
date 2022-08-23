@@ -1,4 +1,4 @@
-{ config, lib, workstation, cpuVendor, ... }:
+{ config, pkgs, lib, workstation, cpuVendor, ... }:
 let
   intelAmdFunc = i: a:
     if

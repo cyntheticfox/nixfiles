@@ -38,16 +38,25 @@
 
   fileSystems =
     let
-      fsroot_subvol = subvol: {
+      fsroot_subvol = subvol: neededForBoot: {
+        inherit neededForBoot;
+
         label = "fsroot";
         fsType = "btrfs";
         options = [ "subvol=${subvol}" ];
       };
     in
     {
-      "/" = fsroot_subvol "root";
-      "/home" = fsroot_subvol "home";
-      "/nix" = fsroot_subvol "nix";
+      "/" = {
+        device = "none";
+        fsType = "tmpfs";
+        options = [ "defaults" "size=2G" "mode=755" ];
+      };
+
+      "/state" = fsroot_subvol "state" true;
+
+      "/persist" = fsroot_subvol "persist" true;
+      "/nix" = fsroot_subvol "nix" false;
 
       "/boot" = {
         label = "boot";

@@ -221,6 +221,7 @@
             inputs.nixos-hardware.nixosModules.common-cpu-intel
             inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
             inputs.nixos-hardware.nixosModules.common-pc-laptop
+            inputs.impermanence.nixosModules.impermanence
             inputs.sops-nix.nixosModules.sops
             ./nixos/hosts/dh-laptop2/configuration.nix
           ];
@@ -233,6 +234,7 @@
           modules = [
             inputs.nixos-hardware.nixosModules.framework
             inputs.sops-nix.nixosModules.sops
+            inputs.impermanence.nixosModules.impermanence
             ./nixos/hosts/dh-framework/configuration.nix
           ];
         };
