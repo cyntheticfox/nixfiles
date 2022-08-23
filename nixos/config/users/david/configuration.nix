@@ -68,6 +68,7 @@
       ".local/share/mime"
       ".local/share/mpd"
       ".local/share/nvim/site"
+      ".local/share/Steam"
       ".local/state/wireplumber"
       ".minikube/cache"
       ".terraform.d"

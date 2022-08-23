@@ -34,6 +34,7 @@
     '';
     kernelModules = [ "v4l2loopback" ];
     extraModulePackages = with config.boot.kernelPackages; [ acpi_call v4l2loopback ];
+  };
 
   fileSystems =
     let
