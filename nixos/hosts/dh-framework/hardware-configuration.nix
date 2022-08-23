@@ -28,26 +28,11 @@
       };
     };
 
-    loader = {
-      efi.canTouchEfiVariables = true;
-      systemd-boot = {
-        enable = true;
-        configurationLimit = 10;
-        editor = false;
-      };
-    };
-
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [
-      "intel_iommu=on"
-      "quiet"
-      "vga=current"
-    ];
     plymouth.enable = true;
 
     extraModprobeConfig = ''
       options v4l2loopback video_nr=63
-      options kvm_intel nested=1
     '';
     kernelModules = [ "v4l2loopback" ];
     extraModulePackages = with config.boot.kernelPackages; [ acpi_call v4l2loopback ];
@@ -72,10 +57,7 @@
       };
     };
 
-  zramSwap.enable = true;
-
   # Enable firmware upgrades
-  hardware.enableRedistributableFirmware = true;
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   services.fwupd.enable = true;
 
@@ -119,6 +101,8 @@
       vaapiVdpau
     ];
   };
+
+  services.thermald.enable = true;
 
   services.tlp = {
     enable = true;

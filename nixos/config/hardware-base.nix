@@ -30,11 +30,10 @@ let
       null;
 
   nologIfWorkstation = if workstation then "quiet" else null;
-  iommuKernelParam = intelOnlyFunc "intel_iommu";
+  iommuKernelParam = intelOnlyFunc "intel_iommu=on";
 
-  kvmModProbeOpt = amdIntelFunc "kvm_intel" "";
+  kvmModProbeOpt = amdIntelFunc "kvm_intel" "kvm_amd";
 
-  modopts = list: builtins.concatStringsSep " " ([ "options" kvmModProbeOpt ] ++ list);
 in
 {
   boot = {
@@ -56,10 +55,12 @@ in
     kernelParams = [
       nologIfWorkstation
       iommuKernelParam
-      "vga=current"
+      #"vga=current"
     ];
 
-    extraModprobeConfig = modopts [ "nested=1" ];
+    extraModprobeConfig = ''
+      options ${kvmModProbeOpt} nested=1
+    '';
   };
 
   zramSwap.enable = true;
