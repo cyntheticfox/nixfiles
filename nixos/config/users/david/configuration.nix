@@ -77,7 +77,6 @@
     ];
 
     files = [
-      ".config/mimeapps.list"
       ".local/share/nix/trusted-settings.json"
       ".zsh_history"
     ];

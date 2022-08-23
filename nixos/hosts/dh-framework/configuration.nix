@@ -56,7 +56,7 @@
   environment.persistence."/persist" = {
     hideMounts = true;
     directories = [
-      "/var/lib/clamav"
+      { directory = "/var/lib/clamav"; user = "clamav"; group = "clamav"; }
       "/var/lib/bluetooth"
       "/var/db/sudo"
       "/var/lib/libvirt"
