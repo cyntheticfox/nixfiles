@@ -67,6 +67,7 @@
       ".local/share/mpd"
       ".local/share/nvim/site"
       ".local/share/Steam"
+      ".local/share/zoxide"
       ".local/state/wireplumber"
       ".minikube/cache"
       ".terraform.d"
@@ -77,7 +78,6 @@
 
     files = [
       ".config/mimeapps.list"
-      ".local/share/zoxide/db.zo"
       ".local/share/nix/trusted-settings.json"
       ".zsh_history"
     ];
