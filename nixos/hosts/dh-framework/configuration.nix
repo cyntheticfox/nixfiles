@@ -25,7 +25,7 @@
 
   sops = {
     gnupg = {
-      home = "/var/lib/sops";
+      home = "/state/var/lib/sops";
       sshKeyPaths = [ ];
     };
 
@@ -45,12 +45,7 @@
   environment.persistence."/state" = {
     hideMounts = true;
     directories = [
-      "/var/db/sudo"
-      "/var/lib/bluetooth"
-      "/var/lib/libvirt"
       "/var/lib/sops"
-      "/var/lib/systemd/coredump"
-      "/var/log"
     ];
 
     files = [
@@ -60,6 +55,13 @@
 
   environment.persistence."/persist" = {
     hideMounts = true;
+    directories = [
+      "/var/lib/bluetooth"
+      "/var/db/sudo"
+      "/var/lib/libvirt"
+      "/var/lib/systemd/coredump"
+      "/var/log"
+    ];
   };
 
   users = {
