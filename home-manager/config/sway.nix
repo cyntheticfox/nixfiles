@@ -258,6 +258,7 @@ in
             { title = "Steam - News"; }
             { title = "Friends List"; }
             { app_id = "^pavucontrol$"; }
+            { app_id = "firefox"; title = "About Mozilla Firefox"; }
           ];
         };
 
