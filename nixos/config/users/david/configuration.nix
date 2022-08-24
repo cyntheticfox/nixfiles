@@ -50,7 +50,7 @@
     ];
 
     files = [
-      ".local/share/musiclibrary.db"
+      ".local/share/beets/musiclibrary.db"
       ".config/pavucontrol.ini"
     ];
   };
@@ -72,12 +72,14 @@
       ".local/state/wireplumber"
       ".minikube/cache"
       ".terraform.d"
+      "dbg"
       "iso"
       "opt"
       "tmp"
     ];
 
     files = [
+      ".local/share/beets/import.log"
       ".local/share/nix/trusted-settings.json"
       ".zsh_history"
     ];

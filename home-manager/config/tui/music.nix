@@ -47,9 +47,28 @@
     enable = true;
 
     settings = {
+      match = {
+        required = "title artist";
+        ignored_media = [
+          "Data CD"
+          "DVD"
+          "DVD-Video"
+          "Blu-ray"
+          "HD-DVD"
+          "VCD"
+          "SVCD"
+          "UMD"
+          "VHS"
+        ];
+      };
       directory = config.xdg.userDirs.music;
-      library = "${config.xdg.dataHome}/musiclibrary.db";
-      import.move = true;
+      library = "${config.xdg.dataHome}/beets/musiclibrary.db";
+      import = {
+        languages = "en jp";
+        log = "${config.xdg.dataHome}/beets/import.log";
+        move = true;
+      };
+      format_item = "$albumartist - $album - $track $title";
       paths = {
         default = "$albumartist - $album%aunique{}/$track - $title";
         singleton = "etc/$artist - $title";
