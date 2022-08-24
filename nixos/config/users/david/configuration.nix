@@ -50,6 +50,7 @@
     ];
 
     files = [
+      ".local/share/musiclibrary.db"
       ".config/pavucontrol.ini"
     ];
   };
