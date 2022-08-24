@@ -129,6 +129,7 @@
     lethe
     ntfs3g
     parted
+    restic
     udiskie
 
     bluez-tools
