@@ -13,7 +13,6 @@
 
     # RE/General
     cutter
-    nixos-unstable.ghidra
     radare2
     rehex
   ];
