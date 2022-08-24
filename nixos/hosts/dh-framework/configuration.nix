@@ -21,6 +21,7 @@
     ../../config/services/docker.nix
     ../../config/services/libvirtd.nix
     ../../config/services/podman.nix
+    ../../config/services/restic.nix
   ];
 
   sops = {
@@ -38,6 +39,14 @@
       wireless = {
         sopsFile = ./secrets.yml;
         restartUnits = [ "supplicant-wlp0s20f3" ];
+      };
+
+      restic-password = {
+        sopsFile = ./secrets.yml;
+      };
+
+      restic-environment = {
+        sopsFile = ./secrets.yml;
       };
     };
   };
@@ -138,6 +147,13 @@
     piper
     wally-cli
   ];
+
+  services.restic.backups."${config.networking.hostName}" = {
+    passwordFile = config.sops.secrets.restic-password.path;
+    environmentFile = config.sops.secrets.restic-environment.path;
+  };
+
+  systemd.services."restic-backups-${config.networking.hostName}".serviceConfig.ExecCondition = "${config.systemd.package}/lib/systemd/systemd-networkd-wait-online --interface=enp0s13f0u4u4:routable --timeout=5";
 
   systemd.tmpfiles.packages = with pkgs; [ openvpn podman-unwrapped man-db ];
 
