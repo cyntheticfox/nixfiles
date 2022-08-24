@@ -53,8 +53,8 @@ in
       # Prevent printing kernel pointers
       "kernel.kptr_restrict" = 2;
 
-      # Disable late module loading
-      "kernel.modules_disabled" = 1;
+      # # Disable late module loading
+      # "kernel.modules_disabled" = 1;
 
       # Disallow profiling at all levels without CAP_SYS_ADMIN
       "kernel.perf_event_paranoid" = 3;
