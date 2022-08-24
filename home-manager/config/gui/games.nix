@@ -4,10 +4,10 @@
 
     # Emulation
     flips
-    retroarch
+    retroarchFull
 
     # itch.io
-    #nixpkgs-master.itch
+    itch
 
     # Steam
     steam
