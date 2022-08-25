@@ -30,6 +30,7 @@
 
     # Cloud-Native clis
     kn
+    open-policy-agent
     tektoncd-cli
 
     # OpenShift
