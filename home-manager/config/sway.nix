@@ -56,10 +56,10 @@ let
     "${user-bins.swaylock}"
     "--daemonize"
     "--show-failed-attempts"
-    "--image ${config.home.homeDirectory}/wallpaper.png"
+    "--image ${config.home.homeDirectory}/lockscreen.jpg"
     "--clock"
     "--indicator"
-    "--effect-blur 7x5"
+    #"--effect-blur 7x5"
     "--effect-vignette 0.5:0.5"
     "--fade-in 0.2"
   ];

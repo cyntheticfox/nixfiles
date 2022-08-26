@@ -50,6 +50,8 @@
     ];
 
     files = [
+      "wallpaper.png"
+      "lockscreen.jpg"
       ".local/share/beets/musiclibrary.db"
       ".config/pavucontrol.ini"
     ];
