@@ -66,7 +66,7 @@ in
       "kernel.unprvileged_bpf_disabled" = 1;
 
       # Require process to have CAP_SYS_PTRACE and use PTRACE_ATTACH or PTRACE_TRACEME
-      "kernel.yama.ptrace_scope" = 2;
+      #"kernel.yama.ptrace_scope" = 2;
 
       # Filter ARP packets to be responded on per-interface. Not sure why this isn't the default
       "net.ipv4.conf.all.arp_filter" = 1;

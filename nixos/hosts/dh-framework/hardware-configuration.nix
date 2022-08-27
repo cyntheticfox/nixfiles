@@ -27,6 +27,8 @@
       };
     };
 
+    kernel.sysctl."dev.i915.perf_stream_paranoid" = 0;
+
     kernelPackages = pkgs.linuxPackages_latest;
 
     extraModprobeConfig = ''
