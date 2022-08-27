@@ -60,6 +60,7 @@
 
       init.defaultBranch = "main";
       pull.ff = "only";
+      tag.gpgSign = true;
     };
   };
 }
