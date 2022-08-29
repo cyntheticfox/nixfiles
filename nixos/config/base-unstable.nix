@@ -1,4 +1,4 @@
-{ config, lib, pkgs, self, inputs, outputs, ... }: {
+{ config, lib, pkgs, self, inputs, ... }: {
   nix = {
     checkConfig = true;
     extraOptions = ''
@@ -12,7 +12,7 @@
     };
     # nixPath = (lib.mapAttrsToList (n: v: n + "=" + v) inputs) ++ [ ("ospkgs=" + "../.") ("nixpkgs-overlays=" + ../. + "/overlays.nix") ];
     optimise.automatic = true;
-    registry = lib.mapAttrs (_: flake: { inherit flake; }) (lib.filterAttrs (_: v: v ? outputs) inputs);
+    registry = lib.mapAttrs (_: flake: { inherit flake; }) (lib.filterAttrs (_: v: v ? self) inputs);
     settings = {
       allowed-users = [ "@wheel" ];
       cores = 0;

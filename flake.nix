@@ -110,13 +110,14 @@
                   ./nixos/config/base-unstable.nix
                   ({ config, pkgs, ... }: {
                     nixpkgs.overlays = [
-                      (final: prev: {
+                      (self: super: {
                         nixos-stable = import inputs.nixos {
                           inherit system;
 
                           config.allowUnfree = true;
                         };
-
+                      })
+                      (self: super: {
                         nixpkgs-stable = import inputs.nixpkgs {
                           inherit system;
 
@@ -131,14 +132,14 @@
                   ./nixos/config/base.nix
                   ({ config, pkgs, ... }: {
                     nixpkgs.overlays = [
-                      (final: prev: {
+                      (self: super: {
                         nixos-unstable = import inputs.nixos-unstable {
                           inherit system;
 
                           config.allowUnfree = true;
                         };
                       })
-                      (final: prev: {
+                      (self: super: {
                         nixpkgs-unstable = import inputs.nixpkgs-unstable {
                           inherit system;
 
@@ -151,7 +152,7 @@
             ) ++ [
               ({ config, pkgs, ... }: {
                 nixpkgs.overlays = [
-                  (final: prev: {
+                  (self: super: {
                     nixpkgs-master = import inputs.nixpkgs-master {
                       inherit system;
 
@@ -178,7 +179,7 @@
 
             specialArgs = {
               inherit self cpuVendor workstation unstable;
-              inherit (self) inputs outputs;
+              inherit (self) inputs;
             };
 
             modules = baseModules

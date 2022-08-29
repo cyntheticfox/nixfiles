@@ -1,4 +1,4 @@
-{ config, pkgs, lib, outputs, ... }: {
+{ config, pkgs, lib, self, ... }: {
   sops.secrets = {
     david-password = {
       sopsFile = ./secrets.yml;
@@ -24,7 +24,7 @@
     passwordFile = config.sops.secrets.david-password.path;
   };
 
-  home-manager.users.david = outputs.nixosModules."${config.networking.hostName}";
+  home-manager.users.david = self.nixosModules."${config.networking.hostName}";
 
   environment.persistence."/state".users.david = {
     directories = [

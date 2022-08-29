@@ -1,4 +1,4 @@
-{ config, lib, pkgs, self, inputs, outputs, ... }: {
+{ config, lib, pkgs, self, inputs, ... }: {
   nix = {
     package = pkgs.nixFlakes;
 
@@ -22,7 +22,7 @@
       persistent = true;
     };
     optimise.automatic = true;
-    registry = lib.mapAttrs (_: flake: { inherit flake; }) (lib.filterAttrs (_: v: v ? outputs) inputs);
+    registry = lib.mapAttrs (_: flake: { inherit flake; }) (lib.filterAttrs (_: v: v ? self) inputs);
   };
 
   nixpkgs.config.allowUnfree = true;
