@@ -10,6 +10,7 @@
     ../../config/gui/games.nix
     ../../config/gui/libvirt.nix
     ../../config/gui/music.nix
+    ../../config/gui/networking.nix
     ../../config/gui/teams.nix
     ../../config/gui/video.nix
 
