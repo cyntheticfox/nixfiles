@@ -11,11 +11,6 @@ let
   };
 in
 {
-
-  home.packages = with pkgs; [
-    tridactyl-native
-  ];
-
   xdg.configFile."tridactyl/tridactylrc".text = ''
     " General Settings
     set update.lastchecktime 1652120990699
@@ -339,7 +334,10 @@ in
 
   programs.firefox = {
     enable = true;
-    package = pkgs.firefox-wayland;
+    package = pkgs.firefox.override {
+      forceWayland = true;
+      cfg.enableTridactylNative = true;
+    };
   };
 
   xdg.mimeApps.defaultApplications =
@@ -355,6 +353,7 @@ in
       "image/gif"
       "image/jpeg"
       "image/png"
+      "x-scheme-handler/ftp"
       "x-scheme-handler/http"
       "x-scheme-handler/https"
     ];
