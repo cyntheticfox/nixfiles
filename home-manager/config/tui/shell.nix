@@ -65,7 +65,7 @@
 
       "nos" = "nixos-rebuild";
       "nosb" = "nixos-rebuild build";
-      "nosbo" = "nixos-reubuild boot";
+      "nosbo" = "nixos-rebuild boot";
       "nose" = "nixos-rebuild edit";
       "nossw" = "nixos-rebuild switch --use-remote-sudo";
       "nosswf" = "nixos-rebuild switch --use-remote-sudo --flake .";
