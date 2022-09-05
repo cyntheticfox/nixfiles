@@ -27,12 +27,15 @@
     traceroute
   ];
 
+  nixpkgs.config = import ./nixpkgs.nix;
+
   programs.nix-index.enable = true;
 
   xdg = {
     enable = true;
     cacheHome = "${config.home.homeDirectory}/.cache";
     configHome = "${config.home.homeDirectory}/.config";
+    configFile."nixpkgs/config.nix".source = ./nixpkgs.nix;
     dataHome = "${config.home.homeDirectory}/.local/share";
     stateHome = "${config.home.homeDirectory}/.local/state";
 
