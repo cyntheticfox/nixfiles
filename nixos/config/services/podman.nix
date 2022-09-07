@@ -5,6 +5,7 @@
 { config, pkgs, lib, ... }: {
   environment.systemPackages = with pkgs; [
     buildah
+    cosign
     podman-compose
     shadow
     skopeo
