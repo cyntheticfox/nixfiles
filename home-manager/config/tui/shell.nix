@@ -9,6 +9,7 @@
 
     shellAliases = {
       "h" = "history";
+      "pg" = "pgrep";
 
       # Editor aliases
       "v" = config.home.sessionVariables.EDITOR;
@@ -30,6 +31,12 @@
       "gcc" = "gcc -fdiagnostics-color";
       "clang" = "clang -fcolor-diagnostics";
 
+      # Make things human-readable
+      "dd" = "dd status=progress";
+      "df" = "df -h";
+      "du" = "du -h";
+      "pkill" = "pkill -e";
+
       # Nix flakes
       "n" = "nix";
 
@@ -46,6 +53,7 @@
       "nfm" = "nix flake metadata";
       "nfs" = "nix flake show";
       "nfu" = "nix flake update";
+      "nfuc" = "nix flake update && nix flake check";
 
       "nfmt" = "nix fmt";
 
@@ -57,6 +65,8 @@
       "nose" = "nixos-rebuild edit";
       "nossw" = "nixos-rebuild switch --use-remote-sudo";
       "nosswf" = "nixos-rebuild switch --use-remote-sudo --flake .";
+      "nosswfc" = "nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
+      "nosswfuc" = "nix flake update && nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
       "nosswrb" = "nixos-rebuild switch --use-remote-sudo --rollback";
       "nost" = "nixos-rebuild test";
       "nosv" = "nixos-rebuild build-vm";
@@ -85,7 +95,41 @@
       "nshn" = "nix shell nixpkgs";
 
       "nst" = "nix store";
+
+      # Additional git aliases
+      "gcmsg" = "git commit --signoff -m";
+      "gcmsga" = "git commit --signoff --all -m";
     };
+
+    shellGlobalAliases."UUID" = "$(uuidgen | tr -d \\n)";
+
+    defaultKeymap = "viins";
+
+    initExtra = ''
+      function gcmsgap() {
+        git commit --signoff --all -m $@ && git push
+      }
+
+      function gcmsgapf() {
+        git commit --signoff --all -m $@ && git push --force-with-lease
+      }
+
+      function gcmsgapf!() {
+        git commit --signoff --all -m $@ && git push --force
+      }
+
+      function gcmsgp() {
+        git commit --signoff -m $@ && git push
+      }
+
+      function gcmsgpf() {
+        git commit --signoff -m $@ && git push --force-with-lease
+      }
+
+      function gcmsgpf!() {
+        git commit --signoff -m $@ && git push --force
+      }
+    '';
 
     enableAutosuggestions = true;
     oh-my-zsh = {
