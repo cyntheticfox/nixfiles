@@ -40,29 +40,27 @@ Here are a few tools I use:
 
 ## Current Bugs
 
+- Some Nvim stuff
+  - Some Nvim LSPs aren't working properly
+  - cspell needs its config fixed
 - MS Teams likes to crash on boot, garble audio
 - ACPI device issues on boot
-- some duplicate kernel module loads
-- ModMic doesn't register or something?
 - gnome-keyring doesn't work. Looking into pass-secret-service as replacement.
-- Something about `PipeWire` not working with JACK?
 - desktop portals failing to load (probably my messy GTK config)
 - udiskie doesn't like my GTK config/icons
 - playerctld crashes mpd frequently
 
 ## Future
 
+- Set up [which-key.nvim](https://github.com/folke/which-key.nvim)
+- Get proper terminal, file/object browser support in Neovim
 - SELinux?
 - Secure boot
 - Use TPM instead of Yubikey for encryption
-- Impermanence/emphemeral system
 - bcachefs or zfs instead of btrfs
-- Use [danth/stylix](https://github.com/danth/stylix)
 - Use pass
 - Switch to [nheko](https://github.com/nheko-reborn/nheko) from Element
 - Declarative VMs?
-- TinyTinyRSS over newsboat
-- An actual backup system
 - Declarative Firefox config
 - More work on [terranix-linode-poc](https://github.com/houstdav000/terranix-linode-poc)
 
