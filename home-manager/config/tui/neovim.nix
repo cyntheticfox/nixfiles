@@ -30,33 +30,33 @@
       set whichwrap+=<,>,h,l
 
       " Set Editor information
-      set termguicolors
-      set scrolloff=7
-      set number
-      set cursorline
-      set mouse=a
-      set showmatch
-      set foldcolumn=1
-      set fileformats=unix,dos,mac
-      set showtabline=2
+      set colorcolumn=80
       set completeopt=menuone,noinsert,noselect,preview
+      set cursorline
+      set fileformats=unix,dos,mac
+      set foldcolumn=1
       set guicursor=n-c-v-sm:block-nCursor
         \,i-ci-ve:ver25-iCursor
         \,r-cr-o:hor20-Cursor
         \,a:blinkwait300-blinkon200-blinkoff150
-      set timeoutlen=500
-      set colorcolumn=80
       set list
+      set mouse=a
+      set number
+      set scrolloff=7
+      set showmatch
+      set showtabline=2
       set splitbelow
       set splitright
+      set termguicolors
+      set timeoutlen=500
       set title
 
       " Set Tab information
-      set smartindent
       set expandtab
-      set softtabstop=4
-      set shiftwidth=4
       set linebreak
+      set shiftwidth=4
+      set smartindent
+      set softtabstop=4
       set textwidth=500
 
       " Set Search Options
@@ -64,8 +64,8 @@
       set smartcase
 
       " Backup options (just use vcs instead)
-      set nowritebackup
       set noswapfile
+      set nowritebackup
 
       " Provide better undo support
       set undofile
