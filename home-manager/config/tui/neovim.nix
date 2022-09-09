@@ -232,6 +232,16 @@
         config = "require('gitsigns').setup()";
       }
       {
+        plugin = indent-blankline-nvim-lua;
+        type = "lua";
+        config = ''
+          require('indent_blankline').setup {
+            show_current_context = true,
+            show_current_context_start = true,
+          }
+        '';
+      }
+      {
         plugin = comment-nvim;
         type = "lua";
         config = ''
@@ -314,6 +324,15 @@
         plugin = nvim-cmp;
         type = "lua";
         config = ''
+          local has_words_before = function()
+            local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+            return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+          end
+
+          local feedkey = function(key, mode)
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+          end
+
           local cmp = require('cmp')
 
           cmp.setup({
