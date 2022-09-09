@@ -31,7 +31,7 @@
 
       " Set Editor information
       set colorcolumn=80
-      set completeopt=menuone,noinsert,noselect,preview
+      set completeopt=menu,menuone,noinsert,noselect,preview
       set cursorline
       set fileformats=unix,dos,mac
       set foldcolumn=1
@@ -124,6 +124,7 @@
 
       }
       cmp-buffer
+      # cmp-git
       cmp-nvim-lsp
       cmp-path
       cmp-treesitter
@@ -313,19 +314,97 @@
         plugin = nvim-cmp;
         type = "lua";
         config = ''
-          require('cmp').setup({
+          local cmp = require('cmp')
+
+          cmp.setup({
+            enabled = function()
+              local context = require('cmp.config.context')
+              if vim.api.nvim_get_mode == 'c' then
+                return true
+              else
+                return not context.in_treesitter_capture('comment')
+                  and not context.in_syntax_group('Comment')
+              end
+            end,
             snippet = {
               expand = function(args)
                 vim.fn["vsnip#anonymous"](args.body)
               end
             },
-            sources = {
+            window = {
+              completion = cmp.config.window.bordered(),
+              documentation = cmp.config.window.bordered(),
+            },
+            mapping = cmp.mapping.preset.insert({
+              ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+              ['<C-f>'] = cmp.mapping.scroll_docs(4),
+              --['<C-Space>'] = cmp.mapping.complete(),
+              ['<C-e>'] = cmp.mapping.abort(),
+              ['<CR>'] = cmp.mapping.confirm({ select = false }),
+              ['<ESC>'] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  cmp.close()
+                else
+                  fallback()
+                end
+              end, { 'i', 's'}),
+              ['<Tab>'] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  cmp.select_next_item()
+                elseif vim.fn['vsnip#available'](1) == 1 then
+                  feedkey("<Plug>(vsnip-expand-or-jump)", "")
+                elseif has_words_before() then
+                  cmp.complete()
+                else
+                  fallback()
+                end
+              end, { 'i', 's'}),
+              ['<S-Tab'] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  cmp.select_prev_item()
+                elseif vim.fn['vsnip#jumpable'](-1) == 1 then
+                  feedkey("<Plug>(vsnip-jump-prev)", "")
+                else
+                  fallback()
+                end
+              end, { 'i', 's' }),
+            }),
+            sources = cmp.config.sources({
               { name = 'nvim_lsp' },
               { name = 'vsnip' },
-              { name = 'buffer' },
               { name = 'path' },
-              { name = 'treesitter' }
+              { name = 'treesitter' },
+            }, {
+              { name = 'buffer' },
+            }),
+          })
+
+          -- Configure gitcommit filetype
+          -- cmp.setup.filetype('gitcommit', {
+          --   sources = cmp.config.sources({
+          --     { name = 'cmp_git' },
+
+          --   }, {
+          --     { name = 'buffer' },
+          --   })
+          -- })
+
+          -- Use 'buffer' source for nvim search mode
+          cmp.setup.cmdline('/', {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = {
+              { name = 'buffer' }
             }
+          })
+
+          -- Use 'cmdline' & 'path' source for nvim command mode
+          cmp.setup.cmdline(':', {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = cmp.config.sources({
+              { name = 'path' }
+            }, {
+              { name = 'cmdline' }
+            })
           })
         '';
       }
