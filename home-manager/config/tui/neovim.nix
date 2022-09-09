@@ -12,64 +12,47 @@
   programs.neovim = {
     enable = true;
 
-    withPython3 = true;
-    withRuby = true;
+    package = pkgs.nixpkgs-unstable.neovim-unwrapped;
+
     withNodeJs = true;
 
     extraConfig = ''
       " Enable filetype plugins
-      if has('autocmd')
-          filetype plugin indent on
-      endif
+      filetype plugin indent on
 
       " Enable syntax
-      if has('syntax')
-          syntax enable
-          if has('autocmd')
-              autocmd BufNewFile,BufRead flake.lock set filetype=json
-          endif
-      endif
-
-      " Allow autoread for outside file changes
-      set autoread
+      syntax enable
+      augroup FlakeLockFix
+        autocmd BufNewFile,BufRead flake.lock set filetype=json
+      augroup end
 
       " Allow line delete
-      set backspace=indent,eol,start
       set whichwrap+=<,>,h,l
 
       " Set Editor information
       set termguicolors
-      set sessionoptions-=options
-      set viewoptions-=options
-      set display+=lastline
       set scrolloff=7
       set number
       set cursorline
-      set ruler
-      set nostartofline
-      set laststatus=2
       set mouse=a
-      set nolazyredraw
-      set magic
       set showmatch
       set foldcolumn=1
-      set encoding=utf-8
       set fileformats=unix,dos,mac
       set showtabline=2
-      set ttyfast
-      set completeopt=menuone,noinsert,noselect
-      set guicursor=n-c-v-sm:block-nCursor-blinkwait300-blinkon200-blinkoff150
-
-      " turn off sounds on errors
-      set noerrorbells
-      set novisualbell
-      set t_vb=
+      set completeopt=menuone,noinsert,noselect,preview
+      set guicursor=n-c-v-sm:block-nCursor
+        \,i-ci-ve:ver25-iCursor
+        \,r-cr-o:hor20-Cursor
+        \,a:blinkwait300-blinkon200-blinkoff150
       set timeoutlen=500
+      set colorcolumn=80
+      set list
+      set splitbelow
+      set splitright
+      set title
 
       " Set Tab information
-      set autoindent
       set smartindent
-      set wrap
       set expandtab
       set softtabstop=4
       set shiftwidth=4
@@ -77,36 +60,22 @@
       set textwidth=500
 
       " Set Search Options
-      set incsearch
-      set hlsearch
       set ignorecase
       set smartcase
 
-      set history=2000
-
       " Backup options (just use vcs instead)
-      set nobackup
       set nowritebackup
       set noswapfile
 
-      " Improve command-line completion
-      set wildmenu
-
-      " Add column ruler
-      set colorcolumn=80
+      " Provide better undo support
+      set undofile
 
       " Remap some keys
-      map <space> /
-      map <C-space> ?
       map <C-j> <C-W>j
       map <C-k> <C-W>k
       map <C-h> <C-W>h
       map <C-l> <C-W>l
       map 0 ^
-      nmap <M-j> mz:m+<cr>`z
-      nmap <M-k> mz:m-2<cr>`z
-      vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-      vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
     '';
 
     plugins = with pkgs.vimPlugins; [
@@ -116,10 +85,44 @@
           augroup ansible_vim_ftplaybooks
             autocmd!
             autocmd BufNewFile,BufRead */playbooks/*.yml setfiletype yaml.ansible
-          augroup END
+          augroup end
         '';
       }
-      barbar-nvim
+      {
+        plugin = barbar-nvim;
+        type = "lua";
+        config = ''
+          local map = vim.api.nvim_set_keymap
+          local opts = { noremap = true, silent = true }
+
+          -- Move to previous/next
+          map('n', '<A-,>', '<Cmd>BufferPrevious<CR>', opts)
+          map('n', '<A-.>', '<Cmd>BufferNext<CR>', opts)
+
+          -- Reordering to previous/next
+          map('n', '<A-<>', '<Cmd>BufferMovePrevious<CR>', opts)
+          map('n', '<A->>', '<Cmd>BufferMoveNext<CR>', opts)
+
+          -- Go-to buffer in position
+          map('n', '<A-1>', '<Cmd>BufferGoto 1<CR>', opts)
+          map('n', '<A-2>', '<Cmd>BufferGoto 2<CR>', opts)
+          map('n', '<A-3>', '<Cmd>BufferGoto 3<CR>', opts)
+          map('n', '<A-4>', '<Cmd>BufferGoto 4<CR>', opts)
+          map('n', '<A-5>', '<Cmd>BufferGoto 5<CR>', opts)
+          map('n', '<A-6>', '<Cmd>BufferGoto 6<CR>', opts)
+          map('n', '<A-7>', '<Cmd>BufferGoto 7<CR>', opts)
+          map('n', '<A-8>', '<Cmd>BufferGoto 8<CR>', opts)
+          map('n', '<A-9>', '<Cmd>BufferGoto 9<CR>', opts)
+          map('n', '<A-0>', '<Cmd>BufferLast<CR>', opts)
+
+          -- Pin/unpin buffer
+          map('n', '<A-p>', '<Cmd>BufferPin<CR>', opts)
+
+          -- Close buffer
+          map('n', '<A-w>', '<Cmd>BufferClose<CR>', opts)
+        '';
+
+      }
       cmp-buffer
       cmp-nvim-lsp
       cmp-path
@@ -132,8 +135,8 @@
       editorconfig-vim
       {
         plugin = formatter-nvim;
+        type = "lua";
         config = ''
-          lua << EOF
           require('formatter').setup({
             filetype = {
               javascript = {
@@ -220,19 +223,48 @@
               }
             }
           })
-          EOF
         '';
       }
       {
         plugin = gitsigns-nvim;
-        config = "lua require('gitsigns').setup()";
+        type = "lua";
+        config = "require('gitsigns').setup()";
       }
-      kommentary
+      {
+        plugin = comment-nvim;
+        type = "lua";
+        config = ''
+          require('Comment').setup({
+            pre_hook = function(ctx)
+              -- Only calculate commentstring for tsx filetypes
+              if vim.bo.filetype == 'typescriptreact' then
+                local U = require('Comment.utils')
+
+                -- Determine whether to use linewise or blockwise commentstring
+                local type = ctx.ctype == U.ctype.linewise and '__default' or '__multiline'
+
+                -- Determine the location where to calculate commentstring from
+                local location = nil
+                if ctx.ctype == U.ctype.blockwise then
+                  location = require('ts_context_commentstring.utils').get_cursor_location()
+                elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+                  location = require('ts_context_commentstring.utils').get_visual_start_location()
+                  end
+
+                return require('ts_context_commentstring.internal').calculate_commentstring({
+                  key = type,
+                  location = location,
+                })
+              end
+            end,
+          })
+        '';
+      }
       lsp_signature-nvim
       {
         plugin = lualine-nvim;
+        type = "lua";
         config = ''
-          lua << EOF
           require('lualine').setup({
             options = {
               icons_enabled = true,
@@ -247,27 +279,40 @@
               lualine_z = {'location'}
             }
           })
-          EOF
-        '';
-      }
-      {
-        plugin = minimap-vim;
-        config = ''
-          let g:minimap_width = 10
-          let g:minimap_auto_start = 1
-          let g:minimap_auto_start_win_enter = 1
-          let g:minimap_git_colors = 1
-          let g:minimap_search_color = 1
         '';
       }
       {
         plugin = nvim-autopairs;
-        config = "lua require('nvim-autopairs').setup()";
+        type = "lua";
+        config = ''
+          require('nvim-autopairs').setup({
+            check_ts = true,
+            ts_config = {
+              lua = { "string", "source" },
+              javascript = { "string", "template_string" },
+              java = false,
+            },
+            disable_filetype = { "TelescopePrompt", "spectre_panel" },
+            fast_wrap = {
+              map = "<M-e>",
+              chars = { "{", "[", "(", '"', "'" },
+              pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
+              offset = 0,
+              end_key = "$",
+              keys = "abcdefghijklmnopqrstuvwxyz",
+              check_comma = true,
+              highlight = "PmenuSel",
+              highlight_grey = "LineNr",
+            },
+          })
+
+          require('cmp').event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done { map_char = { tex = "" } })
+        '';
       }
       {
         plugin = nvim-cmp;
+        type = "lua";
         config = ''
-          lua << EOF
           require('cmp').setup({
             snippet = {
               expand = function(args)
@@ -282,11 +327,11 @@
               { name = 'treesitter' }
             }
           })
-          EOF
         '';
       }
       {
         plugin = nvim-lint;
+        type = "viml";
         config = ''
           lua << EOF
           require('lint').linters.ansible_lint.cmd = '${pkgs.ansible-lint}/bin/ansible-lint'
@@ -328,8 +373,8 @@
       }
       {
         plugin = nvim-lspconfig;
+        type = "lua";
         config = ''
-          lua << EOF
           local on_attach_func = function(client, bufnr)
               require('lsp_signature').on_attach({
                 bind = true,
@@ -519,27 +564,44 @@
             },
             on_attach = on_attach_func
           })
-          EOF
         '';
       }
       {
         plugin = nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars);
+        type = "lua";
         config = ''
-          lua << EOF
           require('nvim-treesitter.configs').setup({
-            ensure_installed = "all",
+            autopairs = {
+              enable = true
+            },
+            autotag = {
+              enable = true
+            },
+            context_commentstring = {
+              enable = true,
+              enable_autocmd = false,
+            },
             highlight = {
               enable = true,
+              additional_vim_regex_highlighting = false,
+            },
+            incremental_selection = {
+              enable = true
+            },
+            indent = {
+              enable = true
             },
             rainbow = {
               enable = true,
               extended_mode = true,
               max_file_lines = 2000
-            }
+            },
+            sync_install = false,
           })
-          EOF
         '';
       }
+      nvim-ts-autotag
+      nvim-ts-context-commentstring
       nvim-ts-rainbow
       nvim-web-devicons
       {
@@ -547,9 +609,20 @@
         config = "colorscheme nord";
       }
       {
-        plugin = telescope-nvim;
+        plugin = scrollbar-nvim;
         config = ''
-          lua << EOF
+          augroup ScrollbarInit
+            autocmd!
+            autocmd WinScrolled,VimResized,QuitPre * silent! lua require('scrollbar').show()
+            autocmd WinEnter,FocusGained * silent! lua require('scrollbar').show()
+            autocmd WinLeave,BufLeave,BufWinLeave,FocusLost * silent! lua require('scrollbar').clear()
+          augroup end
+        '';
+      }
+      {
+        plugin = telescope-nvim;
+        type = "lua";
+        config = ''
           require('telescope').setup({
             defaults = {
               vimgrep_arguments = {
@@ -593,12 +666,12 @@
               buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
             }
           })
-          EOF
         '';
       }
       {
         plugin = todo-comments-nvim;
-        config = "lua require('todo-comments').setup()";
+        type = "lua";
+        config = "require('todo-comments').setup()";
       }
       vim-eunuch
       vim-indent-guides
