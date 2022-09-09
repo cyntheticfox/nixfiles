@@ -66,6 +66,7 @@
       ".cargo/registry"
       ".local/share/containers"
       ".local/share/direnv/allow"
+      ".local/share/libvirt"
       ".local/share/mime"
       ".local/share/mpd"
       ".local/share/nvim/site"
