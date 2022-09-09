@@ -132,7 +132,7 @@
         plugin = dashboard-nvim;
         config = "let g:dashboard_default_executive = 'telescope'";
       }
-      editorconfig-vim
+      editorconfig-nvim
       {
         plugin = formatter-nvim;
         type = "lua";
