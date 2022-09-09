@@ -258,6 +258,11 @@ in
         config = "require('gitsigns').setup()";
       }
       {
+        plugin = impatient-nvim;
+        type = "lua";
+        config = "require('impatient')";
+      }
+      {
         plugin = indent-blankline-nvim-lua;
         type = "lua";
         config =
