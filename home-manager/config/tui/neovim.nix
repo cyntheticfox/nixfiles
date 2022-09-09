@@ -1,4 +1,30 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }:
+let
+  rainbow-colorlist = [
+    "#cc241d"
+    "#a89984"
+    "#b16286"
+    "#d79921"
+    "#689d6a"
+    "#d65d0e"
+    # "#458588"
+  ];
+  genHLList = prefix: list:
+    let
+      vimHLList = lib.zipListsWith (a: b: "highlight ${prefix}${builtins.toString a} guifg=${b} gui=nocombine") (builtins.genList (x: x) (builtins.length list)) list;
+      mkLines = builtins.concatStringsSep "\n";
+    in
+    {
+      inherit vimHLList;
+
+      hlGroupList = builtins.map (x: "${prefix}${builtins.toString x}") (builtins.genList (x: x) (builtins.length list));
+      vimHLString = mkLines vimHLList;
+      luaVimCmdHLString = mkLines (builtins.map (x: "vim.cmd [[${x}]]") vimHLList);
+    };
+  genLuaList = list:
+    "{ ${builtins.concatStringsSep ", " (builtins.map (x: "\"${x}\"") list)} }";
+in
+{
   home.packages = with pkgs; [
     nvimpager
   ];
@@ -234,12 +260,19 @@
       {
         plugin = indent-blankline-nvim-lua;
         type = "lua";
-        config = ''
-          require('indent_blankline').setup {
-            show_current_context = true,
-            show_current_context_start = true,
-          }
-        '';
+        config =
+          let
+            hlList = genHLList "IndentBlanklineIndent" rainbow-colorlist;
+          in
+          ''
+            ${hlList.luaVimCmdHLString}
+
+            require('indent_blankline').setup {
+              show_current_context = true,
+              show_current_context_start = true,
+              char_highlight_list = ${genLuaList hlList.hlGroupList}
+            }
+          '';
       }
       {
         plugin = comment-nvim;
@@ -360,13 +393,6 @@
               --['<C-Space>'] = cmp.mapping.complete(),
               ['<C-e>'] = cmp.mapping.abort(),
               ['<CR>'] = cmp.mapping.confirm({ select = false }),
-              ['<ESC>'] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                  cmp.close()
-                else
-                  fallback()
-                end
-              end, { 'i', 's'}),
               ['<Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                   cmp.select_next_item()
@@ -692,7 +718,8 @@
             rainbow = {
               enable = true,
               extended_mode = true,
-              max_file_lines = 2000
+              max_file_lines = 2000,
+              colors = ${genLuaList rainbow-colorlist}
             },
             sync_install = false,
           })
@@ -772,7 +799,6 @@
         config = "require('todo-comments').setup()";
       }
       vim-eunuch
-      vim-indent-guides
       vim-lastplace
       vim-nix
       vim-surround
