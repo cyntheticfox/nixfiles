@@ -97,11 +97,7 @@ in
       set undofile
 
       " Remap some keys
-      map <C-j> <C-W>j
-      map <C-k> <C-W>k
-      map <C-h> <C-W>h
-      map <C-l> <C-W>l
-      map 0 ^
+      nmap <leader>t :tabe<CR>
     '';
 
     plugins = with pkgs.vimPlugins; [
