@@ -22,7 +22,7 @@
       persistent = true;
     };
     optimise.automatic = true;
-    registry = lib.mapAttrs (_: flake: { inherit flake; }) (lib.filterAttrs (_: v: v ? self) inputs);
+    registry = (lib.mapAttrs (_: flake: { inherit flake; }) (lib.filterAttrs (_: v: v ? outputs) inputs)) // { dotfiles.flake = self; };
   };
 
   nixpkgs.config.allowUnfree = true;
