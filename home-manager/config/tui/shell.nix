@@ -35,6 +35,7 @@
       "dd" = "dd status=progress";
       "df" = "df -h";
       "du" = "du -h";
+      "free" = "free -h";
       "pkill" = "pkill -e";
 
       # Nix flakes
