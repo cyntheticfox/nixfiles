@@ -736,19 +736,19 @@ in
       "label": "logout",
       "action": "${user-bins.loginctl} terminate-user $USER",
       "text": "Logout",
-      "keybind": "e"
+      "keybind": "i"
     }
     {
       "label" : "shutdown",
       "action" : "${user-bins.systemctl} poweroff",
       "text" : "Shutdown",
-      "keybind" : "s"
+      "keybind" : "u"
     }
     {
       "label" : "suspend",
       "action" : "${user-bins.systemctl} suspend",
       "text" : "Suspend",
-      "keybind" : "u"
+      "keybind" : "s"
     }
     {
       "label" : "reboot",
