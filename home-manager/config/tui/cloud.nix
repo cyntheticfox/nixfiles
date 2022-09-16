@@ -4,7 +4,9 @@
     awscli2
     azure-cli
     backblaze-b2
+    flyctl
     linode-cli
+    nixpkgs-unstable.nodePackages.serverless
 
     # Terraform/HashiCorp
     nixpkgs-unstable.nodePackages.cdktf-cli
