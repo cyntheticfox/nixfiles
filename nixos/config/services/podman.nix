@@ -1,8 +1,4 @@
-# podman.nix
-#
-# Podman configuration
-
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, ... }: {
   environment.systemPackages = with pkgs; [
     buildah
     cosign

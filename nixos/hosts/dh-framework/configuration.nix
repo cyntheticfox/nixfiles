@@ -20,7 +20,6 @@
     ../../config/services/cupsd.nix
     ../../config/services/docker.nix
     ../../config/services/libvirtd.nix
-    ../../config/services/podman.nix
     ../../config/services/restic.nix
   ];
 
@@ -73,6 +72,7 @@
       "/var/lib/libvirt"
       "/var/lib/systemd/coredump"
       "/var/log"
+      "/var/tmp"
     ];
   };
 

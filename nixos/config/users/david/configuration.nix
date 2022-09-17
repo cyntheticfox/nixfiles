@@ -1,4 +1,73 @@
-{ config, pkgs, lib, self, ... }: {
+{ config, pkgs, lib, self, ... }:
+let
+  optNetworkManagerGroup =
+    if
+      config.networking.networkmanager.enable
+    then
+      "networkmanager"
+    else
+      "";
+  optLibvirtdGroup =
+    if
+      config.virtualisation.libvirtd.enable
+    then
+      "libvirtd"
+    else
+      "";
+  optKvmgtGroup =
+    if
+      config.virtualisation.kvmgt.enable
+    then
+      "kvmgt"
+    else
+      "";
+  optAudioGroup =
+    if
+      config.hardware.pulseaudio.systemWide
+    then
+      "audio"
+    else
+      "";
+  optJackaudioGroup =
+    if
+      config.services.jack.jackd.enable
+    then
+      "jackaudio"
+    else
+      "";
+  optLightGroup =
+    if
+      config.hardware.acpilight.enable ||
+      config.hardware.brillo.enable ||
+      config.programs.light.enable
+    then
+      "video"
+    else
+      "";
+  optAdbGroup =
+    if
+      config.programs.adb.enable
+    then
+      "adbusers"
+    else
+      "";
+  optWiresharkGroup =
+    if
+      config.programs.wireshark.enable
+    then
+      "wireshark"
+    else
+      "";
+  optGroups = [
+    optNetworkManagerGroup
+    optLibvirtdGroup
+    optKvmgtGroup
+    optAudioGroup
+    optJackaudioGroup
+    optLightGroup
+  ];
+in
+{
   sops.secrets = {
     david-password = {
       sopsFile = ./secrets.yml;
@@ -18,7 +87,7 @@
   users.users."david" = {
     isNormalUser = true;
     home = "/home/david";
-    extraGroups = [ "wheel" "networkmanager" "audio" "video" "docker" "podman" "kvm" "libvirtd" ];
+    extraGroups = [ "wheel" ] ++ optGroups;
     uid = 1000;
     shell = pkgs.zsh;
     passwordFile = config.sops.secrets.david-password.path;

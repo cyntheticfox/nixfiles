@@ -20,6 +20,7 @@
     ../../config/tui/dev.nix
     ../../config/tui/documents.nix
     ../../config/tui/music.nix
+    ../../config/tui/podman.nix
     ../../config/tui/sec.nix
   ];
 
