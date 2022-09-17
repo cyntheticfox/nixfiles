@@ -18,7 +18,6 @@
     # Services
     ../../config/services/clamav.nix
     ../../config/services/cupsd.nix
-    ../../config/services/docker.nix
     ../../config/services/libvirtd.nix
     ../../config/services/restic.nix
   ];
