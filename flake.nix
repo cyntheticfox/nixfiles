@@ -50,10 +50,11 @@
   };
 
   outputs = { self, ... }@inputs:
+    with inputs;
     let
-      supportedSystems = with inputs.nixpkgs.lib; (intersectLists (platforms.x86_64 ++ platforms.aarch64) platforms.linux);
+      supportedSystems = with nixpkgs.lib; (intersectLists (platforms.x86_64 ++ platforms.aarch64) platforms.linux);
 
-      forAllSystems = inputs.nixpkgs.lib.genAttrs supportedSystems;
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
     in
     {
       lib = {
@@ -68,7 +69,13 @@
               else
                 stableFunc;
             username = "david";
-            home-manager = with inputs; unstableIfElse home-manager-unstable home-manager;
+            home-manager =
+              if
+                unstable
+              then
+                home-manager-unstable
+              else
+                inputs.home-manager;
           in
           home-manager.lib.homeManagerConfiguration {
             inherit system username;
@@ -92,14 +99,14 @@
               if
                 unstable
               then
-                inputs.nixos-unstable
+                nixos-unstable
               else
-                inputs.nixos;
+                nixos;
             home-manager =
               if
                 unstable
               then
-                inputs.home-manager-unstable
+                home-manager-unstable
               else
                 inputs.home-manager;
             baseModules = (
@@ -111,14 +118,14 @@
                   ({ config, pkgs, ... }: {
                     nixpkgs.overlays = [
                       (self: super: {
-                        nixos-stable = import inputs.nixos {
+                        nixos-stable = import nixos {
                           inherit system;
 
                           config.allowUnfree = true;
                         };
                       })
                       (self: super: {
-                        nixpkgs-stable = import inputs.nixpkgs {
+                        nixpkgs-stable = import nixpkgs {
                           inherit system;
 
                           config.allowUnfree = true;
@@ -133,14 +140,14 @@
                   ({ config, pkgs, ... }: {
                     nixpkgs.overlays = [
                       (self: super: {
-                        nixos-unstable = import inputs.nixos-unstable {
+                        nixos-unstable = import nixos-unstable {
                           inherit system;
 
                           config.allowUnfree = true;
                         };
                       })
                       (self: super: {
-                        nixpkgs-unstable = import inputs.nixpkgs-unstable {
+                        nixpkgs-unstable = import nixpkgs-unstable {
                           inherit system;
 
                           config.allowUnfree = true;
@@ -153,7 +160,7 @@
               ({ config, pkgs, ... }: {
                 nixpkgs.overlays = [
                   (self: super: {
-                    nixpkgs-master = import inputs.nixpkgs-master {
+                    nixpkgs-master = import nixpkgs-master {
                       inherit system;
 
                       config.allowUnfree = true;
@@ -209,6 +216,14 @@
         };
       };
 
+      containers =
+        let
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        in
+        {
+          ungoogled-chromium = pkgs.callPackage ./containers/ungoogled-chromium.nix { };
+        };
+
       nixosConfigurations = {
         min = self.lib.defFlakeSystem {
           modules = [ ./nixos/hosts/min/configuration.nix ];
@@ -219,11 +234,11 @@
           workstation = true;
 
           modules = [
-            inputs.nixos-hardware.nixosModules.common-cpu-intel
-            inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-            inputs.nixos-hardware.nixosModules.common-pc-laptop
-            inputs.impermanence.nixosModules.impermanence
-            inputs.sops-nix.nixosModules.sops
+            nixos-hardware.nixosModules.common-cpu-intel
+            nixos-hardware.nixosModules.common-pc-laptop-ssd
+            nixos-hardware.nixosModules.common-pc-laptop
+            impermanence.nixosModules.impermanence
+            sops-nix.nixosModules.sops
             ./nixos/hosts/dh-laptop2/configuration.nix
           ];
         };
@@ -233,9 +248,9 @@
           workstation = true;
 
           modules = [
-            inputs.nixos-hardware.nixosModules.framework
-            inputs.sops-nix.nixosModules.sops
-            inputs.impermanence.nixosModules.impermanence
+            nixos-hardware.nixosModules.framework
+            sops-nix.nixosModules.sops
+            impermanence.nixosModules.impermanence
             ./nixos/hosts/dh-framework/configuration.nix
           ];
         };
@@ -246,9 +261,9 @@
       };
 
       checks = {
-        x86_64-linux = inputs.nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel);
+        x86_64-linux = nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel);
       } // forAllSystems (system: {
-        pre-commit-check = inputs.pre-commit-hooks.lib."${system}".run {
+        pre-commit-check = pre-commit-hooks.lib."${system}".run {
           src = ./.;
           hooks = {
             nixpkgs-fmt.enable = true;
@@ -261,9 +276,9 @@
         {
           default =
             let
-              pkgs = import inputs.nixpkgs-unstable {
+              pkgs = import nixpkgs-unstable {
                 inherit system;
-                overlays = [ inputs.sops-nix-unstable.overlay ];
+                overlays = [ sops-nix-unstable.overlay ];
               };
             in
             pkgs.mkShell {
@@ -296,9 +311,9 @@
             };
           no-env =
             let
-              pkgs = import inputs.nixpkgs-unstable {
+              pkgs = import nixpkgs-unstable {
                 inherit system;
-                overlays = [ inputs.sops-nix-unstable.overlay ];
+                overlays = [ sops-nix-unstable.overlay ];
               };
             in
             pkgs.mkShell {
