@@ -1,4 +1,6 @@
 { config, pkgs, ... }: {
+  home.shellAliases."top" = "htop";
+
   programs.htop = {
     enable = true;
 

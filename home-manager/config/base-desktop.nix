@@ -45,6 +45,8 @@
     };
   };
 
+  home.shellAliases."open" = "xdg-open";
+
   xdg.mime.enable = true;
   xdg.mimeApps.enable = true;
 

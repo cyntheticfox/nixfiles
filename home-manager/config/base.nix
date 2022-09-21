@@ -4,11 +4,13 @@
 
   imports = [
     ./tui/bat.nix
+    ./tui/exa.nix
     ./tui/file.nix
     ./tui/fuse.nix
     ./tui/git.nix
     ./tui/gnupg.nix
     ./tui/htop.nix
+    ./tui/less.nix
     ./tui/man.nix
     ./tui/neofetch.nix
     ./tui/neovim.nix
@@ -24,12 +26,30 @@
     curlie
     dogdns
     gping
+    procs
     traceroute
   ];
+
+  home.shellAliases = {
+    "h" = "history";
+    "pg" = "pgrep";
+
+    # Editor aliases
+    "v" = config.home.sessionVariables.EDITOR;
+
+    # Make things human-readable
+    "dd" = "dd status=progress";
+    "df" = "df -Th";
+    "du" = "du -h";
+    "free" = "free -h";
+    "pkill" = "pkill -e";
+  };
 
   nixpkgs.config = import ./nixpkgs.nix;
 
   programs.nix-index.enable = true;
+
+  programs.zoxide.enable = true;
 
   xdg = {
     enable = true;
