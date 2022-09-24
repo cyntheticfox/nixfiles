@@ -110,8 +110,10 @@ in
       { directory = ".gnupg"; mode = "0700"; }
       ".mozilla"
       { directory = ".ssh"; mode = "0700"; }
+      "archive"
       "docs"
       "emu"
+      "games"
       "music"
       "pics"
       "repos"
