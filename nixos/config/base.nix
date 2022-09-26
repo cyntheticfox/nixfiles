@@ -1,7 +1,5 @@
 { config, lib, pkgs, self, inputs, ... }: {
   nix = {
-    package = pkgs.nixStatic;
-
     allowedUsers = [ "@wheel" ];
     autoOptimiseStore = true;
     binaryCachePublicKeys = [
