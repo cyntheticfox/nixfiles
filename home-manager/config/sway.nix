@@ -21,7 +21,7 @@ let
 
   screens = {
     builtin = "eDP-1";
-    main = "Unknown VG28UQL1A 0x00000101";
+    main = "Unknown VG28UQL1A 0x0000135C";
     sub = "ViewSonic Corporation VP211b A22050300003";
 
     # Functions
