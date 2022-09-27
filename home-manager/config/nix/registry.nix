@@ -5,28 +5,28 @@
     type = "github";
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "master";
+    ref = "master";
   };
 
   nixpkgs-staging.to = {
     type = "github";
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "staging";
+    ref = "staging";
   };
 
   nixpkgs-unstable.to = {
     type = "github";
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "nixpkgs-unstable";
+    ref = "nixpkgs-unstable";
   };
 
   nixos-unstable.to = {
     type = "github";
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "nixos-unstable";
+    ref = "nixos-unstable";
   };
 
   # TODO: Make dynamic
@@ -34,7 +34,7 @@
     type = "github";
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "nixos-20.25";
+    ref = "nixos-20.05";
   };
 
   # TODO: Make dynamic
@@ -42,7 +42,7 @@
     type = "github";
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "release-20.25";
+    ref = "release-20.05";
   };
 
   ### Other people's configs
