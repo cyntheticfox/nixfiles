@@ -30,6 +30,8 @@
     traceroute
   ];
 
+  home.sessionVariables."PAGER" = "less";
+
   home.shellAliases = {
     "h" = "history";
     "pg" = "pgrep";

@@ -25,13 +25,13 @@ let
     "{ ${builtins.concatStringsSep ", " (builtins.map (x: "\"${x}\"") list)} }";
 in
 {
-  home.packages = with pkgs; [
-    nvimpager
-  ];
+  # home.packages = with pkgs; [
+  #   nvimpager
+  # ];
 
   home.sessionVariables = {
     "EDITOR" = "${config.programs.neovim.finalPackage}/bin/nvim";
-    "PAGER" = "${pkgs.nvimpager}/bin/nvimpager";
+    # "PAGER" = "${pkgs.nvimpager}/bin/nvimpager";
     "VISUAL" = "${config.home.sessionVariables.EDITOR} -R";
   };
 
