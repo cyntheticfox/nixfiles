@@ -61,13 +61,6 @@
         hmConfig =
           { unstable ? false, system ? "x86_64-linux", modules ? [ ] }:
           let
-            unstableIfElse = unstableFunc: stableFunc:
-              if
-                unstable
-              then
-                unstableFunc
-              else
-                stableFunc;
             username = "david";
             home-manager =
               if
@@ -115,7 +108,7 @@
               then
                 [
                   ./nixos/config/base-unstable.nix
-                  ({ config, pkgs, ... }: {
+                  ({ config, ... }: {
                     nixpkgs.overlays = [
                       (self: super: {
                         nixos-stable = import nixos {
@@ -137,7 +130,7 @@
               else
                 [
                   ./nixos/config/base.nix
-                  ({ config, pkgs, ... }: {
+                  ({ config, ... }: {
                     nixpkgs.overlays = [
                       (self: super: {
                         nixos-unstable = import nixos-unstable {
@@ -157,7 +150,7 @@
                   })
                 ]
             ) ++ [
-              ({ config, pkgs, ... }: {
+              ({ config, ... }: {
                 nixpkgs.overlays = [
                   (self: super: {
                     nixpkgs-master = import nixpkgs-master {
@@ -295,6 +288,7 @@
                 nixpkgs-fmt
 
                 # Nix linting
+                deadnix
                 nix-linter
                 statix
 
@@ -328,6 +322,7 @@
 
                 # Nix formatter
                 alejandra
+                deadnix
                 nixfmt
                 nixpkgs-fmt
 

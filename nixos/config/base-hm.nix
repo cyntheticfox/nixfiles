@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }: {
+{ inputs, ... }: {
   home-manager = {
     sharedModules = [
       ({ pkgs, ... }: {
