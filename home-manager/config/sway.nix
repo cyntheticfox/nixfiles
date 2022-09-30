@@ -294,7 +294,7 @@ in
         assigns = {
           "\"${workspaces._1}\"" = [{ app_id = "^firefox$"; }];
           "\"${workspaces._2}\"" = [{ class = "^Microsoft Teams - Preview"; }];
-          "\"${workspaces._3}\"" = [{ app_id = "^Element$"; }];
+          "\"${workspaces._3}\"" = [{ class = "^Element$"; } { instance = "^element$"; } { title = "^Element"; }];
           # "\"${workspaces._4}\"" = [
           #   { instance = "^discord$"; }
           #   { title = "^Discord$"; }
