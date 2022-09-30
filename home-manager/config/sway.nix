@@ -19,14 +19,72 @@ let
     base0F = "#B48EAD";
   };
 
+  toScreen = { name, id ? null, outputString ? null, xPixels, yPixels, refreshRate, scale ? 1.0 }:
+    assert builtins.isString name;
+    assert id == null || builtins.isString id;
+    assert outputString == null || builtins.isString outputString;
+    assert builtins.isInt xPixels;
+    assert builtins.isInt yPixels;
+    assert builtins.isFloat refreshRate || builtins.isInt refreshRate;
+    assert builtins.isFloat scale;
+    assert (id != null && outputString == null) || (id == null && outputString != null);
+    let
+      resolution = "${xPixels}x${yPixels}";
+      modeString = "${resolution} @ ${refreshRate} Hz";
+      criteria =
+        if
+          id != null
+        then
+          id
+        else
+          outputString;
+      xPixelsOut = builtins.ceil (xPixels * (1 / scale));
+      yPixelsOut = builtins.ceil (yPixels * (1 / scale));
+    in
+    {
+      inherit criteria modeString name refreshRate resolution scale xPixels xPixelsOut yPixels yPixelsOut;
+    };
+
   screens = {
-    builtin = "eDP-1";
-    homeDockCenter = "Unknown VG28UQL1A 0x0000135C";
-    homeDockRight = "ViewSonic Corporation VP211b A22050300003";
-    homeDockRightFallback = "<Unknown> <Unknown> ";
+    builtin = toScreen {
+      name = "Built-in display";
+      id = "eDP-1";
+      xPixels = 2256;
+      yPixels = 1504;
+      refreshRate = 59.999;
+    };
+    homeDockCenter = toScreen {
+      name = "ASUS High Refresh-Rate Monitor";
+      outputString = "Unknown VG28UQL1A 0x0000135C";
+      scale = 1.75;
+      xPixels = 3840;
+      yPixels = 2160;
+      refreshRate = 30; # High refresh rate/resolution, but can't run it at such
+    };
+    homeDockLeft = toScreen {
+      name = "ASUS Low Refresh-Rate Monitor";
+      outputString = "Unknown VA279 N2LMQS025509";
+      xPixels = 1920;
+      yPixels = 1080;
+      refreshRate = 60;
+    };
+    homeDockRight = toScreen {
+      name = "ViewSonic 4:3 Monitor";
+      outputString = "ViewSonic Corporation VP211b A22050300003";
+      xPixels = 1600;
+      yPixels = 1200;
+      refreshRate = 60;
+    };
+    homeDockRightFallback = toScreen {
+      name = "ViewSonic 4:3 Monitor Fallback";
+      outputString = "<Unknown> <Unknown> "; # The displayport to DVI adapter likes to act up
+      xPixels = 1024;
+      yPixels = 768;
+      refreshRate = 60.004;
+    };
 
     # Functions
-    screenOrder = lib.escapeShellArgs;
+    screenOrder = list: lib.escapeShellArgs (builtins.map (x: assert builtins.isAttrs x; x."criteria") list);
   };
 
   user-bins = {
@@ -369,54 +427,64 @@ in
         # Default to outputting some workspaces on other monitors if available
         workspaceOutputAssign =
           let
-            mainOrSub = with screens; screenOrder [
+            center = with screens; screenOrder [
+              homeDockCenter
+              homeDockLeft
+              homeDockRight
+              homeDockRightFallback
+              builtin
+            ];
+            left = with screens; screenOrder [
+              homeDockLeft
               homeDockCenter
               homeDockRight
               homeDockRightFallback
               builtin
             ];
-            subOnly = with screens; screenOrder [
+            right = with screens; screenOrder [
               homeDockRight
               homeDockRightFallback
+              homeDockCenter
+              homeDockLeft
               builtin
             ];
           in
           [
             {
               workspace = workspaces._1;
-              output = mainOrSub;
+              output = left;
             }
             {
               workspace = workspaces._2;
-              output = subOnly;
+              output = right;
             }
             {
               workspace = workspaces._3;
-              output = subOnly;
+              output = right;
             }
             {
               workspace = workspaces._4;
-              output = subOnly;
+              output = right;
             }
             {
               workspace = workspaces._5;
-              output = mainOrSub;
+              output = center;
             }
             {
               workspace = workspaces._6;
-              output = mainOrSub;
+              output = center;
             }
             {
               workspace = workspaces._7;
-              output = mainOrSub;
+              output = center;
             }
             {
               workspace = workspaces._8;
-              output = mainOrSub;
+              output = center;
             }
             {
               workspace = workspaces._9;
-              output = mainOrSub;
+              output = center;
             }
           ];
 
@@ -464,6 +532,17 @@ in
         };
         output."*".bg = "~/wallpaper.png fill #000000";
       };
+    extraConfig = ''
+      workspace "${workspaces._9}"
+      workspace "${workspaces._8}"
+      workspace "${workspaces._7}"
+      workspace "${workspaces._6}"
+      workspace "${workspaces._5}"
+      workspace "${workspaces._4}"
+      workspace "${workspaces._3}"
+      workspace "${workspaces._2}"
+      workspace "${workspaces._1}"
+    '';
   };
 
   ### Waybar configuration
@@ -777,43 +856,53 @@ in
   services.kanshi = {
     enable = true;
 
-    profiles = {
+    profiles = with screens; {
       undocked.outputs = [{
-        criteria = screens.builtin;
+        inherit (screens.builtin) criteria;
         status = "enable";
       }];
-      homeDocked.outputs = [
+
+      homeDockedFull.outputs = [
         {
-          criteria = screens.builtin;
+          inherit (screens.builtin) criteria;
           status = "disable";
         }
         {
-          criteria = screens.homeDockCenter;
+          inherit (screens.homeDockLeft) criteria;
           status = "enable";
-          scale = 1.75;
           position = "0,0";
         }
         {
-          criteria = screens.homeDockRight;
+          inherit (screens.homeDockCenter) criteria scale;
           status = "enable";
-          position = "2195,0";
+          position = "${builtins.toString screens.homeDockLeft.xPixelsOut},0";
+        }
+        {
+          inherit (screens.homeDockRight) criteria;
+          status = "enable";
+          position = "${builtins.toString (screens.homeDockLeft.xPixelsOut + screens.homeDockCenter.xPixelsOut)},0";
         }
       ];
-      homeDockedRightFallback.outputs = [
+
+      homeDockedFullFallback.outputs = [
         {
-          criteria = screens.builtin;
+          inherit (screens.builtin) criteria;
           status = "disable";
         }
         {
-          criteria = screens.homeDockCenter;
+          inherit (screens.homeDockLeft) criteria;
           status = "enable";
-          scale = 1.75;
           position = "0,0";
         }
         {
-          criteria = screens.homeDockRightFallback;
+          inherit (screens.homeDockCenter) criteria scale;
           status = "enable";
-          position = "2195,0";
+          position = "${builtins.toString screens.homeDockLeft.xPixelsOut},0";
+        }
+        {
+          inherit (screens.homeDockRightFallback) criteria;
+          status = "enable";
+          position = "${builtins.toString (screens.homeDockLeft.xPixelsOut + screens.homeDockCenter.xPixelsOut)},0";
         }
       ];
     };
@@ -904,7 +993,6 @@ in
         "timeout 900 \"exec ${lockscreen}\""
         "timeout 960 \"${user-bins.swaymsg} \\\"output * dpms off \\\"\""
         "resume \"${user-bins.swaymsg} \\\"output * dpms on \\\"\""
-
       ];
     in
     {
