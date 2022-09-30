@@ -21,8 +21,9 @@ let
 
   screens = {
     builtin = "eDP-1";
-    main = "Unknown VG28UQL1A 0x0000135C";
-    sub = "ViewSonic Corporation VP211b A22050300003";
+    homeDockCenter = "Unknown VG28UQL1A 0x0000135C";
+    homeDockRight = "ViewSonic Corporation VP211b A22050300003";
+    homeDockRightFallback = "<Unknown> <Unknown> ";
 
     # Functions
     screenOrder = lib.escapeShellArgs;
@@ -369,12 +370,14 @@ in
         workspaceOutputAssign =
           let
             mainOrSub = with screens; screenOrder [
-              main
-              sub
+              homeDockCenter
+              homeDockRight
+              homeDockRightFallback
               builtin
             ];
             subOnly = with screens; screenOrder [
-              sub
+              homeDockRight
+              homeDockRightFallback
               builtin
             ];
           in
@@ -779,19 +782,36 @@ in
         criteria = screens.builtin;
         status = "enable";
       }];
-      docked.outputs = [
+      homeDocked.outputs = [
         {
           criteria = screens.builtin;
           status = "disable";
         }
         {
-          criteria = screens.main;
+          criteria = screens.homeDockCenter;
           status = "enable";
           scale = 1.75;
           position = "0,0";
         }
         {
-          criteria = screens.sub;
+          criteria = screens.homeDockRight;
+          status = "enable";
+          position = "2195,0";
+        }
+      ];
+      homeDockedRightFallback.outputs = [
+        {
+          criteria = screens.builtin;
+          status = "disable";
+        }
+        {
+          criteria = screens.homeDockCenter;
+          status = "enable";
+          scale = 1.75;
+          position = "0,0";
+        }
+        {
+          criteria = screens.homeDockRightFallback;
           status = "enable";
           position = "2195,0";
         }
