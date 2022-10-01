@@ -58,134 +58,9 @@
     in
     {
       lib = {
-        hmConfig =
-          { unstable ? false, system ? "x86_64-linux", modules ? [ ] }:
-          let
-            username = "david";
-            home-manager =
-              if
-                unstable
-              then
-                home-manager-unstable
-              else
-                inputs.home-manager;
-          in
-          home-manager.lib.homeManagerConfiguration {
-            inherit system username;
+        hmConfig = import ./lib/hmConfig.nix;
 
-            homeDirectory = "/home/${username}";
-
-            configuration = _: {
-              imports = modules;
-            };
-          };
-
-        defFlakeSystem =
-          { unstable ? false
-          , workstation ? false
-          , cpuVendor ? null
-          , system ? "x86_64-linux"
-          , modules ? [ ]
-          }:
-          let
-            nixpkgs =
-              if
-                unstable
-              then
-                nixos-unstable
-              else
-                nixos;
-            home-manager =
-              if
-                unstable
-              then
-                home-manager-unstable
-              else
-                inputs.home-manager;
-            baseModules = (
-              if
-                unstable
-              then
-                [
-                  ./nixos/config/base-unstable.nix
-                  ({ config, ... }: {
-                    nixpkgs.overlays = [
-                      (self: super: {
-                        nixos-stable = import nixos {
-                          inherit system;
-
-                          config.allowUnfree = true;
-                        };
-                      })
-                      (self: super: {
-                        nixpkgs-stable = import nixpkgs {
-                          inherit system;
-
-                          config.allowUnfree = true;
-                        };
-                      })
-                    ];
-                  })
-                ]
-              else
-                [
-                  ./nixos/config/base.nix
-                  ({ config, ... }: {
-                    nixpkgs.overlays = [
-                      (self: super: {
-                        nixos-unstable = import nixos-unstable {
-                          inherit system;
-
-                          config.allowUnfree = true;
-                        };
-                      })
-                      (self: super: {
-                        nixpkgs-unstable = import nixpkgs-unstable {
-                          inherit system;
-
-                          config.allowUnfree = true;
-                        };
-                      })
-                    ];
-                  })
-                ]
-            ) ++ [
-              ({ config, ... }: {
-                nixpkgs.overlays = [
-                  (self: super: {
-                    nixpkgs-master = import nixpkgs-master {
-                      inherit system;
-
-                      config.allowUnfree = true;
-                    };
-                  })
-                ];
-              })
-              ./nixos/config/hardware-base.nix
-            ];
-            hmModules =
-              if
-                workstation
-              then
-                [
-                  home-manager.nixosModules.home-manager
-                  ./nixos/config/base-hm.nix
-                ]
-              else
-                [ ];
-          in
-          nixpkgs.lib.nixosSystem {
-            inherit system;
-
-            specialArgs = {
-              inherit self cpuVendor workstation unstable;
-              inherit (self) inputs;
-            };
-
-            modules = baseModules
-              ++ hmModules
-              ++ modules;
-          };
+        defFlakeSystem = import ./lib/defFlakeSystem.nix;
       };
 
       nixosModules = {
@@ -198,45 +73,24 @@
         ];
       };
 
-      homeConfigurations = {
-        wsl = self.lib.hmConfig {
-          modules = [ ./home-manager/hosts/wsl/home.nix ];
-        };
+      homeConfigurations.pbp = self.lib.hmConfig {
+        inherit inputs;
 
-        pbp = self.lib.hmConfig {
-          system = "aarch64-linux";
-          modules = [ ./home-manager/hosts/pbp/home.nix ];
-        };
+        username = "david";
+        system = "aarch64-linux";
+        modules = [ ./home-manager/hosts/pbp/home.nix ];
       };
-
-      containers =
-        let
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        in
-        {
-          ungoogled-chromium = pkgs.callPackage ./containers/ungoogled-chromium.nix { };
-        };
 
       nixosConfigurations = {
         min = self.lib.defFlakeSystem {
+          inherit self inputs;
+
           modules = [ ./nixos/hosts/min/configuration.nix ];
         };
 
-        dh-laptop2 = self.lib.defFlakeSystem {
-          cpuVendor = "intel";
-          workstation = true;
-
-          modules = [
-            nixos-hardware.nixosModules.common-cpu-intel
-            nixos-hardware.nixosModules.common-pc-laptop-ssd
-            nixos-hardware.nixosModules.common-pc-laptop
-            impermanence.nixosModules.impermanence
-            sops-nix.nixosModules.sops
-            ./nixos/hosts/dh-laptop2/configuration.nix
-          ];
-        };
-
         dh-framework = self.lib.defFlakeSystem {
+          inherit self inputs;
+
           cpuVendor = "intel";
           workstation = true;
 
@@ -249,6 +103,8 @@
         };
 
         ashley = self.lib.defFlakeSystem {
+          inherit self inputs;
+
           modules = [ ./nixos/hosts/ashley/configuration.nix ];
         };
       };
@@ -278,7 +134,6 @@
               inherit (self.checks."${system}".pre-commit-check) shellHook;
 
               nativeBuildInputs = with pkgs; [
-
                 # pre-commit
                 pre-commit
 
@@ -322,11 +177,11 @@
 
                 # Nix formatter
                 alejandra
-                deadnix
                 nixfmt
                 nixpkgs-fmt
 
                 # Nix linting
+                deadnix
                 nix-linter
                 statix
 
