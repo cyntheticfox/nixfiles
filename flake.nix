@@ -57,11 +57,7 @@
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
     in
     {
-      lib = {
-        hmConfig = import ./lib/hmConfig.nix;
-
-        defFlakeSystem = import ./lib/defFlakeSystem.nix;
-      };
+      lib = import ./lib;
 
       nixosModules = {
         dh-laptop2.imports = [
