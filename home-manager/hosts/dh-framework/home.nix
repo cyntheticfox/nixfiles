@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }: {
   imports = [
     # ../../config/base.nix
     ../../config/sway.nix
@@ -28,5 +28,5 @@
     mozwire
   ];
 
-  home.stateVersion = "22.05";
+  home.stateVersion = lib.mkDefault "22.05";
 }

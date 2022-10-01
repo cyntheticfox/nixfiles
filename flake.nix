@@ -59,22 +59,21 @@
     {
       lib = import ./lib;
 
-      nixosModules = {
-        dh-laptop2.imports = [
-          ./home-manager/hosts/dh-laptop2/home.nix
-        ];
+      homeConfigurations = {
+        dh-framework = self.lib.hmConfig {
+          inherit inputs;
 
-        dh-framework.imports = [
-          ./home-manager/hosts/dh-framework/home.nix
-        ];
-      };
+          username = "david";
+          modules = [ ./home-manager/hosts/dh-framework/home.nix ];
+        };
 
-      homeConfigurations.pbp = self.lib.hmConfig {
-        inherit inputs;
+        pbp = self.lib.hmConfig {
+          inherit inputs;
 
-        username = "david";
-        system = "aarch64-linux";
-        modules = [ ./home-manager/hosts/pbp/home.nix ];
+          username = "david";
+          system = "aarch64-linux";
+          modules = [ ./home-manager/hosts/pbp/home.nix ];
+        };
       };
 
       nixosConfigurations = {

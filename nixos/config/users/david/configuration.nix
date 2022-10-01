@@ -93,7 +93,7 @@ in
     passwordFile = config.sops.secrets.david-password.path;
   };
 
-  home-manager.users.david = self.nixosModules."${config.networking.hostName}";
+  home-manager.users.david = import (../../../../. + "/home-manager/hosts/${config.networking.hostName}/home.nix");
 
   environment.persistence."/state".users.david = {
     directories = [
