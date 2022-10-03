@@ -14,11 +14,11 @@
     xdg_utils
   ];
 
-  # TODO: Get this to actually work
-  services.gnome-keyring = {
-    enable = true;
-    components = [ "secrets" ];
-  };
+  # # TODO: Get this to actually work
+  # services.gnome-keyring = {
+  #   enable = true;
+  #   components = [ "secrets" ];
+  # };
 
   services.udiskie.enable = true;
 
