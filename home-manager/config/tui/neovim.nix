@@ -841,7 +841,7 @@ in
     indent_style = tab
 
     # Default to two spaces for data languages
-    [*.{c,cpp,css,h,hpp,htm,html,js,json,lua,mof,nix,ps1,psd1,psm1,tf,ts,vue,yml,yaml,xml,xhtml}]
+    [*.{c,cpp,css,h,hpp,htm,html,js,json,lua,mof,nix,ps1,psd1,psm1,rst,tf,ts,vue,yml,yaml,xml,xhtml}]
     indent_size = 2
     indent_style = space
 
