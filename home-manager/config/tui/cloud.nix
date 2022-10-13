@@ -5,6 +5,7 @@
     azure-cli
     backblaze-b2
     flyctl
+    google-cloud-sdk
     linode-cli
     nixpkgs-unstable.nodePackages.serverless
 
