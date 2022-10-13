@@ -101,6 +101,7 @@ in
       { directory = ".azure"; mode = "0700"; }
       ".config/dconf"
       ".config/discord"
+      { directory = ".config/gcloud"; mode = "0700"; }
       ".config/Element"
       ".config/libvirt"
       ".config/Microsoft/Microsoft Teams"
