@@ -53,4 +53,47 @@
       };
     };
   };
+
+  # Load editorconfig file as well
+  home.file.".editorconfig".text = ''
+    # .editorconfig
+    #
+    # Source for controlling tabulation and formatting of files by name
+    #
+    # https://editorconfig.org
+    #
+    # Plugins required for...
+    #
+    # Vim: https://github.com/editorconfig/editorconfig-vim
+    # Neovim: https://github.com/gpanders/editorconfig.nvim
+    # VSCode/VSCodium: https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig
+
+    root = true
+
+    # Set file defaults
+    [*]
+    charset = utf-8
+    end_of_line = lf
+    indent_size = 4
+    indent_style = space
+    insert_final_newline = true
+    trim_trailing_whitespace = true
+
+    [*.md]
+    indent_size = 2
+    trim_trailing_whitespace = false
+
+    [Makefile]
+    indent_size = 8
+    indent_style = tab
+
+    # Default to two spaces for data languages
+    [*.{c,cpp,css,h,hpp,htm,html,js,json,lua,mof,nix,ps1,psd1,psm1,rst,tf,ts,vue,yml,yaml,xml,xhtml}]
+    indent_size = 2
+    indent_style = space
+
+    [flake.lock]
+    indent_size = 2
+    indent_style = space
+  '';
 }
