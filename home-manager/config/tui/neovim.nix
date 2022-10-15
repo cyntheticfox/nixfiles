@@ -721,6 +721,71 @@ in
           })
         '';
       }
+      {
+        plugin = nvim-treesitter-context;
+        type = "lua";
+        config = ''
+          require('treesitter-context').setup({
+            enable = true,
+            max_lines = 0,
+            trim_scope = 'outer',
+            min_window_height = 0,
+            patterns = {
+              -- For all filetypes
+              default = {
+                'class',
+                'function',
+                'method',
+                'for',
+                'while',
+                'if',
+                'switch',
+                'case',
+              },
+
+              -- Patterns for specific filetypes
+              tex = {
+                'chapter',
+                'section',
+                'subsection',
+                'subsubsection',
+              },
+              rust = {
+                'impl_item',
+                'struct',
+                'enum'
+              },
+              scala = {
+                'object_definition',
+              },
+              vhdl = {
+                'process_statement',
+                'architecture_body',
+                'entity_declaration',
+              },
+              markdown = {
+                'section',
+              },
+              elixir = {
+                'anonymous_function',
+                'arguments',
+                'block',
+                'do_block',
+                'list',
+                'map',
+                'tuple',
+                'quoted_content',
+              },
+              json = {
+                'pair',
+              },
+              yaml = {
+                'block_mapping_pair',
+              },
+            },
+          })
+        '';
+      }
       nvim-ts-autotag
       nvim-ts-context-commentstring
       nvim-ts-rainbow
