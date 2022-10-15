@@ -52,7 +52,7 @@
       "/" = {
         device = "none";
         fsType = "tmpfs";
-        options = [ "defaults" "size=8G" "mode=755" ];
+        options = [ "defaults" "size=12G" "mode=755" ];
       };
 
       "/state" = fsroot_subvol "state" true;
