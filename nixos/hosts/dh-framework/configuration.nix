@@ -70,6 +70,7 @@
         mode = "u=rwx,g=x,o=";
       }
       "/var/lib/libvirt"
+      "/var/lib/minikube"
       "/var/lib/systemd/coredump"
       "/var/log"
       "/var/tmp"
@@ -144,7 +145,7 @@
     udiskie
 
     bluez-tools
-    htop
+    minikube
     nixos-icons
     piper
     wally-cli
