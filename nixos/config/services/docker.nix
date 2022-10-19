@@ -7,7 +7,11 @@
     containers = {
       enable = true;
 
-      registries.search = [ "docker.io" "quay.io" "ghcr.io" ];
+      registries.search = [
+        "docker.io"
+        "quay.io"
+        "ghcr.io"
+      ];
     };
 
     docker.enable = true;
