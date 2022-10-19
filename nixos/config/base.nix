@@ -24,7 +24,6 @@
       dotfiles.flake = self;
       nixpkgs.flake = inputs.nixpkgs;
     };
-    # registry = (lib.mapAttrs (_: flake: { inherit flake; }) (lib.filterAttrs (_: v: v ? outputs) inputs)) // { dotfiles.flake = self; };
   };
 
   nixpkgs.config.allowUnfree = true;
