@@ -1,70 +1,49 @@
 { config, pkgs, lib, self, ... }:
 let
-  optNetworkManagerGroup =
-    if
-      config.networking.networkmanager.enable
-    then
-      "networkmanager"
-    else
-      "";
-  optLibvirtdGroup =
-    if
-      config.virtualisation.libvirtd.enable
-    then
-      "libvirtd"
-    else
-      "";
-  optKvmgtGroup =
-    if
-      config.virtualisation.kvmgt.enable
-    then
-      "kvmgt"
-    else
-      "";
-  optAudioGroup =
-    if
-      config.hardware.pulseaudio.systemWide
-    then
-      "audio"
-    else
-      "";
-  optJackaudioGroup =
-    if
-      config.services.jack.jackd.enable
-    then
-      "jackaudio"
-    else
-      "";
-  optLightGroup =
-    if
-      config.hardware.acpilight.enable ||
-      config.hardware.brillo.enable ||
-      config.programs.light.enable
-    then
-      "video"
-    else
-      "";
-  optAdbGroup =
-    if
-      config.programs.adb.enable
-    then
-      "adbusers"
-    else
-      "";
-  optWiresharkGroup =
-    if
-      config.programs.wireshark.enable
-    then
-      "wireshark"
-    else
-      "";
-  optGroups = [
-    optNetworkManagerGroup
-    optLibvirtdGroup
-    optKvmgtGroup
-    optAudioGroup
-    optJackaudioGroup
-    optLightGroup
+  optionalGroup = { cond, group }: lib.optionalString cond group;
+  optGroups = builtins.map optionalGroup [
+    {
+      cond = config.networking.networkmanager.enable;
+      group = "networkmanager";
+    }
+    {
+      cond = config.virtualisation.libvirtd.enable;
+      group = "libvirtd";
+    }
+    {
+      cond = config.virtualisation.kvmgt.enable;
+      group = "kvmgt";
+    }
+    {
+      cond = config.hardware.pulseaudio.systemWide;
+      group = "audio";
+    }
+    {
+      cond = config.services.jack.jackd.enable;
+      group = "jackaudio";
+    }
+    {
+      cond = config.hardware.acpilight.enable
+        || config.hardware.brillo.enable
+        || config.programs.light.enable;
+      group = "video";
+    }
+    {
+      cond = config.programs.adb.enable;
+      group = "adbusers";
+    }
+    {
+      cond = config.programs.wireshark.enable;
+      group = "wireshark";
+    }
+    {
+      cond = config.virtualisation.docker.enable;
+      group = "docker";
+    }
+    {
+      cond = config.virtualisation.podman.enable;
+      group = "podman";
+    }
   ];
 in
 {
@@ -97,20 +76,38 @@ in
 
   environment.persistence."/state".users.david = {
     directories = [
-      { directory = ".aws"; mode = "0700"; }
-      { directory = ".azure"; mode = "0700"; }
+      {
+        directory = ".aws";
+        mode = "0700";
+      }
+      {
+        directory = ".azure";
+        mode = "0700";
+      }
       ".config/dconf"
       ".config/discord"
-      { directory = ".config/gcloud"; mode = "0700"; }
+      {
+        directory = ".config/gcloud";
+        mode = "0700";
+      }
       ".config/Element"
       ".config/libvirt"
       ".config/Microsoft/Microsoft Teams"
       ".config/pipewire"
       ".config/teams"
-      { directory = ".docker"; mode = "0700"; }
-      { directory = ".gnupg"; mode = "0700"; }
+      {
+        directory = ".docker";
+        mode = "0700";
+      }
+      {
+        directory = ".gnupg";
+        mode = "0700";
+      }
       ".mozilla"
-      { directory = ".ssh"; mode = "0700"; }
+      {
+        directory = ".ssh";
+        mode = "0700";
+      }
       "archive"
       "docs"
       "emu"
