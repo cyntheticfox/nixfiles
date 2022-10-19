@@ -162,7 +162,6 @@
 
   programs.gnupg.agent.enable = true;
 
-  # Enable Steam for gaming
   programs.steam.enable = true;
 
   security.rtkit.enable = true;
