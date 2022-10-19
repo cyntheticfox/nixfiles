@@ -21,4 +21,6 @@
       dockerSocket.enable = !config.virtualisation.docker.enable;
     };
   };
+
+  systemd.tmpfiles.packages = with pkgs; [ podman-unwrapped ];
 }

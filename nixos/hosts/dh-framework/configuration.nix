@@ -156,7 +156,7 @@
 
   systemd.services."restic-backups-${config.networking.hostName}".serviceConfig.ExecCondition = "${config.systemd.package}/lib/systemd/systemd-networkd-wait-online --interface=enp0s13f0u4u4:routable --timeout=5";
 
-  systemd.tmpfiles.packages = with pkgs; [ openvpn podman-unwrapped man-db ];
+  systemd.tmpfiles.packages = with pkgs; [ openvpn man-db ];
 
   programs.gnupg.agent.enable = true;
 
