@@ -4,18 +4,26 @@
     fcitx5.addons = with pkgs; [ fcitx5-mozc ];
   };
 
+  # Fcitx5 will _add comments_ if they're not there for some reason
   xdg.configFile."fcitx5/profile".text = ''
     [Groups/0]
+    # Group Name
     Name=Default
+    # Layout
     Default Layout=us
+    # Default Input Method
     DefaultIM=mozc
 
     [Groups/0/Items/0]
+    # Name
     Name=keyboard-us
+    # Layout
     Layout=
 
     [Groups/0/Items/1]
+    # Name
     Name=mozc
+    # Layout
     Layout=
 
     [GroupOrder]
@@ -79,6 +87,7 @@
   '';
 
   xdg.configFile."fcitx5/conf/notifications.conf".text = ''
+    # Hidden Notifications
     HiddenNotifications=
   '';
 
