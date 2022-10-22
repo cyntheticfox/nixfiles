@@ -17,5 +17,6 @@
 
     # Other games
     minecraft
+    nixpkgs-unstable.prismlauncher
   ];
 }
