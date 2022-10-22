@@ -139,6 +139,7 @@ in
       ".local/share/mime"
       ".local/share/mpd"
       ".local/share/nvim/site"
+      ".local/share/PrismLauncher"
       ".local/share/Steam"
       ".local/share/zoxide"
       ".local/state/wireplumber"
