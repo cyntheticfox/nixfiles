@@ -108,7 +108,7 @@ let
     else
       [ ];
 in
-nixpkgs.lib.nixosSystem {
+nixos.lib.nixosSystem {
   inherit system;
 
   specialArgs = {
