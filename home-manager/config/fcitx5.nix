@@ -28,6 +28,7 @@
 
     [GroupOrder]
     0=Default
+
   '';
 
   xdg.configFile."fcitx5/config".text = ''
@@ -89,6 +90,7 @@
   xdg.configFile."fcitx5/conf/notifications.conf".text = ''
     # Hidden Notifications
     HiddenNotifications=
+
   '';
 
   xdg.configFile."fcitx5/conf/quickphrase.conf".text = ''
