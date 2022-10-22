@@ -63,6 +63,12 @@ in
   #
   programs.dconf.profiles.sway = sway-dconf-profile;
 
+  services.xserver.libinput = {
+    enable = true;
+
+    mouse.accelProfile = "flat";
+  };
+
   ### Add X11 Compatibility
   #
   programs.xwayland.enable = true;
