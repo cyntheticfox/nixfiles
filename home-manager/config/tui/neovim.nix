@@ -66,11 +66,13 @@ in
       set scrolloff=7
       set showmatch
       set showtabline=2
-      set splitbelow
-      set splitright
       set termguicolors
       set timeoutlen=500
       set title
+
+      " Set reasonable split behavior
+      set splitbelow
+      set splitright
 
       " Set Tab information
       set expandtab
@@ -91,8 +93,23 @@ in
       " Provide better undo support
       set undofile
 
-      " Remap some keys
-      nmap <leader>t :tabe<CR>
+      " Set up leader mappings
+      nnoremap <leader>et :tabe<CR>
+      nnoremap <leader>w :set wrap! wrap?<CR>
+
+      " Easier buffer switching
+      nnoremap <leader>h <C-w>h
+      nnoremap <leader>j <C-w>j
+      nnoremap <leader>k <C-w>k
+      nnoremap <leader>l <C-w>l
+
+      " Easier terminal launch
+      nnoremap <silent> <leader>tt :terminal<CR>
+      nnoremap <silent> <leader>tv :vnew<CR>:terminal<CR>
+      nnoremap <silent> <leader>th :new<CR>:terminal<CR>
+
+      " Teminal mappings
+      tnoremap <C-x> <C-\><C-n><C-w>q
     '';
 
     plugins = with pkgs.vimPlugins; [
