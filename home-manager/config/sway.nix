@@ -55,7 +55,7 @@ let
     };
     homeDockCenter = toScreen {
       name = "ASUS High Refresh-Rate Monitor";
-      outputString = "Unknown VG28UQL1A 0x0000135C";
+      outputString = "Unknown VG28UQL1A 0x00000101";
       scale = 1.75;
       xPixels = 3840;
       yPixels = 2160;
