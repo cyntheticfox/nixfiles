@@ -104,6 +104,11 @@
         };
       };
 
+      packages.x86_64-linux = import ./pkgs {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        lib = nixpkgs.lib // self.lib;
+      };
+
       checks = {
         x86_64-linux = nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel);
       } // forAllSystems (system: {
