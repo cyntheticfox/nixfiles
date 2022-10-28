@@ -862,6 +862,19 @@ in
         status = "enable";
       }];
 
+      singleMonitor.outputs = [
+        {
+          inherit (screens.builtin) criteria;
+          status = "enable";
+          position = "0,0";
+        }
+        {
+          criteria = "*";
+          status = "enable";
+          position = "${builtins.toString screens.builtin.xPixelsOut},0";
+        }
+      ];
+
       homeDockedFull.outputs = [
         {
           inherit (screens.builtin) criteria;
@@ -903,6 +916,57 @@ in
           inherit (screens.homeDockRightFallback) criteria;
           status = "enable";
           position = "${builtins.toString (screens.homeDockLeft.xPixelsOut + screens.homeDockCenter.xPixelsOut)},0";
+        }
+      ];
+
+      homeDockedPartialNoLeft.outputs = [
+        {
+          inherit (screens.builtin) criteria;
+          status = "disable";
+        }
+        {
+          inherit (screens.homeDockCenter) criteria scale;
+          status = "enable";
+          position = "0,0";
+        }
+        {
+          inherit (screens.homeDockRight) criteria;
+          status = "enable";
+          position = "${builtins.toString screens.homeDockCenter.xPixelsOut},0";
+        }
+      ];
+
+      homeDockedPartialNoCenter.outputs = [
+        {
+          inherit (screens.builtin) criteria;
+          status = "disable";
+        }
+        {
+          inherit (screens.homeDockLeft) criteria;
+          status = "enable";
+          position = "0,0";
+        }
+        {
+          inherit (screens.homeDockRight) criteria;
+          status = "enable";
+          position = "${builtins.toString screens.homeDockLeft.xPixelsOut},0";
+        }
+      ];
+
+      homeDockedPartialNoRight.outputs = [
+        {
+          inherit (screens.builtin) criteria;
+          status = "disable";
+        }
+        {
+          inherit (screens.homeDockLeft) criteria;
+          status = "enable";
+          position = "0,0";
+        }
+        {
+          inherit (screens.homeDockCenter) criteria scale;
+          status = "enable";
+          position = "${builtins.toString screens.homeDockLeft.xPixelsOut},0";
         }
       ];
     };
