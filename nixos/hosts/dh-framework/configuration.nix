@@ -10,7 +10,7 @@
     ../../config/desktops/sway.nix
 
     # Services
-    ../../config/services/clamav.nix
+    # ../../config/services/clamav.nix
     ../../config/services/cupsd.nix
     ../../config/services/libvirtd.nix
     ../../config/services/restic.nix
