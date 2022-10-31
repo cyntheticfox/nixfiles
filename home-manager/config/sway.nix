@@ -53,6 +53,14 @@ let
       yPixels = 1504;
       refreshRate = 59.999;
     };
+    builtinBigger = toScreen {
+      name = "Built-in display";
+      id = "eDP-1";
+      scale = 2.0;
+      xPixels = 2256;
+      yPixels = 1504;
+      refreshRate = 59.999;
+    };
     homeDockCenter = toScreen {
       name = "ASUS High Refresh-Rate Monitor";
       outputString = "Unknown VG28UQL1A 0x00000101";
@@ -432,6 +440,7 @@ in
               homeDockLeft
               homeDockRight
               homeDockRightFallback
+              builtinBigger
               builtin
             ];
             left = with screens; screenOrder [
@@ -439,6 +448,7 @@ in
               homeDockCenter
               homeDockRight
               homeDockRightFallback
+              builtinBigger
               builtin
             ];
             right = with screens; screenOrder [
@@ -446,6 +456,7 @@ in
               homeDockRightFallback
               homeDockCenter
               homeDockLeft
+              builtinBigger
               builtin
             ];
           in
@@ -864,7 +875,7 @@ in
 
       singleMonitor.outputs = [
         {
-          inherit (screens.builtin) criteria;
+          inherit (screens.builtinBigger) criteria;
           status = "enable";
           position = "0,0";
         }
@@ -877,8 +888,9 @@ in
 
       homeDockedFull.outputs = [
         {
-          inherit (screens.builtin) criteria;
-          status = "disable";
+          inherit (screens.builtinBigger) criteria;
+          status = "enable";
+          position = "0,${builtins.toString screens.homeDockLeft.yPixelsOut}";
         }
         {
           inherit (screens.homeDockLeft) criteria;
@@ -899,8 +911,9 @@ in
 
       homeDockedFullFallback.outputs = [
         {
-          inherit (screens.builtin) criteria;
-          status = "disable";
+          inherit (screens.builtinBigger) criteria;
+          status = "enable";
+          position = "0,${builtins.toString screens.homeDockLeft.yPixelsOut}";
         }
         {
           inherit (screens.homeDockLeft) criteria;
@@ -921,8 +934,9 @@ in
 
       homeDockedPartialNoLeft.outputs = [
         {
-          inherit (screens.builtin) criteria;
-          status = "disable";
+          inherit (screens.builtinBigger) criteria;
+          status = "enable";
+          position = "0,${builtins.toString screens.homeDockCenter.yPixelsOut}";
         }
         {
           inherit (screens.homeDockCenter) criteria scale;
@@ -938,8 +952,9 @@ in
 
       homeDockedPartialNoCenter.outputs = [
         {
-          inherit (screens.builtin) criteria;
-          status = "disable";
+          inherit (screens.builtinBigger) criteria;
+          status = "enable";
+          position = "0,${builtins.toString screens.homeDockLeft.yPixelsOut}";
         }
         {
           inherit (screens.homeDockLeft) criteria;
@@ -955,8 +970,9 @@ in
 
       homeDockedPartialNoRight.outputs = [
         {
-          inherit (screens.builtin) criteria;
-          status = "disable";
+          inherit (screens.builtinBigger) criteria;
+          status = "enable";
+          position = "0,${builtins.toString screens.homeDockLeft.yPixelsOut}";
         }
         {
           inherit (screens.homeDockLeft) criteria;
