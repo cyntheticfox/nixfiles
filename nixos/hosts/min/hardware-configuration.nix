@@ -1,4 +1,4 @@
-{ config, ... }: {
+_: {
   fileSystems = {
     "/" = {
       label = "fsroot";

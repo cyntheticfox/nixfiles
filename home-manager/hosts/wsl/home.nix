@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+_: {
   imports = [
     ../../config/base.nix
     ../../config/tui/dev.nix

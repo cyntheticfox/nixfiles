@@ -1,4 +1,4 @@
-{ config, pkgs, lib, self, ... }:
+{ config, pkgs, lib, ... }:
 let
   optionalGroup = { cond, group }: lib.optionalString cond group;
   optGroups = builtins.map optionalGroup [

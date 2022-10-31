@@ -1,8 +1,4 @@
-# ssh-configuration.nix
-#
-# Implement an SSH daemon for logging in remotely (only done in VM)
-
-{ config, pkgs, lib, ... }: {
+{ config, ... }: {
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;

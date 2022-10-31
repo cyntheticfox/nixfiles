@@ -1,4 +1,4 @@
-{ config, ... }: {
+_: {
   services.printing.enable = true;
 
   hardware.printers.ensureDefaultPrinter = "Home-Printer";

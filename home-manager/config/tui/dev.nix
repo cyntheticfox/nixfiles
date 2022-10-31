@@ -14,7 +14,7 @@
     htmlq
     hyperfine
     jq
-    (nixpkgs-unstable.llvmPackages_latest.clang.overrideAttrs (attrs: {
+    (nixpkgs-unstable.llvmPackages_latest.clang.overrideAttrs (_: {
       meta.priority = gcc_latest.meta.priority + 1;
     }))
     nixpkgs-unstable.llvmPackages_latest.clang-manpages

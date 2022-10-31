@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }: {
+{ pkgs, lib, ... }: {
   imports = [
     # ../../config/base.nix
     ../../config/sway.nix

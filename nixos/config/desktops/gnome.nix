@@ -1,8 +1,4 @@
-# gnome-configuration.nix
-#
-# Gnome Desktop Manager Definition and configuration file
-
-{ config, pkgs, lib, ... }: {
+{ pkgs, ... }: {
 
   environment.systemPackages = with pkgs.gnome3; [
     gnome-tweaks

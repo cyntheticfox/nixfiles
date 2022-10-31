@@ -1,8 +1,5 @@
-# sway-configuration.nix
-#
-# https://nixos.wiki/wiki/Sway
-
-{ config, pkgs, lib, ... }:
+# See https://nixos.wiki/wiki/Sway
+{ pkgs, lib, ... }:
 let
   gtk-theme = "Adwaita-Dark";
   icon-theme = "Adwaita";

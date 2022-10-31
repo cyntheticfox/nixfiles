@@ -21,13 +21,13 @@ let
     else
       null;
 
-  amdOnlyFunc = f:
-    if
-      cpuVendor == "amd"
-    then
-      f
-    else
-      null;
+  # amdOnlyFunc = f:
+  #   if
+  #     cpuVendor == "amd"
+  #   then
+  #     f
+  #   else
+  #     null;
 
   nologIfWorkstation = if workstation then "quiet" else null;
   iommuKernelParam = intelOnlyFunc "intel_iommu=on";

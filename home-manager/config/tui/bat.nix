@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+_: {
   home.shellAliases."cat" = "bat";
 
   programs.bat = {

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [ remmina ];
 
   xdg.mimeApps.defaultApplications."application/x-rdp" = "org.remmina.Remmina.desktop";

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 let
   theme = "nord";
   themeFile = "${theme}.conf";

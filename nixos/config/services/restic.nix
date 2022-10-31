@@ -18,7 +18,7 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-{ config, pkgs, lib, ... }: {
+{ config, lib, ... }: {
   services.restic.backups."${config.networking.hostName}" = {
     initialize = true;
     repository = "b2:${lib.replaceStrings ["."] ["-"] config.networking.fqdn}-backup";

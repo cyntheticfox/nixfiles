@@ -1,4 +1,4 @@
-{ config, ... }: {
+_: {
   home.shellAliases = {
     "l" = "exa --classify --color=always --icons";
     "ls" = "exa --classify --color=always --icons";

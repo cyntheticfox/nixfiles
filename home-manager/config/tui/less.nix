@@ -1,4 +1,4 @@
-{ config, ... }: {
+_: {
   home.shellAliases."more" = "less";
 
   # TODO: Figure out a lesskey config

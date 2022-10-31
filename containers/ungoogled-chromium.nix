@@ -6,7 +6,7 @@ let
   toKiB = builtins.mul 1024;
   toMiB = i: builtins.mul 1024 (toKiB i);
   toGiB = i: builtins.mul 1024 (toMiB i);
-  toTiB = i: builtins.mul 1024 (toGiB i);
+  # toTiB = i: builtins.mul 1024 (toGiB i);
   toEnv = lib.mapAttrsToList lib.toShellVar;
 in
 pkgs.dockerTools.buildImage {

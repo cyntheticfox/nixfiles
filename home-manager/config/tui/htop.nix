@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, ... }: {
   home.shellAliases."top" = "htop";
 
   programs.htop = {

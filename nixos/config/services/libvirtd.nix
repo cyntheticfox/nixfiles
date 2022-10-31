@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
 
   boot.kernelModules = [ "kvm-amd" "kvm-intel" ];
   virtualisation = {

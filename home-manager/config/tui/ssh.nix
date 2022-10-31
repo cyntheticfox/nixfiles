@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+_: {
   programs.ssh = {
     enable = true;
     compression = true;

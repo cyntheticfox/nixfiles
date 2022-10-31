@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+_: {
   imports = [
     ../../config/base.nix
     ../../config/base-desktop.nix
