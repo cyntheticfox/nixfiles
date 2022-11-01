@@ -38,11 +38,6 @@
       inputs.nixpkgs.follows = "nixos";
     };
 
-    home-manager-unstable = {
-      url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixos-unstable";
-    };
-
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -64,7 +59,7 @@
           inherit inputs;
 
           username = "david";
-          modules = [ ./home-manager/hosts/dh-framework/home.nix ];
+          modules = [ ./homeConfigurations/dh-framework.nix ];
         };
 
         pbp = self.lib.hmConfig {
@@ -72,7 +67,14 @@
 
           username = "david";
           system = "aarch64-linux";
-          modules = [ ./home-manager/hosts/pbp/home.nix ];
+          modules = [ ./homeConfigurations/pbp.nix ];
+        };
+
+        wsl = self.lib.hmConfig {
+          inherit inputs;
+
+          username = "david";
+          modules = [ ./homeConfigurations/wsl.nix ];
         };
       };
 

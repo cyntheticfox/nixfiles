@@ -72,7 +72,7 @@ in
     passwordFile = config.sops.secrets.david-password.path;
   };
 
-  home-manager.users.david = import (../../../../. + "/home-manager/hosts/${config.networking.hostName}/home.nix");
+  home-manager.users.david = import (../../../../. + "/homeConfigurations/${config.networking.hostName}.nix");
 
   environment.persistence."/state".users.david = {
     directories = [

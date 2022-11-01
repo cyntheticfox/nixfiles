@@ -8,7 +8,6 @@
 }:
 assert cpuVendor == null || builtins.isString cpuVendor;
 assert builtins.hasAttr "home-manager" inputs;
-assert builtins.hasAttr "home-manager-unstable" inputs;
 assert builtins.hasAttr "nixos" inputs;
 assert builtins.hasAttr "nixos-unstable" inputs;
 assert builtins.hasAttr "nixpkgs" inputs;
@@ -29,13 +28,6 @@ let
       inputs.nixpkgs-unstable
     else
       inputs.nixpkgs;
-  home-manager =
-    if
-      unstable
-    then
-      inputs.home-manager-unstable
-    else
-      inputs.home-manager;
   baseModules = (
     if
       unstable
@@ -102,7 +94,7 @@ let
       workstation
     then
       [
-        home-manager.nixosModules.home-manager
+        inputs.home-manager.nixosModules.home-manager
         ../nixos/config/base-hm.nix
       ]
     else
