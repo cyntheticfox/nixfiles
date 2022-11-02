@@ -1,0 +1,3 @@
+[
+  ./sys/fonts.nix
+]

@@ -78,6 +78,8 @@
         };
       };
 
+      homeModules = import ./homeModules;
+
       nixosConfigurations = {
         min = self.lib.defFlakeSystem {
           inherit self inputs;
@@ -107,7 +109,12 @@
       };
 
       checks = {
-        x86_64-linux = nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel);
+        x86_64-linux = (nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel)) //
+          (import ./tests {
+            inherit home-manager;
+
+            pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          });
       } // forAllSystems (system: {
         pre-commit-check = pre-commit-hooks.lib."${system}".run {
           src = ./.;
