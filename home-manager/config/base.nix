@@ -16,7 +16,7 @@
     ./tui/neofetch.nix
     ./tui/neovim.nix
     ./tui/passwords.nix
-    ./tui/shell.nix
+    # ./tui/shell.nix
     ./tui/ssh.nix
     ./tui/tmux.nix
     ./tui/todo.nix

@@ -1,0 +1,226 @@
+{ config, lib, pkgs, ... }:
+
+with lib;
+
+let
+  cfg = config.sys.shell;
+in
+{
+  options.sys.shell = {
+    enable = mkEnableOption "Enable shell management" // {
+      default = true;
+    };
+
+    aliases = mkOption {
+      type = types.attrsOf types.string;
+      default = {
+        "gcmsg" = "git commit --signoff -m";
+        "gcmsga" = "git commit --signoff --all -m";
+      };
+      description = ''
+        Aliases to add for the shell.
+      '';
+    };
+
+    zsh = mkOption {
+      type = with types; nullOr attrs;
+      default = {
+        enable = true;
+        dotDir = ".config/zsh";
+
+        shellGlobalAliases."UUID" = "$(uuidgen | tr -d \\n)";
+
+        defaultKeymap = "viins";
+
+        initExtra = ''
+          function gcmsgap() {
+            git commit --signoff --all -m $@ && git push
+          }
+
+          function gcmsgapf() {
+            git commit --signoff --all -m $@ && git push --force-with-lease
+          }
+
+          function gcmsgapf!() {
+            git commit --signoff --all -m $@ && git push --force
+          }
+
+          function gcmsgp() {
+            git commit --signoff -m $@ && git push
+          }
+
+          function gcmsgpf() {
+            git commit --signoff -m $@ && git push --force-with-lease
+          }
+
+          function gcmsgpf!() {
+            git commit --signoff -m $@ && git push --force
+          }
+        '';
+
+        enableAutosuggestions = true;
+        oh-my-zsh = {
+          enable = true;
+
+          plugins = [
+            "aliases"
+            "aws"
+            "colored-man-pages"
+            "command-not-found"
+            "docker"
+            "encode64"
+            "fd"
+            "gh"
+            "git"
+            "git-auto-fetch"
+            "git-extras"
+            "git-flow"
+            "git-lfs"
+            "golang"
+            "isodate"
+            "python"
+            "ripgrep"
+            "rust"
+            "systemd"
+            "systemadmin"
+            "tig"
+            "terraform"
+            "tmux"
+            "urltools"
+            "web-search"
+          ];
+        };
+
+        plugins = [
+          {
+            name = "zsh-completions";
+            src = pkgs.fetchFromGitHub {
+              owner = "zsh-users";
+              repo = "zsh-completions";
+              rev = "0.33.0";
+              sha256 = "sha256-cQSKjQhhOm3Rvnx9V6LAmtuPp/ht/O0IimpunoQlQW8=";
+            };
+          }
+          {
+            name = "fast-syntax-highlighting";
+            src = pkgs.fetchFromGitHub {
+              owner = "zdharma-continuum";
+              repo = "fast-syntax-highlighting";
+              rev = "v1.55";
+              sha256 = "sha256-DWVFBoICroKaKgByLmDEo4O+xo6eA8YO792g8t8R7kA=";
+            };
+          }
+          {
+            name = "history-search-multi-word";
+            src = pkgs.fetchFromGitHub {
+              owner = "zdharma-continuum";
+              repo = "history-search-multi-word";
+              rev = "5b44d8cea12351d91fbdc3697916556f59f14b8c";
+              sha256 = "sha256-B+I53Y2E6dB2hqSc75FkYwzY4qAVMGzcNWu8ZXytIoc=";
+            };
+          }
+          {
+            name = "zsh-you-should-use";
+            src = pkgs.fetchFromGitHub {
+              owner = "MichaelAquilina";
+              repo = "zsh-you-should-use";
+              rev = "1.7.3";
+              sha256 = "sha256-/uVFyplnlg9mETMi7myIndO6IG7Wr9M7xDFfY1pG5Lc=";
+            };
+          }
+        ];
+
+        history = {
+          size = 102400;
+          save = 10240;
+          ignorePatterns = [
+            "rm *"
+            "pkill *"
+            "cd *"
+          ];
+          expireDuplicatesFirst = true;
+        };
+
+        sessionVariables."ZSH_AUTOSUGGEST_USE_ASYNC" = "1";
+
+        initExtraFirst = ''
+          setopt AUTO_CD
+          setopt PUSHD_IGNORE_DUPS
+          setopt PUSHD_SILENT
+
+          setopt ALWAYS_TO_END
+          setopt AUTO_MENU
+          setopt COMPLETE_IN_WORD
+          setopt FLOW_CONTROL
+        '';
+      };
+      description = ''
+        Zsh module configuration. Set to my defaults.
+      '';
+    };
+
+    starship = mkOption {
+      type = with types; nullOr attrs;
+      default = {
+        enable = true;
+
+        package = pkgs.starship;
+
+        settings = {
+          add_newline = true;
+          scan_timeout = 100;
+
+          username = {
+            format = "[$user]($style) in ";
+            show_always = true;
+            disabled = false;
+          };
+
+          hostname = {
+            ssh_only = false;
+            format = "⟨[$hostname](bold green)⟩ in ";
+            disabled = false;
+          };
+
+          directory = {
+            truncation_length = 3;
+            fish_style_pwd_dir_length = 1;
+          };
+
+          shell = {
+            disabled = false;
+            bash_indicator = "bash";
+            fish_indicator = "fish";
+            powershell_indicator = "pwsh";
+            elvish_indicator = "elvish";
+            tcsh_indicator = "tcsh";
+            xonsh_indicator = "xonsh";
+            unknown_indicator = "?";
+          };
+        };
+      };
+      description = ''
+        Configuration for a prompt
+      '';
+    };
+
+    extraShells = mkOption {
+      type = with types; nullOr (listOf package);
+      default = with pkgs; [
+        elvish
+        powershell
+      ];
+    };
+  };
+
+
+  config = mkIf cfg.enable {
+    home.packages = cfg.extraShells;
+
+    home.shellAliases = cfg.aliases;
+
+    programs.zsh = mkIf (cfg.zsh != null) cfg.zsh;
+
+    programs.starship = mkIf (cfg.starship != null) cfg.starship;
+  };
+}

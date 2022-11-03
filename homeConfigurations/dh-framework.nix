@@ -1,4 +1,7 @@
-{ pkgs, lib, ... }: {
+{ pkgs
+  # , lib
+, ...
+}: {
   imports = [
     # ../home-manager/config/base.nix
     ../home-manager/config/sway.nix
@@ -28,7 +31,10 @@
     mozwire
   ];
 
-  home.stateVersion = lib.mkDefault "22.05";
+  # home.stateVersion = lib.mkDefault "22.05";
 
-  sys.fonts.enable = true;
+  sys = {
+    fonts.enable = true;
+    shell.enable = true;
+  };
 }
