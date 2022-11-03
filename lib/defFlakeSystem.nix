@@ -1,5 +1,4 @@
 { self
-, inputs
 , unstable ? false
 , workstation ? false
 , cpuVendor ? null
@@ -7,13 +6,15 @@
 , modules ? [ ]
 }:
 assert cpuVendor == null || builtins.isString cpuVendor;
-assert builtins.hasAttr "home-manager" inputs;
-assert builtins.hasAttr "nixos" inputs;
-assert builtins.hasAttr "nixos-unstable" inputs;
-assert builtins.hasAttr "nixpkgs" inputs;
-assert builtins.hasAttr "nixpkgs-master" inputs;
-assert builtins.hasAttr "nixpkgs-unstable" inputs;
+assert builtins.hasAttr "home-manager" self.inputs;
+assert builtins.hasAttr "nixos" self.inputs;
+assert builtins.hasAttr "nixos-unstable" self.inputs;
+assert builtins.hasAttr "nixpkgs" self.inputs;
+assert builtins.hasAttr "nixpkgs-master" self.inputs;
+assert builtins.hasAttr "nixpkgs-unstable" self.inputs;
 let
+  inherit (self) inputs;
+
   nixos =
     if
       unstable
@@ -89,7 +90,7 @@ let
     })
     ../nixos/config/hardware-base.nix
   ];
-  hmModules =
+  hmNixosModules =
     if
       workstation
     then
@@ -104,11 +105,10 @@ nixos.lib.nixosSystem {
   inherit system;
 
   specialArgs = {
-    inherit self cpuVendor workstation unstable;
-    inherit (self) inputs;
+    inherit self cpuVendor workstation unstable inputs;
   };
 
   modules = baseModules
-    ++ hmModules
+    ++ hmNixosModules
     ++ modules;
 }

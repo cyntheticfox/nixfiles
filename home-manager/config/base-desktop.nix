@@ -5,7 +5,7 @@
     ./fcitx5.nix
 
     # Modules
-    ./gui/fonts.nix
+    # ./gui/fonts.nix
     ./gui/kitty.nix
     ./gui/remmina.nix
     ./gui/web.nix

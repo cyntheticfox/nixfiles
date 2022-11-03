@@ -19,6 +19,8 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
+    flake-utils.url = "github:numtide/flake-utils";
+
     nix-index-database.url = "github:houstdav000/nix-index-database-stable";
 
     impermanence.url = "github:nix-community/impermanence";
@@ -36,6 +38,7 @@
     home-manager = {
       url = "github:nix-community/home-manager/release-22.05";
       inputs.nixpkgs.follows = "nixos";
+      inputs.utils.follows = "flake-utils";
     };
 
     pre-commit-hooks = {
@@ -46,11 +49,6 @@
 
   outputs = { self, ... }@inputs:
     with inputs;
-    let
-      supportedSystems = with nixpkgs.lib; (intersectLists (platforms.x86_64 ++ platforms.aarch64) platforms.linux);
-
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-    in
     {
       lib = import ./lib;
 
@@ -82,13 +80,13 @@
 
       nixosConfigurations = {
         min = self.lib.defFlakeSystem {
-          inherit self inputs;
+          inherit self;
 
           modules = [ ./nixos/hosts/min/configuration.nix ];
         };
 
         dh-framework = self.lib.defFlakeSystem {
-          inherit self inputs;
+          inherit self;
 
           cpuVendor = "intel";
           workstation = true;
@@ -102,123 +100,120 @@
         };
 
         ashley = self.lib.defFlakeSystem {
-          inherit self inputs;
+          inherit self;
 
           modules = [ ./nixos/hosts/ashley/configuration.nix ];
         };
       };
 
-      checks = {
-        x86_64-linux = (nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel)) //
-          (import ./tests {
-            inherit home-manager;
+      checks.x86_64-linux = (nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel)) //
+      (import ./tests {
+        inherit home-manager;
 
-            pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          });
-      } // forAllSystems (system: {
-        pre-commit-check = pre-commit-hooks.lib."${system}".run {
-          src = ./.;
-          hooks = {
-            deadnix.enable = true;
-            nixpkgs-fmt.enable = true;
-            statix.enable = true;
-          };
-        };
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
       });
 
-      devShells = forAllSystems (system:
-        {
-          default =
-            let
-              pkgs = import nixpkgs-unstable {
-                inherit system;
-                overlays = [ sops-nix-unstable.overlay ];
-              };
-            in
-            pkgs.mkShell {
-              inherit (self.checks."${system}".pre-commit-check) shellHook;
-
-              nativeBuildInputs = with pkgs; [
-                # pre-commit
-                pre-commit
-
-                # Nix formatter
-                alejandra
-                nixfmt
-                nixpkgs-fmt
-
-                # Nix linting
-                deadnix
-                nix-linter
-                statix
-
-                # sops-nix
-                sops
-                sops-init-gpg-key
-                sops-import-keys-hook
-              ];
-
-              sopsPGPKeyDirs = [
-                ./keys/hosts
-                ./keys/users
-              ];
+    } // flake-utils.lib.eachDefaultSystem (system: {
+      checks.pre-commit-check = pre-commit-hooks.lib."${system}".run {
+        src = ./.;
+        hooks = {
+          deadnix.enable = true;
+          nixpkgs-fmt.enable = true;
+          statix.enable = true;
+        };
+      };
+      devShells = {
+        default =
+          let
+            pkgs = import nixpkgs-unstable {
+              inherit system;
+              overlays = [ sops-nix-unstable.overlay ];
             };
-          no-env =
-            let
-              pkgs = import nixpkgs-unstable {
-                inherit system;
-                overlays = [ sops-nix-unstable.overlay ];
-              };
-            in
-            pkgs.mkShell {
-              packages = with pkgs; [
-                git
-                gnupg
-                pinentry-qt
-                neovim
+          in
+          pkgs.mkShell {
+            inherit (self.checks."${system}".pre-commit-check) shellHook;
 
-                # pre-commit
-                pre-commit
+            nativeBuildInputs = with pkgs; [
+              # pre-commit
+              pre-commit
 
-                # Nix formatter
-                alejandra
-                nixfmt
-                nixpkgs-fmt
+              # Nix formatter
+              alejandra
+              nixfmt
+              nixpkgs-fmt
 
-                # Nix linting
-                deadnix
-                nix-linter
-                statix
+              # Nix linting
+              deadnix
+              nix-linter
+              statix
 
-                # sops-nix
-                sops
-                sops-init-gpg-key
-                sops-import-keys-hook
-              ];
+              # sops-nix
+              sops
+              sops-init-gpg-key
+              sops-import-keys-hook
+            ];
 
-              sopsPGPKeyDirs = [
-                ./keys/hosts
-                ./keys/users
-              ];
-
-              shellHook = ''
-                ${self.checks."${system}".pre-commit-check.shellHook}
-
-                alias g="git"
-                alias ga="git add"
-                alias gaa="git add --all"
-                alias gc="git commit"
-                alias gcmsg="git commit -m"
-                alias gd="git diff"
-                alias gl="git pull"
-                alias gp="git push"
-                alias gsb="git status -sb"
-                alias n="nix"
-                alias nfu="nix flake update"
-                alias nosswf="nixos-rebuild switch --use-remote-sudo --flake ."
-                alias v="nvim"
-              '';
+            sopsPGPKeyDirs = [
+              ./keys/hosts
+              ./keys/users
+            ];
+          };
+        no-env =
+          let
+            pkgs = import nixpkgs-unstable {
+              inherit system;
+              overlays = [ sops-nix-unstable.overlay ];
             };
-        });
-    };
+          in
+          pkgs.mkShell {
+            packages = with pkgs; [
+              git
+              gnupg
+              pinentry-qt
+              neovim
+
+              # pre-commit
+              pre-commit
+
+              # Nix formatter
+              alejandra
+              nixfmt
+              nixpkgs-fmt
+
+              # Nix linting
+              deadnix
+              nix-linter
+              statix
+
+              # sops-nix
+              sops
+              sops-init-gpg-key
+              sops-import-keys-hook
+            ];
+
+            sopsPGPKeyDirs = [
+              ./keys/hosts
+              ./keys/users
+            ];
+
+            shellHook = ''
+              ${self.checks."${system}".pre-commit-check.shellHook}
+
+              alias g="git"
+              alias ga="git add"
+              alias gaa="git add --all"
+              alias gc="git commit"
+              alias gcmsg="git commit -m"
+              alias gd="git diff"
+              alias gl="git pull"
+              alias gp="git push"
+              alias gsb="git status -sb"
+              alias n="nix"
+              alias nfu="nix flake update"
+              alias nosswf="nixos-rebuild switch --use-remote-sudo --flake ."
+              alias v="nvim"
+            '';
+          };
+      };
+    });
 }

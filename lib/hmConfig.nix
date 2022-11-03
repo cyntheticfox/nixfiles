@@ -1,15 +1,15 @@
-{ inputs
+{ self
 , username
 , system ? "x86_64-linux"
 , modules ? [ ]
 }:
-inputs.home-manager.lib.homeManagerConfiguration {
+self.inputs.home-manager.lib.homeManagerConfiguration {
   inherit system username;
 
   homeDirectory = "/home/${username}";
 
   configuration = _: {
-    imports = modules;
+    imports = modules ++ (builtins.attrValues self.outputs.homeModules);
 
     home.stateVersion = "22.05";
   };
