@@ -31,8 +31,9 @@ in
   };
 
   home.shellAliases = {
-    "vsplit" = "nvim -O2";
-    "vhsplit" = "nvim -o2";
+    "vdiff" = "nvim -d";
+    "vsplit" = "nvim -O3"; # Kinda wish I could just change the default behavior instead of this
+    "vsudo" = "sudo -- nvim -u ~/.config/nvim/init.vim";
   };
 
   programs.neovim = {
