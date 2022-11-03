@@ -459,11 +459,19 @@ in
               builtinBigger
               builtin
             ];
+            laptop = with screens; screenOrder [
+              builtinBigger
+              homeDockRight
+              homeDockRightFallback
+              homeDockCenter
+              homeDockLeft
+              builtin
+            ];
           in
           [
             {
               workspace = workspaces._1;
-              output = left;
+              output = laptop;
             }
             {
               workspace = workspaces._2;
@@ -479,7 +487,7 @@ in
             }
             {
               workspace = workspaces._5;
-              output = center;
+              output = left;
             }
             {
               workspace = workspaces._6;
