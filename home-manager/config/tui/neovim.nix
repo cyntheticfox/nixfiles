@@ -30,6 +30,11 @@ in
     "VISUAL" = "${config.programs.neovim.finalPackage}/bin/nvim -R";
   };
 
+  home.shellAliases = {
+    "vsplit" = "nvim -O2";
+    "vhsplit" = "nvim -o2";
+  };
+
   programs.neovim = {
     enable = true;
 
