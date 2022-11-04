@@ -31,8 +31,6 @@
     mozwire
   ];
 
-  # home.stateVersion = lib.mkDefault "22.05";
-
   sys = {
     fonts.enable = true;
     shell.enable = true;

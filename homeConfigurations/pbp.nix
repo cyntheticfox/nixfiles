@@ -9,5 +9,8 @@ _: {
     ../home-manager/config/tui/file.nix
   ];
 
-  home.stateVersion = "20.09";
+  sys = {
+    fonts.enable = true;
+    shell.enable = true;
+  };
 }

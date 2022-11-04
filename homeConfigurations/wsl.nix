@@ -11,8 +11,7 @@ _: {
     ../home-manager/config/tui/linters.nix
     ../home-manager/config/tui/lsp.nix
     ../home-manager/config/tui/networking.nix
-    ../home-manager/config/tui/shells.nix
   ];
 
-  home.stateVersion = "21.11";
+  sys.shell.enable = true;
 }
