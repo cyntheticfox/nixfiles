@@ -14,6 +14,20 @@ in
     aliases = mkOption {
       type = types.attrsOf types.string;
       default = {
+        "h" = "history";
+        "pg" = "pgrep";
+
+        # Editor aliases
+        "v" = config.home.sessionVariables.EDITOR;
+
+        # Make things human-readable
+        "dd" = "dd status=progress";
+        "df" = "df -Th";
+        "du" = "du -h";
+        "free" = "free -h";
+        "pkill" = "pkill -e";
+
+        # Additional git aliases
         "gcmsg" = "git commit --signoff -m";
         "gcmsga" = "git commit --signoff --all -m";
       };
@@ -204,6 +218,10 @@ in
       '';
     };
 
+    zoxide = mkEnableOption "Enable zoxide" // { default = true; };
+    z-lua = mkEnableOption "Enable z-lua";
+    autojump = mkEnableOption "Enable autojump";
+
     extraShells = mkOption {
       type = with types; nullOr (listOf package);
       default = with pkgs; [
@@ -220,6 +238,10 @@ in
     home.shellAliases = cfg.aliases;
 
     programs.zsh = mkIf (cfg.zsh != null) cfg.zsh;
+
+    programs.zoxide.enable = cfg.zoxide;
+    programs.z-lua.enable = cfg.z-lua;
+    programs.autojump.enable = cfg.autojump;
 
     programs.starship = mkIf (cfg.starship != null) cfg.starship;
   };
