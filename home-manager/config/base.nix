@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, ... }: {
   # Enable home-manager
   programs.home-manager.enable = true;
 
@@ -22,32 +22,32 @@
     ./tui/todo.nix
   ];
 
-  home.packages = with pkgs; [
-    curlie
-    dogdns
-    gping
-    procs
-    traceroute
-  ];
+  # home.packages = with pkgs; [
+  #   curlie
+  #   dogdns
+  #   gping
+  #   procs
+  #   traceroute
+  # ];
 
-  home.sessionVariables."PAGER" = "less";
+  # home.sessionVariables."PAGER" = "less";
 
-  home.shellAliases = {
-    "h" = "history";
-    "pg" = "pgrep";
+  # home.shellAliases = {
+  #   "h" = "history";
+  #   "pg" = "pgrep";
 
-    # Editor aliases
-    "v" = config.home.sessionVariables.EDITOR;
+  #   # Editor aliases
+  #   "v" = config.home.sessionVariables.EDITOR;
 
-    # Make things human-readable
-    "dd" = "dd status=progress";
-    "df" = "df -Th";
-    "du" = "du -h";
-    "free" = "free -h";
-    "pkill" = "pkill -e";
-  };
+  #   # Make things human-readable
+  #   "dd" = "dd status=progress";
+  #   "df" = "df -Th";
+  #   "du" = "du -h";
+  #   "free" = "free -h";
+  #   "pkill" = "pkill -e";
+  # };
 
-  programs.zoxide.enable = true;
+  # programs.zoxide.enable = true;
 
   xdg = {
     enable = true;
@@ -74,5 +74,5 @@
     };
   };
 
-  home.sessionPath = [ "${config.home.homeDirectory}/.cargo/bin" ];
+  # home.sessionPath = [ "${config.home.homeDirectory}/.cargo/bin" ];
 }

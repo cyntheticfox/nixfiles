@@ -11,6 +11,33 @@ in
       default = true;
     };
 
+    pager = mkOption {
+      type = types.nullOr types.string;
+      default = "${pkgs.less}/bin/less";
+      description = ''
+        CLI pager to use for the user. This gets set to the PAGER env
+        variable.
+      '';
+    };
+
+    editor = mkOption {
+      type = types.nullOr types.string;
+      default = "${pkgs.neovim}/bin/nvim";
+      description = ''
+        CLI editor to use for the user. This gets set to the EDITOR env
+        variable.
+      '';
+    };
+
+    viewer = mkOption {
+      type = types.nullOr types.string;
+      default = "${pkgs.neovim}/bin/nvim -R";
+      description = ''
+        CLI file viewer to use for the user. This gets set to the VISUAL env
+        variable.
+      '';
+    };
+
     aliases = mkOption {
       type = types.attrsOf types.string;
       default = {
@@ -236,13 +263,16 @@ in
     home.packages = cfg.extraShells;
 
     home.shellAliases = cfg.aliases;
+    home.sessionVariables = {
+      "PAGER" = cfg.pager;
+      "EDITOR" = cfg.editor;
+      "VISUAL" = cfg.viewer;
+    };
 
-    programs.zsh = mkIf (cfg.zsh != null) cfg.zsh;
-
-    programs.zoxide.enable = cfg.zoxide;
-    programs.z-lua.enable = cfg.z-lua;
     programs.autojump.enable = cfg.autojump;
-
     programs.starship = mkIf (cfg.starship != null) cfg.starship;
+    programs.z-lua.enable = cfg.z-lua;
+    programs.zoxide.enable = cfg.zoxide;
+    programs.zsh = mkIf (cfg.zsh != null) cfg.zsh;
   };
 }
