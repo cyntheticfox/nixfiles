@@ -33,7 +33,7 @@ in
       '';
     };
 
-    xdgConfig = mkEnableOption "Enable xdg dirs management" // { default = true; };
+    manageXDGConfig = mkEnableOption "Enable xdg dirs management" // { default = true; };
   };
 
   config = mkIf cfg.enable {
@@ -41,7 +41,7 @@ in
 
     home.sessionPath = cfg.extraPaths;
 
-    xdg = {
+    xdg = mkIf cfg.manageXDGConfig {
       enable = mkDefault true;
       cacheHome = mkDefault "${config.home.homeDirectory}/.cache";
       configHome = mkDefault "${config.home.homeDirectory}/.config";
