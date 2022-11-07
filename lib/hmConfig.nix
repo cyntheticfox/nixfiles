@@ -12,5 +12,7 @@ self.inputs.home-manager.lib.homeManagerConfiguration {
     imports = modules ++ (builtins.attrValues self.outputs.homeModules);
 
     home.stateVersion = "22.05";
+
+    programs.home-manager.enable = true;
   };
 }

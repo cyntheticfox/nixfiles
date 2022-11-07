@@ -1,6 +1,6 @@
-{ config, ... }: {
-  # Enable home-manager
-  programs.home-manager.enable = true;
+_: {
+  # # Enable home-manager
+  # programs.home-manager.enable = true;
 
   imports = [
     ./nix
@@ -49,30 +49,30 @@
 
   # programs.zoxide.enable = true;
 
-  xdg = {
-    enable = true;
-    cacheHome = "${config.home.homeDirectory}/.cache";
-    configHome = "${config.home.homeDirectory}/.config";
-    dataHome = "${config.home.homeDirectory}/.local/share";
-    stateHome = "${config.home.homeDirectory}/.local/state";
+  # xdg = {
+  #   enable = true;
+  #   cacheHome = "${config.home.homeDirectory}/.cache";
+  #   configHome = "${config.home.homeDirectory}/.config";
+  #   dataHome = "${config.home.homeDirectory}/.local/share";
+  #   stateHome = "${config.home.homeDirectory}/.local/state";
 
-    userDirs = {
-      enable = true;
+  #   userDirs = {
+  #     enable = true;
 
-      createDirectories = true;
+  #     createDirectories = true;
 
-      desktop = "${config.home.homeDirectory}";
-      documents = "${config.home.homeDirectory}/docs";
-      download = "${config.home.homeDirectory}/tmp";
-      music = "${config.home.homeDirectory}/music";
-      pictures = "${config.home.homeDirectory}/pics";
-      publicShare = "${config.home.homeDirectory}/public";
-      templates = "${config.home.homeDirectory}/.templates";
-      videos = "${config.home.homeDirectory}/videos";
+  #     desktop = "${config.home.homeDirectory}";
+  #     documents = "${config.home.homeDirectory}/docs";
+  #     download = "${config.home.homeDirectory}/tmp";
+  #     music = "${config.home.homeDirectory}/music";
+  #     pictures = "${config.home.homeDirectory}/pics";
+  #     publicShare = "${config.home.homeDirectory}/public";
+  #     templates = "${config.home.homeDirectory}/.templates";
+  #     videos = "${config.home.homeDirectory}/videos";
 
-      extraConfig.XDG_SECRETS_DIR = "${config.home.homeDirectory}/.secrets";
-    };
-  };
+  #     extraConfig.XDG_SECRETS_DIR = "${config.home.homeDirectory}/.secrets";
+  #   };
+  # };
 
   # home.sessionPath = [ "${config.home.homeDirectory}/.cargo/bin" ];
 }
