@@ -71,6 +71,8 @@ in
 
     manageExaConfig = mkEnableOption "Enable default exa config" // { default = true; };
 
+    manageTmuxConfig = mkEnableOption "Enable deafult tmux config" // { default = true; };
+
     zoxide = mkEnableOption "Enable zoxide" // { default = true; };
     z-lua = mkEnableOption "Enable z-lua";
     autojump = mkEnableOption "Enable autojump";
@@ -162,6 +164,36 @@ in
           unknown_indicator = "?";
         };
       };
+    };
+
+    programs.tmux = mkIf cfg.manageTmuxConfig {
+      enable = mkDefault true;
+      clock24 = mkDefault true;
+      keyMode = mkDefault "vi";
+      prefix = mkDefault "C-a";
+      shell = mkDefault "${pkgs.zsh}/bin/zsh";
+      plugins = with pkgs.tmuxPlugins; mkDefault [
+        cpu
+        prefix-highlight
+        resurrect
+      ];
+
+      extraConfig = mkDefault ''
+        # Configure looks
+        set -g status on
+        set -g status-fg 'colour15'
+        set -g status-bg 'colour8'
+        set -g status-left-length '100'
+        set -g status-right-length '100'
+        set -g status-position 'top'
+        set -g status-left '#[fg=colour15,bold] #S '
+        set -g status-right '#[fg=colour0,bg=colour8]#[fg=colour6,bg=colour0] %Y-%m-%d %H:%M '
+        set-window-option -g status-fg 'colour15'
+        set-window-option -g status-bg 'colour8'
+        set-window-option -g window-status-separator ''''''
+        set-window-option -g window-status-format '#[fg=colour15,bg=colour8] #I #W '
+        set-window-option -g window-status-current-format '#[fg=colour8,bg=colour4]#[fg=colour0] #I  #W #[fg=colour4,bg=colour8]'
+      '';
     };
 
     programs.zsh = mkIf cfg.manageZshConfig {

@@ -18,8 +18,7 @@ _: {
     ./tui/passwords.nix
     # ./tui/shell.nix
     ./tui/ssh.nix
-    ./tui/tmux.nix
-    ./tui/todo.nix
+    # ./tui/tmux.nix
   ];
 
   # home.packages = with pkgs; [
