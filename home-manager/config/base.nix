@@ -5,7 +5,7 @@ _: {
   imports = [
     ./nix
     # ./tui/bat.nix
-    ./tui/exa.nix
+    # ./tui/exa.nix
     ./tui/file.nix
     ./tui/fuse.nix
     ./tui/git.nix

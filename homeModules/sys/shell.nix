@@ -69,6 +69,8 @@ in
 
     manageBatConfig = mkEnableOption "Enable default bat config" // { default = true; };
 
+    manageExaConfig = mkEnableOption "Enable default exa config" // { default = true; };
+
     zoxide = mkEnableOption "Enable zoxide" // { default = true; };
     z-lua = mkEnableOption "Enable z-lua";
     autojump = mkEnableOption "Enable autojump";
@@ -86,7 +88,19 @@ in
   config = mkIf cfg.enable {
     home.packages = cfg.extraShells;
 
-    home.shellAliases = cfg.aliases // (mkIf cfg.manageBatConfig { "cat" = "bat"; });
+    home.shellAliases = cfg.aliases // (
+      mkIf cfg.manageBatConfig {
+        "cat" = "bat";
+      }
+    ) // (
+      mkIf cfg.manageExaConfig {
+        "l" = "exa --classify --color=always --icons";
+        "ls" = "exa --classify --color=always --icons";
+        "la" = "exa --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
+        "ll" = "exa --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
+        "tree" = "exa --classify --color=always --icons --long --all --binary --group --header --git --color-scale --tree";
+      }
+    );
     home.sessionVariables = {
       "PAGER" = cfg.pager;
       "EDITOR" = cfg.editor;
@@ -105,6 +119,10 @@ in
         italic-text = "always";
         style = "full";
       };
+    };
+
+    programs.exa = mkIf cfg.manageExaConfig {
+      enable = mkDefault true;
     };
 
     programs.starship = mkIf cfg.manageStarshipConfig {
