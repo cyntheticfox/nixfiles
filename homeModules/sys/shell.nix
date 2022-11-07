@@ -67,6 +67,8 @@ in
 
     manageStarshipConfig = mkEnableOption "Enable default starship config" // { default = true; };
 
+    manageBatConfig = mkEnableOption "Enable default bat config" // { default = true; };
+
     zoxide = mkEnableOption "Enable zoxide" // { default = true; };
     z-lua = mkEnableOption "Enable z-lua";
     autojump = mkEnableOption "Enable autojump";
@@ -84,7 +86,7 @@ in
   config = mkIf cfg.enable {
     home.packages = cfg.extraShells;
 
-    home.shellAliases = cfg.aliases;
+    home.shellAliases = cfg.aliases // (mkIf cfg.manageBatConfig { "cat" = "bat"; });
     home.sessionVariables = {
       "PAGER" = cfg.pager;
       "EDITOR" = cfg.editor;
@@ -94,6 +96,16 @@ in
     programs.autojump.enable = cfg.autojump;
     programs.z-lua.enable = cfg.z-lua;
     programs.zoxide.enable = cfg.zoxide;
+
+    programs.bat = mkIf cfg.manageBatConfig {
+      enable = mkDefault true;
+
+      config = mkDefault {
+        theme = "base16";
+        italic-text = "always";
+        style = "full";
+      };
+    };
 
     programs.starship = mkIf cfg.manageStarshipConfig {
       enable = mkDefault true;
