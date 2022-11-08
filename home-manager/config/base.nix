@@ -3,7 +3,7 @@ _: {
   # programs.home-manager.enable = true;
 
   imports = [
-    ./nix
+    # ./nix
     # ./tui/bat.nix
     # ./tui/exa.nix
     ./tui/file.nix
