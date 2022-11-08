@@ -11,7 +11,7 @@ _: {
     ./tui/git.nix
     ./tui/gnupg.nix
     ./tui/htop.nix
-    ./tui/less.nix
+    # ./tui/less.nix
     ./tui/man.nix
     ./tui/neofetch.nix
     ./tui/neovim.nix

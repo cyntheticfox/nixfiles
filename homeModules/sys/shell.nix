@@ -63,15 +63,13 @@ in
       '';
     };
 
-    manageZshConfig = mkEnableOption "Enable default zsh config" // { default = true; };
-
-    manageStarshipConfig = mkEnableOption "Enable default starship config" // { default = true; };
 
     manageBatConfig = mkEnableOption "Enable default bat config" // { default = true; };
-
     manageExaConfig = mkEnableOption "Enable default exa config" // { default = true; };
-
+    manageLessConfig = mkEnableOption "Enable default less config" // { default = true; };
     manageTmuxConfig = mkEnableOption "Enable deafult tmux config" // { default = true; };
+    manageStarshipConfig = mkEnableOption "Enable default starship config" // { default = true; };
+    manageZshConfig = mkEnableOption "Enable default zsh config" // { default = true; };
 
     zoxide = mkEnableOption "Enable zoxide" // { default = true; };
     z-lua = mkEnableOption "Enable z-lua";
@@ -126,6 +124,12 @@ in
       programs.exa = {
         enable = mkDefault true;
       };
+    })
+    (mkIf cfg.manageLessConfig {
+      home.shellAliases."more" = "less";
+
+      # TODO: Figure out a lesskey config
+      programs.less.enable = true;
     })
     (mkIf cfg.manageStarshipConfig {
       programs.starship = {
