@@ -67,5 +67,6 @@ import nmt {
   testedAttrPath = [ "home" "activationPackage" ];
   tests = builtins.foldl' (a: b: a // (import b)) { } [
     ./sys
+    ./programs
   ];
 }

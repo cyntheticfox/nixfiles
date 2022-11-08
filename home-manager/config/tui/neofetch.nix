@@ -25,18 +25,18 @@
         info "Memory" memory
 
         info cols
-      }
+    }
 
-      kernel_shorthand="on"
-      distro_shorthand="off"
-      os_arch="on"
-      uptime_shorthand="tiny"
-      memory_percent="on"
-      package_managers="on"
-      speed_shorthand="on"
-      cpu_temp="on"
-      refresh_rate="on"
-      gtk_shorthand="on"
-      image_backend="kitty"
+    kernel_shorthand="on"
+    distro_shorthand="off"
+    os_arch="on"
+    uptime_shorthand="tiny"
+    memory_percent="on"
+    package_managers="on"
+    speed_shorthand="on"
+    cpu_temp="on"
+    refresh_rate="on"
+    gtk_shorthand="on"
+    image_backend="kitty"
   '';
 }

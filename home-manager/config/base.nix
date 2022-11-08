@@ -15,7 +15,7 @@ _: {
     ./tui/man.nix
     ./tui/neofetch.nix
     ./tui/neovim.nix
-    ./tui/passwords.nix
+    # ./tui/passwords.nix
     # ./tui/shell.nix
     ./tui/ssh.nix
     # ./tui/tmux.nix

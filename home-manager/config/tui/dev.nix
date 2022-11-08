@@ -45,8 +45,8 @@
     settings = {
       git_protocol = "ssh";
       prompt = "enabled";
-      pager = config.home.sessionVariables.PAGER;
-      editor = config.home.sessionVariables.EDITOR;
+      pager = config.home.sessionVariables.PAGER or "less";
+      editor = config.home.sessionVariables.EDITOR or "nano";
       aliases = {
         co = "pr checkout";
         pv = "pr view";

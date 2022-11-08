@@ -87,248 +87,250 @@ in
   };
 
 
-  config = mkIf cfg.enable {
-    home.packages = cfg.extraShells;
+  config = mkIf cfg.enable (mkMerge [
+    {
+      home.packages = cfg.extraShells;
+      home.shellAliases = cfg.aliases;
+      home.sessionVariables = mkDefault {
+        "PAGER" = cfg.pager;
+        "EDITOR" = cfg.editor;
+        "VISUAL" = cfg.viewer;
+      };
 
-    home.shellAliases = cfg.aliases // (
-      mkIf cfg.manageBatConfig {
-        "cat" = "bat";
-      }
-    ) // (
-      mkIf cfg.manageExaConfig {
+      programs.autojump.enable = cfg.autojump;
+      programs.z-lua.enable = cfg.z-lua;
+      programs.zoxide.enable = cfg.zoxide;
+    }
+    (mkIf cfg.manageBatConfig {
+      home.shellAliases."cat" = "bat";
+
+      programs.bat = {
+        enable = mkDefault true;
+
+        config = mkDefault {
+          theme = "base16";
+          italic-text = "always";
+          style = "full";
+        };
+      };
+    })
+    (mkIf cfg.manageExaConfig {
+      home.shellAliases = {
         "l" = "exa --classify --color=always --icons";
         "ls" = "exa --classify --color=always --icons";
         "la" = "exa --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
         "ll" = "exa --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
         "tree" = "exa --classify --color=always --icons --long --all --binary --group --header --git --color-scale --tree";
-      }
-    );
-    home.sessionVariables = {
-      "PAGER" = cfg.pager;
-      "EDITOR" = cfg.editor;
-      "VISUAL" = cfg.viewer;
-    };
-
-    programs.autojump.enable = cfg.autojump;
-    programs.z-lua.enable = cfg.z-lua;
-    programs.zoxide.enable = cfg.zoxide;
-
-    programs.bat = mkIf cfg.manageBatConfig {
-      enable = mkDefault true;
-
-      config = mkDefault {
-        theme = "base16";
-        italic-text = "always";
-        style = "full";
-      };
-    };
-
-    programs.exa = mkIf cfg.manageExaConfig {
-      enable = mkDefault true;
-    };
-
-    programs.starship = mkIf cfg.manageStarshipConfig {
-      enable = mkDefault true;
-
-      package = mkDefault pkgs.starship;
-
-      settings = mkDefault {
-        add_newline = true;
-        scan_timeout = 100;
-
-        username = {
-          format = "[$user]($style) in ";
-          show_always = true;
-          disabled = false;
-        };
-
-        hostname = {
-          ssh_only = false;
-          format = "⟨[$hostname](bold green)⟩ in ";
-          disabled = false;
-        };
-
-        directory = {
-          truncation_length = 3;
-          fish_style_pwd_dir_length = 1;
-        };
-
-        shell = {
-          disabled = false;
-          bash_indicator = "bash";
-          fish_indicator = "fish";
-          powershell_indicator = "pwsh";
-          elvish_indicator = "elvish";
-          tcsh_indicator = "tcsh";
-          xonsh_indicator = "xonsh";
-          unknown_indicator = "?";
-        };
-      };
-    };
-
-    programs.tmux = mkIf cfg.manageTmuxConfig {
-      enable = mkDefault true;
-      clock24 = mkDefault true;
-      keyMode = mkDefault "vi";
-      prefix = mkDefault "C-a";
-      shell = mkDefault "${pkgs.zsh}/bin/zsh";
-      plugins = with pkgs.tmuxPlugins; mkDefault [
-        cpu
-        prefix-highlight
-        resurrect
-      ];
-
-      extraConfig = mkDefault ''
-        # Configure looks
-        set -g status on
-        set -g status-fg 'colour15'
-        set -g status-bg 'colour8'
-        set -g status-left-length '100'
-        set -g status-right-length '100'
-        set -g status-position 'top'
-        set -g status-left '#[fg=colour15,bold] #S '
-        set -g status-right '#[fg=colour0,bg=colour8]#[fg=colour6,bg=colour0] %Y-%m-%d %H:%M '
-        set-window-option -g status-fg 'colour15'
-        set-window-option -g status-bg 'colour8'
-        set-window-option -g window-status-separator ''''''
-        set-window-option -g window-status-format '#[fg=colour15,bg=colour8] #I #W '
-        set-window-option -g window-status-current-format '#[fg=colour8,bg=colour4]#[fg=colour0] #I  #W #[fg=colour4,bg=colour8]'
-      '';
-    };
-
-    programs.zsh = mkIf cfg.manageZshConfig {
-      enable = mkDefault true;
-      dotDir = mkDefault ".config/zsh";
-
-      shellGlobalAliases = mkDefault {
-        "UUID" = "$(uuidgen | tr -d \\n)";
       };
 
-      defaultKeymap = mkDefault "viins";
-
-      initExtra = mkDefault ''
-        function gcmsgap() {
-          git commit --signoff --all -m $@ && git push
-        }
-
-        function gcmsgapf() {
-          git commit --signoff --all -m $@ && git push --force-with-lease
-        }
-
-        function gcmsgapf!() {
-          git commit --signoff --all -m $@ && git push --force
-        }
-
-        function gcmsgp() {
-          git commit --signoff -m $@ && git push
-        }
-
-        function gcmsgpf() {
-          git commit --signoff -m $@ && git push --force-with-lease
-        }
-
-        function gcmsgpf!() {
-          git commit --signoff -m $@ && git push --force
-        }
-      '';
-
-      enableAutosuggestions = mkDefault true;
-      oh-my-zsh = {
+      programs.exa = {
+        enable = mkDefault true;
+      };
+    })
+    (mkIf cfg.manageStarshipConfig {
+      programs.starship = {
         enable = mkDefault true;
 
-        plugins = mkDefault [
-          "aliases"
-          "aws"
-          "colored-man-pages"
-          "command-not-found"
-          "docker"
-          "encode64"
-          "fd"
-          "gh"
-          "git"
-          "git-auto-fetch"
-          "git-extras"
-          "git-flow"
-          "git-lfs"
-          "golang"
-          "isodate"
-          "python"
-          "ripgrep"
-          "rust"
-          "systemd"
-          "systemadmin"
-          "tig"
-          "terraform"
-          "tmux"
-          "urltools"
-          "web-search"
+        package = mkDefault pkgs.starship;
+
+        settings = mkDefault {
+          add_newline = true;
+          scan_timeout = 100;
+
+          username = {
+            format = "[$user]($style) in ";
+            show_always = true;
+            disabled = false;
+          };
+
+          hostname = {
+            ssh_only = false;
+            format = "⟨[$hostname](bold green)⟩ in ";
+            disabled = false;
+          };
+
+          directory = {
+            truncation_length = 3;
+            fish_style_pwd_dir_length = 1;
+          };
+
+          shell = {
+            disabled = false;
+            bash_indicator = "bash";
+            fish_indicator = "fish";
+            powershell_indicator = "pwsh";
+            elvish_indicator = "elvish";
+            tcsh_indicator = "tcsh";
+            xonsh_indicator = "xonsh";
+            unknown_indicator = "?";
+          };
+        };
+      };
+    })
+    (mkIf cfg.manageTmuxConfig {
+      programs.tmux = mkIf cfg.manageTmuxConfig {
+        enable = mkDefault true;
+        clock24 = mkDefault true;
+        keyMode = mkDefault "vi";
+        prefix = mkDefault "C-a";
+        shell = mkDefault "${pkgs.zsh}/bin/zsh";
+        plugins = with pkgs.tmuxPlugins; mkDefault [
+          cpu
+          prefix-highlight
+          resurrect
         ];
+
+        extraConfig = mkDefault ''
+          # Configure looks
+          set -g status on
+          set -g status-fg 'colour15'
+          set -g status-bg 'colour8'
+          set -g status-left-length '100'
+          set -g status-right-length '100'
+          set -g status-position 'top'
+          set -g status-left '#[fg=colour15,bold] #S '
+          set -g status-right '#[fg=colour0,bg=colour8]#[fg=colour6,bg=colour0] %Y-%m-%d %H:%M '
+          set-window-option -g status-fg 'colour15'
+          set-window-option -g status-bg 'colour8'
+          set-window-option -g window-status-separator ''''''
+          set-window-option -g window-status-format '#[fg=colour15,bg=colour8] #I #W '
+          set-window-option -g window-status-current-format '#[fg=colour8,bg=colour4]#[fg=colour0] #I  #W #[fg=colour4,bg=colour8]'
+        '';
       };
+    })
+    (mkIf cfg.manageZshConfig {
+      programs.zsh = {
+        enable = mkDefault true;
+        dotDir = ".config/zsh";
 
-      plugins = mkDefault [
-        {
-          name = "zsh-completions";
-          src = pkgs.fetchFromGitHub {
-            owner = "zsh-users";
-            repo = "zsh-completions";
-            rev = "0.33.0";
-            sha256 = "sha256-cQSKjQhhOm3Rvnx9V6LAmtuPp/ht/O0IimpunoQlQW8=";
-          };
-        }
-        {
-          name = "fast-syntax-highlighting";
-          src = pkgs.fetchFromGitHub {
-            owner = "zdharma-continuum";
-            repo = "fast-syntax-highlighting";
-            rev = "v1.55";
-            sha256 = "sha256-DWVFBoICroKaKgByLmDEo4O+xo6eA8YO792g8t8R7kA=";
-          };
-        }
-        {
-          name = "history-search-multi-word";
-          src = pkgs.fetchFromGitHub {
-            owner = "zdharma-continuum";
-            repo = "history-search-multi-word";
-            rev = "5b44d8cea12351d91fbdc3697916556f59f14b8c";
-            sha256 = "sha256-B+I53Y2E6dB2hqSc75FkYwzY4qAVMGzcNWu8ZXytIoc=";
-          };
-        }
-        {
-          name = "zsh-you-should-use";
-          src = pkgs.fetchFromGitHub {
-            owner = "MichaelAquilina";
-            repo = "zsh-you-should-use";
-            rev = "1.7.3";
-            sha256 = "sha256-/uVFyplnlg9mETMi7myIndO6IG7Wr9M7xDFfY1pG5Lc=";
-          };
-        }
-      ];
+        shellGlobalAliases = {
+          "UUID" = "$(uuidgen | tr -d \\n)";
+        };
 
-      history = mkDefault {
-        size = 102400;
-        save = 10240;
-        ignorePatterns = [
-          "rm *"
-          "pkill *"
-          "cd *"
+        defaultKeymap = "viins";
+
+        initExtra = ''
+          function gcmsgap() {
+            git commit --signoff --all -m $@ && git push
+          }
+
+          function gcmsgapf() {
+            git commit --signoff --all -m $@ && git push --force-with-lease
+          }
+
+          function gcmsgapf!() {
+            git commit --signoff --all -m $@ && git push --force
+          }
+
+          function gcmsgp() {
+            git commit --signoff -m $@ && git push
+          }
+
+          function gcmsgpf() {
+            git commit --signoff -m $@ && git push --force-with-lease
+          }
+
+          function gcmsgpf!() {
+            git commit --signoff -m $@ && git push --force
+          }
+        '';
+
+        enableAutosuggestions = true;
+        oh-my-zsh = {
+          enable = true;
+
+          plugins = [
+            "aliases"
+            "aws"
+            "colored-man-pages"
+            "command-not-found"
+            "docker"
+            "encode64"
+            "fd"
+            "gh"
+            "git"
+            "git-auto-fetch"
+            "git-extras"
+            "git-flow"
+            "git-lfs"
+            "golang"
+            "isodate"
+            "python"
+            "ripgrep"
+            "rust"
+            "systemd"
+            "systemadmin"
+            "tig"
+            "terraform"
+            "tmux"
+            "urltools"
+            "web-search"
+          ];
+        };
+
+        plugins = [
+          {
+            name = "zsh-completions";
+            src = pkgs.fetchFromGitHub {
+              owner = "zsh-users";
+              repo = "zsh-completions";
+              rev = "0.33.0";
+              sha256 = "sha256-cQSKjQhhOm3Rvnx9V6LAmtuPp/ht/O0IimpunoQlQW8=";
+            };
+          }
+          {
+            name = "fast-syntax-highlighting";
+            src = pkgs.fetchFromGitHub {
+              owner = "zdharma-continuum";
+              repo = "fast-syntax-highlighting";
+              rev = "v1.55";
+              sha256 = "sha256-DWVFBoICroKaKgByLmDEo4O+xo6eA8YO792g8t8R7kA=";
+            };
+          }
+          {
+            name = "history-search-multi-word";
+            src = pkgs.fetchFromGitHub {
+              owner = "zdharma-continuum";
+              repo = "history-search-multi-word";
+              rev = "5b44d8cea12351d91fbdc3697916556f59f14b8c";
+              sha256 = "sha256-B+I53Y2E6dB2hqSc75FkYwzY4qAVMGzcNWu8ZXytIoc=";
+            };
+          }
+          {
+            name = "zsh-you-should-use";
+            src = pkgs.fetchFromGitHub {
+              owner = "MichaelAquilina";
+              repo = "zsh-you-should-use";
+              rev = "1.7.3";
+              sha256 = "sha256-/uVFyplnlg9mETMi7myIndO6IG7Wr9M7xDFfY1pG5Lc=";
+            };
+          }
         ];
-        expireDuplicatesFirst = true;
+
+        history = {
+          size = 102400;
+          save = 10240;
+          ignorePatterns = [
+            "rm *"
+            "pkill *"
+            "cd *"
+          ];
+          expireDuplicatesFirst = true;
+        };
+
+        sessionVariables."ZSH_AUTOSUGGEST_USE_ASYNC" = "1";
+
+        initExtraFirst = ''
+          setopt AUTO_CD
+          setopt PUSHD_IGNORE_DUPS
+          setopt PUSHD_SILENT
+
+          setopt ALWAYS_TO_END
+          setopt AUTO_MENU
+          setopt COMPLETE_IN_WORD
+          setopt FLOW_CONTROL
+        '';
       };
-
-      sessionVariables = mkDefault {
-        "ZSH_AUTOSUGGEST_USE_ASYNC" = "1";
-      };
-
-      initExtraFirst = mkDefault ''
-        setopt AUTO_CD
-        setopt PUSHD_IGNORE_DUPS
-        setopt PUSHD_SILENT
-
-        setopt ALWAYS_TO_END
-        setopt AUTO_MENU
-        setopt COMPLETE_IN_WORD
-        setopt FLOW_CONTROL
-      '';
-    };
-  };
+    })
+  ]);
 }
