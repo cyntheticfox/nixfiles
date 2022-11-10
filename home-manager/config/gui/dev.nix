@@ -9,6 +9,7 @@
   home.packages = with pkgs; [
     neovim-qt
     postman
+    wl-color-picker
     vscode
   ];
 }
