@@ -45,7 +45,7 @@ in
     }
     (mkIf cfg.manageNixConfig
       {
-        home.packages = with pkgs; [ nixos-unstable.comma ];
+        home.packages = with pkgs; [ comma ];
         home.shellAliases = {
           ### Nix Aliases
           # TODO: Make this a separate like OMZ module?
