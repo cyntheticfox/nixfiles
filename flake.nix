@@ -2,7 +2,7 @@
   description = "Personal dotfiles";
 
   nixConfig = {
-    extra-experimental-features = "nix-command flakes";
+    extra-experimental-features = "nix-command flakes ca-derivations";
     extra-substituters =
       "https://cache.nixos.org https://nix-community.cachix.org";
     extra-trusted-public-keys =
