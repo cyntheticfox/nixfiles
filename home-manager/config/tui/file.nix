@@ -7,7 +7,7 @@
     file
     fd
     glow
-    nixos-unstable.fq
+    nixpkgs-unstable.fq
     p7zip
     ripgrep
     unzip

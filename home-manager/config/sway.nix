@@ -159,7 +159,7 @@ in
   wayland.windowManager.sway = {
     enable = true;
 
-    package = pkgs.nixos-unstable.sway;
+    package = pkgs.nixpkgs-unstable.sway;
 
     wrapperFeatures.gtk = true;
     systemdIntegration = true;
@@ -861,7 +861,7 @@ in
 
   programs.rofi = {
     enable = true;
-    package = pkgs.nixos-unstable.rofi-wayland;
+    package = pkgs.nixpkgs-unstable.rofi-wayland;
     terminal = config.home.sessionVariables.TERMINAL;
     font = "Fira Sans 14";
     theme = "android_notification";

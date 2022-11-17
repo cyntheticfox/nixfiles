@@ -12,7 +12,7 @@
     # Steam
     steam
     winetricks
-    nixos-unstable.wine-wayland
+    nixpkgs-unstable.wine-wayland
     protontricks
 
     # Other games

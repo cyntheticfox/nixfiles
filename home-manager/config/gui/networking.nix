@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
-    nixos-unstable.burpsuite
+    nixpkgs-unstable.burpsuite
     mozillavpn
     wireshark
   ];

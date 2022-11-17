@@ -10,12 +10,8 @@
   };
 
   inputs = {
-    nixos.url = "github:NixOS/nixpkgs/nixos-22.05";
-    nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-
-    nixpkgs.url = "github:NixOS/nixpkgs/release-22.05";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
@@ -27,17 +23,12 @@
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixos";
-    };
-
-    sops-nix-unstable = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixos-unstable";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     home-manager = {
       url = "github:nix-community/home-manager/release-22.05";
-      inputs.nixpkgs.follows = "nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
       inputs.utils.follows = "flake-utils";
     };
 
@@ -127,7 +118,7 @@
           let
             pkgs = import nixpkgs-unstable {
               inherit system;
-              overlays = [ sops-nix-unstable.overlay ];
+              overlays = [ sops-nix.overlay ];
             };
           in
           pkgs.mkShell {
@@ -162,7 +153,7 @@
           let
             pkgs = import nixpkgs-unstable {
               inherit system;
-              overlays = [ sops-nix-unstable.overlay ];
+              overlays = [ sops-nix.overlay ];
             };
           in
           pkgs.mkShell {

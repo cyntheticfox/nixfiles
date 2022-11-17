@@ -89,11 +89,11 @@ in
 
           "ns" = "nix search";
           "nsn" = "nix search nixpkgs";
-          "nsm" = "nix search nixpkgs-master";
           "nsu" = "nix search nixpkgs-unstable";
 
           "nsh" = "nix shell";
-          "nshn" = "nix shell nixpkgs";
+          # TODO: Replace w/ working function
+          # "nshn" = "nix shell nixpkgs";
 
           "nst" = "nix store";
         } // (if nixosConfig != null then {
@@ -120,28 +120,8 @@ in
         nix.registry = mkDefault {
           ### Nixpkgs
           #
-          nixpkgs-master.to = {
-            type = "github";
-            owner = "NixOS";
-            repo = "nixpkgs";
-            ref = "master";
-          };
-
-          nixpkgs-staging.to = {
-            type = "github";
-            owner = "NixOS";
-            repo = "nixpkgs";
-            ref = "staging";
-          };
 
           nixpkgs-unstable.to = {
-            type = "github";
-            owner = "NixOS";
-            repo = "nixpkgs";
-            ref = "nixpkgs-unstable";
-          };
-
-          nixos-unstable.to = {
             type = "github";
             owner = "NixOS";
             repo = "nixpkgs";
@@ -149,19 +129,11 @@ in
           };
 
           # TODO: Make dynamic
-          nixos-stable.to = {
+          nixpkgs.to = {
             type = "github";
             owner = "NixOS";
             repo = "nixpkgs";
-            ref = "nixos-20.05";
-          };
-
-          # TODO: Make dynamic
-          nixpkgs-stable.to = {
-            type = "github";
-            owner = "NixOS";
-            repo = "nixpkgs";
-            ref = "release-20.05";
+            ref = "nixos-22.05";
           };
 
           ### Other people's configs

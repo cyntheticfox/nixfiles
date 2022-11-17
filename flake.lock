@@ -33,7 +33,7 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
-          "nixos"
+          "nixpkgs"
         ]
       },
       "locked": {
@@ -81,22 +81,6 @@
         "type": "github"
       }
     },
-    "nixos": {
-      "locked": {
-        "lastModified": 1668543224,
-        "narHash": "sha256-wKeb21iBIV7ggdWGcs0y0kXWCJrNfQjpl5k6Q3rikXA=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "814f8f3363cecee7cce314286846e4da5e92d689",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-22.05",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixos-hardware": {
       "locked": {
         "lastModified": 1668334946,
@@ -112,34 +96,18 @@
         "type": "github"
       }
     },
-    "nixos-unstable": {
-      "locked": {
-        "lastModified": 1668596599,
-        "narHash": "sha256-rhHyZTGI31/OfgYa9xF49UTchDXTI94pEsSNa0fOkpk=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "b457130e8a21608675ddf12c7d85227b22a27112",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1668687671,
-        "narHash": "sha256-AjohNUoSuZMYlrusYo3esjt73VE/vb885N7hMfR0nTY=",
+        "lastModified": 1668595291,
+        "narHash": "sha256-j8cyfbtT5sAYPYwbERgTDzfD48ZernL0/V668eGpXAM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "80664d4f557e83512e8adb0fc2751438cb849eca",
+        "rev": "6474d93e007e4d165bcf48e7f87de2175c93d10b",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "release-22.05",
+        "ref": "nixos-22.05",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -160,50 +128,18 @@
         "type": "github"
       }
     },
-    "nixpkgs-22_05_2": {
-      "locked": {
-        "lastModified": 1668307144,
-        "narHash": "sha256-uY2StvGJvTfgtLaiz3uvX+EQeWZDkiLFiz2vekgJ9ZE=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "eac99848dfd869e486573d8272b0c10729675ca2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "release-22.05",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs-master": {
-      "locked": {
-        "lastModified": 1668691720,
-        "narHash": "sha256-NiJYG4lPU1mWFZJkpMd5js9rjIk/hZWchiPOJjVPvAQ=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "9959fe259d84b969fefa3c541e9e5a4ed381387d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1668650906,
-        "narHash": "sha256-JuiYfDO23O8oxUUOmhQflmOoJovyC5G4RjcYQMQjrRE=",
+        "lastModified": 1668596599,
+        "narHash": "sha256-rhHyZTGI31/OfgYa9xF49UTchDXTI94pEsSNa0fOkpk=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "3a86856a13c88c8c64ea32082a851fefc79aa700",
+        "rev": "b457130e8a21608675ddf12c7d85227b22a27112",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixpkgs-unstable",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -235,44 +171,19 @@
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "nix-index-database": "nix-index-database",
-        "nixos": "nixos",
         "nixos-hardware": "nixos-hardware",
-        "nixos-unstable": "nixos-unstable",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "pre-commit-hooks": "pre-commit-hooks",
-        "sops-nix": "sops-nix",
-        "sops-nix-unstable": "sops-nix-unstable"
+        "sops-nix": "sops-nix"
       }
     },
     "sops-nix": {
       "inputs": {
         "nixpkgs": [
-          "nixos"
+          "nixpkgs-unstable"
         ],
         "nixpkgs-22_05": "nixpkgs-22_05"
-      },
-      "locked": {
-        "lastModified": 1668311578,
-        "narHash": "sha256-nF6mwSbVyvnlIICWFZlADegWdTsgrk1pZnA/0VqByNw=",
-        "owner": "Mic92",
-        "repo": "sops-nix",
-        "rev": "39f0fe57f1ef78764c1abc1de145f091fee1bbbb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Mic92",
-        "repo": "sops-nix",
-        "type": "github"
-      }
-    },
-    "sops-nix-unstable": {
-      "inputs": {
-        "nixpkgs": [
-          "nixos-unstable"
-        ],
-        "nixpkgs-22_05": "nixpkgs-22_05_2"
       },
       "locked": {
         "lastModified": 1668311578,

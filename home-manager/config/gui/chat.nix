@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
-    nixpkgs-master.discord
+    nixpkgs-unstable.discord
     nixpkgs-unstable.element-desktop
   ];
 
