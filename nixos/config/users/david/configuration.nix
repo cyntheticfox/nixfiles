@@ -133,6 +133,7 @@ in
       ".cache/mesa_shader_cache"
       ".cache/virt-manager"
       ".cargo/registry"
+      ".local/share/bash"
       ".local/share/containers"
       ".local/share/direnv/allow"
       ".local/share/libvirt"
@@ -142,6 +143,7 @@ in
       ".local/share/PrismLauncher"
       ".local/share/Steam"
       ".local/share/zoxide"
+      ".local/share/zsh"
       ".local/state/wireplumber"
       ".minikube/cache"
       ".terraform.d"
@@ -154,7 +156,6 @@ in
     files = [
       ".local/share/beets/import.log"
       ".local/share/nix/trusted-settings.json"
-      ".zsh_history"
     ];
   };
 }

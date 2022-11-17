@@ -63,7 +63,7 @@ in
       '';
     };
 
-
+    manageBashConfig = mkEnableOption "Enable default bash config" // { default = true; };
     manageBatConfig = mkEnableOption "Enable default bat config" // { default = true; };
     manageExaConfig = mkEnableOption "Enable default exa config" // { default = true; };
     manageLessConfig = mkEnableOption "Enable default less config" // { default = true; };
@@ -99,6 +99,46 @@ in
       programs.z-lua.enable = cfg.z-lua;
       programs.zoxide.enable = cfg.zoxide;
     }
+    (mkIf cfg.manageBashConfig {
+      programs.bash = {
+        enable = true;
+
+        historyFile = "${config.xdg.dataHome}/bash/bash_history";
+        historyControl = [ "ignoredups" "ignorespace" ];
+        historyIgnore = [
+          "cd"
+          "exit"
+          "pkill"
+          "rm"
+        ];
+
+        initExtra = ''
+          function gcmsgap() {
+            git commit --signoff --all -m $@ && git push
+          }
+
+          function gcmsgapf() {
+            git commit --signoff --all -m $@ && git push --force-with-lease
+          }
+
+          function gcmsgapf!() {
+            git commit --signoff --all -m $@ && git push --force
+          }
+
+          function gcmsgp() {
+            git commit --signoff -m $@ && git push
+          }
+
+          function gcmsgpf() {
+            git commit --signoff -m $@ && git push --force-with-lease
+          }
+
+          function gcmsgpf!() {
+            git commit --signoff -m $@ && git push --force
+          }
+        '';
+      };
+    })
     (mkIf cfg.manageBatConfig {
       home.shellAliases."cat" = "bat";
 
@@ -312,12 +352,15 @@ in
         ];
 
         history = {
+          path = "${config.xdg.dataHome}/zsh/zsh_history";
           size = 102400;
-          save = 10240;
+          save = 1024000;
+
           ignorePatterns = [
+            "cd *"
+            "exit *"
             "rm *"
             "pkill *"
-            "cd *"
           ];
           expireDuplicatesFirst = true;
         };
@@ -333,6 +376,15 @@ in
           setopt AUTO_MENU
           setopt COMPLETE_IN_WORD
           setopt FLOW_CONTROL
+          setopt PRINT_EXIT_VALUE
+          setopt C_BASES
+
+          # Additional History Options
+          setopt INC_APPEND_HISTORY
+          setopt HIST_IGNORE_ALL_DUPS
+          setopt HIST_NO_STORE
+          setopt HIST_REDUCE_BLANKS
+          setopt HIST_VERIFY
         '';
       };
     })
