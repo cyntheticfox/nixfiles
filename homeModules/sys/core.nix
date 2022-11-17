@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, nixosConfig, ... }:
 
 with lib;
 
@@ -71,19 +71,6 @@ in
 
           "nlog" = "nix log";
 
-          "nos" = "nixos-rebuild";
-          "nosb" = "nixos-rebuild build";
-          "nosbo" = "nixos-rebuild boot";
-          "nose" = "nixos-rebuild edit";
-          "nossw" = "nixos-rebuild switch --use-remote-sudo";
-          "nosswf" = "nixos-rebuild switch --use-remote-sudo --flake .";
-          "nosswfc" = "nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
-          "nosswfuc" = "nix flake update && nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
-          "nosswrb" = "nixos-rebuild switch --use-remote-sudo --rollback";
-          "nost" = "nixos-rebuild test";
-          "nosv" = "nixos-rebuild build-vm";
-          "nosvb" = "nixos-rebuild build-vm-with-bootloader";
-
           "np" = "nix profile";
           "nph" = "nix profile history";
           "npi" = "nix profile install";
@@ -109,7 +96,26 @@ in
           "nshn" = "nix shell nixpkgs";
 
           "nst" = "nix store";
-        };
+        } // (if nixosConfig != null then {
+          "nos" = "nixos-rebuild";
+          "nosb" = "nixos-rebuild build";
+          "nosc" = "nixos-container";
+          "nosg" = "nixos-generate-config";
+          "nossw" = "nixos-rebuild switch --use-remote-sudo";
+          "nosswf" = "nixos-rebuild switch --use-remote-sudo --flake .";
+          "nosswfc" = "nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
+          "nosswfuc" = "nix flake update && nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
+          "nosswrb" = "nixos-rebuild switch --use-remote-sudo --rollback";
+        } else {
+          "nos" = "home-manager";
+          "nosb" = "home-manager build";
+          "nossw" = "home-manager switch";
+          "nosswf" = "home-manager switch --flake .#$(hostname) -b '.bak'";
+          "nosswfc" = "nix flake check && home-manager switch --flake .#$(hostname) -b '.bak'";
+          "nosswfuc" = "nix flake update && nix flake check && home-manager switch --flake .#$(hostname) -b '.bak'";
+          # "nosswrb" = "home-manager switch --rollback";
+        });
+
 
         nix.registry = mkDefault {
           ### Nixpkgs

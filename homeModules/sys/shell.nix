@@ -4,6 +4,31 @@ with lib;
 
 let
   cfg = config.sys.shell;
+  posixGitFunctions = ''
+    function gcmsgap() {
+      git commit --signoff --all -m $@ && git push
+    }
+
+    function gcmsgapf() {
+      git commit --signoff --all -m $@ && git push --force-with-lease
+    }
+
+    function gcmsgapf!() {
+      git commit --signoff --all -m $@ && git push --force
+    }
+
+    function gcmsgp() {
+      git commit --signoff -m $@ && git push
+    }
+
+    function gcmsgpf() {
+      git commit --signoff -m $@ && git push --force-with-lease
+    }
+
+    function gcmsgpf!() {
+      git commit --signoff -m $@ && git push --force
+    }
+  '';
 in
 {
   options.sys.shell = {
@@ -112,31 +137,7 @@ in
           "rm"
         ];
 
-        initExtra = ''
-          function gcmsgap() {
-            git commit --signoff --all -m $@ && git push
-          }
-
-          function gcmsgapf() {
-            git commit --signoff --all -m $@ && git push --force-with-lease
-          }
-
-          function gcmsgapf!() {
-            git commit --signoff --all -m $@ && git push --force
-          }
-
-          function gcmsgp() {
-            git commit --signoff -m $@ && git push
-          }
-
-          function gcmsgpf() {
-            git commit --signoff -m $@ && git push --force-with-lease
-          }
-
-          function gcmsgpf!() {
-            git commit --signoff -m $@ && git push --force
-          }
-        '';
+        initExtra = posixGitFunctions;
       };
     })
     (mkIf cfg.manageBatConfig {
@@ -253,31 +254,7 @@ in
 
         defaultKeymap = "viins";
 
-        initExtra = ''
-          function gcmsgap() {
-            git commit --signoff --all -m $@ && git push
-          }
-
-          function gcmsgapf() {
-            git commit --signoff --all -m $@ && git push --force-with-lease
-          }
-
-          function gcmsgapf!() {
-            git commit --signoff --all -m $@ && git push --force
-          }
-
-          function gcmsgp() {
-            git commit --signoff -m $@ && git push
-          }
-
-          function gcmsgpf() {
-            git commit --signoff -m $@ && git push --force-with-lease
-          }
-
-          function gcmsgpf!() {
-            git commit --signoff -m $@ && git push --force
-          }
-        '';
+        initExtra = posixGitFunctions;
 
         enableAutosuggestions = true;
         oh-my-zsh = {
