@@ -70,8 +70,8 @@
       homeModules = import ./homeModules;
 
       nixosConfigurations = {
-        min = self.lib.defFlakeSystem {
-          inherit self;
+        min = self.lib.defFlakeServer {
+          inherit (self.inputs) nixpkgs;
 
           modules = [ ./nixos/hosts/min/configuration.nix ];
         };
@@ -90,8 +90,8 @@
           ];
         };
 
-        ashley = self.lib.defFlakeSystem {
-          inherit self;
+        ashley = self.lib.defFlakeServer {
+          inherit (self.inputs) nixpkgs;
 
           modules = [ ./nixos/hosts/ashley/configuration.nix ];
         };
