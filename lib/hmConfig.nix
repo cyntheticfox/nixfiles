@@ -1,5 +1,6 @@
 { self
 , username
+, nixpkgs-unstable ? null
 , system ? "x86_64-linux"
 , modules ? [ ]
 }:
@@ -14,5 +15,25 @@ self.inputs.home-manager.lib.homeManagerConfiguration {
     home.stateVersion = "22.05";
 
     programs.home-manager.enable = true;
+
+    nixpkgs.overlays =
+      if
+        nixpkgs-unstable != null
+      then
+        [
+          (_: _: {
+            nixpkgs-unstable = import nixpkgs-unstable {
+              inherit system;
+
+              config.allowUnfree = true;
+            };
+          })
+        ]
+      else
+        [
+          (_: super: {
+            nixpkgs-unstable = super;
+          })
+        ];
   };
 }

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, self, ... }:
+{ config, pkgs, lib, ... }:
 let
   optionalGroup = { cond, group }: lib.optionalString cond group;
   optGroups = builtins.map optionalGroup [
@@ -71,8 +71,6 @@ in
     shell = pkgs.zsh;
     passwordFile = config.sops.secrets.david-password.path;
   };
-
-  home-manager.users.david = self.lib.personalNixosHMConfig { inherit lib; inherit (config.networking) hostName; inherit (self.outputs) homeModules; };
 
   environment.persistence."/state".users.david = {
     directories = [

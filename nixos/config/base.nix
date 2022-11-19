@@ -1,4 +1,4 @@
-{ config, lib, pkgs, self, inputs, ... }: {
+{ config, lib, pkgs, ... }: {
   nix = {
     allowedUsers = [ "@wheel" ];
     autoOptimiseStore = true;
@@ -20,10 +20,6 @@
       persistent = true;
     };
     optimise.automatic = true;
-    registry = {
-      dotfiles.flake = self;
-      nixpkgs.flake = inputs.nixpkgs;
-    };
   };
 
   nixpkgs.config.allowUnfree = true;

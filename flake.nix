@@ -76,17 +76,24 @@
           modules = [ ./nixos/hosts/min/configuration.nix ];
         };
 
-        dh-framework = self.lib.defFlakeSystem {
-          inherit self;
+        dh-framework = self.lib.defFlakeWorkstation {
+          inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
 
           cpuVendor = "intel";
-          workstation = true;
 
           modules = [
             nixos-hardware.nixosModules.framework
             sops-nix.nixosModules.sops
             impermanence.nixosModules.impermanence
             ./nixos/hosts/dh-framework/configuration.nix
+            ({ config, lib, ... }: {
+              home-manager.users."david" = self.lib.personalNixosHMConfig {
+                inherit lib;
+                inherit (config.networking) hostName;
+                inherit (self.inputs) nixpkgs-unstable;
+                inherit (self.outputs) homeModules;
+              };
+            })
           ];
         };
 
