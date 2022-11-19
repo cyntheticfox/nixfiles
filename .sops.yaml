@@ -4,11 +4,11 @@ keys:
   - &dh-laptop2 F8F09E1A8E96E4041C32BE674B46F44EF073C77A
   - &dh-framework 3727C581CD4E4DF55F66FDA9C04B64DABDB187CB
 creation_rules:
-  - path_regex: nixos/hosts/dh-laptop2/[^/]+\.yml$
+  - path_regex: nixosConfigurations/dh-laptop2/[^/]+\.yml$
     key_groups:
     - pgp:
         - *dh-laptop2
-  - path_regex: nixos/hosts/dh-framework/[^/]+\.yml$
+  - path_regex: nixosConfigurations/[^/]+\.yml$
     key_groups:
     - pgp:
         - *dh-framework

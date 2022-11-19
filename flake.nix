@@ -73,7 +73,7 @@
         min = self.lib.defFlakeServer {
           inherit (self.inputs) nixpkgs;
 
-          modules = [ ./nixos/hosts/min/configuration.nix ];
+          modules = [ ./nixosConfigurations/min ];
         };
 
         dh-framework = self.lib.defFlakeWorkstation {
@@ -85,7 +85,9 @@
             nixos-hardware.nixosModules.framework
             sops-nix.nixosModules.sops
             impermanence.nixosModules.impermanence
-            ./nixos/hosts/dh-framework/configuration.nix
+
+            ./nixosConfigurations/dh-framework
+
             ({ config, lib, ... }: {
               home-manager.users."david" = self.lib.personalNixosHMConfig {
                 inherit lib;
@@ -100,7 +102,7 @@
         ashley = self.lib.defFlakeServer {
           inherit (self.inputs) nixpkgs;
 
-          modules = [ ./nixos/hosts/ashley/configuration.nix ];
+          modules = [ ./nixosConfigurations/ashley ];
         };
       };
 

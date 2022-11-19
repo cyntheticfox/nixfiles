@@ -4,16 +4,16 @@
     ./hardware-configuration.nix
 
     # Users
-    ../../config/users/david/configuration.nix
+    ../../nixos/config/users/david/configuration.nix
 
     # Desktop
-    ../../config/desktops/sway.nix
+    ../../nixos/config/desktops/sway.nix
 
     # Services
-    # ../../config/services/clamav.nix
-    ../../config/services/cupsd.nix
-    ../../config/services/libvirtd.nix
-    ../../config/services/restic.nix
+    # ../../nixos/config/services/clamav.nix
+    ../../nixos/config/services/cupsd.nix
+    ../../nixos/config/services/libvirtd.nix
+    ../../nixos/config/services/restic.nix
   ];
 
   sops = {

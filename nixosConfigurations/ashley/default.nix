@@ -1,8 +1,8 @@
 { pkgs, ... }: {
   imports = [
     ./hardware-configuration.nix
-    ../../config/services/podman.nix
-    ../../config/services/sshd.nix
+    ../../nixos/config/services/podman.nix
+    ../../nixos/config/services/sshd.nix
   ];
 
   boot = {
