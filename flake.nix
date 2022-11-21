@@ -44,15 +44,8 @@
       lib = import ./lib;
 
       homeConfigurations = {
-        dh-framework = self.lib.hmConfig {
-          inherit inputs;
-
-          username = "david";
-          modules = [ ./homeConfigurations/dh-framework.nix ];
-        };
-
         pbp = self.lib.hmConfig {
-          inherit inputs;
+          inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
 
           username = "david";
           system = "aarch64-linux";
@@ -60,7 +53,7 @@
         };
 
         wsl = self.lib.hmConfig {
-          inherit inputs;
+          inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
 
           username = "david";
           modules = [ ./homeConfigurations/wsl.nix ];

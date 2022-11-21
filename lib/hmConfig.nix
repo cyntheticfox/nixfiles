@@ -1,19 +1,22 @@
-{ self
+{ nixpkgs
+, home-manager
 , username
 , nixpkgs-unstable ? null
 , system ? "x86_64-linux"
 , modules ? [ ]
 }:
-self.inputs.home-manager.lib.homeManagerConfiguration {
+home-manager.lib.homeManagerConfiguration {
   inherit system username;
+
+  pkgs = nixpkgs.legacyPackages."${system}";
 
   homeDirectory = "/home/${username}";
 
+  stateVersion = "22.05";
+
+  extraModules = modules;
+
   configuration = _: {
-    imports = modules ++ (builtins.attrValues self.outputs.homeModules);
-
-    home.stateVersion = "22.05";
-
     programs.home-manager.enable = true;
 
     nixpkgs.overlays =
