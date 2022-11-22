@@ -1,4 +1,4 @@
-{ config, lib, pkgs, nixosConfig ? null, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -96,7 +96,7 @@ in
           # "nshn" = "nix shell nixpkgs";
 
           "nst" = "nix store";
-        } // (if nixosConfig != null then {
+        } // (if builtins.hasAttr "ON_NIXOS" config.home.sessionVariables then {
           "nos" = "nixos-rebuild";
           "nosb" = "nixos-rebuild build";
           "nosc" = "nixos-container";
