@@ -2,8 +2,6 @@
   imports = [
     ./base.nix
 
-    ./fcitx5.nix
-
     # Modules
     # ./gui/fonts.nix
     ./gui/kitty.nix

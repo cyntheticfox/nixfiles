@@ -1,7 +1,4 @@
-{ pkgs
-  # , lib
-, ...
-}: {
+{ pkgs, ... }: {
   imports = [
     # ../home-manager/config/base.nix
     ../home-manager/config/sway.nix
@@ -33,6 +30,7 @@
 
   sys = {
     fonts.enable = true;
+    keyboard.enable = true;
     shell.enable = true;
   };
 }
