@@ -14,7 +14,6 @@
     ../home-manager/config/gui/video.nix
 
     # Terminal modules
-    ../home-manager/config/tui/cloud.nix
     ../home-manager/config/tui/dbg.nix
     ../home-manager/config/tui/dev.nix
     ../home-manager/config/tui/documents.nix
@@ -27,6 +26,13 @@
   ];
 
   sys = {
+    cloud = {
+      enable = true;
+
+      manageAwsConfig = true;
+      manageAzureConfig = true;
+      manageGcpConfig = true;
+    };
     fonts.enable = true;
     keyboard.enable = true;
     music.enable = true;

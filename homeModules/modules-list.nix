@@ -1,4 +1,5 @@
 [
+  ./sys/cloud.nix
   ./sys/core.nix
   ./sys/fonts.nix
   ./sys/keyboard.nix
