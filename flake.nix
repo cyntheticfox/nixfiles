@@ -103,6 +103,12 @@
 
             modules = [ ./nixosConfigurations/ashley ];
           };
+
+          mona = self.lib.defFlakeServer {
+            inherit (self.inputs) nixpkgs;
+
+            modules = [ ./nixosConfigurations/mona ];
+          };
         };
 
         checks.x86_64-linux = (nixpkgs.lib.genAttrs (builtins.attrNames self.outputs.nixosConfigurations) (name: self.outputs.nixosConfigurations."${name}".config.system.build.toplevel)) //
