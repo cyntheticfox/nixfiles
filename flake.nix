@@ -21,6 +21,11 @@
 
     impermanence.url = "github:nix-community/impermanence";
 
+    nmt = {
+      url = "gitlab:rycee/nmt?rev=d83601002c99b78c89ea80e5e6ba21addcfe12ae&narHash=sha256-1xzwwxygzs1cmysg97hzd285r7n1g1lwx5y1ar68gwq07a1rczmv";
+      flake = false;
+    };
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -40,173 +45,175 @@
 
   outputs = { self, ... }@inputs:
     with inputs;
-    {
-      lib = import ./lib;
+    (nixpkgs.lib.recursiveUpdate
+      {
+        lib = import ./lib;
 
-      homeConfigurations = {
-        pbp = self.lib.hmConfig {
-          inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
+        homeConfigurations = {
+          pbp = self.lib.hmConfig {
+            inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
 
-          username = "david";
-          system = "aarch64-linux";
-          modules = [ ./homeConfigurations/pbp.nix ];
+            username = "david";
+            system = "aarch64-linux";
+            modules = [ ./homeConfigurations/pbp.nix ];
+          };
+
+          wsl = self.lib.hmConfig {
+            inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
+
+            username = "david";
+            modules = [ ./homeConfigurations/wsl.nix ];
+          };
         };
 
-        wsl = self.lib.hmConfig {
-          inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
+        homeModules = import ./homeModules;
 
-          username = "david";
-          modules = [ ./homeConfigurations/wsl.nix ];
+        nixosConfigurations = {
+          min = self.lib.defFlakeServer {
+            inherit (self.inputs) nixpkgs;
+
+            modules = [ ./nixosConfigurations/min ];
+          };
+
+          dh-framework = self.lib.defFlakeWorkstation {
+            inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
+
+            cpuVendor = "intel";
+
+            modules = [
+              nixos-hardware.nixosModules.framework
+              sops-nix.nixosModules.sops
+              impermanence.nixosModules.impermanence
+
+              ./nixosConfigurations/dh-framework
+
+              ({ config, lib, ... }: {
+                home-manager.users."david" = self.lib.personalNixosHMConfig {
+                  inherit lib;
+                  inherit (config.networking) hostName;
+                  inherit (self.inputs) nixpkgs-unstable;
+                  inherit (self.outputs) homeModules;
+                };
+              })
+            ];
+          };
+
+          ashley = self.lib.defFlakeServer {
+            inherit (self.inputs) nixpkgs;
+
+            modules = [ ./nixosConfigurations/ashley ];
+          };
         };
-      };
 
-      homeModules = import ./homeModules;
+        checks.x86_64-linux = (nixpkgs.lib.genAttrs (builtins.attrNames self.outputs.nixosConfigurations) (name: self.outputs.nixosConfigurations."${name}".config.system.build.toplevel)) //
+          (import ./tests {
+            inherit home-manager nmt;
 
-      nixosConfigurations = {
-        min = self.lib.defFlakeServer {
-          inherit (self.inputs) nixpkgs;
+            pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          });
 
-          modules = [ ./nixosConfigurations/min ];
+      }
+      (flake-utils.lib.eachDefaultSystem (system: {
+        checks.pre-commit-check = pre-commit-hooks.lib."${system}".run {
+          src = ./.;
+          hooks = {
+            deadnix.enable = true;
+            nixpkgs-fmt.enable = true;
+            statix.enable = true;
+          };
         };
-
-        dh-framework = self.lib.defFlakeWorkstation {
-          inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
-
-          cpuVendor = "intel";
-
-          modules = [
-            nixos-hardware.nixosModules.framework
-            sops-nix.nixosModules.sops
-            impermanence.nixosModules.impermanence
-
-            ./nixosConfigurations/dh-framework
-
-            ({ config, lib, ... }: {
-              home-manager.users."david" = self.lib.personalNixosHMConfig {
-                inherit lib;
-                inherit (config.networking) hostName;
-                inherit (self.inputs) nixpkgs-unstable;
-                inherit (self.outputs) homeModules;
+        devShells = {
+          default =
+            let
+              pkgs = import nixpkgs-unstable {
+                inherit system;
+                overlays = [ sops-nix.overlay ];
               };
-            })
-          ];
-        };
+            in
+            pkgs.mkShell {
+              inherit (self.checks."${system}".pre-commit-check) shellHook;
 
-        ashley = self.lib.defFlakeServer {
-          inherit (self.inputs) nixpkgs;
+              nativeBuildInputs = with pkgs; [
+                # pre-commit
+                pre-commit
 
-          modules = [ ./nixosConfigurations/ashley ];
-        };
-      };
+                # Nix formatter
+                alejandra
+                nixfmt
+                nixpkgs-fmt
 
-      checks.x86_64-linux = (nixpkgs.lib.genAttrs (builtins.attrNames self.nixosConfigurations) (name: self.nixosConfigurations."${name}".config.system.build.toplevel)) //
-      (import ./tests {
-        inherit home-manager;
+                # Nix linting
+                deadnix
+                nix-linter
+                statix
 
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      });
+                # sops-nix
+                sops
+                sops-init-gpg-key
+                sops-import-keys-hook
+              ];
 
-    } // flake-utils.lib.eachDefaultSystem (system: {
-      checks.pre-commit-check = pre-commit-hooks.lib."${system}".run {
-        src = ./.;
-        hooks = {
-          deadnix.enable = true;
-          nixpkgs-fmt.enable = true;
-          statix.enable = true;
-        };
-      };
-      devShells = {
-        default =
-          let
-            pkgs = import nixpkgs-unstable {
-              inherit system;
-              overlays = [ sops-nix.overlay ];
+              sopsPGPKeyDirs = [
+                ./keys/hosts
+                ./keys/users
+              ];
             };
-          in
-          pkgs.mkShell {
-            inherit (self.checks."${system}".pre-commit-check) shellHook;
+          no-env =
+            let
+              pkgs = import nixpkgs-unstable {
+                inherit system;
+                overlays = [ sops-nix.overlay ];
+              };
+            in
+            pkgs.mkShell {
+              packages = with pkgs; [
+                git
+                gnupg
+                pinentry-qt
+                neovim
 
-            nativeBuildInputs = with pkgs; [
-              # pre-commit
-              pre-commit
+                # pre-commit
+                pre-commit
 
-              # Nix formatter
-              alejandra
-              nixfmt
-              nixpkgs-fmt
+                # Nix formatter
+                alejandra
+                nixfmt
+                nixpkgs-fmt
 
-              # Nix linting
-              deadnix
-              nix-linter
-              statix
+                # Nix linting
+                deadnix
+                nix-linter
+                statix
 
-              # sops-nix
-              sops
-              sops-init-gpg-key
-              sops-import-keys-hook
-            ];
+                # sops-nix
+                sops
+                sops-init-gpg-key
+                sops-import-keys-hook
+              ];
 
-            sopsPGPKeyDirs = [
-              ./keys/hosts
-              ./keys/users
-            ];
-          };
-        no-env =
-          let
-            pkgs = import nixpkgs-unstable {
-              inherit system;
-              overlays = [ sops-nix.overlay ];
+              sopsPGPKeyDirs = [
+                ./keys/hosts
+                ./keys/users
+              ];
+
+              shellHook = ''
+                ${self.checks."${system}".pre-commit-check.shellHook}
+
+                alias g="git"
+                alias ga="git add"
+                alias gaa="git add --all"
+                alias gc="git commit"
+                alias gcmsg="git commit -m"
+                alias gd="git diff"
+                alias gl="git pull"
+                alias gp="git push"
+                alias gsb="git status -sb"
+                alias n="nix"
+                alias nfu="nix flake update"
+                alias nosswf="nixos-rebuild switch --use-remote-sudo --flake ."
+                alias v="nvim"
+              '';
             };
-          in
-          pkgs.mkShell {
-            packages = with pkgs; [
-              git
-              gnupg
-              pinentry-qt
-              neovim
-
-              # pre-commit
-              pre-commit
-
-              # Nix formatter
-              alejandra
-              nixfmt
-              nixpkgs-fmt
-
-              # Nix linting
-              deadnix
-              nix-linter
-              statix
-
-              # sops-nix
-              sops
-              sops-init-gpg-key
-              sops-import-keys-hook
-            ];
-
-            sopsPGPKeyDirs = [
-              ./keys/hosts
-              ./keys/users
-            ];
-
-            shellHook = ''
-              ${self.checks."${system}".pre-commit-check.shellHook}
-
-              alias g="git"
-              alias ga="git add"
-              alias gaa="git add --all"
-              alias gc="git commit"
-              alias gcmsg="git commit -m"
-              alias gd="git diff"
-              alias gl="git pull"
-              alias gp="git push"
-              alias gsb="git status -sb"
-              alias n="nix"
-              alias nfu="nix flake update"
-              alias nosswf="nixos-rebuild switch --use-remote-sudo --flake ."
-              alias v="nvim"
-            '';
-          };
-      };
-    });
+        };
+      })));
 }

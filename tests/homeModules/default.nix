@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-{ pkgs ? import <nixpkgs> { }, home-manager }:
+{ pkgs ? import <nixpkgs> { }, home-manager, nmt }:
 
 let
   lib = pkgs.lib.extend
@@ -32,13 +32,6 @@ let
       literalExpression = super.literalExpression or super.literalExample;
       literalDocBook = super.literalDocBook or super.literalExample;
     });
-
-  nmt = pkgs.fetchFromGitLab {
-    owner = "rycee";
-    repo = "nmt";
-    rev = "d83601002c99b78c89ea80e5e6ba21addcfe12ae";
-    sha256 = "1xzwwxygzs1cmysg97hzd285r7n1g1lwx5y1ar68gwq07a1rczmv";
-  };
 
   modules = (import (home-manager.outPath + "/modules/modules.nix") {
     inherit lib pkgs;
@@ -61,12 +54,16 @@ let
   ];
 
   # inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
+  checkTest = name: test: pkgs.runCommandLocal "nmt-test-${name}" { } ''
+    grep -F 'OK' "${test}/result" >$out
+  '';
 in
-import nmt {
-  inherit lib pkgs modules;
-  testedAttrPath = [ "home" "activationPackage" ];
-  tests = builtins.foldl' (a: b: a // (import b)) { } [
-    ./sys
-    ./programs
-  ];
-}
+lib.mapAttrs checkTest
+  (import nmt {
+    inherit lib pkgs modules;
+    testedAttrPath = [ "home" "activationPackage" ];
+    tests = builtins.foldl' (a: b: a // (import b)) { } [
+      ./sys
+      # ./programs
+    ];
+  }).report

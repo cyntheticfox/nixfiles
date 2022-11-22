@@ -37,7 +37,7 @@ in
     };
 
     pager = mkOption {
-      type = types.nullOr types.string;
+      type = with types; nullOr str;
       default = "${pkgs.less}/bin/less";
       description = ''
         CLI pager to use for the user. This gets set to the PAGER env
@@ -46,7 +46,7 @@ in
     };
 
     editor = mkOption {
-      type = types.nullOr types.string;
+      type = with types; nullOr str;
       default = "${pkgs.neovim}/bin/nvim";
       description = ''
         CLI editor to use for the user. This gets set to the EDITOR env
@@ -55,7 +55,7 @@ in
     };
 
     viewer = mkOption {
-      type = types.nullOr types.string;
+      type = with types; nullOr str;
       default = "${pkgs.neovim}/bin/nvim -R";
       description = ''
         CLI file viewer to use for the user. This gets set to the VISUAL env
@@ -64,13 +64,13 @@ in
     };
 
     aliases = mkOption {
-      type = types.attrsOf types.string;
+      type = with types; attrsOf str;
       default = {
         "h" = "history";
         "pg" = "pgrep";
 
         # Editor aliases
-        "v" = config.home.sessionVariables.EDITOR;
+        "v" = config.home.sessionVariables.EDITOR or "nano";
 
         # Make things human-readable
         "dd" = "dd status=progress";

@@ -1,6 +1,6 @@
 { config, pkgs, lib, workstation, cpuVendor, ... }:
 let
-  intelAmdFunc = i: a:
+  intelAmdFunc = i: a: e:
     if
       cpuVendor == "intel"
     then
@@ -11,15 +11,15 @@ let
       then
         a
       else
-        null;
+        e;
 
-  intelOnlyFunc = f:
+  intelOnlyFunc = f: e:
     if
       cpuVendor == "intel"
     then
       f
     else
-      null;
+      e;
 
   # amdOnlyFunc = f:
   #   if
@@ -29,10 +29,10 @@ let
   #   else
   #     null;
 
-  nologIfWorkstation = if workstation then "quiet" else null;
-  iommuKernelParam = intelOnlyFunc "intel_iommu=on";
+  nologIfWorkstation = if workstation then "quiet" else "";
+  iommuKernelParam = intelOnlyFunc "intel_iommu=on" "";
 
-  kvmModProbeOpt = intelAmdFunc "kvm_intel" "kvm_amd";
+  kvmModProbeOpt = intelAmdFunc "kvm_intel" "kvm_amd" "";
 
 in
 {
@@ -91,7 +91,7 @@ in
     # Enable a fancy loading screen on boot
     plymouth.enable = true;
 
-    kernelParams = [
+    kernelParams = builtins.filter (a: a != "") [
       nologIfWorkstation
       iommuKernelParam
       #"vga=current"

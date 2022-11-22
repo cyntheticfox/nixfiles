@@ -10,7 +10,7 @@ in
     enable = mkEnableOption "Manage fonts at a user level";
 
     packages = mkOption {
-      type = types.listOf types.package;
+      type = with types; listOf package;
       default = with pkgs; [
         dejavu_fonts
         fira

@@ -9,7 +9,6 @@
     ../home-manager/config/gui/documents.nix
     ../home-manager/config/gui/games.nix
     ../home-manager/config/gui/libvirt.nix
-    ../home-manager/config/gui/music.nix
     ../home-manager/config/gui/networking.nix
     ../home-manager/config/gui/teams.nix
     ../home-manager/config/gui/video.nix
@@ -19,7 +18,6 @@
     ../home-manager/config/tui/dbg.nix
     ../home-manager/config/tui/dev.nix
     ../home-manager/config/tui/documents.nix
-    ../home-manager/config/tui/music.nix
     ../home-manager/config/tui/podman.nix
     ../home-manager/config/tui/sec.nix
   ];
@@ -31,6 +29,7 @@
   sys = {
     fonts.enable = true;
     keyboard.enable = true;
+    music.enable = true;
     shell.enable = true;
   };
 }
