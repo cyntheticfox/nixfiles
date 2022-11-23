@@ -21,6 +21,11 @@
 
     impermanence.url = "github:nix-community/impermanence";
 
+    gitignore = {
+      url = "github:hercules-ci/gitignore.nix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     nmt = {
       url = "gitlab:rycee/nmt?rev=d83601002c99b78c89ea80e5e6ba21addcfe12ae&narHash=sha256-1xzwwxygzs1cmysg97hzd285r7n1g1lwx5y1ar68gwq07a1rczmv";
       flake = false;
@@ -40,6 +45,10 @@
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs-stable.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.flake-compat.follows = "";
+      inputs.gitignore.follows = "gitignore";
     };
   };
 
@@ -115,7 +124,7 @@
       }
       (flake-utils.lib.eachDefaultSystem (system: {
         checks.pre-commit-check = pre-commit-hooks.lib."${system}".run {
-          src = ./.;
+          src = gitignore.lib.gitIgnoreSource ./.;
           hooks = {
             deadnix.enable = true;
             nixpkgs-fmt.enable = true;
