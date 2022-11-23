@@ -4,24 +4,59 @@ with lib;
 
 let
   cfg = config.sys.core;
+
+  pkgModule = { packages, type, extraOptions ? { } }: types.submodule (_: {
+    options = {
+      enable = mkEnableOption "Manage ${pkgType} packages";
+
+      packages = mkOption {
+        type = with types; listOf package;
+        default = packages;
+      };
+    } // extraOptions;
+  });
+
+  fileModule = pkgModule {
+    type = "file";
+    packages = with pkgs; [
+      glow
+      fq
+      p7zip
+      sd
+      ripgrep
+      unzip
+      xsv
+      zip
+    ];
+  };
+
+  netModule = pkgModule {
+    type = "network";
+    packages = with pkgs; [
+      bandwhich
+      curlie
+      dogdns
+      gping
+      mtr
+      traceroute
+      whois
+      xh
+    ];
+  };
+
+  procModule = pkgModule {
+    type = "process";
+    packages = with pkgs; [
+      nodePackages.fkill-cli
+      procs
+    ];
+
+    extraOptions.htopIntegration = mkEnableOption "Manage htop configuration" // { default = true; };
+  };
 in
 {
   options.sys.core = {
     enable = mkEnableOption "Enable core configuration packages" // { default = true; };
-
-    packages = mkOption {
-      type = with types; listOf package;
-      default = with pkgs; [
-        curlie
-        dogdns
-        gping
-        procs
-        traceroute
-      ];
-      description = ''
-        Core user packages to install
-      '';
-    };
 
     extraPaths = mkOption {
       type = with types; listOf string;
@@ -33,6 +68,24 @@ in
       '';
     };
 
+    manageFilePackages = mkOption {
+      type = fileModule;
+      default = { };
+      description = "Options for managing installed file packages";
+    };
+
+    manageNetworkPackages = mkOption {
+      type = netModule;
+      default = { };
+      description = "Options for managing installed network packages";
+    };
+
+    manageProcessPackages = mkOption {
+      type = procModule;
+      default = { };
+      description = "Options for managing installed process packages";
+    };
+
     manageXDGConfig = mkEnableOption "Enable xdg dirs management" // { default = true; };
 
     manageNixConfig = mkEnableOption "Enable Nix config management" // { default = true; };
@@ -40,9 +93,68 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = cfg.packages;
       home.sessionPath = cfg.extraPaths;
     }
+    (mkIf cfg.manageFilePackages.enable {
+      home.packages = cfg.manageFilePackages.packages;
+
+      home.shellAliases."glow" = "glow -p";
+    })
+    (mkIf cfg.manageNetworkPackages.enable {
+      home.packages = cfg.manageNetworkPackages.packages;
+
+      home.shellAliases."tracert" = "traceroute";
+    })
+    (mkIf cfg.manageProcessPackages.enable {
+      home.packages = cfg.manageProcessPackages.packages;
+
+      home.shellAliases."top" = "htop";
+
+      programs.htop = mkIf cfg.manageProcessPackages.htopIntegration {
+        enable = true;
+
+        settings = {
+          color_scheme = 0;
+          detailed_cpu_time = 1;
+          cpu_count_from_zero = 0;
+          delay = 15;
+          fields = with config.lib.htop.fields; [
+            PID
+            USER
+            PRIORITY
+            NICE
+            M_SIZE
+            M_RESIDENT
+            M_SHARE
+            STATE
+            PERCENT_CPU
+            PERCENT_MEM
+            TIME
+            COMM
+          ];
+          header_margin = 1;
+          hide_threads = 0;
+          hide_kernel_threads = 1;
+          hide_userland_threads = 0;
+          highlight_base_name = 1;
+          highlight_megabytes = 1;
+          highlight_thread = 1;
+          sort_key = config.lib.htop.fields.PERCENT_MEM;
+          sort_direction = 1;
+          tree_view = 1;
+          update_process_names = 0;
+        } // (with config.lib.htop; leftMeters [
+          (bar "LeftCPUs")
+          (bar "Memory")
+          (bar "Swap")
+        ]) // (with config.lib.htop; rightMeters [
+          (bar "RightCPUs")
+          (text "Tasks")
+          (text "LoadAverage")
+          (text "Uptime")
+        ]);
+      };
+    })
     (mkIf cfg.manageNixConfig
       {
         home.packages = with pkgs; [ comma ];

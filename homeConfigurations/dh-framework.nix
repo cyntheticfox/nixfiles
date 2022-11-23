@@ -33,7 +33,17 @@
       manageAzureConfig = true;
       manageGcpConfig = true;
     };
+
+    core = {
+      enable = true;
+
+      manageFilePackages.enable = true;
+      manageNetworkPackages.enable = true;
+      manageProcessPackages.enable = true;
+    };
+
     fonts.enable = true;
+
     git = {
       enable = true;
 
@@ -41,8 +51,13 @@
       email = "houstdav000@gmail.com";
       gpgkey = "5960278CE235F821!";
     };
+
     keyboard.enable = true;
     music.enable = true;
-    shell.enable = true;
+    shell = {
+      enable = true;
+
+      fcp = true;
+    };
   };
 }

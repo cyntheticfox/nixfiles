@@ -68,6 +68,8 @@ in
       default = {
         "h" = "history";
         "pg" = "pgrep";
+        "cp" = "cp -r";
+        "rm" = "rm -r";
 
         # Editor aliases
         "v" = config.home.sessionVariables.EDITOR or "nano";
@@ -100,6 +102,8 @@ in
     z-lua = mkEnableOption "Enable z-lua";
     autojump = mkEnableOption "Enable autojump";
 
+    fcp = mkEnableOption "Enable replacing cp with fcp";
+
     extraShells = mkOption {
       type = with types; nullOr (listOf package);
       default = with pkgs; [
@@ -122,7 +126,6 @@ in
 
       programs.autojump.enable = cfg.autojump;
       programs.z-lua.enable = cfg.z-lua;
-      programs.zoxide.enable = cfg.zoxide;
     }
     (mkIf cfg.manageBashConfig {
       programs.bash = {
@@ -364,6 +367,24 @@ in
           setopt HIST_VERIFY
         '';
       };
+    })
+    (mkIf cfg.zoxide {
+      home.shellAliases = {
+        "za" = "zoxide add";
+        "zq" = "zoxide query";
+        "zr" = "zoxide remove";
+
+        "cd" = "z";
+        "pushd" = "z";
+        "popd" = "z -";
+      };
+
+      programs.zoxide.enable = true;
+    })
+    (mkIf cfg.fcp {
+      home.packages = with pkgs; [ fcp ];
+
+      home.shellAliases."cp" = mkForce "fcp";
     })
   ]);
 }

@@ -10,6 +10,7 @@
     cloc
     deno
     gcc_latest
+    grex
     hexyl
     htmlq
     hyperfine
