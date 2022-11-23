@@ -99,6 +99,7 @@ in
         } // (if builtins.hasAttr "ON_NIXOS" config.home.sessionVariables then {
           "nos" = "nixos-rebuild";
           "nosb" = "nixos-rebuild build";
+          "nosbf" = "nixos-rebuild build --flake .";
           "nosc" = "nixos-container";
           "nosg" = "nixos-generate-config";
           "nossw" = "nixos-rebuild switch --use-remote-sudo";
@@ -109,6 +110,7 @@ in
         } else {
           "nos" = "home-manager";
           "nosb" = "home-manager build";
+          "nosbf" = "home-manager build --flake .#$(hostname)";
           "nossw" = "home-manager switch";
           "nosswf" = "home-manager switch --flake .#$(hostname) -b '.bak'";
           "nosswfc" = "nix flake check && home-manager switch --flake .#$(hostname) -b '.bak'";
