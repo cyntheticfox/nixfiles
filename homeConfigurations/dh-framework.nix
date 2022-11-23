@@ -34,6 +34,13 @@
       manageGcpConfig = true;
     };
     fonts.enable = true;
+    git = {
+      enable = true;
+
+      name = "David Houston";
+      email = "houstdav000@gmail.com";
+      gpgkey = "5960278CE235F821!";
+    };
     keyboard.enable = true;
     music.enable = true;
     shell.enable = true;
