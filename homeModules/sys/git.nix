@@ -34,8 +34,8 @@ in
       type = with types; listOf package;
       default = with pkgs; [
         git-doc
-        git-extras
         git-filter-repo
+        git-ignore
         git-secrets
         gitflow
         octofetch

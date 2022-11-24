@@ -80,10 +80,6 @@ in
         "du" = "du -h";
         "free" = "free -h";
         "pkill" = "pkill -e";
-
-        # Additional git aliases
-        "gcmsg" = "git commit --signoff -m";
-        "gcmsga" = "git commit --signoff --all -m";
       };
       description = ''
         Aliases to add for the shell.
@@ -127,6 +123,15 @@ in
       programs.autojump.enable = cfg.autojump;
       programs.z-lua.enable = cfg.z-lua;
     }
+    (mkIf config.sys.git.enable {
+      home.shellAliases = {
+        "gi" = "git ignore";
+
+        # Additional git aliases
+        "gcmsg" = "git commit --signoff -m";
+        "gcmsga" = "git commit --signoff --all -m";
+      };
+    })
     (mkIf cfg.manageBashConfig {
       programs.bash = {
         enable = true;
@@ -140,7 +145,7 @@ in
           "rm"
         ];
 
-        initExtra = posixGitFunctions;
+        initExtra = mkIf config.sys.git.enable posixGitFunctions;
       };
     })
     (mkIf cfg.manageBatConfig {
@@ -257,7 +262,7 @@ in
 
         defaultKeymap = "viins";
 
-        initExtra = posixGitFunctions;
+        initExtra = mkIf config.sys.git.enable posixGitFunctions;
 
         enableAutosuggestions = true;
         oh-my-zsh = {

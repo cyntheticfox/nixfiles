@@ -124,7 +124,7 @@
       }
       (flake-utils.lib.eachDefaultSystem (system: {
         checks.pre-commit-check = pre-commit-hooks.lib."${system}".run {
-          src = gitignore.lib.gitIgnoreSource ./.;
+          src = gitignore.lib.gitignoreSource ./.;
           hooks = {
             deadnix.enable = true;
             nixpkgs-fmt.enable = true;
