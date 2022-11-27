@@ -60,7 +60,7 @@
 
         homeConfigurations = {
           pbp = self.lib.hmConfig {
-            inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
+            inherit home-manager nixpkgs nixpkgs-unstable;
 
             username = "david";
             system = "aarch64-linux";
@@ -68,7 +68,7 @@
           };
 
           wsl = self.lib.hmConfig {
-            inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
+            inherit home-manager nixpkgs nixpkgs-unstable;
 
             username = "david";
             modules = [ ./homeConfigurations/wsl.nix ];
@@ -79,13 +79,13 @@
 
         nixosConfigurations = {
           min = self.lib.defFlakeServer {
-            inherit (self.inputs) nixpkgs;
+            inherit nixpkgs;
 
             modules = [ ./nixosConfigurations/min ];
           };
 
           dh-framework = self.lib.defFlakeWorkstation {
-            inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
+            inherit home-manager nixpkgs nixpkgs-unstable;
 
             cpuVendor = "intel";
 
@@ -108,7 +108,7 @@
           };
 
           ashley = self.lib.defFlakeServer {
-            inherit (self.inputs) nixpkgs;
+            inherit nixpkgs;
 
             modules = [ ./nixosConfigurations/ashley ];
           };

@@ -235,20 +235,20 @@ in
           ### Nixpkgs
           #
 
-          nixpkgs-unstable.to = {
-            type = "github";
-            owner = "NixOS";
-            repo = "nixpkgs";
-            ref = "nixos-unstable";
-          };
+          # nixpkgs-unstable.to = {
+          #   type = "github";
+          #   owner = "NixOS";
+          #   repo = "nixpkgs";
+          #   ref = "nixos-unstable";
+          # };
 
-          # TODO: Make dynamic
-          nixpkgs.to = {
-            type = "github";
-            owner = "NixOS";
-            repo = "nixpkgs";
-            ref = "nixos-22.05";
-          };
+          # # TODO: Make dynamic
+          # nixpkgs.to = {
+          #   type = "github";
+          #   owner = "NixOS";
+          #   repo = "nixpkgs";
+          #   ref = "nixos-22.05";
+          # };
 
           ### Other people's configs
           #

@@ -25,6 +25,25 @@ nixpkgs.lib.nixosSystem {
     home-manager.nixosModules.home-manager
     ../nixos/config/base.nix
     ../nixos/config/hardware-base.nix
+
+    (_: {
+      nix.registry = {
+        nixpkgs.to = {
+          type = "github";
+          owner = "NixOS";
+          repo = "nixpkgs";
+          ref = nixpkgs.sourceInfo.rev;
+        };
+
+        nixpkgs-unstable.to = {
+          type = "github";
+          owner = "NixOS";
+          repo = "nixpkgs";
+          ref = if nixpkgs-unstable != null then nixpkgs-unstable.sourceInfo.rev else nixpkgs.sourceInfo.rev;
+        };
+      };
+    })
+
     (_: {
       home-manager = {
         sharedModules = [
@@ -68,25 +87,23 @@ nixpkgs.lib.nixosSystem {
         useGlobalPkgs = true;
         useUserPackages = true;
       };
-      nixpkgs.overlays =
-        if
-          nixpkgs-unstable != null
-        then
-          [
-            (_: _: {
-              nixpkgs-unstable = import nixpkgs-unstable {
-                inherit system;
 
-                config.allowUnfree = true;
-              };
-            })
-          ]
-        else
-          [
-            (_: super: {
-              nixpkgs-unstable = super;
-            })
-          ];
+      nixpkgs.overlays = [
+        (_: super: {
+          nixpkgs-unstable =
+            if
+              nixpkgs-unstable != null
+            then
+              import nixpkgs-unstable
+                {
+                  inherit system;
+
+                  config.allowUnfree = true;
+                }
+            else
+              super;
+        })
+      ];
     })
   ] ++ modules;
 }

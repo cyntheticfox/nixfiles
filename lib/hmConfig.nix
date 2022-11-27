@@ -19,24 +19,37 @@ home-manager.lib.homeManagerConfiguration {
   configuration = _: {
     programs.home-manager.enable = true;
 
-    nixpkgs.overlays =
-      if
-        nixpkgs-unstable != null
-      then
-        [
-          (_: _: {
-            nixpkgs-unstable = import nixpkgs-unstable {
-              inherit system;
+    nixpkgs.overlays = [
+      (_: super: {
+        nixpkgs-unstable =
+          if
+            nixpkgs-unstable != null
+          then
+            import nixpkgs-unstable
+              {
+                inherit system;
 
-              config.allowUnfree = true;
-            };
-          })
-        ]
-      else
-        [
-          (_: super: {
-            nixpkgs-unstable = super;
-          })
-        ];
+                config.allowUnfree = true;
+              }
+          else
+            super;
+      })
+    ];
+
+    nix.registry = {
+      nixpkgs.to = {
+        type = "github";
+        owner = "NixOS";
+        repo = "nixpkgs";
+        ref = nixpkgs.sourceInfo.rev;
+      };
+
+      nixpkgs-unstable.to = {
+        type = "github";
+        owner = "NixOS";
+        repo = "nixpkgs";
+        ref = if nixpkgs-unstable != null then nixpkgs-unstable.sourceInfo.rev else nixpkgs.sourceInfo.rev;
+      };
+    };
   };
 }
