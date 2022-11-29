@@ -6,6 +6,7 @@
   ./sys/git.nix
   ./sys/keyboard.nix
   ./sys/music.nix
+  ./sys/sec.nix
   ./sys/shell.nix
   ./sys/ssh.nix
   ./programs/neofetch.nix

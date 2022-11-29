@@ -20,14 +20,25 @@ let
     type = "file";
     packages = with pkgs; [
       fq
-      glow
       man-pages
       p7zip
       ripgrep
       sd
       unzip
-      xsv
       zip
+
+      # Document packages
+      glow
+      pandoc
+      xsv
+
+      # FUSE Packages
+      exfat
+      gocryptfs
+      fuseiso
+      jmtpfs
+      ntfs3g
+      smbnetfs
     ];
   };
 
@@ -94,6 +105,9 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
+      home.packages = with pkgs; [
+      ];
+
       home.sessionPath = cfg.extraPaths;
 
       programs.man = {
@@ -106,6 +120,12 @@ in
       home.packages = cfg.manageFilePackages.packages;
 
       home.shellAliases."glow" = "glow -p";
+
+      programs.texlive = {
+        enable = true;
+
+        extraPackages = p: { inherit (p) collection-fontsrecommended; };
+      };
     })
     (mkIf cfg.manageNetworkPackages.enable {
       home.packages = cfg.manageNetworkPackages.packages;

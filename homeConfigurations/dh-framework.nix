@@ -14,10 +14,7 @@
     ../home-manager/config/gui/video.nix
 
     # Terminal modules
-    ../home-manager/config/tui/dbg.nix
-    ../home-manager/config/tui/documents.nix
     ../home-manager/config/tui/podman.nix
-    ../home-manager/config/tui/sec.nix
   ];
 
   home.packages = with pkgs; [
@@ -42,7 +39,6 @@
     };
 
     dev.enable = true;
-
     fonts.enable = true;
 
     git = {
@@ -55,6 +51,7 @@
 
     keyboard.enable = true;
     music.enable = true;
+    sec.enable = true;
 
     shell = {
       enable = true;

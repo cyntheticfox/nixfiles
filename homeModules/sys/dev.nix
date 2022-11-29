@@ -38,6 +38,22 @@ in
         # Manuals
         man-pages-posix
         stdmanpages
+
+        # General binary tools
+        bintools
+        bingrep
+        bloaty
+
+        # C/General
+        gdb
+        lldb
+        valgrind
+        rr
+
+        # RE/General
+        cutter
+        radare2
+        rehex
       ];
       description = "Options for managing installed file packages";
     };
