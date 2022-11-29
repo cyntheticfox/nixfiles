@@ -19,11 +19,12 @@ let
   fileModule = pkgModule {
     type = "file";
     packages = with pkgs; [
-      glow
       fq
+      glow
+      man-pages
       p7zip
-      sd
       ripgrep
+      sd
       unzip
       xsv
       zip
@@ -94,6 +95,12 @@ in
   config = mkIf cfg.enable (mkMerge [
     {
       home.sessionPath = cfg.extraPaths;
+
+      programs.man = {
+        enable = true;
+
+        generateCaches = true;
+      };
     }
     (mkIf cfg.manageFilePackages.enable {
       home.packages = cfg.manageFilePackages.packages;
@@ -157,7 +164,10 @@ in
     })
     (mkIf cfg.manageNixConfig
       {
-        home.packages = with pkgs; [ comma ];
+        home.packages = with pkgs; [
+          comma
+          nvd
+        ];
         home.shellAliases = {
           ### Nix Aliases
           # TODO: Make this a separate like OMZ module?

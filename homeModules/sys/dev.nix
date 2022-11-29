@@ -34,6 +34,10 @@ in
         # Repository Management
         pre-commit
         git-secrets
+
+        # Manuals
+        man-pages-posix
+        stdmanpages
       ];
       description = "Options for managing installed file packages";
     };
