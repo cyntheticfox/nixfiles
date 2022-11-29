@@ -39,10 +39,6 @@ in
   programs.neovim = {
     enable = true;
 
-    package = pkgs.nixpkgs-unstable.neovim-unwrapped;
-
-    withNodeJs = true;
-
     extraConfig = ''
       " Enable filetype plugins
       filetype plugin indent on
@@ -266,13 +262,56 @@ in
           })
         '';
       }
+      vim-gitgutter
+      # {
+      #   plugin = pkgs.nixpkgs-unstable.vimPlugins.gitsigns-nvim;
+      #   type = "lua";
+      #   config = ''
+      #     require('gitsigns').setup({
+      #       signs = {
+      #         add = {
+      #           hl = 'GitSignsAdd',
+      #           text = '+',
+      #           numhl = 'GitSignsAddNr',
+      #           linehl = 'GitSignsAddLn',
+      #         },
+      #         change = {
+      #           hl = 'GitSignsChange',
+      #           text = '~',
+      #           numhl = 'GitSignsChangeNr',
+      #           linehl = 'GitSignsChangeLn',
+      #         },
+      #         delete = {
+      #           hl = 'GitSignsDelete',
+      #           text = '-',
+      #           numhl = 'GitSignsDeleteNr',
+      #           linehl = 'GitSignsDeleteLn',
+      #         },
+      #         topdelete = {
+      #           hl = 'GitSignsDelete',
+      #           text = '-',
+      #           numhl = 'GitSignsDeleteNr',
+      #           linehl = 'GitSignsDeleteLn',
+      #         },
+      #         changedelete = {
+      #           hl = 'GitSignsChange',
+      #           text = '~',
+      #           numhl = 'GitSignsChangeNr',
+      #           linehl = 'GitSignsChangeLn',
+      #         },
+      #         untracked = {
+      #           hl = 'GitSignsAdd',
+      #           text = '?',
+      #           numhl = 'GitSignsAddNr',
+      #           linehl = 'GitSignsAddLn',
+      #         },
+      #       },
+      #       numhl = true
+      #     })
+      #   '';
+      # }
       {
-        plugin = gitsigns-nvim;
-        type = "lua";
-        config = "require('gitsigns').setup()";
-      }
-      {
-        plugin = impatient-nvim;
+        plugin = pkgs.nixpkgs-unstable.vimPlugins.impatient-nvim;
         type = "lua";
         config = "require('impatient')";
       }
@@ -710,10 +749,11 @@ in
         '';
       }
       {
-        plugin = nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars);
+        plugin = pkgs.nixpkgs-unstable.vimPlugins.nvim-treesitter.withPlugins (_: pkgs.nixpkgs-unstable.tree-sitter.allGrammars);
         type = "lua";
         config = ''
           require('nvim-treesitter.configs').setup({
+            auto_install = false,
             autopairs = {
               enable = true
             },
