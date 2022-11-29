@@ -4,6 +4,7 @@
   ./sys/dev.nix
   ./sys/fonts.nix
   ./sys/git.nix
+  ./sys/gnupg.nix
   ./sys/keyboard.nix
   ./sys/music.nix
   ./sys/sec.nix
