@@ -7,5 +7,6 @@
   ./sys/keyboard.nix
   ./sys/music.nix
   ./sys/shell.nix
+  ./sys/ssh.nix
   ./programs/neofetch.nix
 ]

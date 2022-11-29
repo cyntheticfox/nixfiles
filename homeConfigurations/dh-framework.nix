@@ -55,10 +55,13 @@
 
     keyboard.enable = true;
     music.enable = true;
+
     shell = {
       enable = true;
 
       fcp = true;
     };
+
+    ssh.enable = true;
   };
 }

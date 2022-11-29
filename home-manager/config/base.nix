@@ -4,6 +4,5 @@ _: {
     ./tui/gnupg.nix
     ./tui/neofetch.nix
     ./tui/neovim.nix
-    ./tui/ssh.nix
   ];
 }

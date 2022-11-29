@@ -6,4 +6,5 @@
   sys-keyboard = ./keyboard.nix;
   sys-music = ./music.nix;
   sys-shell = ./shell.nix;
+  sys-ssh = ./ssh.nix;
 }
