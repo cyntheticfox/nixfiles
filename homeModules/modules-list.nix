@@ -1,6 +1,7 @@
 [
   ./sys/cloud.nix
   ./sys/core.nix
+  ./sys/dev.nix
   ./sys/fonts.nix
   ./sys/git.nix
   ./sys/keyboard.nix

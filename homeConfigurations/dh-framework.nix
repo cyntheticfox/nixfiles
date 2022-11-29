@@ -15,7 +15,6 @@
 
     # Terminal modules
     ../home-manager/config/tui/dbg.nix
-    ../home-manager/config/tui/dev.nix
     ../home-manager/config/tui/documents.nix
     ../home-manager/config/tui/podman.nix
     ../home-manager/config/tui/sec.nix
@@ -41,6 +40,8 @@
       manageNetworkPackages.enable = true;
       manageProcessPackages.enable = true;
     };
+
+    dev.enable = true;
 
     fonts.enable = true;
 
