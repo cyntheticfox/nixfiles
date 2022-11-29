@@ -4,9 +4,7 @@
   programs.gpg = {
     enable = true;
 
-    publicKeys = [
-      { source = ../../../keys/users/david.pub.asc; }
-    ] ++ (builtins.map (file: { source = ../../../keys/trusted + "/${file}"; }) (builtins.attrNames (builtins.readDir ../../../keys/trusted)));
+    publicKeys = [{ source = ../../../keys/users/david.pub.asc; trust = "ultimate"; }] ++ (builtins.map (file: { source = ../../../keys/trusted + "/${file}"; trust = "full"; }) (builtins.attrNames (builtins.readDir ../../../keys/trusted)));
 
     settings = {
       # weak-digest = "SHA1";
