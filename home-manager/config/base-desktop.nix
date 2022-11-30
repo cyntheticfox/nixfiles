@@ -1,9 +1,6 @@
 { config, pkgs, lib, ... }: {
   imports = [
-    ./base.nix
-
     # Modules
-    # ./gui/fonts.nix
     ./gui/kitty.nix
     ./gui/remmina.nix
     ./gui/web.nix

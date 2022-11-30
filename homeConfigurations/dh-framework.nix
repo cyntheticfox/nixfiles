@@ -1,6 +1,5 @@
 { pkgs, ... }: {
   imports = [
-    # ../home-manager/config/base.nix
     ../home-manager/config/sway.nix
 
     # GUI modules

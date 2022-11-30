@@ -1,8 +1,4 @@
 _: {
-  imports = [
-    ../home-manager/config/base.nix
-  ];
-
   sys = {
     core = {
       enable = true;
