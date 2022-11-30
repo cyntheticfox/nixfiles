@@ -51,6 +51,7 @@
 
     keyboard.enable = true;
     music.enable = true;
+    neovim.enable = true;
     sec.enable = true;
 
     shell = {

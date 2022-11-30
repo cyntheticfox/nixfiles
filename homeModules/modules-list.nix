@@ -7,6 +7,7 @@
   ./sys/gnupg.nix
   ./sys/keyboard.nix
   ./sys/music.nix
+  ./sys/neovim.nix
   ./sys/sec.nix
   ./sys/shell.nix
   ./sys/ssh.nix
