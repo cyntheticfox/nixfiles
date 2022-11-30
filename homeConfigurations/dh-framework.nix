@@ -12,9 +12,6 @@
     ../home-manager/config/gui/networking.nix
     ../home-manager/config/gui/teams.nix
     ../home-manager/config/gui/video.nix
-
-    # Terminal modules
-    ../home-manager/config/tui/podman.nix
   ];
 
   home.packages = with pkgs; [
@@ -52,6 +49,7 @@
     keyboard.enable = true;
     music.enable = true;
     neovim.enable = true;
+    podman.enable = true;
     sec.enable = true;
 
     shell = {
