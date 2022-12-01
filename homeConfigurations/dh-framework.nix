@@ -39,6 +39,16 @@
 
       discord = true;
       element = true;
+
+      remmina = {
+        enable = true;
+
+        package = pkgs.remmina.override {
+          freerdp = pkgs.freerdp.override {
+            openssl = pkgs.openssl_1_1;
+          };
+        };
+      };
       teams = true;
     };
 

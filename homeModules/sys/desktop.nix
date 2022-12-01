@@ -4,6 +4,14 @@ with lib;
 
 let
   cfg = config.sys.desktop;
+
+  remminaModule = types.submodule (_: {
+    options = {
+      enable = mkEnableOption "Enable Remmina configuration" // { default = true; };
+
+      package = mkPackageOption pkgs "remmina" { };
+    };
+  });
 in
 {
   options.sys.desktop = {
@@ -22,7 +30,13 @@ in
     element = mkEnableOption "Enable Element configuration";
     firefox = mkEnableOption "Enable Firefox configuration" // { default = true; };
     kitty = mkEnableOption "Enable Kitty Terminal emulator" // { default = true; };
-    remmina = mkEnableOption "Enable Remmina remote client" // { default = true; };
+    remmina = mkOption {
+      type = remminaModule;
+      description = ''
+        Configuration options for Remmina, a remote desktop client supporting
+        SSH, VNC, RDP, and more.
+      '';
+    };
     teams = mkEnableOption "Provide MS Teams as a desktop app.";
   };
 
@@ -456,7 +470,6 @@ in
           "x-scheme-handler/http"
           "x-scheme-handler/https"
         ];
-
       }
     ))
     (
@@ -511,8 +524,8 @@ in
 
       }
     )
-    (mkIf cfg.remmina {
-      home.packages = with pkgs; [ remmina ];
+    (mkIf cfg.remmina.enable {
+      home.packages = [ cfg.remmina.package ];
 
       xdg.mimeApps.defaultApplications."application/x-rdp" = "org.remmina.Remmina.desktop";
 
