@@ -178,7 +178,7 @@ in
 
         }
         cmp-buffer
-        # cmp-git
+        cmp-git
         cmp-nvim-lsp
         cmp-path
         cmp-treesitter
@@ -280,56 +280,8 @@ in
             })
           '';
         }
-        vim-gitgutter
-        # {
-        #   plugin = pkgs.nixpkgs-unstable.vimPlugins.gitsigns-nvim;
-        #   type = "lua";
-        #   config = ''
-        #     require('gitsigns').setup({
-        #       signs = {
-        #         add = {
-        #           hl = 'GitSignsAdd',
-        #           text = '+',
-        #           numhl = 'GitSignsAddNr',
-        #           linehl = 'GitSignsAddLn',
-        #         },
-        #         change = {
-        #           hl = 'GitSignsChange',
-        #           text = '~',
-        #           numhl = 'GitSignsChangeNr',
-        #           linehl = 'GitSignsChangeLn',
-        #         },
-        #         delete = {
-        #           hl = 'GitSignsDelete',
-        #           text = '-',
-        #           numhl = 'GitSignsDeleteNr',
-        #           linehl = 'GitSignsDeleteLn',
-        #         },
-        #         topdelete = {
-        #           hl = 'GitSignsDelete',
-        #           text = '-',
-        #           numhl = 'GitSignsDeleteNr',
-        #           linehl = 'GitSignsDeleteLn',
-        #         },
-        #         changedelete = {
-        #           hl = 'GitSignsChange',
-        #           text = '~',
-        #           numhl = 'GitSignsChangeNr',
-        #           linehl = 'GitSignsChangeLn',
-        #         },
-        #         untracked = {
-        #           hl = 'GitSignsAdd',
-        #           text = '?',
-        #           numhl = 'GitSignsAddNr',
-        #           linehl = 'GitSignsAddLn',
-        #         },
-        #       },
-        #       numhl = true
-        #     })
-        #   '';
-        # }
         {
-          plugin = pkgs.nixpkgs-unstable.vimPlugins.impatient-nvim;
+          plugin = impatient-nvim;
           type = "lua";
           config = "require('impatient')";
         }
@@ -584,7 +536,7 @@ in
                 }, bufnr)
             end
 
-            local capabilities_var = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+            local capabilities_var = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
             local runtime_path = vim.split(package.path, ';')
             table.insert(runtime_path, "lua/?.lua")
             table.insert(runtime_path, "lua/?/init.lua")
@@ -767,7 +719,7 @@ in
           '';
         }
         {
-          plugin = pkgs.nixpkgs-unstable.vimPlugins.nvim-treesitter.withPlugins (_: pkgs.nixpkgs-unstable.tree-sitter.allGrammars);
+          plugin = nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars);
           type = "lua";
           config = ''
             require('nvim-treesitter.configs').setup({
@@ -941,6 +893,7 @@ in
           config = "require('todo-comments').setup()";
         }
         vim-eunuch
+        vim-gitgutter
         vim-lastplace
         vim-nix
         vim-surround
