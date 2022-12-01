@@ -90,7 +90,7 @@ in
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    gtkUsePortal = true;
+    # gtkUsePortal = true;
     wlr.enable = true;
   };
 

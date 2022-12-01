@@ -414,7 +414,7 @@ in
         enable = true;
 
         package = pkgs.firefox.override {
-          forceWayland = true;
+          # forceWayland = true;
           cfg.enableTridactylNative = true;
         };
       };

@@ -17,7 +17,7 @@ _: {
 
   programs.home-manager.enable = true;
 
-  home.stateVersion = "22.05";
+  home.stateVersion = "22.11";
 
   home.sessionVariables."ON_NIXOS" = "1";
 }

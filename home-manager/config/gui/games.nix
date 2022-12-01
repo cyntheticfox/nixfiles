@@ -7,7 +7,7 @@
     retroarchFull
 
     # itch.io
-    itch
+    # itch
 
     # Steam
     steam

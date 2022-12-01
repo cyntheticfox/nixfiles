@@ -1,25 +1,32 @@
 { config, lib, pkgs, ... }: {
   nix = {
-    allowedUsers = [ "@wheel" ];
-    autoOptimiseStore = true;
-    binaryCachePublicKeys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
-    binaryCaches = [
-      "https://cache.nixos.org"
-      "https://nix-community.cachix.org"
-    ];
     extraOptions = ''
       experimental-features = nix-command flakes ca-derivations
     '';
+
     gc = {
       automatic = true;
       options = "--delete-older-than 7d";
       dates = "weekly";
       persistent = true;
     };
+
     optimise.automatic = true;
+
+    settings = {
+      allowed-users = [ "@wheel" ];
+      auto-optimise-store = true;
+
+      substituters = [
+        "https://cache.nixos.org"
+        "https://nix-community.cachix.org"
+      ];
+
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+    };
   };
 
   nixpkgs.config.allowUnfree = true;
@@ -130,5 +137,5 @@
     "TrustCor RootCert CA-2"
   ];
 
-  system.stateVersion = "22.05";
+  system.stateVersion = "22.11";
 }

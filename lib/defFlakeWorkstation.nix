@@ -46,6 +46,8 @@ nixpkgs.lib.nixosSystem {
 
     (_: {
       home-manager = {
+        backupFileExtension = ".bak";
+
         sharedModules = [
           ({ pkgs, ... }: {
             programs.nix-index.enable = true;
