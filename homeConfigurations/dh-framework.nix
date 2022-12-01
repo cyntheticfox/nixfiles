@@ -3,7 +3,6 @@
     ../home-manager/config/sway.nix
 
     # GUI modules
-    ../home-manager/config/gui/chat.nix
     ../home-manager/config/gui/dev.nix
     ../home-manager/config/gui/documents.nix
     ../home-manager/config/gui/games.nix
@@ -37,6 +36,9 @@
       enable = true;
 
       defaultBrowser = "firefox";
+
+      discord = true;
+      element = true;
       teams = true;
     };
 

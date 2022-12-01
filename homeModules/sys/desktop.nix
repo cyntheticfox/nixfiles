@@ -17,8 +17,10 @@ in
       '';
     };
 
-    chromium = mkEnableOption "Enable chromium configuration" // { default = true; };
-    firefox = mkEnableOption "Enable firefox configuration" // { default = true; };
+    chromium = mkEnableOption "Enable Chromium configuration" // { default = true; };
+    discord = mkEnableOption "Enable Discord configuration";
+    element = mkEnableOption "Enable Element configuration";
+    firefox = mkEnableOption "Enable Firefox configuration" // { default = true; };
     kitty = mkEnableOption "Enable Kitty Terminal emulator" // { default = true; };
     remmina = mkEnableOption "Enable Remmina remote client" // { default = true; };
     teams = mkEnableOption "Provide MS Teams as a desktop app.";
@@ -78,6 +80,20 @@ in
         enable = true;
         package = pkgs.ungoogled-chromium;
       };
+    })
+    (mkIf cfg.discord {
+      home.packages = with pkgs; [ discord ];
+
+      xdg.configFile."discord/settings.json".source = (pkgs.formats.json { }).generate "settings.json" {
+        IS_MAXIMIZED = true;
+        IS_MINIMIZED = false;
+        SKIP_HOST_UPDATE = true;
+      };
+    })
+    (mkIf cfg.element {
+      home.packages = with pkgs; [ element-desktop ];
+
+      home.sessionVariables."NIXOS_OZONE_WL" = 1;
     })
     (mkIf cfg.firefox {
       xdg.configFile."tridactyl/tridactylrc".text = ''

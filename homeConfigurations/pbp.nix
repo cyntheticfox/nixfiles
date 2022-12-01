@@ -1,15 +1,16 @@
 _: {
-  imports = [
-    ../home-manager/config/gui/chat.nix
-  ];
-
   sys = {
     dev.enable = true;
+
     desktop = {
       enable = true;
 
       defaultBroswer = "firefox";
+
+      discord = true;
+      element = true;
     };
+
     fonts.enable = true;
     podman.enable = true;
 
