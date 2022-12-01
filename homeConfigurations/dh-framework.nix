@@ -9,7 +9,6 @@
     ../home-manager/config/gui/games.nix
     ../home-manager/config/gui/libvirt.nix
     ../home-manager/config/gui/networking.nix
-    ../home-manager/config/gui/teams.nix
     ../home-manager/config/gui/video.nix
   ];
 
@@ -32,6 +31,13 @@
       manageFilePackages.enable = true;
       manageNetworkPackages.enable = true;
       manageProcessPackages.enable = true;
+    };
+
+    desktop = {
+      enable = true;
+
+      defaultBrowser = "firefox";
+      teams = true;
     };
 
     dev.enable = true;

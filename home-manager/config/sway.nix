@@ -147,8 +147,6 @@ let
   };
 in
 {
-  imports = [ ./base-desktop.nix ];
-
   home.packages = with pkgs; [
     libnotify
   ];

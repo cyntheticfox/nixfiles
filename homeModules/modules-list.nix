@@ -2,6 +2,7 @@
   ./sys/cloud.nix
   ./sys/core.nix
   ./sys/dev.nix
+  ./sys/desktop.nix
   ./sys/fonts.nix
   ./sys/git.nix
   ./sys/gnupg.nix
