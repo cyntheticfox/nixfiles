@@ -89,7 +89,7 @@
           };
 
           dh-framework = self.lib.defFlakeWorkstation {
-            inherit home-manager nixpkgs nixpkgs-unstable;
+            inherit home-manager nixpkgs nixpkgs-unstable nix-index-database;
 
             cpuVendor = "intel";
 

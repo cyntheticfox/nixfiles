@@ -76,11 +76,11 @@
     },
     "nix-index-database": {
       "locked": {
-        "lastModified": 1670123531,
-        "narHash": "sha256-lKvy2mNwbkHHOTcrRfdfcAtIJVzlv8mUTJcdYlUg+pc=",
+        "lastModified": 1670242033,
+        "narHash": "sha256-Svn+5ZQXk7+YfYuNzuIE5MuU4Ng21OdHUGkf8c5g6XY=",
         "owner": "houstdav000",
         "repo": "nix-index-database-stable",
-        "rev": "7142135a0a5d8395fc62a9cf161d95618b7ebe3b",
+        "rev": "305a6a81fce5f9447c6bfe4befc7d0db89370b6a",
         "type": "github"
       },
       "original": {
