@@ -67,7 +67,6 @@
             inherit home-manager nixpkgs nixpkgs-unstable;
 
             username = "david";
-            system = "aarch64-linux";
             modules = [ ./homeConfigurations/pbp.nix ];
           };
 
