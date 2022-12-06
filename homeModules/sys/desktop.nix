@@ -10,6 +10,8 @@ let
       enable = mkEnableOption "Enable Remmina configuration" // { default = true; };
 
       package = mkPackageOption pkgs "remmina" { };
+
+      startService = mkEnableOption "Start the remmina service in the background" // { default = true; };
     };
   });
 in
@@ -524,23 +526,43 @@ in
 
       }
     )
-    (mkIf cfg.remmina.enable {
-      home.packages = [ cfg.remmina.package ];
+    (mkIf cfg.remmina.enable (
+      mkMerge [
+        {
+          home.packages = [ cfg.remmina.package ];
 
-      xdg.mimeApps.defaultApplications."application/x-rdp" = "org.remmina.Remmina.desktop";
+          xdg.mimeApps.defaultApplications."application/x-rdp" = "org.remmina.Remmina.desktop";
 
-      xdg.dataFile."mime/packages/application-x-rdp.xml".text = ''
-        <?xml version="1.0" encoding="UTF-8"?>
-        <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
-          <mime-type type="application/x-rdp">
-            <comment>rdp file</comment>
-            <icon name="application-x-rdp"/>
-            <glob-deleteall/>
-            <glob pattern="*.rdp"/>
-          </mime-type>
-        </mime-info>
-      '';
-    })
+          xdg.dataFile."mime/packages/application-x-rdp.xml".text = ''
+            <?xml version="1.0" encoding="UTF-8"?>
+            <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+              <mime-type type="application/x-rdp">
+                <comment>rdp file</comment>
+                <icon name="application-x-rdp"/>
+                <glob-deleteall/>
+                <glob pattern="*.rdp"/>
+              </mime-type>
+            </mime-info>
+          '';
+        }
+        (mkIf cfg.remmina.startService {
+          systemd.user.services.remmina = {
+            Unit = {
+              Description = "Remmina remote desktop client";
+              Documentation = "man:remmina(1)";
+              PartOf = [ "graphical-session.target" ];
+            };
+
+            Install.WantedBy = [ "graphical-session.target" ];
+
+            Service = {
+              Type = "simple";
+              ExecStart = "${cfg.remmina.package}/bin/remmina -i";
+            };
+          };
+        })
+      ])
+    )
     (mkIf cfg.teams {
       home.packages = with pkgs; [
         nixpkgs-unstable.teams
