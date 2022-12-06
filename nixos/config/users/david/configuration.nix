@@ -91,6 +91,7 @@ in
       ".config/Element"
       ".config/libvirt"
       ".config/Microsoft/Microsoft Teams"
+      ".config/microsoft-edge"
       ".config/pipewire"
       ".config/teams"
       {

@@ -30,6 +30,7 @@ in
     chromium = mkEnableOption "Enable Chromium configuration" // { default = true; };
     discord = mkEnableOption "Enable Discord configuration";
     element = mkEnableOption "Enable Element configuration";
+    edge = mkEnableOption "Enable Microsoft Edge configuration";
     firefox = mkEnableOption "Enable Firefox configuration" // { default = true; };
     kitty = mkEnableOption "Enable Kitty Terminal emulator" // { default = true; };
     remmina = mkOption {
@@ -110,6 +111,9 @@ in
       home.packages = with pkgs; [ element-desktop ];
 
       home.sessionVariables."NIXOS_OZONE_WL" = 1;
+    })
+    (mkIf cfg.edge {
+      home.packages = with pkgs; [ microsoft-edge ];
     })
     (mkIf cfg.firefox {
       xdg.configFile."tridactyl/tridactylrc".text = ''
