@@ -32,6 +32,7 @@ in
     element = mkEnableOption "Enable Element configuration";
     edge = mkEnableOption "Enable Microsoft Edge configuration";
     firefox = mkEnableOption "Enable Firefox configuration" // { default = true; };
+    ghidra = mkEnableOption "Enable Ghidra configuration";
     kitty = mkEnableOption "Enable Kitty Terminal emulator" // { default = true; };
     remmina = mkOption {
       type = remminaModule;
@@ -478,6 +479,9 @@ in
         ];
       }
     ))
+    (mkIf cfg.ghidra {
+      home.packages = with pkgs; [ ghidra ];
+    })
     (
       let
         theme = "nord";
