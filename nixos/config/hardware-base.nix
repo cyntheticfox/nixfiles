@@ -102,6 +102,17 @@ in
     '';
   };
 
+  environment.systemPackages =
+    if
+      workstation
+    then
+      with pkgs; [
+        usbutils
+        pciutils
+      ]
+    else
+      [ ];
+
   zramSwap.enable = true;
 
   hardware.enableRedistributableFirmware = true;
