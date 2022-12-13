@@ -28,7 +28,6 @@ in
         llvmPackages_latest.clang-manpages
         nodejs_latest
         pastel
-        poetry
         python3
 
         # Repository Management
