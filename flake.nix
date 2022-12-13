@@ -93,7 +93,7 @@
             cpuVendor = "intel";
 
             modules = [
-              nixos-hardware.nixosModules.framework
+              nixos-hardware.nixosModules.framework-12th-gen-intel
               sops-nix.nixosModules.sops
               impermanence.nixosModules.impermanence
 
