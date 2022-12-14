@@ -342,7 +342,7 @@ in
             outFile =
               let
                 timestampFormat = "%Y-%m-%d-%H%M%S";
-                timestampBash = "$(${user-bins.date} + '${timestampFormat}')";
+                timestampBash = "$(${user-bins.date} +${timestampFormat})";
               in
               dir: prefix: type: dir + "/" + prefix + "-" + timestampBash + "." + type;
             killRecorder = "exec ${user-bins.pkill} wf-recorder";
