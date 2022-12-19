@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-{ pkgs ? import <nixpkgs> { }, home-manager, nmt }:
+{ pkgs ? import <nixpkgs> { }, home-manager, nmt, ... }:
 
 let
   lib = pkgs.lib.extend

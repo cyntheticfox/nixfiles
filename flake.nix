@@ -117,13 +117,12 @@
           };
         };
 
-        checks.x86_64-linux = (nixpkgs.lib.genAttrs (builtins.attrNames self.outputs.nixosConfigurations) (name: self.outputs.nixosConfigurations."${name}".config.system.build.toplevel)) //
-          (import ./tests {
-            inherit home-manager nmt;
+        checks.x86_64-linux = import ./tests {
+          inherit home-manager nmt;
+          inherit (self.outputs) nixosConfigurations;
 
-            pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          });
-
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        };
       }
       (flake-utils.lib.eachDefaultSystem (system: {
         checks.pre-commit-check = pre-commit-hooks.lib."${system}".run {
