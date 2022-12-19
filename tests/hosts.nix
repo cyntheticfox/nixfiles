@@ -19,6 +19,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+# :: { pkgs :: AttrSet, nixosConfigurations :: AttrSet } -> AttrSet
 { pkgs, nixosConfigurations, ... }:
 
 assert builtins.isAttrs nixosConfigurations;
@@ -26,28 +27,43 @@ assert builtins.isAttrs nixosConfigurations;
 with pkgs;
 
 let
+  # type NixosConfig = AttrSet # too much work to figure out right now
+
   testHostModules = [
     {
       nixpkgs.config.allowUnfree = false;
     }
   ];
 
-  mkTestConfig = cfg: (cfg // {
-    modules = testHostModules ++ (cfg.modules or [ ]);
-  });
-
-  mkTestSystem = cfg: (mkTestConfig cfg).config.system.build.toplevel;
-
-  mkTestInstaller = cfg: (mkTestConfig cfg).config.system.build.installer;
-
+  # hasTestableSystem :: NixosConfig -> NixosConfig
   hasTestableSystem = lib.attrsets.hasAttrByPath [ "config" "system" "build" "toplevel" ];
 
-  isBuildableOnHost = cfg: cfg.pkgs.stdenv.hostPlatform.system == pkgs.stdenv.hostPlatform.system;
-
-  isTestableOnHost = cfg: (hasTestableSystem cfg) && (isBuildableOnHost cfg);
-
+  # hasInstaller :: NixosConfig -> NixosConfig
   hasInstaller = lib.attrsets.hasAttrByPath [ "config" "system" "build" "installer" ];
 
-  mkConfigListItem = cfg: { "host-test-${cfg.config.networking.hostName}" = mkTestSystem cfg; } // (if hasInstaller cfg then { "installer-test-${cfg.config.networking.hostName}" = mkTestInstaller cfg; } else { });
+  # isBuildableOnHost :: NixosConfig -> Bool
+  isBuildableOnHost = cfg:
+    cfg.pkgs.stdenv.hostPlatform.system == pkgs.stdenv.hostPlatform.system;
+
+  # isTestableOnHost :: NixosConfig -> Bool
+  isTestableOnHost = cfg:
+    hasTestableSystem cfg && isBuildableOnHost cfg;
+
+  # mkTestConfig :: NixosConfig -> NixosConfig
+  mkTestConfig = cfg:
+    cfg // {
+      modules = testHostModules ++ (cfg.modules or [ ]);
+    };
+
+  # mkConfigListItem :: NixosConfig -> AttrSet
+  mkConfigListItem = cfg:
+    {
+      "host-test-${cfg.config.networking.hostName}" = (mkTestConfig cfg).config.system.build.toplevel;
+    } // lib.attrsets.optionalAttrs (hasInstaller cfg) {
+      "installer-test-${cfg.config.networking.hostName}" = (mkTestConfig cfg).config.system.build.installer;
+    };
+
+  # mergeAttrsList :: [AttrSet] -> AttrSet
+  mergeAttrsList = builtins.foldl' lib.trivial.mergeAttrs { };
 in
-builtins.foldl' (lhs: rhs: lhs // rhs) { } (lib.lists.flatten (builtins.map mkConfigListItem (lib.attrsets.collect isTestableOnHost nixosConfigurations)))
+mergeAttrsList (builtins.map mkConfigListItem (lib.attrsets.collect isTestableOnHost nixosConfigurations))
