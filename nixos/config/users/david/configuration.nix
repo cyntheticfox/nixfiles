@@ -150,6 +150,7 @@ in
       "iso"
       "opt"
       "tmp"
+      "wrk"
     ];
 
     files = [
