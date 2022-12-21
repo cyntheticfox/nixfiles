@@ -23,7 +23,7 @@ home-manager.lib.homeManagerConfiguration {
   pkgs = import nixpkgs {
     config.allowUnfree = allowUnfree;
 
-    overlays = [ nixpkgs-unstable ];
+    overlays = [ unstable-overlay ];
   };
 
   modules = [
