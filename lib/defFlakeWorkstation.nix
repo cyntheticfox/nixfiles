@@ -46,7 +46,7 @@ nixpkgs.lib.nixosSystem {
 
     (_: {
       home-manager = {
-        backupFileExtension = ".bak";
+        backupFileExtension = "bak";
 
         sharedModules = [
           ({ pkgs, ... }: {
