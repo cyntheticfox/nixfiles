@@ -19,31 +19,44 @@ let
     base0F = "#B48EAD";
   };
 
-  toScreen = { name, id ? null, outputString ? null, xPixels, yPixels, refreshRate, scale ? 1.0 }:
-    assert builtins.isString name;
-    assert id == null || builtins.isString id;
-    assert outputString == null || builtins.isString outputString;
-    assert builtins.isInt xPixels;
-    assert builtins.isInt yPixels;
-    assert builtins.isFloat refreshRate || builtins.isInt refreshRate;
-    assert builtins.isFloat scale;
-    assert (id != null && outputString == null) || (id == null && outputString != null);
-    let
-      resolution = "${xPixels}x${yPixels}";
-      modeString = "${resolution} @ ${refreshRate} Hz";
-      criteria =
-        if
-          id != null
-        then
-          id
-        else
-          outputString;
-      xPixelsOut = builtins.ceil (xPixels * (1 / scale));
-      yPixelsOut = builtins.ceil (yPixels * (1 / scale));
-    in
-    {
-      inherit criteria modeString name refreshRate resolution scale xPixels xPixelsOut yPixels yPixelsOut;
-    };
+  # TODO: Refactor?
+  toScreen =
+    { name
+    , id ? null
+    , outputString ? null
+    , xPixels
+    , yPixels
+    , refreshRate
+    , scale ? 1.0
+    }:
+      assert builtins.isString name;
+      assert id == null || builtins.isString id;
+      assert outputString == null || builtins.isString outputString;
+      assert builtins.isInt xPixels;
+      assert builtins.isInt yPixels;
+      assert builtins.isFloat refreshRate || builtins.isInt refreshRate;
+      assert builtins.isFloat scale;
+      assert (id != null && outputString == null) || (id == null && outputString != null);
+
+      let
+        resolution = "${xPixels}x${yPixels}";
+      in
+      {
+        inherit name refreshRate resolution scale xPixels yPixels;
+
+        modeString = "${resolution} @ ${refreshRate} Hz";
+
+        criteria =
+          if
+            id != null
+          then
+            id
+          else
+            outputString;
+
+        xPixelsOut = builtins.ceil (xPixels * (1 / scale));
+        yPixelsOut = builtins.ceil (yPixels * (1 / scale));
+      };
 
   screens = {
     builtin = toScreen {
@@ -53,6 +66,7 @@ let
       yPixels = 1504;
       refreshRate = 59.999;
     };
+
     builtinBigger = toScreen {
       name = "Built-in display";
       id = "eDP-1";
@@ -61,6 +75,7 @@ let
       yPixels = 1504;
       refreshRate = 59.999;
     };
+
     homeDockCenter = toScreen {
       name = "ASUS High Refresh-Rate Monitor";
       outputString = "Unknown VG28UQL1A 0x00000101";
@@ -69,6 +84,7 @@ let
       yPixels = 2160;
       refreshRate = 30; # High refresh rate/resolution, but can't run it at such
     };
+
     homeDockLeft = toScreen {
       name = "ASUS Low Refresh-Rate Monitor";
       outputString = "Unknown VA279 N2LMQS025509";
@@ -76,6 +92,7 @@ let
       yPixels = 1080;
       refreshRate = 60;
     };
+
     homeDockRight = toScreen {
       name = "ViewSonic 4:3 Monitor";
       outputString = "ViewSonic Corporation VP211b A22050300003";
@@ -83,6 +100,7 @@ let
       yPixels = 1200;
       refreshRate = 60;
     };
+
     homeDockRightFallback = toScreen {
       name = "ViewSonic 4:3 Monitor Fallback";
       outputString = "<Unknown> <Unknown> "; # The displayport to DVI adapter likes to act up
@@ -92,12 +110,15 @@ let
     };
 
     # Functions
-    screenOrder = list: lib.escapeShellArgs (builtins.map (x: assert builtins.isAttrs x; x."criteria") list);
+    # TODO: Refactor
+    screenOrder = list:
+      lib.escapeShellArgs (builtins.map (x: assert builtins.isAttrs x; x."criteria") list);
   };
 
   user-bins = {
     date = "${pkgs.coreutils}/bin/date";
-    discord = "${pkgs.discord-canary}/bin/discordcanary";
+    discord = "${pkgs.discord}/bin/discord";
+    edge = "${pkgs.microsoft-edge}/bin/microsoft-edge";
     element = "${pkgs.element-desktop-wayland}/bin/element-desktop";
     grimshot = "${pkgs.sway-contrib.grimshot}/bin/grimshot";
     jq = "${pkgs.jq}/bin/jq";
@@ -112,13 +133,13 @@ let
     swaylock = "${pkgs.swaylock-effects}/bin/swaylock";
     swaymsg = "${config.wayland.windowManager.sway.package}/bin/swaymsg";
     systemctl = config.systemd.user.systemctlPath;
-    teams = "${pkgs.nixpkgs-unstable.teams}/bin/teams";
     waybar = "${pkgs.waybar}/bin/waybar";
     wf-recorder = "${pkgs.wf-recorder}/bin/wf-recorder";
     wlogout = "${pkgs.wlogout}/bin/wlogout";
     xargs = "${pkgs.findutils}/bin/xargs";
   };
 
+  # FIXME: Find a better way to do this pls
   lockscreen = lib.concatStringsSep " " [
     "${user-bins.swaylock}"
     "--daemonize"
@@ -136,14 +157,14 @@ let
   #
   workspaces = {
     _1 = "1:   Web";
-    _2 = "2:   Teams";
+    _2 = "2:   Microsoft Stuff";
     _3 = "3:   Matrix";
     _4 = "4:   Discord";
-    _5 = "5:   Email";
-    _6 = "6:   Etc 1";
-    _7 = "7:   Etc 2";
-    _8 = "8:   Etc 3";
-    _9 = "9:   Etc 4";
+    _5 = "5:   Etc 1";
+    _6 = "6:   Etc 2";
+    _7 = "7:   Etc 3";
+    _8 = "8:   Etc 4";
+    _9 = "9:   Etc 5";
   };
 in
 {
@@ -281,7 +302,7 @@ in
 
         startup = [
           { command = config.home.sessionVariables.BROWSER; }
-          { command = user-bins.teams; }
+          { command = user-bins.edge; }
           { command = user-bins.element; }
           # { command = user-bins.discord; }
         ];
@@ -299,8 +320,19 @@ in
         #
         assigns = {
           "\"${workspaces._1}\"" = [{ app_id = "^firefox$"; }];
-          "\"${workspaces._2}\"" = [{ class = "^Microsoft Teams - Preview"; }];
-          "\"${workspaces._3}\"" = [{ class = "^Element$"; } { instance = "^element$"; } { title = "^Element"; }];
+
+          "\"${workspaces._2}\"" = [
+            { class = "^Microsoft-edge$"; }
+            { instance = "^microsoft-edge$"; }
+          ];
+
+          # Element is a little finicky
+          "\"${workspaces._3}\"" = [
+            { class = "^Element$"; }
+            { instance = "^element$"; }
+            { title = "^Element"; }
+          ];
+
           # "\"${workspaces._4}\"" = [
           #   { instance = "^discord$"; }
           #   { title = "^Discord$"; }
@@ -355,6 +387,7 @@ in
                   small = tiny * 2;
                   large = small * 2;
                 };
+
                 sizeMap = lib.mapAttrs (_: v: "${builtins.toString v}px") sizes;
               in
               with sizeMap; {
@@ -408,22 +441,28 @@ in
               let
                 recording-mode = "mode \"recording_on\"";
                 recording-file = outFile config.xdg.userDirs.videos "recording" "mp4";
+
                 areas = {
                   win = {
                     command = "$(${user-bins.swaymsg} -t get_outputs | ${user-bins.jq} -r '.[] | select(.focused) | .name')";
                     arg = "-o";
                   };
+
                   area = {
                     command = "\"$(${user-bins.slurp} -d)\"";
                     arg = "-g";
                   };
                 };
+
                 audioBln = a: "--audio${if a then "" else "=0"}";
+
                 keyMap = {
                   "w" = "win";
                   "r" = "area";
                 };
-                capture = audio: area: "${killRecorder} || ${user-bins.wf-recorder} ${audioBln audio} ${areas."${area}".arg} ${areas."${area}".command} -f ${recording-file}, ${recording-mode}";
+
+                capture = audio: area:
+                  "${killRecorder} || ${user-bins.wf-recorder} ${audioBln audio} ${areas."${area}".arg} ${areas."${area}".command} -f ${recording-file}, ${recording-mode}";
               in
               (lib.mapAttrs (_: capture true) keyMap) //
               (lib.mapAttrs' (n: v: lib.nameValuePair "Shift+${n}" (capture false v)) keyMap) //
@@ -441,6 +480,7 @@ in
               builtinBigger
               builtin
             ];
+
             left = with screens; screenOrder [
               homeDockLeft
               homeDockCenter
@@ -449,6 +489,7 @@ in
               builtinBigger
               builtin
             ];
+
             right = with screens; screenOrder [
               homeDockRight
               homeDockRightFallback
@@ -457,56 +498,31 @@ in
               builtinBigger
               builtin
             ];
+
             laptop = with screens; screenOrder [
               builtinBigger
+              builtin
+              homeDockLeft
               homeDockRight
               homeDockRightFallback
               homeDockCenter
-              homeDockLeft
-              builtin
             ];
           in
           [
-            {
-              workspace = workspaces._1;
-              output = laptop;
-            }
-            {
-              workspace = workspaces._2;
-              output = right;
-            }
-            {
-              workspace = workspaces._3;
-              output = right;
-            }
-            {
-              workspace = workspaces._4;
-              output = right;
-            }
-            {
-              workspace = workspaces._5;
-              output = left;
-            }
-            {
-              workspace = workspaces._6;
-              output = center;
-            }
-            {
-              workspace = workspaces._7;
-              output = center;
-            }
-            {
-              workspace = workspaces._8;
-              output = center;
-            }
-            {
-              workspace = workspaces._9;
-              output = center;
-            }
+            { workspace = workspaces._1; output = laptop; }
+            { workspace = workspaces._2; output = right; }
+            { workspace = workspaces._3; output = right; }
+            { workspace = workspaces._4; output = right; }
+            { workspace = workspaces._5; output = left; }
+            { workspace = workspaces._6; output = center; }
+            { workspace = workspaces._7; output = center; }
+            { workspace = workspaces._8; output = center; }
+            { workspace = workspaces._9; output = center; }
           ];
 
         colors = with palletes.nord; {
           background = base07;
+
           focused = {
             border = base05;
             background = base0C;
@@ -547,8 +563,10 @@ in
             childBorder = base00;
           };
         };
+
         output."*".bg = "~/wallpaper.png fill #000000";
       };
+
     extraConfig = ''
       workspace "${workspaces._9}"
       workspace "${workspaces._8}"
@@ -578,9 +596,11 @@ in
       "sway/workspaces"
       "sway/mode"
     ];
+
     modules-center = [
       "sway/window"
     ];
+
     modules-right = [
       "network"
       "cpu"
@@ -594,12 +614,15 @@ in
 
     battery = {
       interval = 30;
+
       states = {
         warning = 30;
         critical = 15;
       };
+
       format-charging = " {icon} {capacity}%"; # Icon: bolt
       format = "{icon}  {capacity}%";
+
       format-icons = [
         "" # Icon: battery-empty
         "" # Icon: battery-quarter
@@ -607,6 +630,7 @@ in
         "" # Icon: battery-three-quarters
         "" # Icon: battery-full
       ];
+
       tooltip = false;
     };
 
@@ -620,6 +644,7 @@ in
     cpu = {
       interval = 5;
       format = "  {usage}%"; # Icon: microchip
+
       states = {
         warning = 70;
         critical = 90;
@@ -629,6 +654,7 @@ in
     memory = {
       interval = 5;
       format = "  {}%"; # Icon: memory
+
       states = {
         warning = 70;
         critical = 90;
@@ -670,6 +696,7 @@ in
       format = "{icon}  {volume}%";
       format-bluetooth = "{icon}  {volume}%";
       format-muted = "";
+
       format-icons = {
         headphones = "";
         handsfree = "";
@@ -679,6 +706,7 @@ in
         car = "";
         default = [ "" "" ];
       };
+
       on-scroll-down = "${user-bins.pamixer} -d 2";
       on-scroll-up = "${user-bins.pamixer} -i 2";
       on-click = user-bins.pavucontrol;
@@ -894,9 +922,8 @@ in
 
       homeDockedFull.outputs = [
         {
-          inherit (screens.builtinBigger) criteria;
-          status = "enable";
-          position = "0,${builtins.toString screens.homeDockLeft.yPixelsOut}";
+          inherit (screens.builtin) criteria;
+          status = "disable";
         }
         {
           inherit (screens.homeDockLeft) criteria;
@@ -917,9 +944,8 @@ in
 
       homeDockedFullFallback.outputs = [
         {
-          inherit (screens.builtinBigger) criteria;
-          status = "enable";
-          position = "0,${builtins.toString screens.homeDockLeft.yPixelsOut}";
+          inherit (screens.builtin) criteria;
+          status = "disable";
         }
         {
           inherit (screens.homeDockLeft) criteria;
@@ -940,6 +966,10 @@ in
 
       homeDockedPartialNoLeft.outputs = [
         {
+          inherit (screens.builtin) criteria;
+          status = "disable";
+        }
+        {
           inherit (screens.builtinBigger) criteria;
           status = "enable";
           position = "0,${builtins.toString screens.homeDockCenter.yPixelsOut}";
@@ -958,6 +988,10 @@ in
 
       homeDockedPartialNoCenter.outputs = [
         {
+          inherit (screens.builtin) criteria;
+          status = "disable";
+        }
+        {
           inherit (screens.builtinBigger) criteria;
           status = "enable";
           position = "0,${builtins.toString screens.homeDockLeft.yPixelsOut}";
@@ -975,6 +1009,10 @@ in
       ];
 
       homeDockedPartialNoRight.outputs = [
+        {
+          inherit (screens.builtin) criteria;
+          status = "disable";
+        }
         {
           inherit (screens.builtinBigger) criteria;
           status = "enable";
@@ -1009,6 +1047,7 @@ in
     enable = true;
 
     defaultTimeout = 15 * 1000;
+
     iconPath = lib.concatStringsSep ":" [
       "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark"
       "${pkgs.papirus-icon-theme}/share/icons/Papirus"
