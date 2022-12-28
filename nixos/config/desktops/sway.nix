@@ -15,6 +15,11 @@ let
     '';
   };
 
+  polkit-sway = pkgs.runCommand "polkit-sway" { preferLocalBuild = true; } ''
+    mkdir -p "$out/etc/xdg/autostart"
+    sed -e 's/^OnlyShowIn=.*$/OnlyShowIn=sway;/' ${pkgs.polkit_gnome}/etc/xdg/autostart/polkit-gnome-authentication-agent-1.desktop >$out/etc/xdg/autostart/polkit-sway-authentication-agent-1.desktop
+  '';
+
   sway-dconf-db = pkgs.runCommand "sway-dconf-db" { preferLocalBuild = true; } ''
     ${pkgs.dconf}/bin/dconf compile $out ${sway-dconf-settings}/dconf
   '';
@@ -26,9 +31,8 @@ let
 in
 {
   programs.sway = {
-    ### Enable Sway window-manager
-    #
     enable = true;
+
     wrapperFeatures.gtk = true;
     extraPackages = with pkgs; [
       # Theming
@@ -42,7 +46,7 @@ in
       mako
       pavucontrol
       playerctl
-      polkit_gnome
+      polkit-sway
       qt5.qtwayland
       slurp
       swayidle

@@ -69,6 +69,7 @@
         directory = "/var/lib/docker";
         mode = "u=rwx,g=x,o=";
       }
+      "/var/lib/fprint"
       "/var/lib/libvirt"
       "/var/lib/minikube"
       "/var/lib/systemd/coredump"

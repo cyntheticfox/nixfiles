@@ -37,9 +37,7 @@
 
       defaultBrowser = "firefox";
 
-      discord = true;
       edge = true;
-      element = true;
 
       remmina = {
         enable = true;

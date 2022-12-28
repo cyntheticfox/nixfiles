@@ -117,9 +117,9 @@ let
 
   user-bins = {
     date = "${pkgs.coreutils}/bin/date";
-    discord = "${pkgs.discord}/bin/discord";
+    # discord = "${pkgs.discord}/bin/discord";
     edge = "${pkgs.microsoft-edge}/bin/microsoft-edge";
-    element = "${pkgs.element-desktop-wayland}/bin/element-desktop";
+    # element = "${pkgs.element-desktop-wayland}/bin/element-desktop";
     grimshot = "${pkgs.sway-contrib.grimshot}/bin/grimshot";
     jq = "${pkgs.jq}/bin/jq";
     light = "${pkgs.light}/bin/light";
@@ -303,7 +303,7 @@ in
         startup = [
           { command = config.home.sessionVariables.BROWSER; }
           { command = user-bins.edge; }
-          { command = user-bins.element; }
+          # { command = user-bins.element; }
           # { command = user-bins.discord; }
         ];
 
@@ -326,12 +326,12 @@ in
             { instance = "^microsoft-edge$"; }
           ];
 
-          # Element is a little finicky
-          "\"${workspaces._3}\"" = [
-            { class = "^Element$"; }
-            { instance = "^element$"; }
-            { title = "^Element"; }
-          ];
+          # # Element is a little finicky
+          # "\"${workspaces._3}\"" = [
+          #   { class = "^Element$"; }
+          #   { instance = "^element$"; }
+          #   { title = "^Element"; }
+          # ];
 
           # "\"${workspaces._4}\"" = [
           #   { instance = "^discord$"; }
@@ -1134,4 +1134,10 @@ in
 
       Install.WantedBy = [ "graphical-session.target" ];
     };
+
+
+  systemd.user.targets.sway-session.Unit.Wants = [
+    "graphical-session-pre.target"
+    "xdg-desktop-autostart.target"
+  ];
 }
