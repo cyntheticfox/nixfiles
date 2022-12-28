@@ -155,7 +155,7 @@
 
                 # Nix linting
                 deadnix
-                nix-linter
+                # nix-linter # FIXME: Broken as of 2022-12-28
                 statix
 
                 # sops-nix
@@ -193,7 +193,7 @@
 
                 # Nix linting
                 deadnix
-                nix-linter
+                # nix-linter # FIXME: Broken as of 2022-12-28
                 statix
 
                 # sops-nix
