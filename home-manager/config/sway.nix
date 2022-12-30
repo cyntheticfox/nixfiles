@@ -970,11 +970,6 @@ in
           status = "disable";
         }
         {
-          inherit (screens.builtinBigger) criteria;
-          status = "enable";
-          position = "0,${builtins.toString screens.homeDockCenter.yPixelsOut}";
-        }
-        {
           inherit (screens.homeDockCenter) criteria scale;
           status = "enable";
           position = "0,0";
@@ -992,11 +987,6 @@ in
           status = "disable";
         }
         {
-          inherit (screens.builtinBigger) criteria;
-          status = "enable";
-          position = "0,${builtins.toString screens.homeDockLeft.yPixelsOut}";
-        }
-        {
           inherit (screens.homeDockLeft) criteria;
           status = "enable";
           position = "0,0";
@@ -1012,11 +1002,6 @@ in
         {
           inherit (screens.builtin) criteria;
           status = "disable";
-        }
-        {
-          inherit (screens.builtinBigger) criteria;
-          status = "enable";
-          position = "0,${builtins.toString screens.homeDockLeft.yPixelsOut}";
         }
         {
           inherit (screens.homeDockLeft) criteria;

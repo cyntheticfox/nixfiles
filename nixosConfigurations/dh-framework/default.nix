@@ -143,7 +143,6 @@
     ntfs3g
     parted
     restic
-    udiskie
 
     bluez-tools
     minikube
@@ -158,6 +157,8 @@
   };
 
   systemd.services."restic-backups-${config.networking.hostName}".serviceConfig.ExecCondition = "${config.systemd.package}/lib/systemd/systemd-networkd-wait-online --interface=enp0s13f0u4u4:routable --timeout=5";
+
+  services.udisks2.enable = true;
 
   systemd.tmpfiles.packages = with pkgs; [ openvpn man-db ];
 
