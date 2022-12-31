@@ -25,30 +25,21 @@ Here are a few tools I use:
 
 ### Terminal
 
-- [direnv](https://github.com/direnv/direnv)
-- [git](https://github.com/git/git)
-- [gnupg](https://gnupg.org/)
-- [mpd](https://musicpd.org/)
-- [neovim](https://github.com/neovim/neovim)
-- [newsboat](https://newsboat.org/)
-- [qemu](https://www.qemu.org)
-- [starship](https://github.com/starship/starship)
-- [todo.txt](https://github.com/todotxt/todo.txt-cli)
-- [vimpc](https://github.com/boysetsfrog/vimpc)
-- [zsh](https://www.zsh.org/)
-- [zoxide](https://github.com/ajeetdsouza/zoxide)
+- [direnv](https://github.com/direnv/direnv) - Automatic environment setup on folder entry
+- [git](https://github.com/git/git) - Simple Version Control System
+- [gnupg](https://gnupg.org/) - An encryption/digital-signature suite
+- [mopidy](https://github.com/mopidy/mopdiy) - An extensible music server in Python
+- [neovim](https://github.com/neovim/neovim) - A rewritten Vim for modern use
+- [qemu](https://www.qemu.org) - A suite of tools for virtualization and architecture emulation
+- [starship](https://github.com/starship/starship) - A fancy prompt without being too much
+- [zsh](https://www.zsh.org/) - Extensible, semi-POSIX Linux shell
+- [zoxide](https://github.com/ajeetdsouza/zoxide) - Faster z/autojump system
 
 ## Current Bugs
 
-- Some Nvim stuff
-  - Some Nvim LSPs aren't working properly
-  - cspell needs its config fixed
-- MS Teams likes to crash on boot, garble audio
-- ACPI device issues on boot
 - gnome-keyring doesn't work. Looking into pass-secret-service as replacement.
 - desktop portals failing to load (probably my messy GTK config)
 - udiskie doesn't like my GTK config/icons
-- playerctld crashes mpd frequently
 
 ## Future
 
