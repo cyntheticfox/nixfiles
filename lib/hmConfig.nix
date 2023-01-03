@@ -31,10 +31,12 @@ home-manager.lib.homeManagerConfiguration {
 
   modules = [
     {
-      inherit username;
+      home = {
+        inherit username;
 
-      home.stateVersion = "22.11";
-      homeDirectory = "/home/${username}";
+        stateVersion = "22.11";
+        homeDirectory = "/home/${username}";
+      };
     }
     { programs.home-manager.enable = true; }
     {
