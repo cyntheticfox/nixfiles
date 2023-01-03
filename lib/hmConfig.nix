@@ -1,6 +1,7 @@
 { nixpkgs
 , home-manager
 , username
+, system ? "x86_64-linux"
 , nixpkgs-unstable ? null
 , allowUnfree ? true
 , modules ? [ ]
@@ -21,6 +22,8 @@ let
 in
 home-manager.lib.homeManagerConfiguration {
   pkgs = import nixpkgs {
+    inherit system;
+
     config.allowUnfree = allowUnfree;
 
     overlays = [ unstable-overlay ];

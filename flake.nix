@@ -66,6 +66,7 @@
           pbp = self.lib.hmConfig {
             inherit home-manager nixpkgs nixpkgs-unstable;
 
+            system = "aarch64-linux";
             username = "david";
             modules = [ ./homeConfigurations/pbp.nix ];
           };
