@@ -40,7 +40,7 @@ home-manager.lib.homeManagerConfiguration {
     }
     { programs.home-manager.enable = true; }
     {
-      nixpkgs.allowUnfree = allowUnfree;
+      nixpkgs.config.allowUnfree = allowUnfree;
       nixpkgs.overlays = [ unstable-overlay ];
     }
     {
