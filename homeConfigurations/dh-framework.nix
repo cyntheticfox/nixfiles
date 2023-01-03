@@ -5,7 +5,6 @@
     # GUI modules
     ../home-manager/config/gui/dev.nix
     ../home-manager/config/gui/documents.nix
-    ../home-manager/config/gui/games.nix
     ../home-manager/config/gui/libvirt.nix
     ../home-manager/config/gui/networking.nix
     ../home-manager/config/gui/video.nix
@@ -39,6 +38,14 @@
       discord = true;
       edge = true;
       element = true;
+
+      games = {
+        enable = true;
+
+        retroarch.enable = true;
+        steam.enable = true;
+        minecraft.enable = true;
+      };
 
       remmina = {
         enable = true;

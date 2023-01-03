@@ -7,7 +7,7 @@ let
 
   pkgModule = { packages, type, extraOptions ? { } }: types.submodule (_: {
     options = {
-      enable = mkEnableOption "Manage ${pkgType} packages";
+      enable = mkEnableOption "Manage ${type} packages";
 
       packages = mkOption {
         type = with types; listOf package;
@@ -18,6 +18,7 @@ let
 
   fileModule = pkgModule {
     type = "file";
+
     packages = with pkgs; [
       fq
       man-pages

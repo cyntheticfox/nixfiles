@@ -5,13 +5,119 @@ with lib;
 let
   cfg = config.sys.desktop;
 
-  remminaModule = types.submodule (_: {
+  packageModule = { package, name, extraOptions ? { }, defaultEnable ? false }: types.submodule (_: {
     options = {
-      enable = mkEnableOption "Enable Remmina configuration" // { default = true; };
+      enable = mkEnableOption "Enable ${name} configuration" // { default = defaultEnable; };
 
-      package = mkPackageOption pkgs "remmina" { };
+      package = mkPackageOption pkgs package { };
+    } // extraOptions;
+  });
 
-      startService = mkEnableOption "Start the remmina service in the background" // { default = true; };
+  multipackageModule = { description, defaultPackages ? [ ], defaultEnable ? false, extraOptions ? { } }: types.submodule (_: {
+    options = {
+      enable = mkEnableOption description // { default = defaultEnable; };
+
+      packages = mkOption {
+        type = with types; listOf package;
+        default = defaultPackages;
+      };
+    } // extraOptions;
+  });
+
+  remminaModule = packageModule {
+    package = "remmina";
+    name = "Remmina";
+
+    defaultEnable = true;
+    extraOptions.startService = mkEnableOption "Start the remmina service in the background" // { default = true; };
+  };
+
+  gamesModule = types.submodule (_: {
+    options = {
+      enable = mkEnableOption "Configure desktop games";
+
+      steam = mkOption {
+        type = packageModule {
+          package = "steam";
+          name = "Steam";
+
+          extraOptions.wine = mkOption {
+            type = multipackageModule {
+              description = ''
+                Additional packages to enable for Windows game support. Adds wine-wayland by default.
+              '';
+
+              defaultEnable = true;
+
+              defaultPackages = with pkgs; [
+                winetricks
+                wine-wayland
+                protontricks
+              ];
+            };
+
+            default = { };
+          };
+        };
+
+        default = { };
+
+        description = ''
+          Configure Valve's Steam launcher.
+        '';
+      };
+
+      itch = mkOption {
+        type = packageModule {
+          package = "itch";
+          name = "Itch.io Launcher";
+        };
+
+        default = { };
+
+        description = ''
+          Configure the Itch.io launcher
+        '';
+      };
+
+      lutris = mkOption {
+        type = packageModule {
+          package = "lutris";
+          name = "Lutris";
+        };
+
+        default = { };
+      };
+
+      retroarch = mkOption {
+        type = packageModule {
+          package = "retroarchFull";
+          name = "Retroarch Emulation Framework";
+        };
+
+        default = { };
+      };
+
+      minecraft = mkOption {
+        type = packageModule {
+          package = "minecraft";
+          name = "Minecraft";
+
+          extraOptions.extraLaunchers = mkOption {
+            type = multipackageModule {
+              description = ''
+                Enable additional launchers for modded Minecraft or easier use.
+              '';
+
+              defaultPackages = with pkgs; [ prismlauncher ];
+            };
+
+            default = { };
+          };
+        };
+
+        default = { };
+      };
     };
   });
 in
@@ -22,6 +128,7 @@ in
     defaultBrowser = mkOption {
       type = with types; nullOr (enum [ "chromium" "firefox" ]);
       default = null;
+
       description = ''
         Browser to set as the default via desktop files.
       '';
@@ -34,13 +141,26 @@ in
     firefox = mkEnableOption "Enable Firefox configuration" // { default = true; };
     ghidra = mkEnableOption "Enable Ghidra configuration";
     kitty = mkEnableOption "Enable Kitty Terminal emulator" // { default = true; };
+
+    games = mkOption {
+      type = gamesModule;
+      default = { };
+
+      description = ''
+        Enable games for desktop play.
+      '';
+    };
+
     remmina = mkOption {
       type = remminaModule;
+      default = { };
+
       description = ''
         Configuration options for Remmina, a remote desktop client supporting
         SSH, VNC, RDP, and more.
       '';
     };
+
     teams = mkEnableOption "Provide MS Teams as a desktop app.";
   };
 
@@ -93,12 +213,14 @@ in
         $DRY_RUN_CMD ${pkgs.shared-mime-info}/bin/update-mime-database $VERBOSE_ARG ${config.xdg.dataHome}/mime
       '';
     }
+
     (mkIf cfg.chromium {
       programs.chromium = {
         enable = true;
         package = pkgs.ungoogled-chromium;
       };
     })
+
     (mkIf cfg.discord {
       home.packages = with pkgs; [ discord ];
 
@@ -108,14 +230,43 @@ in
         SKIP_HOST_UPDATE = true;
       };
     })
+
+    (mkMerge [
+      (mkIf cfg.games.steam.enable (mkMerge [
+        { home.packages = [ cfg.games.steam.package ]; }
+
+        (mkIf cfg.games.steam.wine.enable {
+          home.packages = cfg.games.steam.wine.packages;
+        })
+      ]))
+
+      (mkIf cfg.games.itch.enable {
+        home.packages = [ cfg.games.itch.package ];
+      })
+
+      (mkIf cfg.games.lutris.enable {
+        home.packages = [ cf.games.lutris.package ];
+      })
+
+      (mkIf cfg.games.minecraft.enable (mkMerge [
+        { home.packages = [ cfg.games.minecraft.package ]; }
+
+        (mkIf cfg.games.minecraft.extraLaunchers.enable {
+          home.packages = cfg.games.minecraft.extraLaunchers.packages;
+        })
+      ]))
+    ])
+
     (mkIf cfg.element {
       home.packages = with pkgs; [ element-desktop ];
 
       home.sessionVariables."NIXOS_OZONE_WL" = 1;
     })
+
     (mkIf cfg.edge {
       home.packages = with pkgs; [ microsoft-edge ];
     })
+
     (mkIf cfg.firefox {
       xdg.configFile."tridactyl/tridactylrc".text = ''
         " General Settings
@@ -439,8 +590,8 @@ in
           cfg.enableTridactylNative = true;
         };
       };
-
     })
+
     (mkIf ((cfg.chromium || cfg.firefox) && cfg.defaultBrowser != null) (
       let
         primary-browser =
@@ -479,9 +630,11 @@ in
         ];
       }
     ))
+
     (mkIf cfg.ghidra {
       home.packages = with pkgs; [ ghidra ];
     })
+
     (
       let
         theme = "nord";
@@ -534,6 +687,7 @@ in
 
       }
     )
+
     (mkIf cfg.remmina.enable (
       mkMerge [
         {
@@ -553,6 +707,7 @@ in
             </mime-info>
           '';
         }
+
         (mkIf cfg.remmina.startService {
           systemd.user.services.remmina = {
             Unit = {
@@ -571,6 +726,7 @@ in
         })
       ])
     )
+
     (mkIf cfg.teams {
       home.packages = with pkgs; [
         nixpkgs-unstable.teams
@@ -593,6 +749,5 @@ in
           fi
         '';
     })
-
   ]);
 }
