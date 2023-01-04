@@ -143,6 +143,15 @@ in
       '';
     };
 
+    defaultPDFViewer = mkOption {
+      type = with types; nullOr (enum [ "mupdf" ]);
+      default = null;
+
+      description = ''
+        Editor to set as default via environment variables.
+      '';
+    };
+
     chromium = mkEnableOption "Enable Chromium configuration" // { default = true; };
     discord = mkEnableOption "Enable Discord configuration";
     element = mkEnableOption "Enable Element configuration";
@@ -150,6 +159,24 @@ in
     firefox = mkEnableOption "Enable Firefox configuration" // { default = true; };
     ghidra = mkEnableOption "Enable Ghidra configuration";
     kitty = mkEnableOption "Enable Kitty Terminal emulator" // { default = true; };
+
+    mupdf = mkOption {
+      type = packageModule {
+        package = "mupdf";
+        name = "MuPDF";
+      };
+
+      default = { };
+    };
+
+    libreoffice = mkOption {
+      type = packageModule {
+        package = "libreoffice";
+        name = "LibreOffice";
+      };
+
+      default = { };
+    };
 
     neovim-qt = mkOption {
       type = packageModule {
@@ -311,6 +338,29 @@ in
 
     (mkIf cfg.edge {
       home.packages = with pkgs; [ microsoft-edge ];
+    })
+
+    (mkIf cfg.mupdf.enable {
+      home.packages = [ cfg.mupdf.package ];
+    })
+
+    (mkIf cfg.libreoffice.enable {
+      home.packages = [ cfg.libreoffice.package ];
+    })
+
+    (mkIf (cfg.defaultPDFViewer != null) {
+      xdg.mimeApps.defaultApplications =
+        let
+          app = "${cfg.defaultPDFViewer}.desktop";
+        in
+        {
+          "application/pdf" = app;
+          "application/x-pdf" = app;
+          "application/x-cbz" = app;
+          "application/oxps" = app;
+          "application/vnd.ms-xpsdocument" = app;
+          "application/epub+zip" = app;
+        };
     })
 
     (mkIf cfg.firefox {
