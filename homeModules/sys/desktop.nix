@@ -134,6 +134,15 @@ in
       '';
     };
 
+    defaultEditor = mkOption {
+      type = with types; nullOr (enum [ "vscode" "nvim-qt" ]);
+      default = null;
+
+      description = ''
+        Editor to set as default via environment variables.
+      '';
+    };
+
     chromium = mkEnableOption "Enable Chromium configuration" // { default = true; };
     discord = mkEnableOption "Enable Discord configuration";
     element = mkEnableOption "Enable Element configuration";
@@ -141,6 +150,24 @@ in
     firefox = mkEnableOption "Enable Firefox configuration" // { default = true; };
     ghidra = mkEnableOption "Enable Ghidra configuration";
     kitty = mkEnableOption "Enable Kitty Terminal emulator" // { default = true; };
+
+    neovim-qt = mkOption {
+      type = packageModule {
+        package = "neovim-qt";
+        name = "Neovim QT";
+      };
+
+      default = { };
+    };
+
+    vscode = mkOption {
+      type = packageModule {
+        package = "vscode";
+        name = "Visual Studio Code";
+      };
+
+      default = { };
+    };
 
     games = mkOption {
       type = gamesModule;
@@ -231,31 +258,50 @@ in
       };
     })
 
-    (mkMerge [
-      (mkIf cfg.games.steam.enable (mkMerge [
-        { home.packages = [ cfg.games.steam.package ]; }
+    (mkIf cfg.games.steam.enable (mkMerge [
+      { home.packages = [ cfg.games.steam.package ]; }
 
-        (mkIf cfg.games.steam.wine.enable {
-          home.packages = cfg.games.steam.wine.packages;
-        })
-      ]))
-
-      (mkIf cfg.games.itch.enable {
-        home.packages = [ cfg.games.itch.package ];
+      (mkIf cfg.games.steam.wine.enable {
+        home.packages = cfg.games.steam.wine.packages;
       })
+    ]))
 
-      (mkIf cfg.games.lutris.enable {
-        home.packages = [ cf.games.lutris.package ];
+    (mkIf cfg.games.itch.enable {
+      home.packages = [ cfg.games.itch.package ];
+    })
+
+    (mkIf cfg.games.lutris.enable {
+      home.packages = [ cf.games.lutris.package ];
+    })
+
+    (mkIf cfg.games.minecraft.enable (mkMerge [
+      { home.packages = [ cfg.games.minecraft.package ]; }
+
+      (mkIf cfg.games.minecraft.extraLaunchers.enable {
+        home.packages = cfg.games.minecraft.extraLaunchers.packages;
       })
+    ]))
 
-      (mkIf cfg.games.minecraft.enable (mkMerge [
-        { home.packages = [ cfg.games.minecraft.package ]; }
+    (mkIf cfg.neovim-qt.enable {
+      home.packages = [ cfg.neovim-qt.package ];
+    })
 
-        (mkIf cfg.games.minecraft.extraLaunchers.enable {
-          home.packages = cfg.games.minecraft.extraLaunchers.packages;
-        })
-      ]))
-    ])
+    (mkIf cfg.vscode.enable {
+      home.packages = [ cfg.vscode.package ];
+    })
+
+    (mkIf (cfg.defaultEditor != null) {
+      home.sessionVariables =
+        let
+          bin = cfg.defaultEditor;
+          pkg = if bin == "nvim-qt" then "neovim-qt" else bin;
+          path = "${cfg."${pkg}".package}/bin/${bin}";
+        in
+        {
+          EDITOR_GRAPHICAL = path;
+          VISUAL_GRAPHICAL = path;
+        };
+    })
 
     (mkIf cfg.element {
       home.packages = with pkgs; [ element-desktop ];
