@@ -1,9 +1,4 @@
 { pkgs, ... }: {
-  imports = [
-    ../home-manager/config/sway.nix
-  ];
-
-  # Specific packages
   home.packages = with pkgs; [
     burpsuite
     mozwire
@@ -56,6 +51,8 @@
           };
         };
       };
+
+      sway.enable = true;
 
       teams = true;
     };

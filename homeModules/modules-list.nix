@@ -3,6 +3,7 @@
   ./sys/core.nix
   ./sys/dev.nix
   ./sys/desktop.nix
+  ./sys/desktop/sway.nix
   ./sys/fonts.nix
   ./sys/git.nix
   ./sys/gnupg.nix
