@@ -1,20 +1,21 @@
 { pkgs, ... }: {
   imports = [
     ../home-manager/config/sway.nix
-
-    # GUI modules
-    ../home-manager/config/gui/video.nix
   ];
 
+  # Specific packages
   home.packages = with pkgs; [
     burpsuite
-    postman
     mozwire
+    obs-studio
+    openshot-qt
+    postman
     virt-manager
     virt-viewer
     wl-color-picker
   ];
 
+  # Using my home-manager modules
   sys = {
     cloud = {
       enable = true;
@@ -41,8 +42,6 @@
       element = true;
 
       games = {
-        enable = true;
-
         retroarch.enable = true;
         steam.enable = true;
         minecraft.enable = true;
@@ -85,6 +84,14 @@
     };
 
     ssh.enable = true;
+
+    video.ffmpeg = {
+      enable = true;
+
+      package = pkgs.ffmpeg-full;
+    };
+
+    video.mpv.enable = true;
   };
 
   xdg.configFile."wireplumber/main.lua.d/51-fix-dac-rate.lua".text = ''

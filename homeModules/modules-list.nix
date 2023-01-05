@@ -13,5 +13,6 @@
   ./sys/sec.nix
   ./sys/shell.nix
   ./sys/ssh.nix
+  ./sys/video.nix
   ./programs/neofetch.nix
 ]

@@ -23,103 +23,6 @@ let
       };
     } // extraOptions;
   });
-
-  remminaModule = packageModule {
-    package = "remmina";
-    name = "Remmina";
-
-    defaultEnable = true;
-    extraOptions.startService = mkEnableOption "Start the remmina service in the background" // { default = true; };
-  };
-
-  gamesModule = types.submodule (_: {
-    options = {
-      enable = mkEnableOption "Configure desktop games";
-
-      steam = mkOption {
-        type = packageModule {
-          package = "steam";
-          name = "Steam";
-
-          extraOptions.wine = mkOption {
-            type = multipackageModule {
-              description = ''
-                Additional packages to enable for Windows game support. Adds wine-wayland by default.
-              '';
-
-              defaultEnable = true;
-
-              defaultPackages = with pkgs; [
-                winetricks
-                wine-wayland
-                protontricks
-              ];
-            };
-
-            default = { };
-          };
-        };
-
-        default = { };
-
-        description = ''
-          Configure Valve's Steam launcher.
-        '';
-      };
-
-      itch = mkOption {
-        type = packageModule {
-          package = "itch";
-          name = "Itch.io Launcher";
-        };
-
-        default = { };
-
-        description = ''
-          Configure the Itch.io launcher
-        '';
-      };
-
-      lutris = mkOption {
-        type = packageModule {
-          package = "lutris";
-          name = "Lutris";
-        };
-
-        default = { };
-      };
-
-      retroarch = mkOption {
-        type = packageModule {
-          package = "retroarchFull";
-          name = "Retroarch Emulation Framework";
-        };
-
-        default = { };
-      };
-
-      minecraft = mkOption {
-        type = packageModule {
-          package = "minecraft";
-          name = "Minecraft";
-
-          extraOptions.extraLaunchers = mkOption {
-            type = multipackageModule {
-              description = ''
-                Enable additional launchers for modded Minecraft or easier use.
-              '';
-
-              defaultPackages = with pkgs; [ prismlauncher ];
-            };
-
-            default = { };
-          };
-        };
-
-        default = { };
-      };
-    };
-  });
 in
 {
   options.sys.desktop = {
@@ -196,17 +99,98 @@ in
       default = { };
     };
 
-    games = mkOption {
-      type = gamesModule;
+    games.steam = mkOption {
+      type = packageModule {
+        package = "steam";
+        name = "Steam";
+
+        extraOptions.wine = mkOption {
+          type = multipackageModule {
+            description = ''
+              Additional packages to enable for Windows game support. Adds wine-wayland by default.
+            '';
+
+            defaultEnable = true;
+
+            defaultPackages = with pkgs; [
+              winetricks
+              wine-wayland
+              protontricks
+            ];
+          };
+
+          default = { };
+        };
+      };
+
       default = { };
 
       description = ''
-        Enable games for desktop play.
+        Configure Valve's Steam launcher.
       '';
     };
 
+    games.itch = mkOption {
+      type = packageModule {
+        package = "itch";
+        name = "Itch.io Launcher";
+      };
+
+      default = { };
+
+      description = ''
+        Configure the Itch.io launcher
+      '';
+    };
+
+    games.lutris = mkOption {
+      type = packageModule {
+        package = "lutris";
+        name = "Lutris";
+      };
+
+      default = { };
+    };
+
+    games.retroarch = mkOption {
+      type = packageModule {
+        package = "retroarchFull";
+        name = "Retroarch Emulation Framework";
+      };
+
+      default = { };
+    };
+
+    games.minecraft = mkOption {
+      type = packageModule {
+        package = "minecraft";
+        name = "Minecraft";
+
+        extraOptions.extraLaunchers = mkOption {
+          type = multipackageModule {
+            description = ''
+              Enable additional launchers for modded Minecraft or easier use.
+            '';
+
+            defaultPackages = with pkgs; [ prismlauncher ];
+          };
+
+          default = { };
+        };
+      };
+
+      default = { };
+    };
+
     remmina = mkOption {
-      type = remminaModule;
+      type = packageModule {
+        package = "remmina";
+        name = "Remmina";
+
+        defaultEnable = true;
+        extraOptions.startService = mkEnableOption "Start the remmina service in the background" // { default = true; };
+      };
+
       default = { };
 
       description = ''
