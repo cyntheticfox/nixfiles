@@ -3,11 +3,11 @@
     ../home-manager/config/sway.nix
 
     # GUI modules
-    ../home-manager/config/gui/networking.nix
     ../home-manager/config/gui/video.nix
   ];
 
   home.packages = with pkgs; [
+    burpsuite
     postman
     mozwire
     virt-manager
