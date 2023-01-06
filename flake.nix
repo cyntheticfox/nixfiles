@@ -134,78 +134,49 @@
             statix.enable = true;
           };
         };
-        devShells = {
-          default =
-            let
-              pkgs = import nixpkgs-unstable {
-                inherit system;
-                overlays = [ sops-nix.overlay ];
-              };
-            in
-            pkgs.mkShell {
-              inherit (self.checks."${system}".pre-commit-check) shellHook;
+        devShells =
+          let
+            pkgs = import nixpkgs-unstable {
+              inherit system;
 
-              nativeBuildInputs = with pkgs; [
-                # pre-commit
-                pre-commit
-
-                # Nix formatter
-                alejandra
-                nixfmt
-                nixpkgs-fmt
-
-                # Nix linting
-                deadnix
-                # nix-linter # FIXME: Broken as of 2022-12-28
-                statix
-
-                # sops-nix
-                sops
-                sops-init-gpg-key
-                sops-import-keys-hook
-              ];
-
-              sopsPGPKeyDirs = [
-                ./keys/hosts
-                ./keys/users
-              ];
+              overlays = [ sops-nix.overlay ];
             };
-          no-env =
-            let
-              pkgs = import nixpkgs-unstable {
-                inherit system;
-                overlays = [ sops-nix.overlay ];
-              };
-            in
-            pkgs.mkShell {
-              packages = with pkgs; [
+
+            formatPackages = pkgs: with pkgs; [
+              pre-commit
+              nixpkgs-fmt
+              deadnix
+              statix
+            ];
+
+            sopsPackages = pkgs: with pkgs; [
+              sops
+              sops-init-gpg-key
+              sops-import-keys-hook
+            ];
+
+            sopsPGPKeyDirs = [
+              ./keys/hosts
+              ./keys/users
+            ];
+          in
+          {
+            default = pkgs.mkShell {
+              inherit (self.checks."${system}".pre-commit-check) shellHook;
+              inherit sopsPGPKeyDirs;
+
+              packages = (formatPackages pkgs) ++ (sopsPackages pkgs);
+
+            };
+
+            no-env = pkgs.mkShell {
+              inherit sopsPGPKeyDirs;
+
+              packages = (formatPackages pkgs) ++ (sopsPackages pkgs) ++ [
                 git
                 gnupg
                 pinentry-qt
                 neovim
-
-                # pre-commit
-                pre-commit
-
-                # Nix formatter
-                alejandra
-                nixfmt
-                nixpkgs-fmt
-
-                # Nix linting
-                deadnix
-                # nix-linter # FIXME: Broken as of 2022-12-28
-                statix
-
-                # sops-nix
-                sops
-                sops-init-gpg-key
-                sops-import-keys-hook
-              ];
-
-              sopsPGPKeyDirs = [
-                ./keys/hosts
-                ./keys/users
               ];
 
               shellHook = ''
@@ -226,6 +197,6 @@
                 alias v="nvim"
               '';
             };
-        };
+          };
       })));
 }
