@@ -23,6 +23,7 @@
 
     gitignore = {
       url = "github:hercules-ci/gitignore.nix";
+
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
@@ -34,25 +35,31 @@
     sops-nix = {
       url = "github:Mic92/sops-nix";
 
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-      inputs.nixpkgs-stable.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+        nixpkgs-stable.follows = "nixpkgs";
+      };
     };
 
     home-manager = {
       url = "github:nix-community/home-manager/release-22.11";
 
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.utils.follows = "flake-utils";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        utils.follows = "flake-utils";
+      };
     };
 
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
 
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-      inputs.nixpkgs-stable.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-      inputs.flake-compat.follows = "";
-      inputs.gitignore.follows = "gitignore";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+        nixpkgs-stable.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+        flake-compat.follows = "";
+        gitignore.follows = "gitignore";
+      };
     };
   };
 
@@ -102,10 +109,10 @@
 
               ({ config, lib, ... }: {
                 home-manager.users."david" = self.lib.personalNixosHMConfig {
-                  inherit lib;
                   inherit (config.networking) hostName;
                   inherit (self.inputs) nixpkgs-unstable;
                   inherit (self.outputs) homeModules;
+                  inherit lib;
                 };
               })
             ];
@@ -125,15 +132,18 @@
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
         };
       }
+
       (flake-utils.lib.eachDefaultSystem (system: {
         checks.pre-commit-check = pre-commit-hooks.lib."${system}".run {
           src = gitignore.lib.gitignoreSource ./.;
+
           hooks = {
             deadnix.enable = true;
             nixpkgs-fmt.enable = true;
             statix.enable = true;
           };
         };
+
         devShells =
           let
             pkgs = import nixpkgs-unstable {
@@ -172,12 +182,12 @@
             no-env = pkgs.mkShell {
               inherit sopsPGPKeyDirs;
 
-              packages = (formatPackages pkgs) ++ (sopsPackages pkgs) ++ [
+              packages = (formatPackages pkgs) ++ (sopsPackages pkgs) ++ (with pkgs; [
                 git
                 gnupg
                 pinentry-qt
                 neovim
-              ];
+              ]);
 
               shellHook = ''
                 ${self.checks."${system}".pre-commit-check.shellHook}
