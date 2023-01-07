@@ -54,7 +54,12 @@
 
       sway.enable = true;
 
-      teams = true;
+      teams = {
+        enable = true;
+
+        package = pkgs.nixpkgs-unstable.teams-for-linux;
+        desktopEntry = "teams-for-linux.desktop";
+      };
     };
 
     dev.enable = true;

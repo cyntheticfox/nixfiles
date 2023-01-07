@@ -199,7 +199,24 @@ in
       '';
     };
 
-    teams = mkEnableOption "Provide MS Teams as a desktop app.";
+    teams = mkOption {
+      type = packageModule {
+        package = "teams";
+        name = "Microsoft Teams";
+
+        extraOptions.desktopEntry = mkOption {
+          type = types.str;
+          default = "${builtins.toString config.sys.desktop.teams.package.name}.desktop";
+          description = ''
+            File name of the XDG Desktop Entry for the Microsoft Teams application.
+          '';
+        };
+      };
+
+      default = { };
+
+      description = "Provide MS Teams as a desktop app.";
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -807,12 +824,10 @@ in
       ])
     )
 
-    (mkIf cfg.teams {
-      home.packages = with pkgs; [
-        nixpkgs-unstable.teams
-      ];
+    (mkIf cfg.teams.enable {
+      home.packages = [ cfg.teams.package ];
 
-      xdg.mimeApps.defaultApplications."x-scheme-handler/msteams" = "teams.desktop";
+      xdg.mimeApps.defaultApplications."x-scheme-handler/msteams" = cfg.teams.desktopEntry;
 
       # For whatever reason, teams likes to overwrite the mimetypes, even if it's
       #   fine. So, add a step to activation to remove the file if it's not a link.
