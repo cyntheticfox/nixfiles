@@ -100,6 +100,7 @@ in
         url."https://github.com".insteadOf = "git://github.com";
 
         init.defaultBranch = "main";
+        push.autoSetupRemote = true;
         pull.ff = "only";
         tag.gpgSign = true;
       };
