@@ -52,7 +52,11 @@
         };
       };
 
-      sway.enable = true;
+      sway = {
+        enable = true;
+
+        package = pkgs.nixpkgs-unstable.sway;
+      };
 
       teams = {
         enable = true;
