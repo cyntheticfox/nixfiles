@@ -1289,14 +1289,8 @@ in
         };
 
         # Have kanshi restart to ensure
-        home.activation.restart-kanshi = lib.hm.dag.entryAfter [ "reloadSystemd" ] (lib.escapeShellArgs [
-          "$DRY_RUN_CMD"
-          "${pkgs.systemd}/bin/systemctl"
-          "restart"
-          "$VERBOSE_ARG"
-          "--user"
-          "kanshi.service"
-        ]);
+        home.activation.restart-kanshi =
+          lib.hm.dag.entryAfter [ "reloadSystemd" ] "$DRY_RUN_CMD ${pkgs.systemd}/bin/systemctl restart $VERBOSE_ARG --user kanshi.service";
       })
 
       (lib.mkIf cfg.playerctl.enable {
