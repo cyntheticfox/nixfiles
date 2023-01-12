@@ -490,183 +490,185 @@ in
         set searchurls.qwant https://www.qwant.com/?q=
 
         " Default bindings
-        bind ;x hint -F e => { const pos = tri.dom.getAbsoluteCentre(e); tri.excmds.exclaim_quiet("xdotool mousemove --sync " + window.devicePixelRatio * pos.x + " " + window.devicePixelRatio * pos.y + "; xdotool click 1")}
+        bind $ scrollto 100 x
+        bind . repeat
+        bind : fillcmdline_notrail
+        bind ;# hint -#
+        bind ;; hint -; *
+        bind ;A hint -A
+        bind ;I hint -I
+        bind ;K hint -K
+        bind ;M composite hint -Jpipe img src | tabopen images.google.com/searchbyimage?image_url=
+        bind ;O hint -W fillcmdline_notrail open
+        bind ;P hint -P
+        bind ;S hint -S
+        bind ;T hint -W fillcmdline_notrail tabopen
+        bind ;V hint -V
+        bind ;W hint -W fillcmdline_notrail winopen
         bind ;X hint -F e => { const pos = tri.dom.getAbsoluteCentre(e); tri.excmds.exclaim_quiet("xdotool mousemove --sync " + window.devicePixelRatio * pos.x + " " + window.devicePixelRatio * pos.y + "; xdotool keydown ctrl+shift; xdotool click 1; xdotool keyup ctrl+shift")}
-        bind <A-p> pin
+        bind ;Y hint -cF img i => tri.excmds.yankimage(tri.urlutils.getAbsoluteURL(i.src))
+        bind ;a hint -a
+        bind ;b hint -b
+        bind ;g# hint -q#
+        bind ;g; hint -q;
+        bind ;gA hint -qA
+        bind ;gF hint -qb
+        bind ;gI hint -qI
+        bind ;gP hint -qP
+        bind ;gS hint -qS
+        bind ;ga hint -qa
+        bind ;gb hint -qb
+        bind ;gf hint -q
+        bind ;gi hint -qi
+        bind ;gk hint -qk
+        bind ;gp hint -qp
+        bind ;gr hint -qr
+        bind ;gs hint -qs
+        bind ;gv hint -qW mpvsafe
+        bind ;gw hint -qw
+        bind ;gy hint -qy
+        bind ;h hint -h
+        bind ;i hint -i
+        bind ;k hint -k
+        bind ;m composite hint -Jpipe img src | open images.google.com/searchbyimage?image_url=
+        bind ;o hint
+        bind ;p hint -p
+        bind ;r hint -r
+        bind ;s hint -s
+        bind ;t hint -W tabopen
+        bind ;v hint -W mpvsafe
+        bind ;w hint -w
+        bind ;x hint -F e => { const pos = tri.dom.getAbsoluteCentre(e); tri.excmds.exclaim_quiet("xdotool mousemove --sync " + window.devicePixelRatio * pos.x + " " + window.devicePixelRatio * pos.y + "; xdotool click 1")}
+        bind ;y hint -y
+        bind ;z hint -z
+        bind << tabmove -1
         bind <A-m> mute toggle
+        bind <A-p> pin
+        bind <AC-Escape> mode ignore
+        bind <AC-`> mode ignore
+        bind <C-[> composite mode normal ; hidecmdline
+        bind <C-a> urlincrement 1
+        bind <C-b> scrollpage -1
+        bind <C-d> scrollpage 0.5
+        bind <C-e> scrollline 10
+        bind <C-f> scrollpage 1
+        bind <C-i> jumpnext
+        bind <C-o> jumpprev
+        bind <C-u> scrollpage -0.5
+        bind <C-v> nmode ignore 1 mode normal
+        bind <C-x> urlincrement -1
+        bind <C-y> scrollline -10
+        bind <Escape> composite mode normal ; hidecmdline
         bind <F1> help
-        bind ]] followpage next
+        bind <S-Escape> mode ignore
+        bind <S-Insert> mode ignore
+        bind >> tabmove +1
+        bind D composite tabprev; tabclose #
+        bind F hint -b
+        bind G scrollto 100
+        bind H back
+        bind J tabprev
+        bind K tabnext
+        bind L forward
+        bind P clipboard tabopen
+        bind R reloadhard
+        bind U undo window
         bind [[ followpage prev
         bind [c urlincrement -1
+        bind ]] followpage next
         bind ]c urlincrement 1
-        bind <C-x> urlincrement -1
-        bind <C-a> urlincrement 1
-        bind yy clipboard yank
-        bind ys clipboard yankshort
+        bind ^ scrollto 0 x
+        bind d tabclose
+        bind f hint
+        bind g! jumble
+        bind g$ tablast
+        bind g0 tabfirst
+        bind g; changelistjump -1
+        bind g? rot13
+        bind gF hint -qb
+        bind gH home true
+        bind gT tabprev
+        bind g^ tabfirst
+        bind ga tabaudio
+        bind gf viewsource
+        bind gg scrollto 0
+        bind gh home
+        bind gi focusinput -l
+        bind gr reader
+        bind gt tabnext_gt
+        bind gu urlparent
+        bind gx$ tabclosealltoright
+        bind gx0 tabclosealltoleft
+        bind h scrollpx -50
+        bind j scrollline 10
+        bind k scrollline -10
+        bind l scrollpx 50
+        bind p clipboard open
+        bind r reload
+        bind u undo
         bind yc clipboard yankcanon
         bind ym clipboard yankmd
         bind yo clipboard yankorg
+        bind ys clipboard yankshort
         bind yt clipboard yanktitle
-        bind gh home
-        bind gH home true
-        bind p clipboard open
-        bind P clipboard tabopen
-        bind j scrollline 10
-        bind <C-e> scrollline 10
-        bind k scrollline -10
-        bind <C-y> scrollline -10
-        bind h scrollpx -50
-        bind l scrollpx 50
-        bind G scrollto 100
-        bind gg scrollto 0
-        bind <C-u> scrollpage -0.5
-        bind <C-d> scrollpage 0.5
-        bind <C-f> scrollpage 1
-        bind <C-b> scrollpage -1
-        bind <C-v> nmode ignore 1 mode normal
-        bind $ scrollto 100 x
-        bind ^ scrollto 0 x
-        bind H back
-        bind L forward
-        bind <C-o> jumpprev
-        bind <C-i> jumpnext
-        bind d tabclose
-        bind D composite tabprev; tabclose #
-        bind gx0 tabclosealltoleft
-        bind gx$ tabclosealltoright
-        bind << tabmove -1
-        bind >> tabmove +1
-        bind u undo
-        bind U undo window
-        bind r reload
-        bind R reloadhard
-        bind gi focusinput -l
-        bind g? rot13
-        bind g! jumble
-        bind g; changelistjump -1
-        bind J tabprev
-        bind K tabnext
-        bind gt tabnext_gt
-        bind gT tabprev
-        bind g^ tabfirst
-        bind g0 tabfirst
-        bind g$ tablast
-        bind ga tabaudio
-        bind gr reader
-        bind gu urlparent
-        bind gf viewsource
-        bind : fillcmdline_notrail
-        bind f hint
-        bind F hint -b
-        bind gF hint -qb
-        bind ;i hint -i
-        bind ;b hint -b
-        bind ;o hint
-        bind ;I hint -I
-        bind ;k hint -k
-        bind ;K hint -K
-        bind ;y hint -y
-        bind ;Y hint -cF img i => tri.excmds.yankimage(tri.urlutils.getAbsoluteURL(i.src))
-        bind ;p hint -p
-        bind ;h hint -h
-        bind ;P hint -P
-        bind ;r hint -r
-        bind ;s hint -s
-        bind ;S hint -S
-        bind ;a hint -a
-        bind ;A hint -A
-        bind ;; hint -; *
-        bind ;# hint -#
-        bind ;v hint -W mpvsafe
-        bind ;V hint -V
-        bind ;w hint -w
-        bind ;t hint -W tabopen
-        bind ;O hint -W fillcmdline_notrail open
-        bind ;W hint -W fillcmdline_notrail winopen
-        bind ;T hint -W fillcmdline_notrail tabopen
-        bind ;z hint -z
-        bind ;m composite hint -Jpipe img src | open images.google.com/searchbyimage?image_url=
-        bind ;M composite hint -Jpipe img src | tabopen images.google.com/searchbyimage?image_url=
-        bind ;gi hint -qi
-        bind ;gI hint -qI
-        bind ;gk hint -qk
-        bind ;gy hint -qy
-        bind ;gp hint -qp
-        bind ;gP hint -qP
-        bind ;gr hint -qr
-        bind ;gs hint -qs
-        bind ;gS hint -qS
-        bind ;ga hint -qa
-        bind ;gA hint -qA
-        bind ;g; hint -q;
-        bind ;g# hint -q#
-        bind ;gv hint -qW mpvsafe
-        bind ;gw hint -qw
-        bind ;gb hint -qb
-        bind ;gF hint -qb
-        bind ;gf hint -q
-        bind <S-Insert> mode ignore
-        bind <AC-Escape> mode ignore
-        bind <AC-`> mode ignore
-        bind <S-Escape> mode ignore
-        bind <Escape> composite mode normal ; hidecmdline
-        bind <C-[> composite mode normal ; hidecmdline
-        bind zi zoom 0.1 true
-        bind zo zoom -0.1 true
-        bind zm zoom 0.5 true
-        bind zr zoom -0.5 true
-        bind zM zoom 0.5 true
-        bind zR zoom -0.5 true
-        bind zz zoom 1
+        bind yy clipboard yank
         bind zI zoom 3
+        bind zM zoom 0.5 true
         bind zO zoom 0.3
-        bind . repeat
+        bind zR zoom -0.5 true
+        bind zi zoom 0.1 true
+        bind zm zoom 0.5 true
+        bind zo zoom -0.1 true
+        bind zr zoom -0.5 true
+        bind zz zoom 1
 
-        " Qutebrowser-style keybinds
-        unbind pp
-        unbind Pp
-        unbind a
+        " Remove Non-Qutebrowser-style keybinds
         unbind A
-        unbind w
-        unbind W
-        unbind t
-        unbind x
-        unbind s
+        unbind Pp
         unbind S
+        unbind W
         unbind ZZ
-        bind o fillcmdline open
-        bind O fillcmdline tabopen
-        bind M bmark
-        bind T fillcmdline tab
-        bind b fillcmdline bmarks
-        bind B fillcmdline bmarks -t
-        bind gU composite tabduplicate; urlparent
-        bind v mode visual
-        bind wp clipboard winopen
-        bind wo fillcmdline winopen
-        bind / fillcmdline find
-        bind ? fillcmdline find -?
-        bind n findnext 1
-        bind N findnext -1
+        unbind a
+        unbind pp
+        unbind s
+        unbind t
+        unbind w
+        unbind x
+
+        " Add Qutebrowser-styel keybinds
         bind ,<Space> nohlsearch
+        bind / fillcmdline find
         bind <C-h> home
         bind <C-q> qall
+        bind <C-s> stop
+        bind ? fillcmdline find -?
+        bind B fillcmdline bmarks -t
+        bind M bmark
+        bind N findnext -? 1
+        bind O fillcmdline tabopen
+        bind T fillcmdline tab
+        bind b fillcmdline bmarks
+        bind co tabonly
         bind gC tabduplicate
         bind gD tabdetach
-        bind ss fillcmdline set
+        bind gJ tabmove -1
+        bind gK tabmove +1
+        bind gO current_url tabopen
+        bind gU composite tabduplicate; urlparent
+        bind gd fillcmdline saveas
+        bind gm tabmove
+        bind go current_url open
+        bind n findnext 1
+        bind o fillcmdline open
         bind sf fillcmdline mkt
         bind sk fillcmdline bind
-        bind <C-s> stop
-        bind go current_url open
-        bind gO current_url tabopen
+        bind ss fillcmdline set
+        bind v mode visual
         bind wi viewsource
-        bind gK tabmove +1
-        bind gJ tabmove -1
-        bind gm tabmove
-        bind xo fillcmdline tabopen -b
-        bind gd fillcmdline saveas
-        bind co tabonly
+        bind wo fillcmdline winopen
+        bind wp clipboard winopen
         bind xO current_url tabopen -b
+        bind xo fillcmdline tabopen -b
         bind yY clipboard yank
         bind yp clipboard yank
 
