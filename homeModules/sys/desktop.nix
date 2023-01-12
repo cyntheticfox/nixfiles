@@ -38,8 +38,8 @@ in
     };
 
     defaultEditor = mkOption {
-      type = with types; nullOr (enum [ "vscode" "nvim-qt" ]);
-      default = "nvim-qt";
+      type = with types; nullOr (enum [ "vscode" "neovim-qt" ]);
+      default = "neovim-qt";
 
       description = ''
         Editor to set as default via environment variables.
@@ -298,10 +298,10 @@ in
       ];
 
       # # TODO: Get this to actually work
-      # services.gnome-keyring = {
-      #   enable = true;
-      #   components = [ "secrets" ];
-      # };
+      services.gnome-keyring = {
+        enable = true;
+        components = [ "secrets" ];
+      };
 
       services.udiskie.enable = true;
 
@@ -393,9 +393,7 @@ in
     (mkIf (cfg.defaultEditor != null) {
       home.sessionVariables =
         let
-          bin = cfg.defaultEditor;
-          pkg = if bin == "nvim-qt" then "neovim-qt" else bin;
-          path = "${cfg."${pkg}".package}/bin/${bin}";
+          path = lib.getExe cfg."${cfg.defaultEditor}".package;
         in
         {
           EDITOR_GRAPHICAL = path;
@@ -673,81 +671,81 @@ in
         bind yp clipboard yank
 
         " Aliases
-        alias save mktridactylrc
         command alias command
+        alias save mktridactylrc
+        alias ! exclaim
+        alias !js fillcmdline_tmp 3000 !js is deprecated. Please use js instead
+        alias !jsb fillcmdline_tmp 3000 !jsb is deprecated. Please use jsb instead
+        alias !s exclaim_quiet
         alias au autocmd
         alias aucon autocontain
         alias audel autocmddelete
         alias audelete autocmddelete
-        alias blacklistremove autocmddelete DocStart
+        alias authors credits
         alias b tab
-        alias clsh clearsearchhighlight
-        alias nohlsearch clearsearchhighlight
-        alias noh clearsearchhighlight
-        alias o open
-        alias w winopen
-        alias t tabopen
-        alias tabnew tabopen
-        alias tabm tabmove
-        alias tabo tabonly
-        alias tn tabnext_gt
-        alias bn tabnext_gt
-        alias tnext tabnext_gt
-        alias bnext tabnext_gt
-        alias tp tabprev
-        alias tN tabprev
-        alias bp tabprev
         alias bN tabprev
-        alias tprev tabprev
-        alias bprev tabprev
-        alias tabfirst tab 1
-        alias tablast tab 0
-        alias bfirst tabfirst
-        alias blast tablast
-        alias tfirst tabfirst
-        alias tlast tablast
-        alias buffer tab
-        alias bufferall taball
         alias bd tabclose
         alias bdelete tabclose
-        alias quit tabclose
-        alias q tabclose
-        alias qa qall
-        alias sanitize sanitise
-        alias saveas! saveas --cleanup --overwrite
-        alias tutorial tutor
-        alias h help
-        alias unmute mute unmute
-        alias authors credits
-        alias openwith hint -W
-        alias ! exclaim
-        alias !s exclaim_quiet
-        alias containerremove containerdelete
-        alias colours colourscheme
-        alias colorscheme colourscheme
+        alias bfirst tabfirst
+        alias blacklistremove autocmddelete DocStart
+        alias blast tablast
+        alias bn tabnext_gt
+        alias bnext tabnext_gt
+        alias bp tabprev
+        alias bprev tabprev
+        alias buffer tab
+        alias bufferall taball
+        alias clsh clearsearchhighlight
         alias colors colourscheme
-        alias man help
-        alias !js fillcmdline_tmp 3000 !js is deprecated. Please use js instead
-        alias !jsb fillcmdline_tmp 3000 !jsb is deprecated. Please use jsb instead
-        alias get_current_url js document.location.href
+        alias colorscheme colourscheme
+        alias colours colourscheme
+        alias containerremove containerdelete
         alias current_url composite get_current_url | fillcmdline_notrail
-        alias stop js window.stop()
-        alias zo zoom
+        alias drawingstop no_mouse_mode
+        alias exto extoptions
+        alias extp extpreferences
+        alias extpreferences extoptions
+        alias get_current_url js document.location.href
+        alias h help
         alias installnative nativeinstall
-        alias nativeupdate updatenative
+        alias man help
         alias mkt mktridactylrc
         alias mkt! mktridactylrc -f
         alias mktridactylrc! mktridactylrc -f
         alias mpvsafe js -p tri.excmds.shellescape(JS_ARG).then(url => tri.excmds.exclaim_quiet('mpv --no-terminal ' + url))
-        alias drawingstop no_mouse_mode
-        alias exto extoptions
-        alias extpreferences extoptions
-        alias extp extpreferences
-        alias prefset setpref
+        alias nativeupdate updatenative
+        alias noh clearsearchhighlight
+        alias nohlsearch clearsearchhighlight
+        alias o open
+        alias openwith hint -W
         alias prefremove removepref
-        alias tabclosealltoright tabcloseallto right
-        alias tabclosealltoleft tabcloseallto left
+        alias prefset setpref
+        alias q tabclose
+        alias qa qall
+        alias quit tabclose
         alias reibadailty jumble
+        alias sanitize sanitise
+        alias saveas! saveas --cleanup --overwrite
+        alias stop js window.stop()
+        alias t tabopen
+        alias tN tabprev
+        alias tabclosealltoleft tabcloseallto left
+        alias tabclosealltoright tabcloseallto right
+        alias tabfirst tab 1
+        alias tablast tab 0
+        alias tabm tabmove
+        alias tabnew tabopen
+        alias tabo tabonly
+        alias tfirst tabfirst
+        alias tlast tablast
+        alias tn tabnext_gt
+        alias tnext tabnext_gt
+        alias tp tabprev
+        alias tprev tabprev
+        alias tutorial tutor
+        alias unmute mute unmute
+        alias w winopen
+        alias zo zoom
 
         " For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
         " vim: set filetype=tridactyl

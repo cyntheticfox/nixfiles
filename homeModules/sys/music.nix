@@ -89,7 +89,6 @@ in
 
         settings = {
           core.restore_state = true;
-          logging.verbosity = 1;
 
           # Built-in extensions
           file.enabled = true;
