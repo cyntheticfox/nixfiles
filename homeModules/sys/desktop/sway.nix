@@ -824,7 +824,7 @@ in
               output."*".bg = "~/wallpaper.png fill #000000";
             };
 
-          extraConfig = builtins.concatStringsSep "\n" (builtins.map ({ name, ... }: "workspace \"${name}\"") (mkFinalWorkspaces cfg.workspaces));
+          extraConfig = builtins.concatStringsSep "\n" (builtins.map ({ name, ... }: "workspace \"${name}\"") (lib.reverseList (mkFinalWorkspaces cfg.workspaces)));
         };
 
         ### Power Menu
@@ -1419,7 +1419,7 @@ in
 
             Service = {
               Type = "simple";
-              ExecStart = lib.escapeShellArgs [ (lib.getExe cfg.swayidle.package) "-w" args ];
+              ExecStart = "${lib.getExe cfg.swayidle.package} -w ${args}";
             };
 
             Install.WantedBy = [ "graphical-session.target" ];

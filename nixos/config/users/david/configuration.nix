@@ -94,6 +94,7 @@ in
       ".config/microsoft-edge"
       ".config/pipewire"
       ".config/teams"
+      ".config/teams-for-linux"
       {
         directory = ".docker";
         mode = "0700";
