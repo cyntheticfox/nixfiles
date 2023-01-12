@@ -27,10 +27,10 @@ let
   };
 
   mapListToAttrs' = f: list: builtins.listToAttrs (builtins.map f list);
-  # pipeShellCmds = builtins.concatStringSep " | ";
+  pipeShellCmds = builtins.concatStringsSep " | ";
   xor = a: b: (!a && b) || (a && !b);
   # xnor = a: b: (a && b) || (!a && !b);
-  #nz = x: y: if x == null then y else x;
+  nz = x: y: if x == null then y else x;
 
   # TODO: Refactor?
   mkScreenConfig =
@@ -59,7 +59,8 @@ let
 
         modeString = "${resolution} @ ${refreshRate} Hz";
 
-        criteria = if id != null then id else outputString;
+        # criteria = if id != null then id else outputString;
+        criteria = nz id outputString;
 
         xPixelsOut = builtins.ceil (xPixels * (1 / scale));
         yPixelsOut = builtins.ceil (yPixels * (1 / scale));
@@ -235,6 +236,7 @@ in
           assigns = [
             { class = "^Microsoft-edge$"; }
             { instance = "^microsoft-edge$"; }
+            { app_id = "^teams-for-linux$"; }
           ];
         }
         {
@@ -551,7 +553,7 @@ in
               seat.seat0.hide_cursor = "when-typing enable";
 
               # Use some of the default keybindings w/ `lib.mkOptionDefault`
-              keybindings = {
+              keybindings = lib.mkOptionDefault ({
                 # Media key bindings
                 "XF86AudioMute" = "exec ${lib.getExe cfg.mixerPackage} -t";
                 "XF86AudioLowerVolume" = "exec ${lib.getExe cfg.mixerPackage} -d 2";
@@ -591,7 +593,8 @@ in
                 "${modifier}+Shift+r" = "mode \"recording\"";
               }
               // mkKeyAssigns modifier mkSwitchKeyAssign (mkFinalWorkspaces cfg.workspaces)
-              // mkKeyAssigns modifier mkMoveKeyAssign (mkFinalWorkspaces cfg.workspaces);
+              // mkKeyAssigns modifier mkMoveKeyAssign (mkFinalWorkspaces cfg.workspaces)
+              );
 
               input = {
                 "type:keyboard" = {
@@ -611,9 +614,10 @@ in
 
               startup = [
                 { command = config.home.sessionVariables.BROWSER or (lib.getExe pkgs.chromium); }
-                { command = lib.getExe pkgs.element-desktop-wayland; }
-              ] ++ lib.optionals (cfg.sys.desktop.teams.enable or false) [
-                { command = lib.getExe cfg.sys.desktop.teams.package; }
+              ] ++ lib.optionals (config.sys.desktop.element.enable or false) [
+                { command = lib.getExe config.sys.desktop.element.package; }
+              ] ++ lib.optionals (config.sys.desktop.teams.enable or false) [
+                { command = lib.getExe config.sys.desktop.teams.package; }
               ];
 
               ### Organize startup programs
@@ -636,17 +640,20 @@ in
                   style = "Bold Semi-Condensed";
                   size = 14.0;
                 };
+
                 position = "top";
                 command = lib.getExe cfg.waybar.package;
               }];
 
               floating = {
                 border = 1;
+
                 criteria = [
                   { title = "Steam - News"; }
                   { title = "Friends List"; }
                   { app_id = "^pavucontrol$"; }
                   { app_id = "firefox"; title = "About Mozilla Firefox"; }
+                  { app_id = "firefox"; title = "Firefox — Sharing Indicator"; }
                 ];
               };
 
@@ -1135,22 +1142,18 @@ in
 
       (lib.mkIf cfg.dmenu.enable (
         let
-          rofiDesktopMenu = lib.escapeShellArgs [ (lib.getExe cfg.dmenu.package) "-show" "drun" ];
-          rofiMenu = lib.escapeShellArgs [ (lib.getExe cfg.dmenu.package) "-show" "run" ];
-          xargsToSway = lib.escapeShellArgs [ "${pkgs.findutils}/bin/xargs" "${cfg.package}/bin/swaymsg" "exec" "--" ];
-
           # Your preferred application launcher
           # NOTE: pass the final command to swaymsg so that the resulting window
           #   can be opened on the original workspace that the command was run on.
-          appmenu = "${rofiDesktopMenu} | ${xargsToSway}";
-          menu = "${rofiMenu} | ${xargsToSway}";
+          rofiDesktopMenu = lib.escapeShellArgs [ (lib.getExe cfg.dmenu.package) "-show" "drun" ];
+          rofiMenu = lib.escapeShellArgs [ (lib.getExe cfg.dmenu.package) "-show" "run" ];
+          xargsToSway = lib.escapeShellArgs [ "${pkgs.findutils}/bin/xargs" "${cfg.package}/bin/swaymsg" "exec" "--" ];
         in
         {
-
-          wayland.windowManager.sway.config.keybindings = {
+          wayland.windowManager.sway.config.keybindings = lib.mkOptionDefault {
             # Redefine menu bindings
-            "${modifier}+d" = "exec ${appmenu}";
-            "${modifier}+Shift+d" = "exec ${menu}";
+            "${modifier}+d" = "exec '${pipeShellCmds [ rofiDesktopMenu xargsToSway ]}'";
+            "${modifier}+Shift+d" = "exec '${pipeShellCmds [ rofiMenu xargsToSway ]}'";
           };
 
           programs.rofi = {
@@ -1302,7 +1305,7 @@ in
           let
             playerctl = lib.getExe cfg.playerctl.package;
           in
-          {
+          lib.mkOptionDefault {
             "XF86AudioNext" = lib.escapeShellArgs [ "exec" (lib.escapeShellArgs [ playerctl "next" ]) ];
             "XF86AudioPlay" = lib.escapeShellArgs [ "exec" (lib.escapeShellArgs [ playerctl "play-pause" ]) ];
             "XF86AudioPrev" = lib.escapeShellArgs [ "exec" (lib.escapeShellArgs [ playerctl "previous" ]) ];
@@ -1311,7 +1314,7 @@ in
       })
 
       (lib.mkIf cfg.mako.enable {
-        home.packages = with pkgs; [ cfg.mako.notifysendPackage ];
+        home.packages = [ cfg.mako.notifysendPackage ];
         ### Mako Notification Daemon
         # Configure a notification daemon for Sway, providing
         #   `org.freedesktop.Notifications`.

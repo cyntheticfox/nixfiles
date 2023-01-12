@@ -30,7 +30,7 @@ in
 
     defaultBrowser = mkOption {
       type = with types; nullOr (enum [ "chromium" "firefox" ]);
-      default = null;
+      default = "firefox";
 
       description = ''
         Browser to set as the default via desktop files.
@@ -39,7 +39,7 @@ in
 
     defaultEditor = mkOption {
       type = with types; nullOr (enum [ "vscode" "nvim-qt" ]);
-      default = null;
+      default = "nvim-qt";
 
       description = ''
         Editor to set as default via environment variables.
@@ -48,25 +48,93 @@ in
 
     defaultPDFViewer = mkOption {
       type = with types; nullOr (enum [ "mupdf" ]);
-      default = null;
+      default = "mupdf";
 
       description = ''
         Editor to set as default via environment variables.
       '';
     };
 
-    chromium = mkEnableOption "Enable Chromium configuration" // { default = true; };
-    discord = mkEnableOption "Enable Discord configuration";
-    element = mkEnableOption "Enable Element configuration";
-    edge = mkEnableOption "Enable Microsoft Edge configuration";
-    firefox = mkEnableOption "Enable Firefox configuration" // { default = true; };
-    ghidra = mkEnableOption "Enable Ghidra configuration";
-    kitty = mkEnableOption "Enable Kitty Terminal emulator" // { default = true; };
+    defaultTerminal = mkOption {
+      type = with types; nullOr (enum [ "kitty" ]);
+      default = "kitty";
+
+      description = ''
+        Terminal to set as default via environment variables.
+      '';
+    };
+
+    ghidra = mkOption {
+      type = packageModule {
+        name = "Ghidra";
+        package = "ghidra";
+      };
+
+      default = { };
+    };
+
+    edge = mkOption {
+      type = packageModule {
+        name = "Microsoft Edge";
+        package = "microsoft-edge";
+      };
+
+      default = { };
+    };
+
+    kitty = mkOption {
+      type = packageModule {
+        defaultEnable = true;
+        name = "Kitty";
+        package = "kitty";
+      };
+
+      default = { };
+    };
+
+    chromium = mkOption {
+      type = packageModule {
+        name = "Chromium";
+        package = "chromium";
+      };
+
+      default = { };
+    };
+
+    firefox = mkOption {
+      type = packageModule {
+        defaultEnable = true;
+        name = "Mozilla Firefox";
+        package = "firefox";
+      };
+
+      default = { };
+    };
+
+    discord = mkOption {
+      type = packageModule {
+        name = "Discord";
+        package = "discord";
+      };
+
+      default = { };
+    };
+
+    element = mkOption {
+      type = packageModule {
+        defaultEnable = true;
+        name = "Element";
+        package = "element-desktop-wayland";
+      };
+
+      default = { };
+    };
 
     mupdf = mkOption {
       type = packageModule {
-        package = "mupdf";
+        defaultEnable = true;
         name = "MuPDF";
+        package = "mupdf";
       };
 
       default = { };
@@ -74,6 +142,7 @@ in
 
     libreoffice = mkOption {
       type = packageModule {
+        defaultEnable = true;
         package = "libreoffice";
         name = "LibreOffice";
       };
@@ -83,6 +152,7 @@ in
 
     neovim-qt = mkOption {
       type = packageModule {
+        defaultEnable = config.sys.neovim.enable;
         package = "neovim-qt";
         name = "Neovim QT";
       };
@@ -92,6 +162,7 @@ in
 
     vscode = mkOption {
       type = packageModule {
+        defaultEnable = !config.sys.neovim.enable;
         package = "vscode";
         name = "Visual Studio Code";
       };
@@ -269,17 +340,18 @@ in
       '';
     }
 
-    (mkIf cfg.chromium {
+    (mkIf cfg.chromium.enable {
       programs.chromium = {
-        enable = true;
+        inherit (cfg.chromium) enable;
+
         package = pkgs.ungoogled-chromium;
       };
     })
 
-    (mkIf cfg.discord {
-      home.packages = with pkgs; [ discord ];
+    (mkIf cfg.discord.enable {
+      home.packages = [ cfg.discord.package ];
 
-      xdg.configFile."discord/settings.json".source = (pkgs.formats.json { }).generate "settings.json" {
+      xdg.configFile."discord/settings.json".source = (pkgs.formats.json { }).generate "discord-settings.json" {
         IS_MAXIMIZED = true;
         IS_MINIMIZED = false;
         SKIP_HOST_UPDATE = true;
@@ -331,14 +403,14 @@ in
         };
     })
 
-    (mkIf cfg.element {
-      home.packages = with pkgs; [ element-desktop ];
+    (mkIf cfg.element.enable {
+      home.packages = [ cfg.element.package ];
 
       home.sessionVariables."NIXOS_OZONE_WL" = 1;
     })
 
-    (mkIf cfg.edge {
-      home.packages = with pkgs; [ microsoft-edge ];
+    (mkIf cfg.edge.enable {
+      home.packages = [ cfg.edge.package ];
     })
 
     (mkIf cfg.mupdf.enable {
@@ -364,7 +436,7 @@ in
         };
     })
 
-    (mkIf cfg.firefox {
+    (mkIf cfg.firefox.enable {
       xdg.configFile."tridactyl/tridactylrc".text = ''
         " General Settings
         set update.lastchecktime 1652120990699
@@ -680,16 +752,15 @@ in
       '';
 
       programs.firefox = {
-        enable = true;
+        inherit (cfg.firefox) enable;
 
-        package = pkgs.firefox.override {
-          # forceWayland = true;
+        package = cfg.firefox.package.override {
           cfg.enableTridactylNative = true;
         };
       };
     })
 
-    (mkIf ((cfg.chromium || cfg.firefox) && cfg.defaultBrowser != null) (
+    (mkIf ((cfg.chromium.enable || cfg.firefox.enable) && cfg.defaultBrowser != null) (
       let
         primary-browser =
           if
@@ -697,13 +768,13 @@ in
           then
             {
               name = "firefox";
-              bin = "${config.programs.firefox.package}/bin/firefox";
+              bin = lib.getExe config.programs.firefox.package;
               xdg-desktop = "firefox.desktop";
             }
           else
             {
               name = "chromium";
-              bin = "${config.programs.chromium.package}/bin/chromium";
+              bin = lib.getExe config.programs.chromium.package;
               xdg-desktop = "chromium.desktop";
             };
 
@@ -728,62 +799,57 @@ in
       }
     ))
 
-    (mkIf cfg.ghidra {
-      home.packages = with pkgs; [ ghidra ];
+    (mkIf cfg.ghidra.enable {
+      home.packages = [ cfg.ghidra.package ];
     })
 
-    (
-      let
-        theme = "nord";
-        themeFile = "${theme}.conf";
-      in
-      mkIf cfg.kitty {
-        home.sessionVariables.TERMINAL = "${pkgs.kitty}/bin/kitty";
+    (mkIf cfg.kitty.enable {
+      programs.kitty = {
+        inherit (cfg.kitty) enable;
 
-        programs.kitty = {
-          enable = true;
+        settings = {
+          # Set font settings
+          font_family = "FiraCodeNerdFontCompleteMono-Retina";
+          font_size = 12;
+          font_features = "FiraCodeNerdFontCompleteMono-Retina +zero +onum";
 
-          settings = {
-            # Set font settings
-            font_family = "FiraCodeNerdFontCompleteMono-Retina";
-            font_size = 12;
-            font_features = "FiraCodeNerdFontCompleteMono-Retina +zero +onum";
+          # Set terminal bell to off
+          enable_audio_bell = false;
+          visual_bell_duration = 0;
 
-            # Set terminal bell to off
-            enable_audio_bell = false;
-            visual_bell_duration = 0;
+          # Fix tab bar
+          tab_bar_edge = "top";
+          tab_bar_style = "powerline";
+          tab_bar_min_tabs = 1;
+          tab_title_template = "{index}: {title}";
+          tab_bar_background = "#222";
 
-            # Fix tab bar
-            tab_bar_edge = "top";
-            tab_bar_style = "powerline";
-            tab_bar_min_tabs = 1;
-            tab_title_template = "{index}: {title}";
-            tab_bar_background = "#222";
-
-            # Set background Opacity
-            background_opacity = "0.9";
-          };
-
-          extraConfig = ''
-            include ./${themeFile}
-          '';
+          # Set background Opacity
+          background_opacity = "0.9";
         };
 
-        xdg.configFile."kitty/${themeFile}".source =
+        extraConfig =
           let
-            owner = "connorholyday";
-            repo = "nord-kitty";
-            rev = "3a819c1f207cd2f98a6b7c7f9ebf1c60da91c9e9";
-            sha256 = "sha256:1fbnc6r9mbqb6wxqqi9z8hjhfir44rqd6ynvbc49kn6gd8v707p1";
+            themefile =
+              let
+                owner = "connorholyday";
+                repo = "nord-kitty";
+                rev = "3a819c1f207cd2f98a6b7c7f9ebf1c60da91c9e9";
+                sha256 = "sha256:1fbnc6r9mbqb6wxqqi9z8hjhfir44rqd6ynvbc49kn6gd8v707p1";
+              in
+              pkgs.fetchurl {
+                inherit sha256;
+
+                url = "https://raw.githubusercontent.com/${owner}/${repo}/${rev}/nord.conf";
+              };
           in
-          pkgs.fetchurl {
-            inherit sha256;
+          "include ${themefile}";
+      };
+    })
 
-            url = "https://raw.githubusercontent.com/${owner}/${repo}/${rev}/${themeFile}";
-          };
-
-      }
-    )
+    (mkIf (cfg.defaultTerminal != null) {
+      home.sessionVariables.TERMINAL = lib.getExe cfg."${cfg.defaultTerminal}".package;
+    })
 
     (mkIf cfg.remmina.enable (
       mkMerge [
@@ -817,7 +883,7 @@ in
 
             Service = {
               Type = "simple";
-              ExecStart = "${cfg.remmina.package}/bin/remmina -i";
+              ExecStart = "${lib.getExe cfg.remmina.package} -i";
             };
           };
         })

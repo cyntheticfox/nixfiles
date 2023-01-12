@@ -31,10 +31,16 @@
     desktop = {
       enable = true;
 
-      defaultBrowser = "firefox";
-      discord = true;
-      edge = true;
-      element = true;
+      chromium = {
+        enable = true;
+
+        package = pkgs.ungoogled-chromium;
+      };
+
+      discord.enable = true;
+      edge.enable = true;
+      firefox.enable = true;
+      ghidra.enable = true;
 
       games = {
         retroarch.enable = true;
@@ -61,7 +67,7 @@
       teams = {
         enable = true;
 
-        package = pkgs.nixpkgs-unstable.teams-for-linux;
+        package = pkgs.foosteros.teams-for-linux;
         desktopEntry = "teams-for-linux.desktop";
       };
     };

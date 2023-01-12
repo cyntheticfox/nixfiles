@@ -5,6 +5,7 @@
 , cpuVendor ? null
 , system ? "x86_64-linux"
 , modules ? [ ]
+, overlays ? [ ]
 }:
 assert cpuVendor == null || builtins.isString cpuVendor;
 assert builtins.hasAttr "lib" nixpkgs;
@@ -105,7 +106,7 @@ nixpkgs.lib.nixosSystem {
             else
               super;
         })
-      ];
+      ] ++ overlays;
     })
   ] ++ modules;
 }

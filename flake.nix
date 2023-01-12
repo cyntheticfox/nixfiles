@@ -61,6 +61,10 @@
         gitignore.follows = "gitignore";
       };
     };
+
+    foosteros = {
+      url = "github:lilyinstarlight/foosteros";
+    };
   };
 
   outputs = { self, ... }@inputs:
@@ -97,6 +101,16 @@
 
           dh-framework = self.lib.defFlakeWorkstation {
             inherit home-manager nixpkgs nixpkgs-unstable nix-index-database;
+
+            overlays = [
+              (_: _: {
+                foosteros = import foosteros {
+                  system = "x86_64-linux";
+
+                  allowUnfree = true;
+                };
+              })
+            ];
 
             cpuVendor = "intel";
 
