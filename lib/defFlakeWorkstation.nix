@@ -1,4 +1,5 @@
 { nixpkgs
+, flake-registry
 , home-manager
 , nixpkgs-unstable ? null
 , nix-index-database ? null
@@ -7,6 +8,7 @@
 , modules ? [ ]
 , overlays ? [ ]
 }:
+
 assert cpuVendor == null || builtins.isString cpuVendor;
 assert builtins.hasAttr "lib" nixpkgs;
 assert builtins.hasAttr "nixosSystem" nixpkgs.lib;
@@ -28,21 +30,44 @@ nixpkgs.lib.nixosSystem {
     ../nixos/config/hardware-base.nix
 
     (_: {
-      nix.registry = {
-        nixpkgs.to = {
-          type = "github";
-          owner = "NixOS";
-          repo = "nixpkgs";
-          ref = nixpkgs.sourceInfo.rev;
-        };
+      nix = {
+        settings.flake-registry = "${flake-registry}/flake-registry.json";
 
-        nixpkgs-unstable.to = {
-          type = "github";
-          owner = "NixOS";
-          repo = "nixpkgs";
-          ref = if nixpkgs-unstable != null then nixpkgs-unstable.sourceInfo.rev else nixpkgs.sourceInfo.rev;
+        registry = {
+          nixpkgs.to = {
+            type = "github";
+            owner = "NixOS";
+            repo = "nixpkgs";
+            ref = nixpkgs.sourceInfo.rev;
+          };
+
+          nixpkgs-unstable.to = {
+            type = "github";
+            owner = "NixOS";
+            repo = "nixpkgs";
+            ref = if nixpkgs-unstable != null then nixpkgs-unstable.sourceInfo.rev else nixpkgs.sourceInfo.rev;
+          };
         };
       };
+    })
+
+    ({ config, ... }: {
+      nixpkgs.overlays = [
+        (_: super: {
+          nixpkgs-unstable =
+            if
+              nixpkgs-unstable != null
+            then
+              import nixpkgs-unstable
+                {
+                  inherit system;
+
+                  config.allowUnfree = config.nixpkgs.config.allowUnfree;
+                }
+            else
+              super;
+        })
+      ] ++ overlays;
     })
 
     (_: {
@@ -90,23 +115,6 @@ nixpkgs.lib.nixosSystem {
         useGlobalPkgs = true;
         useUserPackages = true;
       };
-
-      nixpkgs.overlays = [
-        (_: super: {
-          nixpkgs-unstable =
-            if
-              nixpkgs-unstable != null
-            then
-              import nixpkgs-unstable
-                {
-                  inherit system;
-
-                  config.allowUnfree = true;
-                }
-            else
-              super;
-        })
-      ] ++ overlays;
     })
   ] ++ modules;
 }

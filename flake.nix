@@ -27,6 +27,11 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    flake-registry = {
+      url = "github:/NixOS/flake-registry";
+      flake = false;
+    };
+
     nmt = {
       url = "gitlab:rycee/nmt?rev=d83601002c99b78c89ea80e5e6ba21addcfe12ae&narHash=sha256-1xzwwxygzs1cmysg97hzd285r7n1g1lwx5y1ar68gwq07a1rczmv";
       flake = false;
@@ -74,6 +79,7 @@
         nixpkgs.follows = "nixpkgs-unstable";
         pre-commit-hooks-nix.follows = "pre-commit-hooks";
         sops-nix.follows = "sops-nix";
+        flake-registry.follows = "flake-registry";
 
         # Unused dependencies
         crane.follows = "";
@@ -82,7 +88,6 @@
         fenix.follows = "";
         flake-compat.follows = "";
         flake-parts.follows = "";
-        flake-registry.follows = "";
         lanzaboote.follows = "";
         nix-alien.follows = "";
         nix-index-database.follows = "";
@@ -118,13 +123,13 @@
 
         nixosConfigurations = {
           min = self.lib.defFlakeServer {
-            inherit nixpkgs;
+            inherit flake-registry nixpkgs;
 
             modules = [ ./nixosConfigurations/min ];
           };
 
           dh-framework = self.lib.defFlakeWorkstation {
-            inherit home-manager nixpkgs nixpkgs-unstable nix-index-database;
+            inherit flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
 
             overlays = [
               (_: _: {
@@ -157,7 +162,7 @@
           };
 
           ashley = self.lib.defFlakeServer {
-            inherit nixpkgs;
+            inherit flake-registry nixpkgs;
 
             modules = [ ./nixosConfigurations/ashley ];
           };

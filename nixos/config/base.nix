@@ -30,6 +30,7 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+
   environment.etc."nix/nixpkgs-config.nix".text = lib.mkDefault ''
     {
       allowUnfree = ${lib.boolToString config.nixpkgs.config.allowUnfree};
