@@ -54,16 +54,40 @@
       url = "github:cachix/pre-commit-hooks.nix";
 
       inputs = {
-        nixpkgs.follows = "nixpkgs-unstable";
-        nixpkgs-stable.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
-        flake-compat.follows = "";
         gitignore.follows = "gitignore";
+        nixpkgs-stable.follows = "nixpkgs";
+        nixpkgs.follows = "nixpkgs-unstable";
+
+        # Unused dependencies
+        flake-compat.follows = "";
       };
     };
 
     foosteros = {
       url = "github:lilyinstarlight/foosteros";
+
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        impermanence.follows = "impermanence";
+        nixpkgs-stable.follows = "nixpkgs";
+        nixpkgs.follows = "nixpkgs-unstable";
+        pre-commit-hooks-nix.follows = "pre-commit-hooks";
+        sops-nix.follows = "sops-nix";
+
+        # Unused dependencies
+        crane.follows = "";
+        disko.follows = "";
+        envfs.follows = "";
+        fenix.follows = "";
+        flake-compat.follows = "";
+        flake-parts.follows = "";
+        flake-registry.follows = "";
+        lanzaboote.follows = "";
+        nix-alien.follows = "";
+        nix-index-database.follows = "";
+        rust-overlay.follows = "";
+      };
     };
   };
 
