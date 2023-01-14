@@ -621,6 +621,8 @@ in
                 { command = lib.getExe config.sys.desktop.element.package; }
               ] ++ lib.optionals (config.sys.desktop.teams.enable or false) [
                 { command = lib.getExe config.sys.desktop.teams.package; }
+              ] ++ lib.optionals (config.sys.desktop.discord.enable or false) [
+                { command = lib.getExe config.sys.desktop.discord.package; }
               ];
 
               ### Organize startup programs
