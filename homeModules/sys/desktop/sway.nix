@@ -431,7 +431,7 @@ in
       modifier = "Mod4";
 
       # lockscreen :: String
-      lockscreen = lib.escapeShellArgs [
+      swaylock = [
         (lib.getExe cfg.lockscreenPackage)
         "--daemonize"
         "--show-failed-attempts"
@@ -445,6 +445,9 @@ in
         "--fade-in"
         "0.2"
       ];
+
+      lockscreen = lib.escapeShellArgs swaylock;
+      idlelock = builtins.concatStringsSep " " swaylock;
 
       # mkDefaultWorkspace :: Int -> Int -> Workspace
       mkDefaultWorkspace = offset: index:
@@ -649,11 +652,11 @@ in
                 border = 1;
 
                 criteria = [
-                  { title = "Steam - News"; }
-                  { title = "Friends List"; }
+                  { title = "^Steam - News$"; }
+                  { title = "^Friends List$"; }
                   { app_id = "^pavucontrol$"; }
-                  { app_id = "firefox"; title = "About Mozilla Firefox"; }
-                  { app_id = "firefox"; title = "Firefox — Sharing Indicator"; }
+                  { app_id = "^firefox$"; title = "^About Mozilla Firefox$"; }
+                  { app_id = "^firefox$"; title = "^Firefox — Sharing Indicator$"; }
                 ];
               };
 
@@ -1371,7 +1374,7 @@ in
         #   timeouts = [
         #     {
         #       timeout = 900;
-        #       command = "exec ${lockscreen}";
+        #       command = "exec ${idlelock}";
         #     }
         #     {
         #       timeout = 960;
@@ -1386,44 +1389,37 @@ in
         #     }
         #     {
         #       event = "before-sleep";
-        #       command = "exec ${lockscreen}";
+        #       command = "exec ${idlelock}";
         #     }
         #   ];
         # };
-        systemd.user.services.swayidle =
+        xdg.configFile."swayidle/config".text =
           let
-            basetime = 15 * 60;
-            args = lib.escapeShellArgs [
-              (lib.escapeShellArgs [
-                "timeout"
-                (builtins.toString basetime)
-                (lib.escapeShellArgs [ "exec" lockscreen ])
-              ])
-              (lib.escapeShellArgs [
-                "timeout"
-                (builtins.toString (basetime + 60))
-                (lib.escapeShellArgs [ "${cfg.package}/bin/swaymsg" "output" "*" "dpms" "off" ])
-              ])
-              (lib.escapeShellArgs [
-                "resume"
-                (lib.escapeShellArgs [ "${cfg.package}/bin/swaymsg" "output" "*" "dpms" "on" ])
-              ])
-            ];
+            lockTimer = 16 * 60; # in Seconds
+            screenTimer = lockTimer + 60;
+            screensOn = on: "${cfg.package}/bin/swaymsg output * dpms ${if on then "on" else "off"}";
           in
-          {
-            Unit = {
-              Description = "Idle manager for Wayland";
-              Documentation = "man:swayidle(1)";
-              PartOf = [ "graphical-session.target" ];
-            };
+          ''
+            idlehint ${builtins.toString lockTimer}
+            lock "${idlelock}"
+            before-sleep "${idlelock}"
+            timeout ${builtins.toString screenTimer} "${screensOn false}" resume "${screensOn true}"
+          '';
 
-            Service = {
-              Type = "simple";
-              ExecStart = "${lib.getExe cfg.swayidle.package} -w ${args}";
-            };
-
-            Install.WantedBy = [ "graphical-session.target" ];
+        systemd.user.services.swayidle = {
+          Unit = {
+            Description = "Idle manager for Wayland";
+            Documentation = "man:swayidle(1)";
+            PartOf = [ "graphical-session.target" ];
           };
+
+          Service = {
+            Type = "simple";
+            ExecStart = "${lib.getExe cfg.swayidle.package} -w -C \"${config.xdg.configFile."swayidle/config".source}\"";
+          };
+
+          Install.WantedBy = [ "graphical-session.target" ];
+        };
 
 
         systemd.user.targets.sway-session.Unit.Wants = [

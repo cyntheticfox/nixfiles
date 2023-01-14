@@ -56,6 +56,8 @@
     localBinInPath = true;
   };
 
+  services.logind.extraConfig = "IdleAction=Lock";
+
   programs.vim.defaultEditor = true;
 
   programs.tmux.enable = true;
