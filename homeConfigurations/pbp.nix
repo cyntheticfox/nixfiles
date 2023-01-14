@@ -7,8 +7,8 @@ _: {
 
       defaultBroswer = "firefox";
 
-      discord = true;
-      element = true;
+      discord.enable = true;
+      element.enable = true;
     };
 
     fonts.enable = true;
