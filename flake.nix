@@ -104,7 +104,8 @@
 
         homeConfigurations = {
           pbp = self.lib.hmConfig {
-            inherit home-manager nixpkgs nixpkgs-unstable;
+            inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
+            inherit (self.outputs) homeModules;
 
             system = "aarch64-linux";
             username = "david";
@@ -112,7 +113,9 @@
           };
 
           wsl = self.lib.hmConfig {
-            inherit home-manager nixpkgs nixpkgs-unstable;
+            inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
+            inherit (self.outputs) homeModules;
+
 
             username = "david";
             modules = [ ./homeConfigurations/wsl.nix ];
@@ -123,13 +126,14 @@
 
         nixosConfigurations = {
           min = self.lib.defFlakeServer {
-            inherit flake-registry nixpkgs;
+            inherit (self.inputs) flake-registry nixpkgs;
 
             modules = [ ./nixosConfigurations/min ];
           };
 
           dh-framework = self.lib.defFlakeWorkstation {
-            inherit flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
+            inherit (self.inputs) flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
+            inherit (self.outputs) nixosModules;
 
             overlays = [
               (_: _: {
@@ -162,14 +166,17 @@
           };
 
           ashley = self.lib.defFlakeServer {
-            inherit flake-registry nixpkgs;
+            inherit (self.inputs) flake-registry nixpkgs;
+            inherit (self.outputs) nixosModules;
 
             modules = [ ./nixosConfigurations/ashley ];
           };
         };
 
+        nixosModules = import ./nixosModules;
+
         checks.x86_64-linux = import ./tests {
-          inherit home-manager nmt;
+          inherit (self.inputs) home-manager nmt;
           inherit (self.outputs) nixosConfigurations;
 
           pkgs = nixpkgs.legacyPackages.x86_64-linux;

@@ -20,6 +20,7 @@ let
     type = "file";
 
     packages = with pkgs; [
+      fd
       fq
       man-pages
       p7zip

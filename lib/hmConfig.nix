@@ -1,6 +1,7 @@
 { nixpkgs
 , home-manager
 , username
+, homeModules ? [ ]
 , system ? "x86_64-linux"
 , nixpkgs-unstable ? null
 , allowUnfree ? true
@@ -60,5 +61,5 @@ home-manager.lib.homeManagerConfiguration {
         };
       };
     }
-  ] ++ modules;
+  ] ++ modules ++ (builtins.attrValues homeModules);
 }

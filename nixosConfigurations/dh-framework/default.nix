@@ -12,7 +12,7 @@
     # Services
     # ../../nixos/config/services/clamav.nix
     ../../nixos/config/services/cupsd.nix
-    ../../nixos/config/services/libvirtd.nix
+    #../../nixos/config/services/libvirtd.nix
     ../../nixos/config/services/restic.nix
   ];
 
@@ -42,6 +42,8 @@
       };
     };
   };
+
+  sys.libvirtd.enable = true;
 
   environment.persistence."/state" = {
     hideMounts = true;

@@ -5,6 +5,7 @@
 , nix-index-database ? null
 , cpuVendor ? null
 , system ? "x86_64-linux"
+, nixosModules ? { }
 , modules ? [ ]
 , overlays ? [ ]
 }:
@@ -15,6 +16,9 @@ assert builtins.hasAttr "nixosSystem" nixpkgs.lib;
 assert builtins.hasAttr "nixosModules" home-manager;
 assert builtins.hasAttr "home-manager" home-manager.nixosModules;
 
+let
+  nz = a: b: if a != null then a else b;
+in
 nixpkgs.lib.nixosSystem {
   inherit system;
 
@@ -45,7 +49,7 @@ nixpkgs.lib.nixosSystem {
             type = "github";
             owner = "NixOS";
             repo = "nixpkgs";
-            ref = if nixpkgs-unstable != null then nixpkgs-unstable.sourceInfo.rev else nixpkgs.sourceInfo.rev;
+            ref = (nz nixpkgs-unstable nixpkgs).sourceInfo.rev;
           };
         };
       };
@@ -116,5 +120,5 @@ nixpkgs.lib.nixosSystem {
         useUserPackages = true;
       };
     })
-  ] ++ modules;
+  ] ++ modules ++ builtins.attrValues nixosModules;
 }

@@ -3,6 +3,7 @@
 , nixpkgs-unstable ? null
 , cpuVendor ? null
 , system ? "x86_64-linux"
+, nixosModules ? { }
 , modules ? [ ]
 , overlays ? [ ]
 }:
@@ -11,6 +12,9 @@ assert cpuVendor == null || builtins.isString cpuVendor;
 assert builtins.hasAttr "lib" nixpkgs;
 assert builtins.hasAttr "nixosSystem" nixpkgs.lib;
 
+let
+  nz = v: x: if v != null then v else x;
+in
 nixpkgs.lib.nixosSystem {
   inherit system;
 
@@ -40,7 +44,7 @@ nixpkgs.lib.nixosSystem {
             type = "github";
             owner = "NixOS";
             repo = "nixpkgs";
-            ref = if nixpkgs-unstable != null then nixpkgs-unstable.sourceInfo.rev else nixpkgs.sourceInfo.rev;
+            ref = (nz nixpkgs-unstable nixpkgs).sourceInfo.rev;
           };
         };
       };
@@ -64,5 +68,5 @@ nixpkgs.lib.nixosSystem {
         })
       ] ++ overlays;
     })
-  ] ++ modules;
+  ] ++ modules ++ builtins.attrValues nixosModules;
 }

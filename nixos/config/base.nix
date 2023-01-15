@@ -1,4 +1,54 @@
 { config, lib, pkgs, ... }: {
+  console = {
+    font = "Lat2-Terminus16";
+    useXkbConfig = true;
+  };
+
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  environment.etc."nix/nixpkgs-config.nix".text = lib.mkDefault ''
+    {
+      allowUnfree = ${lib.boolToString config.nixpkgs.config.allowUnfree};
+    }
+  '';
+
+  environment.defaultPackages = with pkgs; [
+    aria
+    bc
+    cachix
+    fd
+    file
+    git
+    gnupg
+    hexyl
+    man-pages
+    man-pages-posix
+    nix-index
+    neofetch
+    progress
+    ripgrep
+    strace
+    tree
+    unzip
+  ];
+
+  environment.homeBinInPath = true;
+  environment.localBinInPath = true;
+
+  environment.shellAliases = {
+    ll = "ls -al";
+    la = "ls -al";
+  };
+
+  programs.mtr.enable = true;
+  programs.tmux.enable = true;
+  programs.vim.defaultEditor = true;
+
+  networking = {
+    useDHCP = false;
+    firewall.pingLimit = lib.mkIf config.networking.firewall.enable "--limit 1/minute --limit-burst 5";
+  };
+
   nix = {
     extraOptions = ''
       experimental-features = nix-command flakes ca-derivations
@@ -30,51 +80,6 @@
   };
 
   nixpkgs.config.allowUnfree = true;
-
-  environment.etc."nix/nixpkgs-config.nix".text = lib.mkDefault ''
-    {
-      allowUnfree = ${lib.boolToString config.nixpkgs.config.allowUnfree};
-    }
-  '';
-
-  environment = {
-    defaultPackages = with pkgs; [
-      aria
-      bc
-      cachix
-      file
-      git
-      gnupg
-      nix-index
-      neofetch
-      progress
-      strace
-      tree
-      unzip
-    ];
-
-    homeBinInPath = true;
-    localBinInPath = true;
-  };
-
-  services.logind.extraConfig = "IdleAction=Lock";
-
-  programs.vim.defaultEditor = true;
-
-  programs.tmux.enable = true;
-
-  programs.mtr.enable = true;
-
-  networking = {
-    useDHCP = false;
-    firewall.pingLimit = lib.mkIf config.networking.firewall.enable "--limit 1/minute --limit-burst 5";
-  };
-
-  i18n.defaultLocale = "en_US.UTF-8";
-  console = {
-    font = "Lat2-Terminus16";
-    useXkbConfig = true;
-  };
 
   # Since apparently I can't trust people
   security.pki.caCertificateBlacklist = [
@@ -139,6 +144,8 @@
     "TrustCor RootCert CA-1"
     "TrustCor RootCert CA-2"
   ];
+
+  services.logind.extraConfig = "IdleAction=Lock";
 
   system.stateVersion = "22.11";
 }
