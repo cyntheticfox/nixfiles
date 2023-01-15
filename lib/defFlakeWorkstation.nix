@@ -30,7 +30,6 @@ nixpkgs.lib.nixosSystem {
 
   modules = [
     home-manager.nixosModules.home-manager
-    ../nixos/config/base.nix
     ../nixos/config/hardware-base.nix
 
     (_: {
@@ -119,6 +118,10 @@ nixpkgs.lib.nixosSystem {
         useGlobalPkgs = true;
         useUserPackages = true;
       };
+    })
+
+    (_: {
+      system.stateVersion = "22.11";
     })
   ] ++ modules ++ builtins.attrValues nixosModules;
 }

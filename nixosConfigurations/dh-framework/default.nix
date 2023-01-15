@@ -43,6 +43,12 @@
     };
   };
 
+  sys.core.nix-experimental-features = [
+    "nix-command"
+    "flakes"
+    "ca-derivations"
+  ];
+
   sys.libvirtd.enable = true;
 
   environment.persistence."/state" = {

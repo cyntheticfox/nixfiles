@@ -25,7 +25,6 @@ nixpkgs.lib.nixosSystem {
   };
 
   modules = [
-    ../nixos/config/base.nix
     ../nixos/config/hardware-base.nix
 
     (_: {
@@ -67,6 +66,10 @@ nixpkgs.lib.nixosSystem {
               super;
         })
       ] ++ overlays;
+    })
+
+    (_: {
+      system.stateVersion = "22.11";
     })
   ] ++ modules ++ builtins.attrValues nixosModules;
 }
