@@ -30,7 +30,7 @@ nixpkgs.lib.nixosSystem {
 
   modules = [
     home-manager.nixosModules.home-manager
-    ../nixos/config/hardware-base.nix
+    ../nixos/hardware-base.nix
 
     (_: {
       nix = {

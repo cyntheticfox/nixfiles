@@ -25,7 +25,7 @@ nixpkgs.lib.nixosSystem {
   };
 
   modules = [
-    ../nixos/config/hardware-base.nix
+    ../nixos/hardware-base.nix
 
     (_: {
       nix = {
