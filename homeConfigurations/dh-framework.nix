@@ -67,7 +67,7 @@
       teams = {
         enable = true;
 
-        package = pkgs.foosteros.teams-for-linux;
+        package = pkgs.nixpkgs-unstable.teams-for-linux;
         desktopEntry = "teams-for-linux.desktop";
       };
     };
