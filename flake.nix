@@ -86,7 +86,6 @@
         crane.follows = "";
         disko.follows = "";
         envfs.follows = "";
-        fenix.follows = "";
         flake-compat.follows = "";
         flake-parts.follows = "";
         lanzaboote.follows = "";
