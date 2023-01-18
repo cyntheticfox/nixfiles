@@ -226,7 +226,6 @@
               inherit sopsPGPKeyDirs;
 
               packages = (formatPackages pkgs) ++ (sopsPackages pkgs);
-
             };
 
             no-env = pkgs.mkShell {
