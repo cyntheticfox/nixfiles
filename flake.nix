@@ -17,6 +17,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
 
     nix-index-database.url = "github:houstdav000/nix-index-database-stable";
 
@@ -98,7 +99,7 @@
 
   outputs = { self, ... }@inputs:
     with inputs;
-    (nixpkgs.lib.recursiveUpdate
+    (nixpkgs-lib.lib.recursiveUpdate
       {
         lib = import ./lib;
 
