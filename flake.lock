@@ -67,11 +67,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1673954891,
-        "narHash": "sha256-cCPOdo9ylaY6Q9LA8P6EJJuj8GNdstpJvRhKJt+wsNs=",
+        "lastModified": 1673976626,
+        "narHash": "sha256-M/hIPfNMolC0ybbjO36uviVIKKGRQ6aUwM7tLhkiIKI=",
         "owner": "lilyinstarlight",
         "repo": "foosteros",
-        "rev": "cb07d0db8d813d6d54ee4ff8caf320e28b8a7fa3",
+        "rev": "94bc1aaa70b06839231c27998048b8acdb7b3297",
         "type": "github"
       },
       "original": {
