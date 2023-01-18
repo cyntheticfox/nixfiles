@@ -78,6 +78,8 @@
     git = {
       enable = true;
 
+      package = pkgs.nixpkgs-unstable.git;
+
       name = "David Houston";
       email = "houstdav000@gmail.com";
       gpgkey = "5960278CE235F821!";

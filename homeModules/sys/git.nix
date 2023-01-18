@@ -9,6 +9,8 @@ in
   options.sys.git = {
     enable = mkEnableOption "Enable configuration of git environment";
 
+    package = mkPackageOption pkgs "git" { };
+
     name = mkOption {
       type = types.str;
       description = ''
@@ -53,7 +55,7 @@ in
     home.packages = cfg.extraPackages;
 
     programs.git = {
-      enable = true;
+      inherit (cfg) enable package;
 
       userName = cfg.name;
       userEmail = cfg.email;
@@ -64,6 +66,8 @@ in
         state = "status -sb --";
         unstage = "reset HEAD --";
       };
+
+      attributes = [ "*.pdf -text diff=pdf" ];
 
       signing = {
         key = cfg.gpgkey;
@@ -87,22 +91,63 @@ in
       delta.enable = true;
 
       extraConfig = {
-        credential.helper = "cache --timeout 600";
-        help.autocorrect = true;
+        blame = {
+          coloring = "highlightRecent";
+          markUnblamableLines = true;
+          markIgnoredLines = true;
+        };
+
         core = {
+          autocrlf = "input";
           editor = config.home.sessionVariables.EDITOR or "nano";
           filemode = false;
-          autocrlf = "input";
           hideDotFiles = true;
           ignoreCase = true;
+          safecrlf = true;
+        };
+
+        credential.helper = "cache --timeout 600";
+        fetch.output = "compact";
+
+        help = {
+          autocorrect = 20;
+          format = "man";
+        };
+
+        init.defaultBranch = "main";
+        merge.autoStash = true;
+        pull.ff = "only";
+
+        push = {
+          autoSetupRemote = true;
+          followTags = true;
+          gpgSign = "if-asked";
+        };
+
+        rebase = {
+          abbreviateCommands = true;
+          autoStash = true;
+          stat = true;
+        };
+
+        stash = {
+          showPatch = true;
+          showIncludeUntracked = true;
+        };
+
+        status = {
+          branch = true;
+          relativePaths = false;
+        };
+
+        tag = {
+          forceSignAnnotated = true;
+          gpgSign = true;
         };
 
         url."https://github.com".insteadOf = "git://github.com";
 
-        init.defaultBranch = "main";
-        push.autoSetupRemote = true;
-        pull.ff = "only";
-        tag.gpgSign = true;
+        user.useConfigOnly = true;
       };
     };
   };
