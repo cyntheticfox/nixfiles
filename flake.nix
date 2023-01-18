@@ -234,7 +234,7 @@
               packages = (formatPackages pkgs) ++ (sopsPackages pkgs) ++ (with pkgs; [
                 git
                 gnupg
-                pinentry-qt
+                pinentry-qt # FIXME: Should really have separate devShells for w/ desktop and w/o.
                 neovim
               ]);
 
