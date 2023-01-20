@@ -46,6 +46,7 @@ let
 
   netModule = pkgModule {
     type = "network";
+
     packages = with pkgs; [
       bandwhich
       curlie
@@ -67,6 +68,12 @@ let
 
     extraOptions.htopIntegration = mkEnableOption "Manage htop configuration" // { default = true; };
   };
+
+  nixDiffCommands = {
+    builtin = "nix store diff-closures";
+    nvd = "nvd diff";
+    nix-diff = "nix-diff";
+  };
 in
 {
   options.sys.core = {
@@ -74,12 +81,8 @@ in
 
     extraPaths = mkOption {
       type = with types; listOf string;
-      default = with pkgs; [
-        "${config.home.homeDirectory}/.cargo/bin"
-      ];
-      description = ''
-        Additional packages to add to the user's session path.
-      '';
+      default = [ "${config.home.homeDirectory}/.cargo/bin" ];
+      description = "Additional packages to add to the user's session path.";
     };
 
     manageFilePackages = mkOption {
@@ -102,7 +105,18 @@ in
 
     manageXDGConfig = mkEnableOption "Enable xdg dirs management" // { default = true; };
 
-    manageNixConfig = mkEnableOption "Enable Nix config management" // { default = true; };
+    nix = {
+      enable = mkEnableOption "Enable Nix config management" // { default = true; };
+
+      diffProgram = mkOption {
+        type = types.enum (builtins.attrNames nixDiffCommands);
+        default =
+          let
+            mkDefaultBin = name: assert builtins.hasAttr name nixDiffCommands; name;
+          in
+          mkDefaultBin "builtin";
+      };
+    };
 
     neofetch = mkEnableOption "Enable neofetch config" // { default = true; };
   };
@@ -186,12 +200,10 @@ in
         ]);
       };
     })
-    (mkIf cfg.manageNixConfig
+    (mkIf cfg.nix.enable
       {
-        home.packages = with pkgs; [
-          comma
-          nvd
-        ];
+        home.packages = [ pkgs.comma ] ++ lib.optional (cfg.nix.diffProgram != "builtin") [ pkgs."${cfg.nix.diffProgram}" ];
+
         home.shellAliases = {
           ### Nix Aliases
           # TODO: Make this a separate like OMZ module?
@@ -201,7 +213,11 @@ in
           "nb" = "nix build";
           "nbr" = "nix build --rebuild";
 
-          "nd" = "nix develop";
+          "nd" = builtins.getAttr cfg.nix.diffProgram nixDiffCommands; # TODO: Make diff
+
+          "ndev" = "nix develop";
+
+          "ne" = "nix edit";
 
           "nf" = "nix flake";
           "nfc" = "nix flake check";
@@ -226,6 +242,8 @@ in
           "nprb" = "nix profile rollback";
           "npw" = "nix profile wipe-history";
 
+          "npath" = "nix path-info";
+
           "nr" = "nix run";
 
           "nrepl" = "nix repl";
@@ -241,49 +259,37 @@ in
           # TODO: Replace w/ working function
           # "nshn" = "nix shell nixpkgs";
 
+          "nsd" = "nix show-derivation";
+
           "nst" = "nix store";
         } // (if builtins.hasAttr "ON_NIXOS" config.home.sessionVariables then {
           "nos" = "nixos-rebuild";
           "nosb" = "nixos-rebuild build";
           "nosbf" = "nixos-rebuild build --flake .";
           "nosc" = "nixos-container";
+          "nosd" = "";
           "nosg" = "nixos-generate-config";
+          "nosp" = "read-link '/nix/var/nix/profiles/system'";
+          "nospl" = "ls -r '/nix/var/nix/profiles/system-*'";
           "nossw" = "nixos-rebuild switch --use-remote-sudo";
           "nosswf" = "nixos-rebuild switch --use-remote-sudo --flake .";
           "nosswfc" = "nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
           "nosswfuc" = "nix flake update && nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
           "nosswrb" = "nixos-rebuild switch --use-remote-sudo --rollback";
+          "nosv" = "nixos-version";
         } else {
           "nos" = "home-manager";
           "nosb" = "home-manager build";
-          "nosbf" = "home-manager build --flake .#$(hostname)";
+          "nosbf" = "home-manager build --flake .#`hostname`";
           "nossw" = "home-manager switch";
-          "nosswf" = "home-manager switch --flake .#$(hostname) -b '.bak'";
-          "nosswfc" = "nix flake check && home-manager switch --flake .#$(hostname) -b '.bak'";
-          "nosswfuc" = "nix flake update && nix flake check && home-manager switch --flake .#$(hostname) -b '.bak'";
-          # "nosswrb" = "home-manager switch --rollback";
+          "nosswf" = "home-manager switch --flake .#`hostname` -b '.bak'";
+          "nosswfc" = "nix flake check && home-manager switch --flake .#`hostname` -b '.bak'";
+          "nosswfuc" = "nix flake update && nix flake check && home-manager switch --flake .#`hostname` -b '.bak'";
+          # "nosswrb" = "home-manager switch --rollback"; # FIXME: Find a workaround?
         });
 
 
         nix.registry = mkDefault {
-          ### Nixpkgs
-          #
-
-          # nixpkgs-unstable.to = {
-          #   type = "github";
-          #   owner = "NixOS";
-          #   repo = "nixpkgs";
-          #   ref = "nixos-unstable";
-          # };
-
-          # # TODO: Make dynamic
-          # nixpkgs.to = {
-          #   type = "github";
-          #   owner = "NixOS";
-          #   repo = "nixpkgs";
-          #   ref = "nixos-22.05";
-          # };
-
           ### Other people's configs
           #
           foosteros.to = {
@@ -326,6 +332,7 @@ in
     (mkIf cfg.manageXDGConfig {
       xdg = {
         enable = mkDefault true;
+
         cacheHome = mkDefault "${config.home.homeDirectory}/.cache";
         configHome = mkDefault "${config.home.homeDirectory}/.config";
         dataHome = mkDefault "${config.home.homeDirectory}/.local/share";
