@@ -86,7 +86,6 @@
         # Unused dependencies
         crane.follows = "";
         disko.follows = "";
-        envfs.follows = "";
         flake-compat.follows = "";
         flake-parts.follows = "";
         lanzaboote.follows = "";
@@ -210,6 +209,13 @@
               statix
             ];
 
+            editingPackages = pkgs: with pkgs; [
+              git
+              gnupg
+              neovim
+              pinentry
+            ];
+
             sopsPackages = pkgs: with pkgs; [
               sops
               sops-init-gpg-key
@@ -220,6 +226,22 @@
               ./keys/hosts
               ./keys/users
             ];
+
+            posixShellAliases = ''
+              alias g="git"
+              alias ga="git add"
+              alias gaa="git add --all"
+              alias gc="git commit"
+              alias gcmsg="git commit -m"
+              alias gd="git diff"
+              alias gl="git pull"
+              alias gp="git push"
+              alias gsb="git status -sb"
+              alias n="nix"
+              alias nfu="nix flake update"
+              alias nosswf="nixos-rebuild switch --use-remote-sudo --flake ."
+              alias v="nvim"
+            '';
           in
           {
             default = pkgs.mkShell {
@@ -232,30 +254,28 @@
             no-env = pkgs.mkShell {
               inherit sopsPGPKeyDirs;
 
-              packages = (formatPackages pkgs) ++ (sopsPackages pkgs) ++ (with pkgs; [
-                git
-                gnupg
-                pinentry-qt # FIXME: Should really have separate devShells for w/ desktop and w/o.
-                neovim
-              ]);
+              packages = formatPackages pkgs
+                ++ sopsPackages pkgs
+                ++ editingPackages pkgs;
 
-              shellHook = ''
-                ${self.checks."${system}".pre-commit-check.shellHook}
+              shellHook = builtins.concatStringsSep "\n" [
+                self.checks."${system}".pre-commit-check.shellHook
+                posixShellAliases
+              ];
+            };
 
-                alias g="git"
-                alias ga="git add"
-                alias gaa="git add --all"
-                alias gc="git commit"
-                alias gcmsg="git commit -m"
-                alias gd="git diff"
-                alias gl="git pull"
-                alias gp="git push"
-                alias gsb="git status -sb"
-                alias n="nix"
-                alias nfu="nix flake update"
-                alias nosswf="nixos-rebuild switch --use-remote-sudo --flake ."
-                alias v="nvim"
-              '';
+            no-env-desktop = pkgs.mkShell {
+              inherit sopsPGPKeyDirs;
+
+              packages = formatPackages pkgs
+                ++ sopsPackages pkgs
+                ++ editingPackages pkgs
+                ++ [ pkgs.pinentry-qt ];
+
+              shellHook = builtins.concatStringsSep "\n" [
+                self.checks."${system}".pre-commit-check.shellHook
+                posixShellAliases
+              ];
             };
           };
       })));
