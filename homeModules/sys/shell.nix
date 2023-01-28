@@ -80,6 +80,9 @@ in
         "du" = "du -h";
         "free" = "free -h";
         "pkill" = "pkill -e";
+
+        # VI Keys pls
+        "info" = "info --vi-keys";
       };
       description = ''
         Aliases to add for the shell.
