@@ -126,6 +126,7 @@ in
       programs.autojump.enable = cfg.autojump;
       programs.z-lua.enable = cfg.z-lua;
     }
+
     (mkIf config.sys.git.enable {
       home.shellAliases = {
         "gi" = "git ignore";
@@ -135,6 +136,7 @@ in
         "gcmsga" = "git commit --signoff --all -m";
       };
     })
+
     (mkIf cfg.manageBashConfig {
       programs.bash = {
         enable = true;
@@ -151,6 +153,7 @@ in
         initExtra = mkIf config.sys.git.enable posixGitFunctions;
       };
     })
+
     (mkIf cfg.manageBatConfig {
       home.shellAliases."cat" = "bat";
 
@@ -164,6 +167,7 @@ in
         };
       };
     })
+
     (mkIf cfg.manageExaConfig {
       home.shellAliases = {
         "l" = "exa --classify --color=always --icons";
@@ -177,12 +181,14 @@ in
         enable = mkDefault true;
       };
     })
+
     (mkIf cfg.manageLessConfig {
       home.shellAliases."more" = "less";
 
       # TODO: Figure out a lesskey config
       programs.less.enable = true;
     })
+
     (mkIf cfg.manageStarshipConfig {
       programs.starship = {
         enable = mkDefault true;
@@ -223,6 +229,7 @@ in
         };
       };
     })
+
     (mkIf cfg.manageTmuxConfig {
       programs.tmux = mkIf cfg.manageTmuxConfig {
         enable = mkDefault true;
@@ -254,6 +261,7 @@ in
         '';
       };
     })
+
     (mkIf cfg.manageZshConfig {
       programs.zsh = {
         enable = mkDefault true;
@@ -376,6 +384,7 @@ in
         '';
       };
     })
+
     (mkIf cfg.zoxide {
       home.shellAliases = {
         "za" = "zoxide add";
@@ -389,6 +398,7 @@ in
 
       programs.zoxide.enable = true;
     })
+
     (mkIf cfg.fcp {
       home.packages = with pkgs; [ fcp ];
 
