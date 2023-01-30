@@ -1,16 +1,98 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   cfg = config.sys.dev;
+
+  # lib.types.attrsWithMatch = pattern: lib.mkOptionType {
+  #   name = "attrsWithMatch";
+  #   description = "attribute set with names of a certain pattern";
+  #   check = x: builtins.isAttrs x && builtins.all (i: (builtins.match pattern i) != null) (builtins.attrNames x);
+  #   merge = foldl' (res: def: res // def.value) { };
+  #   emptyValue = { value = { }; };
+  # };
+
+  # lib.types.attrsOfWithMatch = pattern: elemType: lib.mkOptionType {
+  #   name = "attrsOfWithMatch";
+  #   description = "attribute set of ${optionDescriptionPhrase (class: class == "noun" || class == "composite") elemType} with names of a certain pattern";
+  #   check = x: builtins.isAttrs x && builtins.all (i: (builtins.match pattern i) != null) (builtins.attrNames x);
+  #
+  #   merge = loc: defs:
+  #     builtins.mapAttrs (_: v: v.value) (lib.filterAttrs (_: v: v ? value) (builtins.zipAttrsWith
+  #       (name: defs:
+  #         (mergeDefinitions (loc ++ [ name ]) elemType defs).optionalValue
+  #       )
+  #       (builtins.map (def: builtins.mapAttrs (_: value: { inherit (def) file; inherit value; }) def.value) defs)));
+  #
+  #   emptyValue = { value = { }; };
+  # };
+  #
+  # # See https://spec.editorconfig.org/
+  # styleModule = lib.types.submodule ({ config, ... }: {
+  #   options = {
+  #     indent_style = lib.mkOption {
+  #       type = with lib.types; nullOr (enum [ "tab" "space" "unset" ]);
+  #       default = null;
+  #     };
+  #
+  #     indent_size = lib.mkOption {
+  #       type = with lib.types; nullOr (either ints.unsigned "unset");
+  #       default = null;
+  #     };
+  #
+  #     tab_width = lib.mkOption {
+  #       type = with lib.types; nullOr (either ints.unsigned "unset");
+  #       default = null;
+  #     };
+  #
+  #     end_of_line = lib.mkOption {
+  #       type = with lib.types; nullOr (enum [ "lf" "cr" "crlf" "unset" ]);
+  #       default = null;
+  #     };
+  #
+  #     charset = lib.mkOption {
+  #       type = with lib.types; nullOr (enum [ "latin1" "utf-8" "utf-8-bom" "utf-16be" "utf-16le" "unset" ]);
+  #       default = null;
+  #     };
+  #
+  #     trim_trailing_whitespace = lib.mkOption {
+  #       type = with lib.types; nullOr (either bool "unset");
+  #       default = null;
+  #     };
+  #
+  #     insert_final_newline = lib.mkOption {
+  #       type = with lib.types; nullOr (either bool "unset");
+  #       default = null;
+  #     };
+  #   };
+  # });
 in
 {
   options.sys.dev = {
-    enable = mkEnableOption "Enable dev configuration packages";
+    enable = lib.mkEnableOption "Enable dev configuration packages";
 
-    packages = mkOption {
-      type = with types; listOf package;
+    # TODO: Make this a thing
+    # defaultStyle = lib.mkOption {
+    #   type = styleModule;
+    #
+    #   default = {
+    #     indent_style = "space";
+    #     indent_size = 2;
+    #     tab_width = 8;
+    #     end_of_line = "lf";
+    #     charset = "utf-8";
+    #     trim_trailing_whitespace = true;
+    #     insert_final_newline = true;
+    #   };
+    # };
+    #
+    # styles = lib.mkOption {
+    #   type = lib.types.attrsOfWithMatch "^/?$" styleModule;
+    #   default = { };
+    # };
+
+    packages = lib.mkOption {
+      type = with lib.types; listOf package;
+
       default = with pkgs; [
         act
         cargo
@@ -22,9 +104,11 @@ in
         htmlq
         hyperfine
         jq
+
         (llvmPackages_latest.clang.overrideAttrs (_: {
           meta.priority = gcc_latest.meta.priority + 1;
         }))
+
         llvmPackages_latest.clang-manpages
         nodejs_latest
         pastel
@@ -54,15 +138,16 @@ in
         radare2
         rehex
       ];
+
       description = "Options for managing installed file packages";
     };
 
-    manageDirenvConfig = mkEnableOption "Enable direnv management" // { default = true; };
+    manageDirenvConfig = lib.mkEnableOption "Enable direnv management" // { default = true; };
 
-    manageGhConfig = mkEnableOption "Enable gh management" // { default = true; };
+    manageGhConfig = lib.mkEnableOption "Enable gh management" // { default = true; };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       home.shellAliases = {
         "gcc" = "gcc -fdiagnostics-color";
@@ -97,37 +182,29 @@ in
         [*]
         charset = utf-8
         end_of_line = lf
-        indent_size = 4
+        indent_size = 2
         indent_style = space
         insert_final_newline = true
         trim_trailing_whitespace = true
 
         [*.md]
-        indent_size = 2
         trim_trailing_whitespace = false
 
         [Makefile]
         indent_size = 8
         indent_style = tab
-
-        # Default to two spaces for data languages
-        [*.{c,cpp,css,h,hpp,htm,html,js,json,lua,mof,nix,ps1,psd1,psm1,rst,tf,ts,vue,yml,yaml,xml,xhtml}]
-        indent_size = 2
-        indent_style = space
-
-        [flake.lock]
-        indent_size = 2
-        indent_style = space
       '';
     }
-    (mkIf cfg.manageDirenvConfig {
+
+    (lib.mkIf cfg.manageDirenvConfig {
       programs.direnv = {
         enable = true;
 
         nix-direnv.enable = true;
       };
     })
-    (mkIf cfg.manageGhConfig {
+
+    (lib.mkIf cfg.manageGhConfig {
       programs.gh = {
         enable = true;
 
@@ -136,6 +213,7 @@ in
           prompt = "enabled";
           pager = config.home.sessionVariables.PAGER or "less";
           editor = config.home.sessionVariables.EDITOR or "nano";
+
           aliases = {
             co = "pr checkout";
             pv = "pr view";
