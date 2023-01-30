@@ -4,41 +4,29 @@ with lib;
 
 let
   cfg = config.sys.shell;
+
   posixGitFunctions = ''
-    function gcmsgap() {
-      git commit --signoff --all -m $@ && git push
-    }
-
-    function gcmsgapf() {
-      git commit --signoff --all -m $@ && git push --force-with-lease
-    }
-
-    function gcmsgapf!() {
-      git commit --signoff --all -m $@ && git push --force
-    }
-
     function gcmsgp() {
-      git commit --signoff -m $@ && git push
+      git commit -m $@ && git push
     }
 
     function gcmsgpf() {
-      git commit --signoff -m $@ && git push --force-with-lease
+      git commit -m $@ && git push --force-with-lease
     }
 
     function gcmsgpf!() {
-      git commit --signoff -m $@ && git push --force
+      git commit -m $@ && git push --force
     }
   '';
 in
 {
   options.sys.shell = {
-    enable = mkEnableOption "Enable shell management" // {
-      default = true;
-    };
+    enable = mkEnableOption "Enable shell management" // { default = true; };
 
     pager = mkOption {
       type = with types; nullOr str;
-      default = "${pkgs.less}/bin/less";
+      default = lib.getExe pkgs.less;
+
       description = ''
         CLI pager to use for the user. This gets set to the PAGER env
         variable.
@@ -47,7 +35,8 @@ in
 
     editor = mkOption {
       type = with types; nullOr str;
-      default = "${pkgs.neovim}/bin/nvim";
+      default = lib.getExe pkgs.neovim;
+
       description = ''
         CLI editor to use for the user. This gets set to the EDITOR env
         variable.
@@ -56,7 +45,8 @@ in
 
     viewer = mkOption {
       type = with types; nullOr str;
-      default = "${pkgs.neovim}/bin/nvim -R";
+      default = "${lib.getExe pkgs.neovim} -R";
+
       description = ''
         CLI file viewer to use for the user. This gets set to the VISUAL env
         variable.
@@ -65,6 +55,7 @@ in
 
     aliases = mkOption {
       type = with types; attrsOf str;
+
       default = {
         "h" = "history";
         "pg" = "pgrep";
@@ -84,6 +75,7 @@ in
         # VI Keys pls
         "info" = "info --vi-keys";
       };
+
       description = ''
         Aliases to add for the shell.
       '';
@@ -105,6 +97,7 @@ in
 
     extraShells = mkOption {
       type = with types; nullOr (listOf package);
+
       default = with pkgs; [
         elvish
         powershell
@@ -117,6 +110,7 @@ in
     {
       home.packages = cfg.extraShells;
       home.shellAliases = cfg.aliases;
+
       home.sessionVariables = mkDefault {
         "PAGER" = cfg.pager;
         "EDITOR" = cfg.editor;
@@ -141,8 +135,9 @@ in
       programs.bash = {
         enable = true;
 
-        historyFile = "${config.xdg.dataHome}/bash/bash_history";
+        historyFile = "${config.xdg.dataHome or "$XDG_DATA_HOME"}/bash/bash_history";
         historyControl = [ "ignoredups" "ignorespace" ];
+
         historyIgnore = [
           "cd"
           "exit"
@@ -177,9 +172,7 @@ in
         "tree" = "exa --classify --color=always --icons --long --all --binary --group --header --git --color-scale --tree";
       };
 
-      programs.exa = {
-        enable = mkDefault true;
-      };
+      programs.exa.enable = true;
     })
 
     (mkIf cfg.manageLessConfig {
@@ -236,7 +229,8 @@ in
         clock24 = mkDefault true;
         keyMode = mkDefault "vi";
         prefix = mkDefault "C-a";
-        shell = mkDefault "${pkgs.zsh}/bin/zsh";
+        shell = mkDefault (lib.getExe pkgs.zsh);
+
         plugins = with pkgs.tmuxPlugins; mkDefault [
           cpu
           prefix-highlight
@@ -266,16 +260,11 @@ in
       programs.zsh = {
         enable = mkDefault true;
         dotDir = ".config/zsh";
-
-        shellGlobalAliases = {
-          "UUID" = "$(uuidgen | tr -d \\n)";
-        };
-
+        shellGlobalAliases."UUID" = "$(uuidgen | tr -d \\n)";
         defaultKeymap = "viins";
-
         initExtra = mkIf config.sys.git.enable posixGitFunctions;
-
         enableAutosuggestions = true;
+
         oh-my-zsh = {
           enable = true;
 
@@ -348,7 +337,7 @@ in
         ];
 
         history = {
-          path = "${config.xdg.dataHome}/zsh/zsh_history";
+          path = "${config.xdg.dataHome or "$XDG_DATA_HOME"}/zsh/zsh_history";
           size = 102400;
           save = 1024000;
 
@@ -358,6 +347,7 @@ in
             "rm *"
             "pkill *"
           ];
+
           expireDuplicatesFirst = true;
         };
 
@@ -401,7 +391,6 @@ in
 
     (mkIf cfg.fcp {
       home.packages = with pkgs; [ fcp ];
-
       home.shellAliases."cp" = mkForce "fcp";
     })
   ]);
