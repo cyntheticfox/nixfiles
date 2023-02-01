@@ -120,16 +120,6 @@ in
       default = { };
     };
 
-    element = mkOption {
-      type = packageModule {
-        defaultEnable = true;
-        name = "Element";
-        package = "element-desktop-wayland";
-      };
-
-      default = { };
-    };
-
     mupdf = mkOption {
       type = packageModule {
         defaultEnable = true;
@@ -399,12 +389,6 @@ in
           EDITOR_GRAPHICAL = path;
           VISUAL_GRAPHICAL = path;
         };
-    })
-
-    (mkIf cfg.element.enable {
-      home.packages = [ cfg.element.package ];
-
-      home.sessionVariables."NIXOS_OZONE_WL" = 1;
     })
 
     (mkIf cfg.edge.enable {

@@ -4,6 +4,7 @@
   ./sys/dev.nix
   ./sys/desktop.nix
   ./sys/desktop/sway.nix
+  ./sys/desktop/chat/element.nix
   ./sys/fonts.nix
   ./sys/git.nix
   ./sys/gnupg.nix

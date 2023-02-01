@@ -617,8 +617,8 @@ in
 
               startup = [
                 { command = config.home.sessionVariables.BROWSER or (lib.getExe pkgs.chromium); }
-              ] ++ lib.optionals (config.sys.desktop.element.enable or false) [
-                { command = lib.getExe config.sys.desktop.element.package; }
+              ] ++ lib.optionals (config.sys.desktop.chat.element.enable or false && config.sys.desktop.chat.element.autostart or false) [
+                { command = lib.getExe config.sys.desktop.chat.element.package; }
               ] ++ lib.optionals (config.sys.desktop.teams.enable or false) [
                 { command = lib.getExe config.sys.desktop.teams.package; }
               ] ++ lib.optionals (config.sys.desktop.discord.enable or false) [

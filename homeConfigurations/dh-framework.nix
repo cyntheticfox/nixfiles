@@ -31,6 +31,13 @@
     desktop = {
       enable = true;
 
+      chat.element = {
+        enable = true;
+
+        autostart = true;
+        package = pkgs.element-desktop-wayland;
+      };
+
       chromium = {
         enable = true;
 
