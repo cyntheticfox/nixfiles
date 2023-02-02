@@ -111,15 +111,6 @@ in
       default = { };
     };
 
-    discord = mkOption {
-      type = packageModule {
-        name = "Discord";
-        package = "discord";
-      };
-
-      default = { };
-    };
-
     mupdf = mkOption {
       type = packageModule {
         defaultEnable = true;
@@ -335,16 +326,6 @@ in
         inherit (cfg.chromium) enable;
 
         package = pkgs.ungoogled-chromium;
-      };
-    })
-
-    (mkIf cfg.discord.enable {
-      home.packages = [ cfg.discord.package ];
-
-      xdg.configFile."discord/settings.json".source = (pkgs.formats.json { }).generate "discord-settings.json" {
-        IS_MAXIMIZED = true;
-        IS_MINIMIZED = false;
-        SKIP_HOST_UPDATE = true;
       };
     })
 

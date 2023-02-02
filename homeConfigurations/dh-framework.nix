@@ -31,11 +31,15 @@
     desktop = {
       enable = true;
 
-      chat.element = {
-        enable = true;
+      chat = {
+        discord.enable = true;
 
-        autostart = true;
-        package = pkgs.element-desktop-wayland;
+        element = {
+          enable = true;
+
+          autostart = true;
+          package = pkgs.element-desktop-wayland;
+        };
       };
 
       chromium = {
@@ -44,7 +48,6 @@
         package = pkgs.ungoogled-chromium;
       };
 
-      discord.enable = true;
       edge.enable = true;
       firefox.enable = true;
       ghidra.enable = true;
