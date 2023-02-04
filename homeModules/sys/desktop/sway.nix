@@ -529,6 +529,9 @@ in
     in
     mkMerge [
       {
+        # TODO: Make conditional on enabling an electron App
+        home.sessionVariables."NIXOS_OZONE_WL" = 1;
+
         wayland.windowManager.sway = {
           inherit (cfg) package enable;
 
