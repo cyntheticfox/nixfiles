@@ -38,7 +38,6 @@
           enable = true;
 
           autostart = true;
-          package = pkgs.element-desktop-wayland;
         };
       };
 
