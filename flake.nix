@@ -158,8 +158,9 @@
                 home-manager.users."david" = self.lib.personalNixosHMConfig {
                   inherit (config.networking) hostName;
                   inherit (self.inputs) nixpkgs-unstable;
-                  inherit (self.outputs) homeModules;
                   inherit lib;
+
+                  homeModules = lib.recursiveUpdate self.outputs.homeModules self.inputs.impermanence.nixosModules.home-manager;
                 };
               })
             ];

@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 let
   optionalGroup = { cond, group }: lib.optionalString cond group;
+
   optGroups = builtins.map optionalGroup [
     {
       cond = config.networking.networkmanager.enable;
@@ -53,14 +54,14 @@ in
       neededForUsers = true;
     };
 
-    gh-config = {
-      inherit (config.users.users.david) group;
-
-      sopsFile = ./secrets.yml;
-      mode = "0400";
-      owner = config.users.users.david.name;
-      path = "${config.users.users.david.home}/.config/gh/hosts.yml";
-    };
+    # gh-config = {
+    #   inherit (config.users.users.david) group;
+    #
+    #   sopsFile = ./secrets.yml;
+    #   mode = "0400";
+    #   owner = config.users.users.david.name;
+    #   path = "${config.users.users.david.home}/.config/gh/hosts.yml";
+    # };
   };
 
   users.users."david" = {
@@ -70,95 +71,5 @@ in
     uid = 1000;
     shell = pkgs.zsh;
     passwordFile = config.sops.secrets.david-password.path;
-  };
-
-  environment.persistence."/state".users.david = {
-    directories = [
-      {
-        directory = ".aws";
-        mode = "0700";
-      }
-      {
-        directory = ".azure";
-        mode = "0700";
-      }
-      ".config/dconf"
-      ".config/discord"
-      {
-        directory = ".config/gcloud";
-        mode = "0700";
-      }
-      ".config/Element"
-      ".config/libvirt"
-      ".config/Microsoft/Microsoft Teams"
-      ".config/microsoft-edge"
-      ".config/pipewire"
-      ".config/teams"
-      ".config/teams-for-linux"
-      {
-        directory = ".docker";
-        mode = "0700";
-      }
-      {
-        directory = ".gnupg";
-        mode = "0700";
-      }
-      ".mozilla"
-      {
-        directory = ".ssh";
-        mode = "0700";
-      }
-      "archive"
-      "docs"
-      "emu"
-      "games"
-      "music"
-      "pics"
-      "repos"
-      "videos"
-    ];
-
-    files = [
-      "wallpaper.png"
-      "lockscreen.jpg"
-      ".local/share/beets/musiclibrary.db"
-      ".config/pavucontrol.ini"
-    ];
-  };
-
-  environment.persistence."/persist".users.david = {
-    directories = [
-      ".cache/fontconfig"
-      ".cache/mesa_shader_cache"
-      ".cache/mopidy"
-      ".cache/pre-commit"
-      ".cache/virt-manager"
-      ".cargo/registry"
-      ".local/share/PrismLauncher"
-      ".local/share/Steam"
-      ".local/share/bash"
-      ".local/share/containers"
-      ".local/share/direnv/allow"
-      ".local/share/keyrings"
-      ".local/share/libvirt"
-      ".local/share/mime"
-      ".local/share/mopidy"
-      ".local/share/nvim/site"
-      ".local/share/zoxide"
-      ".local/share/zsh"
-      ".local/state/wireplumber"
-      ".minikube/cache"
-      ".terraform.d"
-      "dbg"
-      "iso"
-      "opt"
-      "tmp"
-      "wrk"
-    ];
-
-    files = [
-      ".local/share/beets/import.log"
-      ".local/share/nix/trusted-settings.json"
-    ];
   };
 }

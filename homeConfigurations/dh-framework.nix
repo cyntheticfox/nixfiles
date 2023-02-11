@@ -139,4 +139,80 @@
 
     table.insert(alsa_monitor.rules, rule)
   '';
+
+  home.persistence."/state/home/david" = {
+    allowOther = false;
+
+    directories = [
+      ".aws"
+      ".azure"
+      ".config/dconf"
+      ".config/discord"
+      ".config/gcloud"
+      ".config/Element"
+      ".config/libvirt"
+      ".config/Microsoft/Microsoft Teams"
+      ".config/microsoft-edge"
+      ".config/pipewire"
+      ".config/teams"
+      ".config/teams-for-linux"
+      ".docker"
+      ".gnupg"
+      ".mozilla"
+      ".ssh"
+      "archive"
+      "docs"
+      "emu"
+      "games"
+      "music"
+      "pics"
+      "repos"
+      "videos"
+    ];
+
+    files = [
+      "wallpaper.png"
+      "lockscreen.jpg"
+      ".local/share/beets/musiclibrary.db"
+      ".config/pavucontrol.ini"
+    ];
+  };
+
+  home.persistence."/persist/home/david" = {
+    allowOther = false;
+
+    directories = [
+      ".cache/fontconfig"
+      ".cache/mesa_shader_cache"
+      ".cache/mopidy"
+      ".cache/pre-commit"
+      ".cache/virt-manager"
+      ".cargo/registry"
+      ".local/share/PrismLauncher"
+      ".local/share/Steam"
+      ".local/share/bash"
+      ".local/share/containers"
+      ".local/share/direnv/allow"
+      ".local/share/keyrings"
+      ".local/share/libvirt"
+      ".local/share/mime"
+      ".local/share/mopidy"
+      ".local/share/nvim/site"
+      ".local/share/zoxide"
+      ".local/share/zsh"
+      ".local/state/wireplumber"
+      ".minikube/cache"
+      ".terraform.d"
+      "dbg"
+      "iso"
+      "opt"
+      "tmp"
+      "wrk"
+    ];
+
+    files = [
+      ".local/share/beets/import.log"
+      ".local/share/nix/trusted-settings.json"
+    ];
+  };
 }
