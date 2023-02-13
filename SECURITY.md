@@ -1,0 +1,1 @@
+Should you find any notable security vulnerabilities in any scripts I write or expose through top-level APIs, please email me at <mailto:houstdav000@gmail.com>, encrypted with <https://github.com/houstdav000.gpg> about it.
