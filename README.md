@@ -1,4 +1,4 @@
-# dotfiles
+# Personal NixOS Configuration
 
 A complete NixOS configuration, tailored to how I do things, usually using some kind of "Nord"-like color scheming. Set up with some secrets via [sops-nix](https://github.com/Mic92/sops-nix), and splitting out user configuration into a home-manager configuration. Also once provided a few packages and an overlay, as inspired by [FoosterOS/2 Warp](https://github.com/lilyinstarlight/foosteros). Currently pending me getting back into that.
 
