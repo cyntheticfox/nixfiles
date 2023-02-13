@@ -37,21 +37,11 @@ Here are a few tools I use:
 
 ## Current Bugs
 
-See <https://github.com/houstdav000/nixfiles/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Abug>
+See <https://github.com/houstdav000/nixfiles/labels/bug>.
 
 ## Future
 
-- Set up [which-key.nvim](https://github.com/folke/which-key.nvim)
-- Get proper terminal, file/object browser support in Neovim
-- SELinux?
-- Secure boot
-- Use TPM instead of Yubikey for encryption
-- bcachefs or zfs instead of btrfs
-- Use pass
-- Switch to [nheko](https://github.com/nheko-reborn/nheko) from Element
-- Declarative VMs?
-- Declarative Firefox config
-- More work on [terranix-linode-poc](https://github.com/houstdav000/terranix-linode-poc)
+See <https://github.com/houstdav000/nixfiles/labels/enhancement>.
 
 ## Other
 
