@@ -37,9 +37,7 @@ Here are a few tools I use:
 
 ## Current Bugs
 
-- gnome-keyring doesn't work. Looking into pass-secret-service as replacement.
-- desktop portals failing to load (probably my messy GTK config)
-- udiskie doesn't like my GTK config/icons
+See <https://github.com/houstdav000/nixfiles/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Abug>
 
 ## Future
 
