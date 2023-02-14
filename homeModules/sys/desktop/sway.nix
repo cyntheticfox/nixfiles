@@ -1067,11 +1067,11 @@ in
           }
 
           #battery.warning {
-            color: @warning_color;
+            background: @warning_color;
           }
 
           #battery.critical {
-            color: @error_color;
+            background: @error_color;
           }
 
           #clock {
@@ -1083,19 +1083,19 @@ in
           }
 
           #cpu.warning {
-            color: @warning_color;
+            background: @warning_color;
           }
 
           #cpu.critical {
-            color: @error_color;
+            background: @error_color;
           }
 
           #memory.warning {
-            color: @warning_color;
+            background: @warning_color;
           }
 
           #memory.critical {
-            color: @error_color;
+            background: @error_color;
           }
 
           #mode {
