@@ -171,6 +171,14 @@ in
       "TrustCor RootCert CA-2"
     ];
 
-    services.logind.extraConfig = "IdleAction=Lock";
+    services.logind = {
+      extraConfig = ''
+        IdleAction=lock
+        IdleActionSec=0
+      '';
+
+      killUserProcesses = true;
+      lidSwitch = "hybrid-sleep";
+    };
   };
 }

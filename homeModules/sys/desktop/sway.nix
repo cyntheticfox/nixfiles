@@ -490,8 +490,8 @@ in
 
       /* Perform final attribute cleanup to produce a final workspace for addition.
 
-         Type:
-          mkFinalWorkspace :: { index :: Int, icon :: String, title :: String, mappedKeys :: [AttrSet]} -> FinalWorkspace
+        Type:
+        mkFinalWorkspace :: { index :: Int, icon :: String, title :: String, mappedKeys :: [AttrSet]} -> FinalWorkspace
       */
       mkFinalWorkspace = { index, icon, title, mappedKeys ? [ ], ... }@args: args // {
         keys = lib.unique (mappedKeys ++ [ "${builtins.toString index}" ]);
@@ -500,24 +500,24 @@ in
 
       /* Create workspace switch key assignment
 
-         Type:
-           mkSwitchKeyAssign :: String -> String -> String -> NameValuePair
+        Type:
+        mkSwitchKeyAssign :: String -> String -> String -> NameValuePair
       */
       mkSwitchKeyAssign = modKey: name: key:
         { name = "${modKey}+${key}"; value = "workspace \"${name}\""; };
 
       /* Create workspace move key assignment
 
-         Type:
-           mkMoveKeyAssign :: String -> String -> String -> NameValuePair
+        Type:
+        mkMoveKeyAssign :: String -> String -> String -> NameValuePair
       */
       mkMoveKeyAssign = modKey: name: key:
         { name = "${modKey}+Shift+${key}"; value = "move container to workspace \"${name}\""; };
 
       /* Create assignments for each workspace:
 
-         Type:
-           mkKeyAssigns :: String -> ({ keys :: [String], name :: String } -> AttrSet) -> [FinalWorkspace] -> AttrSet
+        Type:
+        mkKeyAssigns :: String -> ({ keys :: [String], name :: String } -> AttrSet) -> [FinalWorkspace] -> AttrSet
       */
       mkKeyAssigns = modKey: mkFunc: list:
         builtins.foldl' lib.mergeAttrs { } (lib.flatten (builtins.map ({ keys, name, ... }: mapListToAttrs' (mkFunc modKey name) keys) list));
@@ -1405,12 +1405,16 @@ in
           let
             lockTimer = 16 * 60; # in Seconds
             screenTimer = lockTimer + 60;
-            screensOn = on: "${cfg.package}/bin/swaymsg output * dpms ${if on then "on" else "off"}";
+            screensOn = on: "${cfg.package}/bin/swaymsg output '*' dpms ${if on then "on" else "off"}";
           in
+          # ''
+            #   idlehint ${builtins.toString lockTimer}
+            #   lock "${idlelock}"
+            #   before-sleep "${idlelock}"
+            #   timeout ${builtins.toString screenTimer} "${screensOn false}" resume "${screensOn true}"
+            # '';
           ''
-            idlehint ${builtins.toString lockTimer}
-            lock "${idlelock}"
-            before-sleep "${idlelock}"
+            timeout ${builtins.toString lockTimer} "${idlelock}"
             timeout ${builtins.toString screenTimer} "${screensOn false}" resume "${screensOn true}"
           '';
 
@@ -1423,12 +1427,11 @@ in
 
           Service = {
             Type = "simple";
-            ExecStart = "${lib.getExe cfg.swayidle.package} -w -C \"${config.xdg.configFile."swayidle/config".source}\"";
+            ExecStart = "${lib.getExe cfg.swayidle.package} -w";
           };
 
           Install.WantedBy = [ "graphical-session.target" ];
         };
-
 
         systemd.user.targets.sway-session.Unit.Wants = [
           "graphical-session-pre.target"
