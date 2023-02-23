@@ -527,6 +527,8 @@ in
 
       # mkFinalWorkspaces :: [Workspace] -> [FinalWorkspace]
       mkFinalWorkspaces = w: builtins.map mkFinalWorkspace (mkExpandedWorkspaces w);
+
+      finalWorkspaces = mkFinalWorkspaces cfg.workspaces;
     in
     mkMerge [
       {
@@ -599,8 +601,8 @@ in
                 "${modifier}+Shift+s" = "mode \"screenshot\"";
                 "${modifier}+Shift+r" = "mode \"recording\"";
               }
-              // mkKeyAssigns modifier mkSwitchKeyAssign (mkFinalWorkspaces cfg.workspaces)
-              // mkKeyAssigns modifier mkMoveKeyAssign (mkFinalWorkspaces cfg.workspaces)
+              // mkKeyAssigns modifier mkSwitchKeyAssign finalWorkspaces
+              // mkKeyAssigns modifier mkMoveKeyAssign finalWorkspaces
               );
 
               input = {
@@ -641,7 +643,7 @@ in
               # TODO: Replace DiscordCanary with a wayland-compatible electron app
               #
               assigns =
-                mapListToAttrs' ({ name, assigns, ... }: { name = "\"${name}\""; value = assigns; }) (builtins.filter ({ assigns, ... }: (builtins.length assigns) > 0) (mkFinalWorkspaces cfg.workspaces));
+                mapListToAttrs' ({ name, assigns, ... }: { name = "\"${name}\""; value = assigns; }) (builtins.filter ({ assigns, ... }: (builtins.length assigns) > 0) finalWorkspaces);
 
               bars = lib.optionals cfg.waybar.enable [{
                 fonts = {
@@ -784,7 +786,7 @@ in
 
               # Default to outputting some workspaces on other monitors if available
               workspaceOutputAssign =
-                builtins.map ({ name, output, ... }: { inherit output; workspace = name; }) (mkFinalWorkspaces cfg.workspaces);
+                builtins.map ({ name, output, ... }: { inherit output; workspace = name; }) finalWorkspaces;
 
               colors = with palletes.nord; {
                 background = base07;
@@ -833,7 +835,7 @@ in
               output."*".bg = "~/wallpaper.png fill #000000";
             };
 
-          extraConfig = builtins.concatStringsSep "\n" (builtins.map ({ name, ... }: "workspace \"${name}\"") (lib.reverseList (mkFinalWorkspaces cfg.workspaces)));
+          extraConfig = builtins.concatStringsSep "\n" (builtins.map ({ name, ... }: "workspace \"${name}\"") (lib.reverseList finalWorkspaces));
         };
 
         ### Power Menu
