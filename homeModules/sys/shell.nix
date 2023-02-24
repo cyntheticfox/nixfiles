@@ -342,12 +342,8 @@ in
           }
           {
             name = "zsh-you-should-use";
-            src = pkgs.fetchFromGitHub {
-              owner = "MichaelAquilina";
-              repo = "zsh-you-should-use";
-              rev = "1.7.3";
-              sha256 = "sha256-/uVFyplnlg9mETMi7myIndO6IG7Wr9M7xDFfY1pG5Lc=";
-            };
+            src = pkgs.zsh-you-should-use;
+            file = "share/zsh/plugins/you-should-use/you-should-use.plugin.zsh";
           }
         ];
 
