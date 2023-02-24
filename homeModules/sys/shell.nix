@@ -81,6 +81,26 @@ in
       '';
     };
 
+    historyIgnore = mkOption {
+      type = with types; listOf str;
+
+      default = [
+        "cd *"
+        "exit"
+        "export *"
+        "kill *"
+        "pkill"
+        "pushd *"
+        "popd"
+        "rm *"
+        "z *"
+      ];
+
+      description = ''
+        Shell patterns to exclude from the history. Supported in Bash and Zsh.
+      '';
+    };
+
     manageBashConfig = mkEnableOption "Enable default bash config" // { default = true; };
     manageBatConfig = mkEnableOption "Enable default bat config" // { default = true; };
     manageExaConfig = mkEnableOption "Enable default exa config" // { default = true; };
@@ -133,17 +153,12 @@ in
 
     (mkIf cfg.manageBashConfig {
       programs.bash = {
+        inherit (cfg) historyIgnore;
+
         enable = true;
 
         historyFile = "${config.xdg.dataHome or "$XDG_DATA_HOME"}/bash/bash_history";
         historyControl = [ "ignoredups" "ignorespace" ];
-
-        historyIgnore = [
-          "cd"
-          "exit"
-          "pkill"
-          "rm"
-        ];
 
         initExtra = mkIf config.sys.git.enable posixGitFunctions;
       };
@@ -338,15 +353,10 @@ in
 
         history = {
           path = "${config.xdg.dataHome or "$XDG_DATA_HOME"}/zsh/zsh_history";
-          size = 102400;
-          save = 1024000;
+          size = 100000;
+          save = 1000000;
 
-          ignorePatterns = [
-            "cd *"
-            "exit *"
-            "rm *"
-            "pkill *"
-          ];
+          ignorePatterns = cfg.historyIgnore;
 
           expireDuplicatesFirst = true;
         };
