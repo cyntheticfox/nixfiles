@@ -284,7 +284,10 @@ in
           enable = true;
 
           plugins = [
+            "adb"
+            "alias-finder"
             "aliases"
+            "ansible"
             "aws"
             "colored-man-pages"
             "command-not-found"
@@ -309,19 +312,11 @@ in
             "tmux"
             "urltools"
             "web-search"
+            # (lib.optionalString cfg.zoxide "zoxide") # NOTE: Sourcing provided by home-manager module
           ];
         };
 
         plugins = [
-          {
-            name = "zsh-completions";
-            src = pkgs.fetchFromGitHub {
-              owner = "zsh-users";
-              repo = "zsh-completions";
-              rev = "0.33.0";
-              sha256 = "sha256-cQSKjQhhOm3Rvnx9V6LAmtuPp/ht/O0IimpunoQlQW8=";
-            };
-          }
           {
             name = "fast-syntax-highlighting";
             src = pkgs.zsh-fast-syntax-highlighting;
