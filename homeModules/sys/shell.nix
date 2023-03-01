@@ -324,12 +324,8 @@ in
           }
           {
             name = "fast-syntax-highlighting";
-            src = pkgs.fetchFromGitHub {
-              owner = "zdharma-continuum";
-              repo = "fast-syntax-highlighting";
-              rev = "v1.55";
-              sha256 = "sha256-DWVFBoICroKaKgByLmDEo4O+xo6eA8YO792g8t8R7kA=";
-            };
+            src = pkgs.zsh-fast-syntax-highlighting;
+            file = "share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
           }
           {
             name = "history-search-multi-word";
