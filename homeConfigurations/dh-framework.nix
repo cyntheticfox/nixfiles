@@ -34,10 +34,11 @@
       chat = {
         discord.enable = true;
 
-        element = {
+        matrix = {
           enable = true;
 
           autostart = true;
+          package = pkgs.nixpkgs-unstable.nheko;
         };
       };
 
@@ -150,11 +151,10 @@
       ".config/dconf"
       ".config/discord"
       ".config/gcloud"
-      ".config/Element"
       ".config/lagrange"
       ".config/libvirt"
-      ".config/Microsoft/Microsoft Teams"
       ".config/microsoft-edge"
+      ".config/nheko"
       ".config/obs-studio"
       ".config/pipewire"
       ".config/teams"
@@ -188,6 +188,7 @@
       ".cache/fontconfig"
       ".cache/mesa_shader_cache"
       ".cache/mopidy"
+      ".cache/nheko"
       ".cache/pre-commit"
       ".cache/virt-manager"
       ".cargo/registry"

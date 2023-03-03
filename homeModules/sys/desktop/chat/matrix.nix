@@ -1,13 +1,13 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.sys.desktop.chat.element;
+  cfg = config.sys.desktop.chat.matrix;
 in
 {
-  options.sys.desktop.chat.element = {
-    enable = lib.mkEnableOption "Element, a Matrix client";
+  options.sys.desktop.chat.matrix = {
+    enable = lib.mkEnableOption "matrix client";
 
-    package = lib.mkPackageOption pkgs "element-desktop" { };
+    package = lib.mkPackageOption pkgs "nheko" { };
 
     autostart = lib.mkOption {
       type = lib.types.bool;

@@ -5,7 +5,7 @@
   ./sys/desktop.nix
   ./sys/desktop/sway.nix
   ./sys/desktop/chat/discord.nix
-  ./sys/desktop/chat/element.nix
+  ./sys/desktop/chat/matrix.nix
   ./sys/fonts.nix
   ./sys/git.nix
   ./sys/gnupg.nix
