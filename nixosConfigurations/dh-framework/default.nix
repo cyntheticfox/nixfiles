@@ -185,5 +185,7 @@
     wireplumber.enable = true;
   };
 
+  services.upower.enable = true;
+
   systemd.user.services.pipewire-pulse.path = [ pkgs.pulseaudio ];
 }

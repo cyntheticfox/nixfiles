@@ -1,12 +1,14 @@
-# See https://nixos.wiki/wiki/Sway
 { pkgs, lib, ... }:
+
 let
   gtk-theme = "Adwaita-Dark";
   icon-theme = "Adwaita";
   cursor-theme = "Adwaita";
+
   sway-dconf-settings = pkgs.writeTextFile {
     name = "sway-dconf-settings";
     destination = "/dconf/sway-custom";
+
     text = ''
       [org/gnome/desktop/interface]
       gtk-theme='${gtk-theme}'
@@ -15,10 +17,11 @@ let
     '';
   };
 
-  polkit-sway = pkgs.runCommand "polkit-sway" { preferLocalBuild = true; } ''
-    mkdir -p "$out/etc/xdg/autostart"
-    sed -e 's/^OnlyShowIn=.*$/OnlyShowIn=sway;/' ${pkgs.polkit_gnome}/etc/xdg/autostart/polkit-gnome-authentication-agent-1.desktop >$out/etc/xdg/autostart/polkit-sway-authentication-agent-1.desktop
-  '';
+  # # NOTE: Replacing with systemd service
+  # polkit-sway = pkgs.runCommand "polkit-sway" { preferLocalBuild = true; } ''
+  #   mkdir -p "$out/etc/xdg/autostart"
+  #   sed -e 's/^OnlyShowIn=.*$/OnlyShowIn=sway;/' ${pkgs.polkit_gnome}/etc/xdg/autostart/polkit-gnome-authentication-agent-1.desktop >$out/etc/xdg/autostart/polkit-sway-authentication-agent-1.desktop
+  # '';
 
   sway-dconf-db = pkgs.runCommand "sway-dconf-db" { preferLocalBuild = true; } ''
     ${pkgs.dconf}/bin/dconf compile $out ${sway-dconf-settings}/dconf
@@ -46,7 +49,6 @@ in
       mako
       pavucontrol
       playerctl
-      polkit-sway
       qt5.qtwayland
       slurp
       swayidle
@@ -94,15 +96,12 @@ in
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    # gtkUsePortal = true;
     wlr.enable = true;
   };
 
   # services.gnome.gnome-keyring.enable = true;
 
   gtk.iconCache.enable = true;
-
-  fonts.enableDefaultFonts = true;
 
   qt5 = {
     enable = true;
@@ -117,6 +116,7 @@ in
     enable = true;
     settings = {
       terminal.vt = 7;
+
       default_session.command = lib.concatStringsSep " " [
         "${pkgs.greetd.tuigreet}/bin/tuigreet"
         "--cmd \"${pkgs.sway}/bin/sway\""

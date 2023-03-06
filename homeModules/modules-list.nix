@@ -6,6 +6,8 @@
   ./sys/desktop/sway.nix
   ./sys/desktop/chat/discord.nix
   ./sys/desktop/chat/matrix.nix
+  ./sys/desktop/chat/msteams.nix
+  ./sys/desktop/web
   ./sys/fonts.nix
   ./sys/git.nix
   ./sys/gnupg.nix

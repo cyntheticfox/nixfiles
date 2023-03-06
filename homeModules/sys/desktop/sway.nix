@@ -235,9 +235,16 @@ in
           output = defaultScreenRight;
 
           assigns = [
+            # Microsoft Edge X11
             { class = "^Microsoft-edge$"; }
             { instance = "^microsoft-edge$"; }
+
+            # Teams-For-Linux Wayland
             { app_id = "^teams-for-linux$"; }
+
+            # Teams-For-Linux X11
+            { class = "^teams-for-linux$"; }
+            { instance = "^teams-for-linux$"; }
           ];
         }
         {
@@ -351,17 +358,11 @@ in
       default = { };
     };
 
-    mako = lib.mkOption {
-      type = lib.types.submodule (_: {
-        options = {
-          enable = lib.mkEnableOption "notifications system" // { default = true; };
+    mako = {
+      enable = lib.mkEnableOption "notifications system" // { default = true; };
 
-          package = lib.mkPackageOption pkgs "mako" { };
-          notifysendPackage = lib.mkPackageOption pkgs "libnotify" { };
-        };
-      });
-
-      default = { };
+      package = lib.mkPackageOption pkgs "mako" { };
+      notifysendPackage = lib.mkPackageOption pkgs "libnotify" { };
     };
 
     playerctl = lib.mkOption {
@@ -623,16 +624,6 @@ in
                 };
               };
 
-              startup = [
-                { command = config.home.sessionVariables.BROWSER or (lib.getExe pkgs.chromium); }
-              ] ++ lib.optionals (config.sys.desktop.chat.matrix.enable or false && config.sys.desktop.chat.matrix.autostart) [
-                { command = lib.getExe config.sys.desktop.chat.matrix.package; }
-              ] ++ lib.optionals (config.sys.desktop.teams.enable or false) [
-                { command = lib.getExe config.sys.desktop.teams.package; }
-              ] ++ lib.optionals (config.sys.desktop.discord.chat.enable or false && config.sys.desktop.chat.discord.autostart) [
-                { command = lib.getExe config.sys.desktop.chat.discord.package; }
-              ];
-
               ### Organize startup programs
               # For how the home-manager module is written as of 2022-01-05, the
               #   workspace argument isn't quoted, technically allowing for using
@@ -888,6 +879,23 @@ in
               "keybind" : "r"
             }
           '';
+
+        systemd.user.services.sway-polkit-authentication-agent = {
+          Unit = {
+            Description = "Sway Polkit authentication agent";
+            Documentation = "https://gitlab.freedesktop.org/polkit/polkit/";
+            After = [ "graphical-session-pre.target" ];
+            PartOf = [ "graphical-session.target" ];
+          };
+
+          Service = {
+            ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+            Restart = "always";
+            BusName = "org.freedesktop.PolicyKit1.Authority";
+          };
+
+          Install.WantedBy = [ "graphical-session.target" ];
+        };
       }
 
       (lib.mkIf cfg.waybar.enable {
@@ -1304,6 +1312,8 @@ in
               }
             ];
           };
+
+          systemdTarget = "graphical-session-pre.target";
         };
 
         # Have kanshi restart to ensure
@@ -1356,22 +1366,24 @@ in
             Unit = {
               Description = "mako notification daemon for Sway";
               Documentation = "man:mako(1)";
-              PartOf = [ "graphical-session.target" ];
+              PartOf = [ "graphical-session-pre.target" ];
               ConditionPathExists = configFile;
             };
 
-            Install.WantedBy = [ "graphical-session.target" ];
-
             Service = {
-              Type = "simple";
+              Type = "DBus";
               ExecStart = lib.escapeShellArgs [ (lib.getExe cfg.mako.package) "--config" configFile ];
               # ExecStartPost =
               #   lib.optionalString (config.services.mpdris2.enable or false)
               #     (lib.escapeShellArgs [ "${pkgs.systemd}/bin/systemctl" "--user" "--" "restart" "mpdris2.service" ]);
               BusName = "org.freedesktop.Notifications";
             };
+
+            Install.WantedBy = [ "graphical-session-pre.target" ];
           }
         );
+
+        services.poweralertd.enable = true;
       })
 
       (lib.mkIf cfg.swayidle.enable {
@@ -1439,7 +1451,6 @@ in
 
         systemd.user.targets.sway-session.Unit.Wants = [
           "graphical-session-pre.target"
-          "xdg-desktop-autostart.target"
         ];
       })
     ]

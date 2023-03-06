@@ -5,14 +5,9 @@ let
 in
 {
   options.sys.desktop.chat.discord = {
-    enable = lib.mkEnableOption "Discord";
-
+    enable = lib.mkEnableOption "Discord client";
     package = lib.mkPackageOption pkgs "discord" { };
-
-    autostart = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-    };
+    autostart = lib.mkEnableOption "Discord client on startup";
   };
 
   config = lib.mkIf cfg.enable {
@@ -22,6 +17,25 @@ in
       IS_MAXIMIZED = true;
       IS_MINIMIZED = false;
       SKIP_HOST_UPDATE = true;
+    };
+
+    systemd.user.services.discord-client = lib.mkIf cfg.autostart {
+      Unit = {
+        Description = "${cfg.package.name} Discord client";
+        Requires = [
+          "graphical-session-pre.target"
+          "secrets-service.target"
+        ];
+        After = [ "secrets-service.target" ];
+      };
+
+      Service = {
+        Type = "simple";
+        ExecStart = lib.getExe cfg.package;
+        Restart = "on-abort";
+      };
+
+      Install.WantedBy = [ "graphical-session.target" ];
     };
   };
 }

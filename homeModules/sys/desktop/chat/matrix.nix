@@ -5,18 +5,31 @@ let
 in
 {
   options.sys.desktop.chat.matrix = {
-    enable = lib.mkEnableOption "matrix client";
-
+    enable = lib.mkEnableOption "Matrix client";
     package = lib.mkPackageOption pkgs "nheko" { };
-
-    autostart = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-    };
+    autostart = lib.mkEnableOption "Matrix client on startup";
   };
 
-  # TODO: Move autostart config from hm/sys/desktop/sway
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
+
+    systemd.user.services.matrix-client = lib.mkIf cfg.autostart {
+      Unit = {
+        Description = "${cfg.package.name} Matrix client";
+        Requires = [
+          "graphical-session-pre.target"
+          "secrets-service.target"
+        ];
+        After = [ "secrets-service.target" ];
+      };
+
+      Service = {
+        Type = "simple";
+        ExecStart = lib.getExe cfg.package;
+        Restart = "on-abort";
+      };
+
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
   };
 }

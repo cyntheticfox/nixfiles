@@ -40,6 +40,13 @@
           autostart = true;
           package = pkgs.nixpkgs-unstable.nheko;
         };
+
+        msteams = {
+          enable = true;
+
+          autostart = true;
+          package = pkgs.nixpkgs-unstable.teams-for-linux;
+        };
       };
 
       chromium = {
@@ -49,7 +56,7 @@
       };
 
       edge.enable = true;
-      firefox.enable = true;
+      web.firefox.enable = true;
       ghidra.enable = true;
 
       games = {
@@ -72,13 +79,6 @@
         enable = true;
 
         package = pkgs.nixpkgs-unstable.sway;
-      };
-
-      teams = {
-        enable = true;
-
-        package = pkgs.nixpkgs-unstable.teams-for-linux;
-        desktopEntry = "teams-for-linux.desktop";
       };
     };
 
