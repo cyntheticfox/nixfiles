@@ -201,6 +201,7 @@
       ".local/share/libvirt"
       ".local/share/mime"
       ".local/share/mopidy"
+      ".local/share/nheko"
       ".local/share/nvim/site"
       ".local/share/zoxide"
       ".local/share/zsh"
