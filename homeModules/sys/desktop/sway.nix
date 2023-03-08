@@ -1383,7 +1383,7 @@ in
           }
         );
 
-        services.poweralertd.enable = true;
+        # services.poweralertd.enable = true;
       })
 
       (lib.mkIf cfg.swayidle.enable {
