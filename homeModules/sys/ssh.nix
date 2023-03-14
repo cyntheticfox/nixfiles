@@ -333,13 +333,6 @@ in
           port = 22;
           identityFile = "~/.ssh/gitlab_id_ed25519";
         };
-
-        "ghec" = {
-          hostname = "github.com";
-          user = "git";
-          port = 22;
-          identityFile = "~/.ssh/ghec_id_ed25519_sk";
-        };
       } // cfg.extraMatchBlocks;
     };
   };

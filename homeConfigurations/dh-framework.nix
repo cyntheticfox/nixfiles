@@ -107,7 +107,18 @@
       fcp = true;
     };
 
-    ssh.enable = true;
+    ssh = {
+      enable = true;
+
+      extraMatchBlocks = {
+        "ghec" = {
+          hostname = "github.com";
+          user = "git";
+          port = 22;
+          identityFile = "~/.ssh/ghec_id_ed25519_sk";
+        };
+      };
+    };
 
     video.ffmpeg = {
       enable = true;
