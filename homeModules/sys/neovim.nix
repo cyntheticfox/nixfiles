@@ -1,7 +1,5 @@
 { config, pkgs, lib, ... }:
 
-with lib;
-
 let
   cfg = config.sys.neovim;
 
@@ -23,10 +21,10 @@ let
 in
 {
   options.sys.neovim = {
-    enable = mkEnableOption "Manage NeoVim editor configuration";
+    enable = lib.mkEnableOption "Manage NeoVim editor configuration";
 
-    colorlist = mkOption {
-      type = with types; listOf str;
+    colorlist = lib.mkOption {
+      type = with lib.types; listOf str;
       default = [
         "#cc241d"
         "#a89984"
@@ -40,9 +38,15 @@ in
         List of colors to use in rainbow for indent, brackets.
       '';
     };
+
+    plugins.treesitter = {
+      enable = lib.mkEnableOption "Enable Treesitter support" // { default = true; };
+
+      package = lib.mkPackageOption pkgs "vimPlugins.nvim-treesitter" { default = pkgs.vimPlugins.nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars); };
+    };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.sessionVariables = {
       "EDITOR" = "${config.programs.neovim.finalPackage}/bin/nvim";
       "VISUAL" = "${config.programs.neovim.finalPackage}/bin/nvim -R";
@@ -181,7 +185,6 @@ in
         cmp-git
         cmp-nvim-lsp
         cmp-path
-        cmp-treesitter
         cmp-vsnip
         {
           plugin = dashboard-nvim;
@@ -402,8 +405,8 @@ in
                 if vim.api.nvim_get_mode == 'c' then
                   return true
                 else
-                  return not context.in_treesitter_capture('Comment')
-                    and not context.in_syntax_group('Comment')
+                ${ if cfg.plugins.treesitter.enable then
+                  "return not context.in_treesitter_capture('Comment') and not context.in_syntax_group('Comment')" else "return not context.in_syntax_group('Comment')" }
                 end
               end,
               snippet = {
@@ -446,7 +449,7 @@ in
                 { name = 'nvim_lsp' },
                 { name = 'vsnip' },
                 { name = 'path' },
-                { name = 'treesitter' },
+                ${ lib.optionalString cfg.plugins.treesitter.enable "{ name = 'treesitter' },"}
               }, {
                 { name = 'buffer' },
               }),
@@ -718,8 +721,86 @@ in
             })
           '';
         }
+        nvim-web-devicons
         {
-          plugin = nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars);
+          plugin = nord-nvim;
+          config = "colorscheme nord";
+        }
+        {
+          plugin = scrollbar-nvim;
+          config = ''
+            augroup ScrollbarInit
+              autocmd!
+              autocmd WinScrolled,VimResized,QuitPre * silent! lua require('scrollbar').show()
+              autocmd WinEnter,FocusGained * silent! lua require('scrollbar').show()
+              autocmd WinLeave,BufLeave,BufWinLeave,FocusLost * silent! lua require('scrollbar').clear()
+            augroup end
+          '';
+        }
+        {
+          plugin = telescope-nvim;
+          type = "lua";
+          config = ''
+            require('telescope').setup({
+              defaults = {
+                vimgrep_arguments = {
+                  'rg',
+                  '--color=never',
+                  '--no-heading',
+                  '--with-filename',
+                  '--line-number',
+                  '--column',
+                  '--smart-case'
+                },
+                prompt_prefix = "> ",
+                selection_caret = "> ",
+                entry_prefix = " ",
+                initial_mode = "insert",
+                selection_strategy = "reset",
+                sorting_strategy = "descending",
+                layout_strategy = "horizontal",
+                layout_config = {
+                  horizontal = {
+                    mirror = false,
+                  },
+                  vertical = {
+                    mirror = false,
+                  },
+                },
+                file_sorter = require'telescope.sorters'.get_fuzzy_file,
+                file_ignore_patterns = {},
+                eneric_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
+                winblend = 0,
+                border = {},
+                borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
+                color_devicons = true,
+                use_less = true,
+                set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
+                file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+                grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
+                qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
+
+                -- Developer configurations: Not meant for general override
+                buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
+              }
+            })
+          '';
+        }
+        {
+          plugin = todo-comments-nvim;
+          type = "lua";
+          config = "require('todo-comments').setup()";
+        }
+        vim-eunuch
+        vim-gitgutter
+        vim-lastplace
+        vim-nix
+        vim-surround
+        vim-vsnip
+      ] ++ lib.optionals cfg.plugins.treesitter.enable [
+        cmp-treesitter
+        {
+          plugin = cfg.plugins.treesitter.package;
           type = "lua";
           config = ''
             require('nvim-treesitter.configs').setup({
@@ -822,82 +903,6 @@ in
         nvim-ts-autotag
         nvim-ts-context-commentstring
         nvim-ts-rainbow
-        nvim-web-devicons
-        {
-          plugin = nord-nvim;
-          config = "colorscheme nord";
-        }
-        {
-          plugin = scrollbar-nvim;
-          config = ''
-            augroup ScrollbarInit
-              autocmd!
-              autocmd WinScrolled,VimResized,QuitPre * silent! lua require('scrollbar').show()
-              autocmd WinEnter,FocusGained * silent! lua require('scrollbar').show()
-              autocmd WinLeave,BufLeave,BufWinLeave,FocusLost * silent! lua require('scrollbar').clear()
-            augroup end
-          '';
-        }
-        {
-          plugin = telescope-nvim;
-          type = "lua";
-          config = ''
-            require('telescope').setup({
-              defaults = {
-                vimgrep_arguments = {
-                  'rg',
-                  '--color=never',
-                  '--no-heading',
-                  '--with-filename',
-                  '--line-number',
-                  '--column',
-                  '--smart-case'
-                },
-                prompt_prefix = "> ",
-                selection_caret = "> ",
-                entry_prefix = " ",
-                initial_mode = "insert",
-                selection_strategy = "reset",
-                sorting_strategy = "descending",
-                layout_strategy = "horizontal",
-                layout_config = {
-                  horizontal = {
-                    mirror = false,
-                  },
-                  vertical = {
-                    mirror = false,
-                  },
-                },
-                file_sorter = require'telescope.sorters'.get_fuzzy_file,
-                file_ignore_patterns = {},
-                eneric_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
-                winblend = 0,
-                border = {},
-                borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
-                color_devicons = true,
-                use_less = true,
-                set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
-                file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
-                grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
-                qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
-
-                -- Developer configurations: Not meant for general override
-                buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
-              }
-            })
-          '';
-        }
-        {
-          plugin = todo-comments-nvim;
-          type = "lua";
-          config = "require('todo-comments').setup()";
-        }
-        vim-eunuch
-        vim-gitgutter
-        vim-lastplace
-        vim-nix
-        vim-surround
-        vim-vsnip
       ];
     };
   };
