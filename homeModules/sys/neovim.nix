@@ -198,7 +198,7 @@ in
                   -- Prettier
                   function()
                     return {
-                      exe = "${pkgs.nodePackages.prettier}/bin/prettier",
+                      exe = "${lib.getExe pkgs.nodePackages.prettier}",
                       args = {
                         "--stdin-filepath",
                         vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)),
@@ -212,7 +212,7 @@ in
                   -- gofumpt
                   function()
                     return {
-                      exe = "${pkgs.gofumpt}/bin/gofumpt",
+                      exe = "${lib.getExe pkgs.gofumpt}",
                       args = {},
                       stdin = false,
                     }
@@ -233,7 +233,7 @@ in
                   -- Black
                   function()
                     return {
-                      exe = "${pkgs.python3Packages.black}/bin/black",
+                      exe = "${lib.getExe pkgs.python3Packages.black}",
                       args = { '-' },
                       stdin = true,
                     }
@@ -243,7 +243,7 @@ in
                   -- Rustfmt
                   function()
                     return {
-                      exe = "${pkgs.rustfmt}/bin/rustfmt",
+                      exe = "${lib.getExe pkgs.rustfmt}",
                       args = {
                         "--emit=stdout"
                       },
@@ -255,7 +255,7 @@ in
                   -- Shell script formatter
                   function()
                     return {
-                      exe = "${pkgs.shfmt}/bin/shfmt",
+                      exe = "${lib.getExe pkgs.shfmt}",
                       args = {
                         "-i",
                         "4"
@@ -267,7 +267,7 @@ in
                 terraform = {
                   function()
                     return {
-                      exe = "${pkgs.terraform}/bin/terraform",
+                      exe = "${lib.getExe pkgs.terraform}",
                       args = {
                         "fmt",
                         "-"
@@ -486,15 +486,15 @@ in
           type = "viml";
           config = ''
             lua << EOF
-            require('lint').linters.ansible_lint.cmd = '${pkgs.ansible-lint}/bin/ansible-lint'
-            require('lint').linters.cppcheck.cmd = '${pkgs.cppcheck}/bin/cppcheck'
-            require('lint').linters.cspell.cmd = '${pkgs.nodePackages.cspell}/bin/cspell'
-            require('lint').linters.flake8.cmd = '${pkgs.python3Packages.flake8}/bin/flake8'
-            require('lint').linters.flawfinder.cmd = '${pkgs.flawfinder}/bin/flawfinder'
+            require('lint').linters.ansible_lint.cmd = '${lib.getExe pkgs.ansible-lint}'
+            require('lint').linters.cppcheck.cmd = '${lib.getExe pkgs.cppcheck}'
+            require('lint').linters.cspell.cmd = '${lib.getExe pkgs.nodePackages.cspell}'
+            require('lint').linters.flake8.cmd = '${lib.getExe pkgs.python3Packages.flake8}'
+            require('lint').linters.flawfinder.cmd = '${lib.getExe pkgs.flawfinder}'
             require('lint').linters.nix.cmd = '${pkgs.nix}/bin/nix-instantiate'
-            require('lint').linters.pylint.cmd = '${pkgs.python3Packages.pylint}/bin/pylint'
-            require('lint').linters.shellcheck.cmd = '${pkgs.shellcheck}/bin/shellcheck'
-            require('lint').linters.statix.cmd = '${pkgs.statix}/bin/statix'
+            require('lint').linters.pylint.cmd = '${lib.getExe pkgs.python3Packages.pylint}'
+            require('lint').linters.shellcheck.cmd = '${lib.getExe pkgs.shellcheck}'
+            require('lint').linters.statix.cmd = '${lib.getExe pkgs.statix}'
 
             require('lint').linters_by_ft = {
               ada = {'cspell'},
@@ -547,7 +547,7 @@ in
             nvim_lsp.bashls.setup({
               capabilities = capabilities_var,
               cmd = {
-                "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server",
+                "${lib.getExe pkgs.nodePackages.bash-language-server}",
                 "start"
               },
               on_attach = on_attach_func
@@ -555,7 +555,7 @@ in
 
             nvim_lsp.ccls.setup({
               capabilities = capabilities_var,
-              cmd = { "${pkgs.ccls}/bin/ccls" },
+              cmd = { "${lib.getExe pkgs.ccls}" },
               on_attach = on_attach_func
             })
 
@@ -600,7 +600,7 @@ in
 
             nvim_lsp.gopls.setup({
               capabilities = capabilities_var,
-              cmd = { "${pkgs.gopls}/bin/gopls" },
+              cmd = { "${lib.getExe pkgs.gopls}" },
               on_attach = on_attach_func
             })
 
@@ -639,25 +639,25 @@ in
 
             nvim_lsp.rnix.setup({
               capabilities = capabilities_var,
-              cmd = { "${pkgs.rnix-lsp}/bin/rnix-lsp" },
+              cmd = { "${lib.getExe pkgs.rnix-lsp}" },
               on_attach = on_attach_func
             })
 
             nvim_lsp.rust_analyzer.setup({
               capabilities = capabilities_var,
-              cmd = { "${pkgs.rust-analyzer}/bin/rust-analyzer" },
+              cmd = { "${lib.getExe pkgs.rust-analyzer}" },
               on_attach = on_attach_func
             })
 
             nvim_lsp.sqls.setup({
               capabilities = capabilities_var,
-              cmd = { "${pkgs.sqls}/bin/sqls" },
+              cmd = { "${lib.getExe pkgs.sqls}" },
               on_attach = on_attach_func
             })
 
             nvim_lsp.sumneko_lua.setup({
               capabilities = capabilities_var,
-              cmd = {"${pkgs.sumneko-lua-language-server}/bin/lua-language-server"},
+              cmd = {"${lib.getExe pkgs.sumneko-lua-language-server}"},
               on_attach = on_attach_func,
               settings = {
                 Lua = {
@@ -678,7 +678,7 @@ in
             nvim_lsp.terraformls.setup({
               capabilities = capabilities_var,
               cmd = {
-                "${pkgs.terraform-ls}/bin/terraform-ls",
+                "${lib.getExe pkgs.terraform-ls}",
                 "serve"
               },
               on_attach = on_attach_func
@@ -687,7 +687,7 @@ in
             nvim_lsp.tsserver.setup({
               capabilities = capabilities_var,
               cmd = {
-                "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server",
+                "${lib.getExe pkgs.nodePackages.typescript-language-server}",
                 "--stdio"
               },
               on_attach = on_attach_func
@@ -696,7 +696,7 @@ in
             nvim_lsp.vimls.setup({
               capabilities = capabilities_var,
               cmd = {
-                "${pkgs.nodePackages.vim-language-server}/bin/vim-language-server",
+                "${lib.getExe pkgs.nodePackages.vim-language-server}",
                 "--stdio"
               },
               on_attach = on_attach_func
@@ -711,7 +711,7 @@ in
             nvim_lsp.yamlls.setup({
               capabilities = capabilities_var,
               cmd = {
-                "${pkgs.nodePackages.yaml-language-server}/bin/yaml-language-server",
+                "${lib.getExe pkgs.nodePackages.yaml-language-server}",
                 "--stdio"
               },
               on_attach = on_attach_func
