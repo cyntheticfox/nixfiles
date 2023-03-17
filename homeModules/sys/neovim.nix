@@ -50,7 +50,7 @@ in
 
     home.shellAliases = {
       "vdiff" = "nvim -d";
-      "vsplit" = "nvim -O3"; # Kinda wish I could just change the default behavior instead of this
+      "vsplit" = "nvim -O2"; # Kinda wish I could just change the default behavior instead of this
       "vsudo" = "sudo -- nvim -u ~/.config/nvim/init.vim";
     };
 
