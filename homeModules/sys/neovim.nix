@@ -221,7 +221,7 @@ in
                 nix = {
                   function()
                     return {
-                      exe = "${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt",
+                      exe = "${lib.getExe pkgs.nixpkgs-fmt}",
                       args = {
                         "--"
                       },
