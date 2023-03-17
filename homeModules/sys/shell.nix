@@ -203,7 +203,9 @@ in
 
         package = mkDefault pkgs.starship;
 
-        settings = mkDefault {
+        enableNushellIntegration = false;
+
+        settings = {
           add_newline = true;
           scan_timeout = 100;
 
@@ -226,12 +228,13 @@ in
 
           shell = {
             disabled = false;
+
             bash_indicator = "bash";
             fish_indicator = "fish";
             powershell_indicator = "pwsh";
-            elvish_indicator = "elvish";
-            tcsh_indicator = "tcsh";
-            xonsh_indicator = "xonsh";
+            # elvish_indicator = "elvish";
+            # tcsh_indicator = "tcsh";
+            # xonsh_indicator = "xonsh";
             unknown_indicator = "?";
           };
         };
