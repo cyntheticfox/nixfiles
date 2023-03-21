@@ -57,6 +57,8 @@
       };
     };
 
+    nixvim.url = "github:pta2002/nixvim";
+
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
 
@@ -160,7 +162,10 @@
                   inherit (self.inputs) nixpkgs-unstable;
                   inherit lib;
 
-                  homeModules = lib.recursiveUpdate self.outputs.homeModules self.inputs.impermanence.nixosModules.home-manager;
+                  homeModules = [
+                    nixvim.homeManagerModules.nixvim
+                  ] ++ builtins.attrValues self.homeModules
+                  ++ builtins.attrValues impermanence.nixosModules.home-manager;
                 };
               })
             ];

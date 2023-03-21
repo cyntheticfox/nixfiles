@@ -70,7 +70,7 @@
 
         package = pkgs.remmina.override {
           freerdp = pkgs.freerdp.override {
-            openssl = pkgs.openssl_1_1;
+            openssl = pkgs.openssl_legacy;
           };
         };
       };
@@ -101,7 +101,29 @@
     neovim = {
       enable = true;
 
-      plugins.treesitter.package = pkgs.nixpkgs-unstable.vimPlugins.nvim-treesitter.withPlugins (_: pkgs.nixpkgs-unstable.tree-sitter.allGrammars);
+      # package = pkgs.nixpkgs-unstable.neovim-unwrapped;
+
+      # plugins = {
+      #   cmp-nvim-lsp.package = pkgs.nixpkgs-unstable.vimPlugins.cmp-nvim-lsp;
+
+      #   nvim-cmp = {
+      #     enable = false;
+      #     package = pkgs.nixpkgs-unstable.vimPlugins.nvim-cmp;
+      #   };
+
+      #   nvim-lspconfig = {
+      #     package = pkgs.nixpkgs-unstable.vimPlugins.nvim-lspconfig;
+      #     bash-language-server.package = pkgs.nixpkgs-unstable.nodePackages.bash-language-server.override {
+      #       nativeBuildInputs = [ pkgs.buildPackages.makeWrapper ];
+      #       postInstall = ''
+      #         wrapProgram "$out/bin/bash-language-server" \
+      #           --prefix 'PATH' ':' '${lib.getExe pkgs.shellcheck}'
+      #       '';
+      #     };
+      #   };
+
+      #   nvim-treesitter.package = pkgs.nixpkgs-unstable.vimPlugins.nvim-treesitter.withAllGrammars;
+      # };
     };
 
     podman.enable = true;
