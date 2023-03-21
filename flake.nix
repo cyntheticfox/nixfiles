@@ -200,7 +200,7 @@
             pkgs = import nixpkgs-unstable {
               inherit system;
 
-              overlays = [ sops-nix.overlay ];
+              overlays = [ sops-nix.overlays.default ];
             };
 
             formatPackages = pkgs: with pkgs; [
