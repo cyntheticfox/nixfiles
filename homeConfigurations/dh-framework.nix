@@ -98,11 +98,7 @@
     keyboard.enable = true;
     music.enable = true;
 
-    neovim = {
-      enable = true;
-
-      plugins.treesitter.package = pkgs.nixpkgs-unstable.vimPlugins.nvim-treesitter.withPlugins (_: pkgs.nixpkgs-unstable.tree-sitter.allGrammars);
-    };
+    neovim.enable = true;
 
     podman.enable = true;
     sec.enable = true;
