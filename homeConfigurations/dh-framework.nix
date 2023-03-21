@@ -70,7 +70,7 @@
 
         package = pkgs.remmina.override {
           freerdp = pkgs.freerdp.override {
-            openssl = pkgs.openssl_legacy;
+            openssl = pkgs.openssl_1_1;
           };
         };
       };
