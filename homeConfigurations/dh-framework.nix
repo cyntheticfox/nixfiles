@@ -98,33 +98,7 @@
     keyboard.enable = true;
     music.enable = true;
 
-    neovim = {
-      enable = true;
-
-      # package = pkgs.nixpkgs-unstable.neovim-unwrapped;
-
-      # plugins = {
-      #   cmp-nvim-lsp.package = pkgs.nixpkgs-unstable.vimPlugins.cmp-nvim-lsp;
-
-      #   nvim-cmp = {
-      #     enable = false;
-      #     package = pkgs.nixpkgs-unstable.vimPlugins.nvim-cmp;
-      #   };
-
-      #   nvim-lspconfig = {
-      #     package = pkgs.nixpkgs-unstable.vimPlugins.nvim-lspconfig;
-      #     bash-language-server.package = pkgs.nixpkgs-unstable.nodePackages.bash-language-server.override {
-      #       nativeBuildInputs = [ pkgs.buildPackages.makeWrapper ];
-      #       postInstall = ''
-      #         wrapProgram "$out/bin/bash-language-server" \
-      #           --prefix 'PATH' ':' '${lib.getExe pkgs.shellcheck}'
-      #       '';
-      #     };
-      #   };
-
-      #   nvim-treesitter.package = pkgs.nixpkgs-unstable.vimPlugins.nvim-treesitter.withAllGrammars;
-      # };
-    };
+    neovim.enable = true;
 
     podman.enable = true;
     sec.enable = true;
