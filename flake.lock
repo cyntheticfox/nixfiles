@@ -23,6 +23,26 @@
         "type": "github"
       }
     },
+    "disko": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-unstable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1679457423,
+        "narHash": "sha256-dMgcy4Yl1PNJam/cXhpSDoMV2aD9fC7nSXrcMVm9lUg=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "e29cb84d6d6a7862e0a0480d4db819c0e85a096a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -103,7 +123,9 @@
     "foosteros": {
       "inputs": {
         "crane": [],
-        "disko": [],
+        "disko": [
+          "disko"
+        ],
         "flake-compat": [],
         "flake-parts": [],
         "flake-registry": [
@@ -500,6 +522,7 @@
     },
     "root": {
       "inputs": {
+        "disko": "disko",
         "flake-registry": "flake-registry",
         "flake-utils": "flake-utils",
         "foosteros": "foosteros",

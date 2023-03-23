@@ -1,14 +1,15 @@
-_: {
-  fileSystems = {
-    "/" = {
-      label = "fsroot";
-      fsType = "btrfs";
-      options = [ "subvol=root" ];
-    };
+{ lib, modulesPath, ... }: {
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ];
 
-    "/boot" = {
-      label = "boot";
-      fsType = "vfat";
-    };
+  disko.devices = import ./disk-config.nix {
+    inherit lib;
+  };
+
+  boot.loader.grub = {
+    devices = [ "/dev/sda" ];
+    efiSupport = true;
+    efiInstallAsRemovable = true;
   };
 }

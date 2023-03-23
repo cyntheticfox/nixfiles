@@ -21,6 +21,12 @@
 
     nix-index-database.url = "github:houstdav000/nix-index-database-stable";
 
+    disko = {
+      url = "github:nix-community/disko";
+
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     impermanence.url = "github:nix-community/impermanence";
 
     gitignore = {
@@ -78,6 +84,7 @@
 
       inputs = {
         flake-utils.follows = "flake-utils";
+        disko.follows = "disko";
         impermanence.follows = "impermanence";
         nixpkgs-stable.follows = "nixpkgs";
         nixpkgs.follows = "nixpkgs-unstable";
@@ -87,7 +94,6 @@
 
         # Unused dependencies
         crane.follows = "";
-        disko.follows = "";
         flake-compat.follows = "";
         flake-parts.follows = "";
         lanzaboote.follows = "";
@@ -130,7 +136,28 @@
           min = self.lib.defFlakeServer {
             inherit (self.inputs) flake-registry nixpkgs;
 
-            modules = [ ./nixosConfigurations/min ];
+            modules = [
+              ./nixosConfigurations/min
+
+              disko.nixosModules.disko
+            ];
+          };
+
+          hcloud-init = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+
+            modules = [
+              ./nixosConfigurations/min
+
+              disko.nixosModules.disko
+
+              ({ modulesPath, ... }: {
+                imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
+
+                services.openssh.enable = true;
+                users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhQjUo/lBb2+WUaU1grNi88Yi+WdhEAy8p6CRcc6DTE david@dh-framework" ];
+              })
+            ];
           };
 
           dh-framework = self.lib.defFlakeWorkstation {
