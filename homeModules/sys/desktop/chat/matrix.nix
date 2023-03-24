@@ -16,10 +16,12 @@ in
     systemd.user.services.matrix-client = lib.mkIf cfg.autostart {
       Unit = {
         Description = "${cfg.package.name} Matrix client";
+
         Requires = [
           "graphical-session-pre.target"
           "secrets-service.target"
         ];
+
         After = [ "secrets-service.target" ];
       };
 
@@ -27,6 +29,7 @@ in
         Type = "simple";
         ExecStart = lib.getExe cfg.package;
         Restart = "on-abort";
+        Environment = "BROWSER=${config.home.sessionVariables.BROWSER}";
       };
 
       Install.WantedBy = [ "graphical-session.target" ];
