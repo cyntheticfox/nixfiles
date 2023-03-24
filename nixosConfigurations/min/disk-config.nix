@@ -3,7 +3,7 @@
     device = mainDisk;
     type = "disk";
 
-    # MBR-compatible EFI
+    # MBR-compatible GPT
     content = {
       type = "table";
       format = "gpt";
