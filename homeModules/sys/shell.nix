@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   cfg = config.sys.shell;
 
@@ -21,10 +19,10 @@ let
 in
 {
   options.sys.shell = {
-    enable = mkEnableOption "Enable shell management" // { default = true; };
+    enable = lib.mkEnableOption "Enable shell management" // { default = true; };
 
-    pager = mkOption {
-      type = with types; nullOr str;
+    pager = lib.mkOption {
+      type = with lib.types; nullOr str;
       default = lib.getExe pkgs.less;
 
       description = ''
@@ -33,8 +31,8 @@ in
       '';
     };
 
-    editor = mkOption {
-      type = with types; nullOr str;
+    editor = lib.mkOption {
+      type = with lib.types; nullOr str;
       default = lib.getExe pkgs.neovim;
 
       description = ''
@@ -43,8 +41,8 @@ in
       '';
     };
 
-    viewer = mkOption {
-      type = with types; nullOr str;
+    viewer = lib.mkOption {
+      type = with lib.types; nullOr str;
       default = "${lib.getExe pkgs.neovim} -R";
 
       description = ''
@@ -53,17 +51,13 @@ in
       '';
     };
 
-    aliases = mkOption {
-      type = with types; attrsOf str;
+    aliases = lib.mkOption {
+      type = with lib.types; attrsOf str;
 
       default = {
         "h" = "history";
         "pg" = "pgrep";
         "cp" = "cp -r";
-        "rm" = "rm -r";
-
-        # Editor aliases
-        "v" = config.home.sessionVariables.EDITOR or "nano";
 
         # Make things human-readable
         "dd" = "dd status=progress";
@@ -74,6 +68,9 @@ in
 
         # VI Keys pls
         "info" = "info --vi-keys";
+
+        # Dissuade bad behavior
+        "rm" = "rm --interactive";
       };
 
       description = ''
@@ -81,8 +78,8 @@ in
       '';
     };
 
-    historyIgnore = mkOption {
-      type = with types; listOf str;
+    historyIgnore = lib.mkOption {
+      type = with lib.types; listOf str;
 
       default = [
         "cd *"
@@ -93,6 +90,7 @@ in
         "pushd *"
         "popd"
         "rm *"
+        "tp *"
         "z *"
       ];
 
@@ -101,22 +99,30 @@ in
       '';
     };
 
-    manageBashConfig = mkEnableOption "Enable default bash config" // { default = true; };
-    manageBatConfig = mkEnableOption "Enable default bat config" // { default = true; };
-    manageExaConfig = mkEnableOption "Enable default exa config" // { default = true; };
-    manageLessConfig = mkEnableOption "Enable default less config" // { default = true; };
-    manageTmuxConfig = mkEnableOption "Enable deafult tmux config" // { default = true; };
-    manageStarshipConfig = mkEnableOption "Enable default starship config" // { default = true; };
-    manageZshConfig = mkEnableOption "Enable default zsh config" // { default = true; };
+    manageBashConfig = lib.mkEnableOption "Enable default bash config" // { default = true; };
+    manageBatConfig = lib.mkEnableOption "Enable default bat config" // { default = true; };
+    manageExaConfig = lib.mkEnableOption "Enable default exa config" // { default = true; };
+    manageLessConfig = lib.mkEnableOption "Enable default less config" // { default = true; };
+    manageTmuxConfig = lib.mkEnableOption "Enable deafult tmux config" // { default = true; };
+    manageStarshipConfig = lib.mkEnableOption "Enable default starship config" // { default = true; };
+    manageZshConfig = lib.mkEnableOption "Enable default zsh config" // { default = true; };
 
-    zoxide = mkEnableOption "Enable zoxide" // { default = true; };
-    z-lua = mkEnableOption "Enable z-lua";
-    autojump = mkEnableOption "Enable autojump";
+    trashy = {
+      enable = lib.mkEnableOption "trashy, a rm alternative" // { default = true; };
 
-    fcp = mkEnableOption "Enable replacing cp with fcp";
+      package = lib.mkPackageOption pkgs "trashy" { };
 
-    extraShells = mkOption {
-      type = with types; nullOr (listOf package);
+      enableAliases = lib.mkEnableOption "trashy aliases" // { default = true; };
+    };
+
+    zoxide = lib.mkEnableOption "Enable zoxide" // { default = true; };
+    z-lua = lib.mkEnableOption "Enable z-lua";
+    autojump = lib.mkEnableOption "Enable autojump";
+
+    fcp = lib.mkEnableOption "Enable replacing cp with fcp";
+
+    extraShells = lib.mkOption {
+      type = with lib.types; nullOr (listOf package);
 
       default = with pkgs; [
         elvish
@@ -126,12 +132,15 @@ in
   };
 
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = cfg.extraShells;
-      home.shellAliases = cfg.aliases;
+      home.shellAliases = cfg.aliases // {
+        # Editor aliases
+        "v" = config.home.sessionVariables.EDITOR or "${lib.getExe pkgs.neovim}";
+      };
 
-      home.sessionVariables = mkDefault {
+      home.sessionVariables = lib.mkDefault {
         "PAGER" = cfg.pager;
         "EDITOR" = cfg.editor;
         "VISUAL" = cfg.viewer;
@@ -141,7 +150,15 @@ in
       programs.z-lua.enable = cfg.z-lua;
     }
 
-    (mkIf config.sys.git.enable {
+    (lib.mkIf cfg.trashy.enable {
+      home.packages = [ cfg.trashy.package ];
+
+      home.shellAliases = lib.mkIf cfg.trashy.enableAliases {
+        "tp" = "trash put";
+      };
+    })
+
+    (lib.mkIf config.sys.git.enable {
       home.shellAliases = {
         "gi" = "git ignore";
 
@@ -151,7 +168,7 @@ in
       };
     })
 
-    (mkIf cfg.manageBashConfig {
+    (lib.mkIf cfg.manageBashConfig {
       programs.bash = {
         inherit (cfg) historyIgnore;
 
@@ -160,17 +177,17 @@ in
         historyFile = "${config.xdg.dataHome or "$XDG_DATA_HOME"}/bash/bash_history";
         historyControl = [ "ignoredups" "ignorespace" ];
 
-        initExtra = mkIf config.sys.git.enable posixGitFunctions;
+        initExtra = lib.mkIf config.sys.git.enable posixGitFunctions;
       };
     })
 
-    (mkIf cfg.manageBatConfig {
+    (lib.mkIf cfg.manageBatConfig {
       home.shellAliases."cat" = "bat";
 
       programs.bat = {
-        enable = mkDefault true;
+        enable = lib.mkDefault true;
 
-        config = mkDefault {
+        config = lib.mkDefault {
           theme = "base16";
           italic-text = "always";
           style = "full";
@@ -178,7 +195,7 @@ in
       };
     })
 
-    (mkIf cfg.manageExaConfig {
+    (lib.mkIf cfg.manageExaConfig {
       home.shellAliases = {
         "l" = "exa --classify --color=always --icons";
         "ls" = "exa --classify --color=always --icons";
@@ -190,19 +207,20 @@ in
       programs.exa.enable = true;
     })
 
-    (mkIf cfg.manageLessConfig {
+    (lib.mkIf cfg.manageLessConfig {
       home.shellAliases."more" = "less";
 
       # TODO: Figure out a lesskey config
       programs.less.enable = true;
     })
 
-    (mkIf cfg.manageStarshipConfig {
+    (lib.mkIf cfg.manageStarshipConfig {
       programs.starship = {
-        enable = mkDefault true;
+        enable = lib.mkDefault true;
 
-        package = mkDefault pkgs.starship;
+        package = lib.mkDefault pkgs.starship;
 
+        # Broken sometimes
         enableNushellIntegration = false;
 
         settings = {
@@ -241,21 +259,21 @@ in
       };
     })
 
-    (mkIf cfg.manageTmuxConfig {
-      programs.tmux = mkIf cfg.manageTmuxConfig {
-        enable = mkDefault true;
-        clock24 = mkDefault true;
-        keyMode = mkDefault "vi";
-        prefix = mkDefault "C-a";
-        shell = mkDefault (lib.getExe pkgs.zsh);
+    (lib.mkIf cfg.manageTmuxConfig {
+      programs.tmux = lib.mkIf cfg.manageTmuxConfig {
+        enable = lib.mkDefault true;
+        clock24 = lib.mkDefault true;
+        keyMode = lib.mkDefault "vi";
+        prefix = lib.mkDefault "C-a";
+        shell = lib.mkDefault (lib.getExe pkgs.zsh);
 
-        plugins = with pkgs.tmuxPlugins; mkDefault [
+        plugins = with pkgs.tmuxPlugins; lib.mkDefault [
           cpu
           prefix-highlight
           resurrect
         ];
 
-        extraConfig = mkDefault ''
+        extraConfig = lib.mkDefault ''
           # Configure looks
           set -g status on
           set -g status-fg 'colour15'
@@ -274,13 +292,13 @@ in
       };
     })
 
-    (mkIf cfg.manageZshConfig {
+    (lib.mkIf cfg.manageZshConfig {
       programs.zsh = {
-        enable = mkDefault true;
+        enable = lib.mkDefault true;
         dotDir = ".config/zsh";
         shellGlobalAliases."UUID" = "$(uuidgen | tr -d \\n)";
         defaultKeymap = "viins";
-        initExtra = mkIf config.sys.git.enable posixGitFunctions;
+        initExtra = lib.mkIf config.sys.git.enable posixGitFunctions;
         enableAutosuggestions = true;
 
         oh-my-zsh = {
@@ -371,7 +389,7 @@ in
       };
     })
 
-    (mkIf cfg.zoxide {
+    (lib.mkIf cfg.zoxide {
       home.shellAliases = {
         "za" = "zoxide add";
         "zq" = "zoxide query";
@@ -385,9 +403,9 @@ in
       programs.zoxide.enable = true;
     })
 
-    (mkIf cfg.fcp {
+    (lib.mkIf cfg.fcp {
       home.packages = with pkgs; [ fcp ];
-      home.shellAliases."cp" = mkForce "fcp";
+      home.shellAliases."cp" = lib.mkForce "fcp";
     })
   ]);
 }
