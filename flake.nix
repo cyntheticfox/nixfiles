@@ -63,7 +63,15 @@
       };
     };
 
-    nixvim.url = "github:pta2002/nixvim";
+    nixvim = {
+      url = "github:pta2002/nixvim";
+
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+        flake-utils.follows = "flake-utils";
+        pre-commit-hooks.follows = "pre-commit-hooks";
+      };
+    };
 
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
@@ -83,14 +91,16 @@
       url = "github:lilyinstarlight/foosteros";
 
       inputs = {
-        flake-utils.follows = "flake-utils";
         disko.follows = "disko";
+        flake-registry.follows = "flake-registry";
+        flake-utils.follows = "flake-utils";
+        home-manager.follows = "home-manager";
         impermanence.follows = "impermanence";
+        nixos-hardware.follows = "nixos-hardware";
         nixpkgs-stable.follows = "nixpkgs";
         nixpkgs.follows = "nixpkgs-unstable";
         pre-commit-hooks-nix.follows = "pre-commit-hooks";
         sops-nix.follows = "sops-nix";
-        flake-registry.follows = "flake-registry";
 
         # Unused dependencies
         crane.follows = "";
