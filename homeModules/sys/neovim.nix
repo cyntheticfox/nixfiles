@@ -23,6 +23,7 @@ in
 
     colorlist = lib.mkOption {
       type = with lib.types; listOf str;
+
       default = [
         "#cc241d"
         "#a89984"
@@ -32,6 +33,7 @@ in
         "#d65d0e"
         # "#458588"
       ];
+
       description = ''
         List of colors to use in rainbow for indent, brackets.
       '';
