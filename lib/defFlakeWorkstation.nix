@@ -56,20 +56,26 @@ nixpkgs.lib.nixosSystem {
 
     ({ config, ... }: {
       nixpkgs.overlays = [
-        (_: super: {
-          nixpkgs-unstable =
-            if
-              nixpkgs-unstable != null
-            then
-              import nixpkgs-unstable
-                {
-                  inherit system;
+        (_: super:
+          let
+            unstablePkgs =
+              if
+                nixpkgs-unstable != null
+              then
+                import nixpkgs-unstable
+                  {
+                    inherit system;
 
-                  config.allowUnfree = config.nixpkgs.config.allowUnfree;
-                }
-            else
-              super;
-        })
+                    config.allowUnfree = config.nixpkgs.config.allowUnfree;
+                  }
+              else
+                super;
+          in
+          {
+            inherit (unstablePkgs) vimPlugins;
+
+            nixpkgs-unstable = unstablePkgs;
+          })
       ] ++ overlays;
     })
 
