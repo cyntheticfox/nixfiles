@@ -6,6 +6,7 @@
 , nixpkgs-unstable ? null
 , allowUnfree ? true
 , modules ? [ ]
+, specialArgs ? { }
 }:
 let
   unstable-overlay = _: super: {
@@ -22,6 +23,8 @@ let
   };
 in
 home-manager.lib.homeManagerConfiguration {
+  extraSpecialArgs = specialArgs;
+
   pkgs = import nixpkgs {
     inherit system;
 
