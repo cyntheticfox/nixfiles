@@ -8,6 +8,7 @@
 , nixosModules ? { }
 , modules ? [ ]
 , overlays ? [ ]
+, specialArgs ? { }
 }:
 
 assert cpuVendor == null || builtins.isString cpuVendor;
@@ -22,7 +23,7 @@ in
 nixpkgs.lib.nixosSystem {
   inherit system;
 
-  specialArgs = {
+  specialArgs = specialArgs // {
     inherit cpuVendor;
 
     workstation = true;
@@ -82,6 +83,7 @@ nixpkgs.lib.nixosSystem {
     (_: {
       home-manager = {
         backupFileExtension = "bak";
+        extraSpecialArgs = specialArgs;
 
         sharedModules = [
           ({ pkgs, ... }: {
