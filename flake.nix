@@ -196,13 +196,11 @@
               ({ config, lib, ... }: {
                 home-manager.users."david" = self.lib.personalNixosHMConfig {
                   inherit (config.networking) hostName;
-                  inherit (self.inputs) nixpkgs-unstable;
                   inherit lib;
+                  inherit (self) inputs;
 
-                  homeModules = [
-                    nixvim.homeManagerModules.nixvim
-                  ] ++ builtins.attrValues self.homeModules
-                  ++ builtins.attrValues impermanence.nixosModules.home-manager;
+                  homeModules = builtins.attrValues self.homeModules
+                    ++ builtins.attrValues impermanence.nixosModules.home-manager;
                 };
               })
             ];
