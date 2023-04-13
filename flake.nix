@@ -165,12 +165,12 @@
                 imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
 
                 services.openssh.enable = true;
-                users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhQjUo/lBb2+WUaU1grNi88Yi+WdhEAy8p6CRcc6DTE david@dh-framework" ];
+                users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhQjUo/lBb2+WUaU1grNi88Yi+WdhEAy8p6CRcc6DTE david@cyn-framework" ];
               })
             ];
           };
 
-          dh-framework = self.lib.defFlakeWorkstation {
+          cyn-framework = self.lib.defFlakeWorkstation {
             inherit (self.inputs) flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
             inherit (self.outputs) nixosModules;
 
@@ -191,7 +191,7 @@
               sops-nix.nixosModules.sops
               impermanence.nixosModules.impermanence
 
-              ./nixosConfigurations/dh-framework
+              ./nixosConfigurations/cyn-framework
 
               ({ config, lib, ... }: {
                 home-manager.users."david" = self.lib.personalNixosHMConfig {

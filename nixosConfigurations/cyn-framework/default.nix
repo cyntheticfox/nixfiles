@@ -90,7 +90,7 @@
   };
 
   networking = {
-    hostName = "dh-framework";
+    hostName = "cyn-framework";
     domain = "gh0st.network";
 
     wireless.scanOnLowSignal = false;
