@@ -2,7 +2,8 @@
 { hostName
 , homeModules
 , lib
-, ...
+, unstableHomeModules
+, nixpkgs-unstable
 }:
 
 # assert builtins.hasAttr "networking.hostName" config;
@@ -10,14 +11,29 @@ assert builtins.isAttrs homeModules || builtins.isList homeModules;
 assert builtins.hasAttr "collect" lib;
 
 let
-  modules = if builtins.isAttrs homeModules then lib.collect builtins.isFunction homeModules else homeModules;
+  collectModules =
+    modules:
+    if
+      builtins.isAttrs modules
+    then
+      lib.collect builtins.isFunction modules
+    else
+      modules;
+
+  overrideModulePkgs =
+    module:
+    { pkgs, ... }@args:
+    module (args // { pkgs = pkgs.nixpkgs-unstable; });
 in
 _: {
-  imports = [ (../. + "/homeConfigurations/${hostName}.nix") ] ++ modules;
+  imports = [ (../. + "/homeConfigurations/${hostName}.nix") ]
+    ++ collectModules homeModules
+    ++ builtins.map overrideModulePkgs (collectModules unstableHomeModules);
 
   programs.home-manager.enable = true;
 
-  home.stateVersion = "22.11";
-
-  home.sessionVariables."ON_NIXOS" = "1";
+  home = {
+    stateVersion = "22.11";
+    sessionVariables."ON_NIXOS" = "1";
+  };
 }
