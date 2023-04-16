@@ -1,14 +1,14 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
-    burpsuite
-    mozwire
-    obs-studio
+    insomnia
     openshot-qt
-    postman
     virt-manager
     virt-viewer
     wl-color-picker
+    zap
   ];
+
+  programs.obs-studio.enable = true;
 
   # Using my home-manager modules
   sys = {
