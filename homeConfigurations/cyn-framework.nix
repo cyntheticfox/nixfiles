@@ -45,7 +45,7 @@
           enable = true;
 
           autostart = true;
-          package = pkgs.nixpkgs-unstable.teams-for-linux;
+          package = pkgs.foosteros.teams-for-linux;
         };
       };
 
