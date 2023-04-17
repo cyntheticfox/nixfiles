@@ -32,7 +32,12 @@
       enable = true;
 
       chat = {
-        discord.enable = true;
+        discord = {
+          enable = true;
+
+          autostart = true;
+          package = pkgs.nixpkgs-unstable.discord;
+        };
 
         matrix = {
           enable = true;
