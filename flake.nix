@@ -217,6 +217,17 @@
           };
         };
 
+        apps.x86_64-linux.update-flake =
+          let
+            pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          in
+          {
+            type = "app";
+
+            # FIXME: Use patchShebangs
+            program = builtins.toString (pkgs.writers.writeBash "update-flake" (builtins.readFile ./scripts/update-flake.sh));
+          };
+
         nixosModules = import ./nixosModules;
 
         checks.x86_64-linux = import ./tests {
