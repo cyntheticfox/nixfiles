@@ -194,13 +194,13 @@
       "locked": {
         "lastModified": 1681614511,
         "narHash": "sha256-UgiJUKfb5kI+97WJbhwp84eUWsm3hP6UvhTbH4bX/k4=",
-        "owner": "houstdav000",
+        "owner": "cyntheticfox",
         "repo": "nix-index-database-stable",
         "rev": "8feb5f4b3a7cebb6bbb72dbcf5578948d0ecd3a3",
         "type": "github"
       },
       "original": {
-        "owner": "houstdav000",
+        "owner": "cyntheticfox",
         "repo": "nix-index-database-stable",
         "type": "github"
       }

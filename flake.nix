@@ -19,7 +19,7 @@
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
 
-    nix-index-database.url = "github:houstdav000/nix-index-database-stable";
+    nix-index-database.url = "github:cyntheticfox/nix-index-database-stable";
 
     disko = {
       url = "github:nix-community/disko";
