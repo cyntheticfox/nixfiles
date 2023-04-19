@@ -631,7 +631,7 @@ in
               #   spaces in their name to not load correctly. Workaround is quoting
               #   the workspace name.
               #
-              # NOTE: See https://github.com/houstdav000/home-manager/blob/master/modules/services/window-managers/i3-sway/lib/functions.nix#L55
+              # NOTE: See https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/lib/functions.nix#L55
               #
               # TODO: Replace DiscordCanary with a wayland-compatible electron app
               #
