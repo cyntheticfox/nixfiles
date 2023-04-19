@@ -37,13 +37,13 @@ Here are a few tools I use:
 
 ## Current Bugs
 
-See <https://github.com/houstdav000/nixfiles/labels/bug>.
+See <https://github.com/cyntheticfox/nixfiles/labels/bug>.
 
 ## Future
 
-See <https://github.com/houstdav000/nixfiles/labels/enhancement>.
+See <https://github.com/cyntheticfox/nixfiles/labels/enhancement>.
 
 ## Other
 
-For Windows platforms, please see instead [houstdav000/dotfiles.ps1](https://github.com/houstdav000/dotfiles.ps1)
+For Windows platforms, please see instead [cyntheticfox/dotfiles.ps1](https://github.com/cyntheticfox/dotfiles.ps1)
 
