@@ -23,7 +23,7 @@ in
     programs.gpg = {
       enable = true;
 
-      publicKeys = [{ source = keyDir + "/users/david.pub.asc"; trust = "ultimate"; }] ++ (builtins.map (file: { source = trustedDir + "/${file}"; trust = "full"; }) (listFilesInDir trustedDir));
+      publicKeys = [{ source = keyDir + "/users/cynthia.pub.asc"; trust = "ultimate"; }] ++ (builtins.map (file: { source = trustedDir + "/${file}"; trust = "full"; }) (listFilesInDir trustedDir));
 
       settings = {
         # weak-digest = "SHA1";

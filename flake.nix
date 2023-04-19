@@ -126,7 +126,7 @@
             inherit (self.outputs) homeModules;
 
             system = "aarch64-linux";
-            username = "david";
+            username = "cynthia";
             modules = [ ./homeConfigurations/pbp.nix ];
           };
 
@@ -135,7 +135,7 @@
             inherit (self.outputs) homeModules;
 
 
-            username = "david";
+            username = "cynthia";
             modules = [ ./homeConfigurations/wsl.nix ];
           };
         };
@@ -165,7 +165,7 @@
                 imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
 
                 services.openssh.enable = true;
-                users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhQjUo/lBb2+WUaU1grNi88Yi+WdhEAy8p6CRcc6DTE david@cyn-framework" ];
+                users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhQjUo/lBb2+WUaU1grNi88Yi+WdhEAy8p6CRcc6DTE cynthia@cyn-framework" ];
               })
             ];
           };
@@ -194,7 +194,7 @@
               ./nixosConfigurations/cyn-framework
 
               ({ config, lib, ... }: {
-                home-manager.users."david" = self.lib.personalNixosHMConfig {
+                home-manager.users."cynthia" = self.lib.personalNixosHMConfig {
                   inherit (config.networking) hostName;
                   inherit (self.inputs) nixpkgs-unstable;
                   inherit (self) homeModules;

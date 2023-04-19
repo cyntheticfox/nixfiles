@@ -49,27 +49,27 @@ let
 in
 {
   sops.secrets = {
-    david-password = {
+    cynthia-password = {
       sopsFile = ./secrets.yml;
       neededForUsers = true;
     };
 
     # gh-config = {
-    #   inherit (config.users.users.david) group;
+    #   inherit (config.users.users.cynthia) group;
     #
     #   sopsFile = ./secrets.yml;
     #   mode = "0400";
-    #   owner = config.users.users.david.name;
-    #   path = "${config.users.users.david.home}/.config/gh/hosts.yml";
+    #   owner = config.users.users.cynthia.name;
+    #   path = "${config.users.users.cynthia.home}/.config/gh/hosts.yml";
     # };
   };
 
-  users.users."david" = {
+  users.users."cynthia" = {
     isNormalUser = true;
-    home = "/home/david";
+    home = "/home/cynthia";
     extraGroups = [ "wheel" ] ++ optGroups;
     uid = 1000;
     shell = pkgs.zsh;
-    passwordFile = config.sops.secrets.david-password.path;
+    passwordFile = config.sops.secrets.cynthia-password.path;
   };
 }

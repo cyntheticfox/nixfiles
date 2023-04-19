@@ -4,7 +4,7 @@
     ./hardware-configuration.nix
 
     # Users
-    ../../nixosUserConfigurations/david/configuration.nix
+    ../../nixosUserConfigurations/cynthia/configuration.nix
 
     # Desktop
     ../../nixos/desktops/sway.nix

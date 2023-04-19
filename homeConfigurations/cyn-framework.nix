@@ -159,7 +159,7 @@
     table.insert(alsa_monitor.rules, rule)
   '';
 
-  home.persistence."/state/home/david" = {
+  home.persistence."/state/home" = {
     allowOther = false;
 
     directories = [
@@ -199,7 +199,7 @@
     ];
   };
 
-  home.persistence."/persist/home/david" = {
+  home.persistence."/persist/home" = {
     allowOther = false;
 
     directories = [
