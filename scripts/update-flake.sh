@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 LOCKFILE="flake.lock"
+NIX_FLAKE_CHECK="nix flake check --no-update-lock-file --no-write-lock-file --no-use-registries"
 
 if [ ! -e "$LOCKFILE" ]; then
   echo "Cannot find \"$LOCKFILE\" in current directory"
@@ -13,30 +14,43 @@ get_inputs() {
 
 INPUTS=$(get_inputs | tr -d '"')
 
-PASS=""
-FAIL=""
+PASS=()
+FAIL=()
 
 # NOTE: No point in making this parallel as Nix will just complain
 for INPUT in $INPUTS; do
   ORIGINAL_FLAKE=$(<$LOCKFILE)
 
+  echo "Attempting to update \"$INPUT\""
   if ! nix flake lock --update-input "$INPUT"; then
     echo "Unable to update input \"$INPUT\""
     echo "$ORIGINAL_FLAKE" >$LOCKFILE
-    FAIL="$FAIL $INPUT"
+    FAIL+=("$INPUT")
 
     continue
   fi
 
-  if ! nix flake check; then
-    echo "Check for updated input \"$INPUT\" failed."
+  echo "Testing eval for \"$INPUT\""
+  if ! $NIX_FLAKE_CHECK --no-build; then
+    echo "Check eval for updated input \"$INPUT\" failed."
     echo "$ORIGINAL_FLAKE" >$LOCKFILE
-    FAIL="$FAIL $INPUT"
+
+    FAIL+=("$INPUT: Check eval failed")
 
     continue
   fi
 
-  PASS="$PASS $INPUT"
+  echo "Testing build for \"$INPUT\""
+  if ! $NIX_FLAKE_CHECK; then
+    echo "Check build for updated input \"$INPUT\" failed."
+    echo "$ORIGINAL_FLAKE" >$LOCKFILE
+
+    FAIL+=("$INPUT: Check build failed")
+
+    continue
+  fi
+
+  PASS+=("$INPUT")
 done
 
 cat << EOF
@@ -44,11 +58,11 @@ cat << EOF
 =================
 Update flake script completed.
 
-$(echo "$PASS" | wc -w) inputs successfully updated:
-$(echo "$PASS" | tr ' ' "\n")
+${#PASS[@]} inputs successfully updated:
+$(printf '%s\n' "${PASS[@]}")
 
-$(echo "$FAIL" | wc -w) inputs failed to update:
-$(echo "$FAIL" | tr ' ' "\n")
+${#FAIL[@]} inputs failed to update:
+$(printf '%s\n' "${FAIL[@]}")
 
 =================
 EOF
