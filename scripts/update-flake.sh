@@ -1,7 +1,20 @@
 #!/usr/bin/env bash
 
 LOCKFILE="flake.lock"
-NIX_FLAKE_CHECK="nix flake check --no-update-lock-file --no-write-lock-file --no-use-registries"
+NIX_BIN="nix"
+GENERAL_FLAGS=(
+  "--accept-flake-config"
+  "--no-warn-dirty"
+)
+FLAKE_CHECK_FLAGS=(
+  "${GENERAL_FLAGS[@]}"
+  "--no-update-lock-file"
+  "--no-write-lock-file"
+  "--no-use-registries"
+)
+UPDATE_INPUT_CMD="$NIX_BIN flake lock ${GENERAL_FLAGS[*]}"
+EVAL_CHECK_CMD="$NIX_BIN flake check --no-build ${FLAKE_CHECK_FLAGS[*]}"
+BUILD_CHECK_CMD="$NIX_BIN flake check ${FLAKE_CHECK_FLAGS[*]}"
 
 if [ ! -e "$LOCKFILE" ]; then
   echo "Cannot find \"$LOCKFILE\" in current directory"
@@ -22,7 +35,7 @@ for INPUT in $INPUTS; do
   ORIGINAL_FLAKE=$(<$LOCKFILE)
 
   echo "Attempting to update \"$INPUT\""
-  if ! nix flake lock --update-input "$INPUT"; then
+  if ! $UPDATE_INPUT_CMD --update-input "$INPUT" "${NIX_FLAKE_FLAGS[@]}"; then
     echo "Unable to update input \"$INPUT\""
     echo "$ORIGINAL_FLAKE" >$LOCKFILE
     FAIL+=("$INPUT")
@@ -31,7 +44,7 @@ for INPUT in $INPUTS; do
   fi
 
   echo "Testing eval for \"$INPUT\""
-  if ! $NIX_FLAKE_CHECK --no-build; then
+  if ! $EVAL_CHECK_CMD; then
     echo "Check eval for updated input \"$INPUT\" failed."
     echo "$ORIGINAL_FLAKE" >$LOCKFILE
 
@@ -41,7 +54,7 @@ for INPUT in $INPUTS; do
   fi
 
   echo "Testing build for \"$INPUT\""
-  if ! $NIX_FLAKE_CHECK; then
+  if ! $BUILD_CHECK_CMD; then
     echo "Check build for updated input \"$INPUT\" failed."
     echo "$ORIGINAL_FLAKE" >$LOCKFILE
 
