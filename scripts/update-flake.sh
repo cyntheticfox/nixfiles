@@ -6,6 +6,9 @@ GENERAL_FLAGS=(
   "--accept-flake-config"
   "--no-warn-dirty"
 )
+
+# TODO: Waiting on https://github.com/NixOS/nix/issues/6453#issuecomment-1518117282 to ignore custom outputs
+# TODO: Waiting on https://github.com/NixOS/nix/issues/7230 for hiding saved value use
 FLAKE_CHECK_FLAGS=(
   "${GENERAL_FLAGS[@]}"
   "--no-update-lock-file"
@@ -21,16 +24,12 @@ if [ ! -e "$LOCKFILE" ]; then
   exit 1
 fi
 
-get_inputs() {
-  jq '.nodes.root.inputs | keys | .[]' "$LOCKFILE" | tr '\n' ' '
-}
-
-INPUTS=$(get_inputs | tr -d '"')
+INPUTS=$(jq -r '.nodes.root.inputs | keys | join(" ")' "$LOCKFILE")
 
 PASS=()
 FAIL=()
 
-# NOTE: No point in making this parallel as Nix will just complain
+# NOTE: No point in making this parallel as Nix will just complain... I think
 for INPUT in $INPUTS; do
   ORIGINAL_FLAKE=$(<$LOCKFILE)
 
