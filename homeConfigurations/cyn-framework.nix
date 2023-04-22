@@ -49,7 +49,7 @@
         msteams = {
           enable = true;
 
-          autostart = true;
+          systemd-service = true;
           package = pkgs.foosteros.teams-for-linux;
         };
       };
