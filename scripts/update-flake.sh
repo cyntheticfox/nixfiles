@@ -2,6 +2,7 @@
 
 LOCKFILE="flake.lock"
 NIX_BIN="nix"
+JQ_BIN="jq"
 GENERAL_FLAGS=(
   "--accept-flake-config"
   "--no-warn-dirty"
@@ -24,7 +25,7 @@ if [ ! -e "$LOCKFILE" ]; then
   exit 1
 fi
 
-INPUTS=$(jq -r '.nodes.root.inputs | keys | join(" ")' "$LOCKFILE")
+INPUTS=$($JQ_BIN -r '.nodes.root.inputs | keys | join(" ")' "$LOCKFILE")
 
 PASS=()
 FAIL=()
@@ -37,7 +38,8 @@ for INPUT in $INPUTS; do
   if ! $UPDATE_INPUT_CMD --update-input "$INPUT" "${NIX_FLAKE_FLAGS[@]}"; then
     echo "Unable to update input \"$INPUT\""
     echo "$ORIGINAL_FLAKE" >$LOCKFILE
-    FAIL+=("$INPUT")
+
+    FAIL+=("$INPUT: Update failed")
 
     continue
   fi
