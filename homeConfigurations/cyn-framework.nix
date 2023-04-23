@@ -96,7 +96,7 @@
       package = pkgs.nixpkgs-unstable.git;
 
       name = "Cynthia Fox";
-      email = "houstdav000@gmail.com";
+      email = "cyntheticfox@gh0st.sh";
       gpgkey = "5960278CE235F821!";
     };
 
