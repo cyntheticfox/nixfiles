@@ -76,15 +76,6 @@ let
       refreshRate = 59.999;
     };
 
-    # builtinBigger = mkScreenConfig {
-    #   name = "Built-in display";
-    #   id = "eDP-1";
-    #   scale = 2.0;
-    #   xPixels = 2256;
-    #   yPixels = 1504;
-    #   refreshRate = 59.999;
-    # };
-
     homeDockCenter = mkScreenConfig {
       name = "ASUS High Refresh-Rate Monitor";
       outputString = "Unknown VG28UQL1A 0x00000101";
@@ -128,7 +119,6 @@ let
     homeDockLeft
     homeDockRight
     homeDockRightFallback
-    # builtinBigger
     builtin
   ];
 
@@ -137,7 +127,6 @@ let
     homeDockCenter
     homeDockRight
     homeDockRightFallback
-    # builtinBigger
     builtin
   ];
 
@@ -146,12 +135,10 @@ let
     homeDockRightFallback
     homeDockCenter
     homeDockLeft
-    # builtinBigger
     builtin
   ];
 
   defaultScreenLaptop = with screens; screenOrder [
-    # builtinBigger
     builtin
     homeDockLeft
     homeDockRight
@@ -1204,7 +1191,6 @@ in
 
             singleMonitor.outputs = [
               {
-                # inherit (screens.builtinBigger) criteria;
                 inherit (screens.builtin) criteria scale;
 
                 status = "enable";
