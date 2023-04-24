@@ -228,15 +228,23 @@
           };
         };
 
-        apps.x86_64-linux.update-flake =
+        apps.x86_64-linux =
           let
             pkgs = nixpkgs.legacyPackages.x86_64-linux;
           in
           {
-            type = "app";
+            update-flake = {
+              type = "app";
 
-            # FIXME: Use patchShebangs
-            program = builtins.toString (pkgs.writers.writeBash "update-flake" (builtins.readFile ./scripts/update-flake.sh));
+              # FIXME: Use patchShebangs
+              program = builtins.toString (pkgs.writers.writeBash "update-flake" (builtins.readFile ./scripts/update-flake.sh));
+            };
+
+            build-and-diff-flake-system = {
+              type = "app";
+
+              program = builtins.toString (pkgs.writers.writeBash "build-and-diff-flake-system" (builtins.readFile ./scripts/build-and-diff-flake-system.sh));
+            };
           };
 
         nixosModules = import ./nixosModules;
