@@ -15,6 +15,18 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    nix-on-droid = {
+      url = "github:t184256/nix-on-droid/release-22.11";
+
+      inputs = {
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
+
+        nix-formatter-pack.follows = "";
+        nmd.follows = "";
+      };
+    };
+
     foosteros = {
       url = "github:lilyinstarlight/foosteros";
 
@@ -226,6 +238,10 @@
 
             modules = [ ./nixosConfigurations/ashley ];
           };
+        };
+
+        nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
+          modules = [ ./nixOnDroidConfigurations/cyn-p7 ];
         };
 
         apps.x86_64-linux =
