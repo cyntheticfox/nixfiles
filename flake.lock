@@ -80,42 +80,26 @@
     "foosteros": {
       "inputs": {
         "crane": [],
-        "disko": [
-          "disko"
-        ],
+        "disko": [],
         "flake-compat": [],
         "flake-parts": [],
-        "flake-registry": [
-          "flake-registry"
-        ],
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "home-manager": [
-          "home-manager"
-        ],
-        "impermanence": [
-          "impermanence"
-        ],
+        "flake-registry": [],
+        "flake-utils": [],
+        "home-manager": [],
+        "impermanence": [],
         "lanzaboote": [],
         "nix-alien": [],
         "nix-index-database": [],
-        "nixos-hardware": [
-          "nixos-hardware"
-        ],
+        "nixos-hardware": [],
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
         "nixpkgs-stable": [
           "nixpkgs"
         ],
-        "pre-commit-hooks-nix": [
-          "pre-commit-hooks"
-        ],
+        "pre-commit-hooks-nix": [],
         "rust-overlay": [],
-        "sops-nix": [
-          "sops-nix"
-        ]
+        "sops-nix": []
       },
       "locked": {
         "lastModified": 1682299700,
@@ -276,9 +260,7 @@
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
-        "pre-commit-hooks": [
-          "pre-commit-hooks"
-        ]
+        "pre-commit-hooks": []
       },
       "locked": {
         "lastModified": 1682326386,

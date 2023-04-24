@@ -11,38 +11,49 @@
   };
 
   inputs = {
+    # Package Sets
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    nixos-hardware.url = "github:NixOS/nixos-hardware";
+    foosteros = {
+      url = "github:lilyinstarlight/foosteros";
 
+      inputs = {
+        nixpkgs-stable.follows = "nixpkgs";
+        nixpkgs.follows = "nixpkgs-unstable";
+
+        # Unused dependencies
+        crane.follows = "";
+        disko.follows = "";
+        flake-compat.follows = "";
+        flake-parts.follows = "";
+        flake-registry.follows = "";
+        flake-utils.follows = "";
+        home-manager.follows = "";
+        impermanence.follows = "";
+        lanzaboote.follows = "";
+        nix-alien.follows = "";
+        nix-index-database.follows = "";
+        nixos-hardware.follows = "";
+        pre-commit-hooks-nix.follows = "";
+        rust-overlay.follows = "";
+        sops-nix.follows = "";
+      };
+    };
+
+    # Libraries
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
 
+    # NixOS Modules
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
+    impermanence.url = "github:nix-community/impermanence";
     nix-index-database.url = "github:cyntheticfox/nix-index-database-stable";
 
     disko = {
       url = "github:nix-community/disko";
 
       inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
-    impermanence.url = "github:nix-community/impermanence";
-
-    gitignore = {
-      url = "github:hercules-ci/gitignore.nix";
-
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
-    flake-registry = {
-      url = "github:/NixOS/flake-registry";
-      flake = false;
-    };
-
-    nmt = {
-      url = "gitlab:rycee/nmt?rev=d83601002c99b78c89ea80e5e6ba21addcfe12ae&narHash=sha256-1xzwwxygzs1cmysg97hzd285r7n1g1lwx5y1ar68gwq07a1rczmv";
-      flake = false;
     };
 
     sops-nix = {
@@ -69,8 +80,15 @@
       inputs = {
         nixpkgs.follows = "nixpkgs-unstable";
         flake-utils.follows = "flake-utils";
-        pre-commit-hooks.follows = "pre-commit-hooks";
+        pre-commit-hooks.follows = "";
       };
+    };
+
+    # Extra flake utilities
+    gitignore = {
+      url = "github:hercules-ci/gitignore.nix";
+
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     pre-commit-hooks = {
@@ -87,30 +105,15 @@
       };
     };
 
-    foosteros = {
-      url = "github:lilyinstarlight/foosteros";
+    # MISC
+    flake-registry = {
+      url = "github:/NixOS/flake-registry";
+      flake = false;
+    };
 
-      inputs = {
-        disko.follows = "disko";
-        flake-registry.follows = "flake-registry";
-        flake-utils.follows = "flake-utils";
-        home-manager.follows = "home-manager";
-        impermanence.follows = "impermanence";
-        nixos-hardware.follows = "nixos-hardware";
-        nixpkgs-stable.follows = "nixpkgs";
-        nixpkgs.follows = "nixpkgs-unstable";
-        pre-commit-hooks-nix.follows = "pre-commit-hooks";
-        sops-nix.follows = "sops-nix";
-
-        # Unused dependencies
-        crane.follows = "";
-        flake-compat.follows = "";
-        flake-parts.follows = "";
-        lanzaboote.follows = "";
-        nix-alien.follows = "";
-        nix-index-database.follows = "";
-        rust-overlay.follows = "";
-      };
+    nmt = {
+      url = "gitlab:rycee/nmt?rev=d83601002c99b78c89ea80e5e6ba21addcfe12ae&narHash=sha256-1xzwwxygzs1cmysg97hzd285r7n1g1lwx5y1ar68gwq07a1rczmv";
+      flake = false;
     };
   };
 
