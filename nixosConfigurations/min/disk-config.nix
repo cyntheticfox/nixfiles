@@ -11,13 +11,11 @@
       partitions = [
         {
           name = "boot";
-          type = "partition";
           start = "0";
           end = "1M";
           flags = [ "bios_grub" ];
         }
         {
-          type = "partition";
           name = "esp";
           start = "1MiB";
           end = "100MiB";
@@ -30,7 +28,6 @@
           };
         }
         {
-          type = "partition";
           name = "root";
           start = "100MiB";
           end = "100%";
