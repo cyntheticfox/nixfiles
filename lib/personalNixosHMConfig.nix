@@ -3,7 +3,8 @@
 , homeModules
 , lib
 , unstableHomeModules
-, nixpkgs-unstable
+, unstablePkgs
+, unstableLib
 }:
 
 # assert builtins.hasAttr "networking.hostName" config;
@@ -23,7 +24,10 @@ let
   overrideModulePkgs =
     module:
     { pkgs, ... }@args:
-    module (args // { pkgs = pkgs.nixpkgs-unstable; });
+    module (args // {
+      lib = unstableLib;
+      pkgs = unstablePkgs;
+    });
 in
 _: {
   imports = [ (../. + "/homeConfigurations/${hostName}.nix") ]

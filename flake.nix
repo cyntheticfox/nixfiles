@@ -197,9 +197,16 @@
               ({ config, lib, ... }: {
                 home-manager.users."cynthia" = self.lib.personalNixosHMConfig {
                   inherit (config.networking) hostName;
-                  inherit (self.inputs) nixpkgs-unstable;
-                  inherit (self) homeModules;
+                  inherit (self.outputs) homeModules;
                   inherit lib;
+
+                  unstableLib = nixpkgs-unstable.lib;
+
+                  unstablePkgs = import nixpkgs-unstable {
+                    system = "x86_64-linux";
+
+                    config.allowUnfree = true;
+                  };
 
                   unstableHomeModules = [
                     nixvim.homeManagerModules.nixvim

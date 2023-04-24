@@ -44,7 +44,7 @@ in
 
     programs.nixvim =
       let
-        prefix = "IndentBlanklineIndent";
+        prefix = "ColorLayer";
 
         charHighlightList = lib.imap1 (i: _: "${prefix}${builtins.toString i}") cfg.colorlist;
         vimHLString = lib.concatImapStringsSep "\n" (i: v: "vim.cmd [[highlight ${prefix}${builtins.toString i} guifg=${v} gui=nocombine]]") cfg.colorlist;
@@ -196,6 +196,8 @@ in
             showCurrentContextStart = true;
           };
 
+          lastplace.enable = true;
+
           lsp = {
             enable = true;
 
@@ -341,6 +343,11 @@ in
           };
 
           treesitter-context.enable = true;
+          treesitter-rainbow = {
+            enable = true;
+
+            hlgroups = charHighlightList;
+          };
         };
       };
 
@@ -411,9 +418,7 @@ in
     #       '';
     #     }
     #     vim-eunuch
-    #     vim-lastplace
     #     nvim-ts-autotag
     #     nvim-ts-context-commentstring
-    #     nvim-ts-rainbow
   };
 }
