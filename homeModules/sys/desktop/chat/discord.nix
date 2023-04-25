@@ -6,7 +6,9 @@ in
 {
   options.sys.desktop.chat.discord = {
     enable = lib.mkEnableOption "Discord client";
+
     package = lib.mkPackageOption pkgs "discord" { };
+    systemd-service = lib.mkEnableOption "discord Systemd user service" // { default = true; };
     autostart = lib.mkEnableOption "Discord client on startup";
   };
 
@@ -19,13 +21,15 @@ in
       SKIP_HOST_UPDATE = true;
     };
 
-    systemd.user.services.discord-client = lib.mkIf cfg.autostart {
+    systemd.user.services.discord-client = lib.mkIf cfg.systemd-service {
       Unit = {
         Description = "${cfg.package.name} Discord client";
+
         Requires = [
           "graphical-session-pre.target"
           "secrets-service.target"
         ];
+
         After = [ "secrets-service.target" ];
       };
 
@@ -33,9 +37,14 @@ in
         Type = "simple";
         ExecStart = lib.getExe cfg.package;
         Restart = "on-abort";
+
+        Environment = builtins.concatStringsSep " " [
+          "BROWSER=${config.home.sessionVariables.BROWSER} "
+          "NIXOS_OZONE_WL=1"
+        ];
       };
 
-      Install.WantedBy = [ "graphical-session.target" ];
+      Install.WantedBy = lib.mkIf cfg.autostart [ "graphical-session.target" ];
     };
   };
 }
