@@ -36,7 +36,7 @@
           enable = true;
 
           autostart = true;
-          package = pkgs.nixpkgs-unstable.discord;
+          package = pkgs.nixpkgs-unstable.webcord;
         };
 
         matrix = {
