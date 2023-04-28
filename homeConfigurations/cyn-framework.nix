@@ -167,7 +167,7 @@
       ".azure"
       ".config/cutter"
       ".config/dconf"
-      ".config/discord"
+      ".config/discord" # TODO: Put into discord module
       ".config/gcloud"
       ".config/lagrange"
       ".config/libvirt"
@@ -177,6 +177,7 @@
       ".config/pipewire"
       ".config/teams"
       ".config/teams-for-linux"
+      ".config/WebCord"
       ".docker"
       ".gnupg"
       ".mozilla"
