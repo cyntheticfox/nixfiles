@@ -43,7 +43,8 @@ lib.recursiveUpdate
         };
 
         Service = {
-          Type = "simple";
+          Type = "exec";
+          ExitType = "cgroup";
           ExecStart = browserBin;
           Restart = "on-abort";
         };

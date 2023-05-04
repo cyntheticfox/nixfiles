@@ -28,7 +28,8 @@ in
       };
 
       Service = {
-        Type = "simple";
+        Type = "exec";
+        ExitType = "cgroup";
         ExecStart = lib.getExe cfg.package;
         Restart = "on-abort";
       } // lib.optionalAttrs (cfg.package.pname == "teams-for-linux" && (config.desktop.sway.enable or false)) {

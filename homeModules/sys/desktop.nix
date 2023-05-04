@@ -253,7 +253,7 @@ in
         };
 
         Service = {
-          Type = "Dbus";
+          Type = "dbus";
           BusName = "org.freedesktop.secrets";
           ExecStart = "${pkgs.gnome.gnome-keyring}/bin/gnome-keyring-daemon --start --foreground --components=secrets";
         };

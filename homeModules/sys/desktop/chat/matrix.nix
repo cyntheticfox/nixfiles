@@ -7,22 +7,22 @@ in
   options.sys.desktop.chat.matrix = {
     enable = lib.mkEnableOption "Matrix client";
     package = lib.mkPackageOption pkgs "nheko" { };
+    systemd-service = lib.mkEnableOption "Matrix client systemd service" // { default = true; };
     autostart = lib.mkEnableOption "Matrix client on startup";
   };
 
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    systemd.user.services.matrix-client = lib.mkIf cfg.autostart {
+    systemd.user.services.matrix-client = lib.mkIf cfg.systemd-service {
       Unit = {
         Description = "${cfg.package.name} Matrix client";
 
         Requires = [
           "graphical-session-pre.target"
-          "secrets-service.target"
-        ];
+        ] ++ lib.optional (cfg.package.name == "nheko") "secrets-service.target";
 
-        After = [ "secrets-service.target" ];
+        After = lib.mkIf (cfg.package.name == "nheko") "secrets-service.target";
       };
 
       Service = {
@@ -32,7 +32,7 @@ in
         Environment = "BROWSER=${config.home.sessionVariables.BROWSER}";
       };
 
-      Install.WantedBy = [ "graphical-session.target" ];
+      Install.WantedBy = lib.mkIf cfg.autostart [ "graphical-session.target" ];
     };
   };
 }

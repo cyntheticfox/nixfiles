@@ -871,14 +871,14 @@ in
         systemd.user.services.sway-polkit-authentication-agent = {
           Unit = {
             Description = "Sway Polkit authentication agent";
-            Documentation = "https://gitlab.freedesktop.org/polkit/polkit/";
+            Documentation = "https://gitlab.freedesktop.org/polkit/polkit";
             After = [ "graphical-session-pre.target" ];
-            PartOf = [ "graphical-session.target" ];
+            # PartOf = [ "graphical-session.target" ];
           };
 
           Service = {
+            Type = "exec";
             ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-            Restart = "always";
             BusName = "org.freedesktop.PolicyKit1.Authority";
           };
 
@@ -1358,7 +1358,7 @@ in
             };
 
             Service = {
-              Type = "DBus";
+              Type = "dbus";
               ExecStart = lib.escapeShellArgs [ (lib.getExe cfg.mako.package) "--config" configFile ];
               # ExecStartPost =
               #   lib.optionalString (config.services.mpdris2.enable or false)
