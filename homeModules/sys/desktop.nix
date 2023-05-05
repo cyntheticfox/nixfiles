@@ -233,33 +233,101 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = with pkgs; [
-        pcmanfm
-        xdg_utils
-        gnome.gnome-keyring
-      ];
+      #   home.packages = with pkgs; [
+      #     pcmanfm
+      #     xdg_utils
+      #     gnome.gnome-keyring
+      #   ];
+      #
+      #   systemd.user.sockets.gnome-keyring-daemon = {
+      #     Unit = {
+      #       Description = "GNOME Keyring daemon";
+      #       Documentation = "man:gnome-keyring-daemon(1)";
+      #     };
+      #
+      #     Socket = {
+      #       Priority = 6;
+      #       Backlog = 5;
+      #       ListenStream = "%t/keyring/control";
+      #       DirectoryMode = "0700";
+      #     };
+      #
+      #     Install.WantedBy = [ "sockets.target" ];
+      #   };
+      #
+      #   systemd.user.services.gnome-keyring-daemon = {
+      #     Unit = {
+      #       Description = "GNOME Keyring daemon";
+      #       Documentation = "man:gnome-keyring-daemon(1)";
+      #       PartOf = [ "secrets-service.target" ];
+      #       Requires = [ "gnome-keyring-daemon.socket" ];
+      #     };
+      #
+      #     Service = {
+      #       Type = "simple";
+      #       StandardError = "journal";
+      #       ExecStart = keyringCmd;
+      #       BusName = [
+      #         "org.freedesktop.impl.portal.Secret"
+      #         "org.freedesktop.secrets"
+      #         "org.gnome.keyring"
+      #       ];
+      #       Restart = "on-failure";
+      #     };
+      #
+      #     Install = {
+      #       Also = [ "gnome-keyring-daemon.socket" ];
+      #       RequiredBy = [ "secrets-service.target" ];
+      #     };
+      #   };
+      #
+      #   xdg.dataFile =
+      #     let
+      #       mapListToAttrs' = f: list: builtins.listToAttrs (builtins.map f list);
+      #
+      #       files = [
+      #         "org.freedesktop.impl.portal.Secret"
+      #         "org.freedesktop.secrets"
+      #         "org.gnome.keyring"
+      #       ];
+      #     in
+      #     mapListToAttrs'
+      #       (f: {
+      #         name = "dbus-1/services/${f}.service";
+      #         value = {
+      #           text = ''
+      #             [D-BUS Service]
+      #             Name=${f}
+      #             Exec=${keyringCmd}
+      #           '';
+      #         };
+      #       })
+      #       files;
 
-      # # TODO: Get this to actually work
-      # services.gnome-keyring = {
+      # TODO: Replace when home-manager/release-22.11
+      # services.pass-secret-service = {
       #   enable = true;
-      #   components = [ "secrets" ];
+      #
+      #   storePath = "${config.home.homeDirectory}/.local/share/password-store";
       # };
-
-      systemd.user.services.gnome-keyring = {
+      systemd.user.services.pass-secret-service = {
         Unit = {
-          Description = "GNOME Keyring";
-          Documentation = "man:gnome-keyring-daemon(1)";
+          AssertFileIsExecutable = "${pkgs.pass-secret-service}/bin/pass_secret_service";
+          Description = "Pass libsecret service";
+          Documentation = "https://github.com/mdellweg/pass_secret_service";
           PartOf = [ "secrets-service.target" ];
         };
 
         Service = {
           Type = "dbus";
+          ExecStart = "${pkgs.pass-secret-service}/bin/pass_secret_service --path \"${config.home.homeDirectory}/.local/share/password-store\"";
           BusName = "org.freedesktop.secrets";
-          ExecStart = "${pkgs.gnome.gnome-keyring}/bin/gnome-keyring-daemon --start --foreground --components=secrets";
         };
 
-        Install.RequiredBy = [ "secrets-service.target" ];
+        Install.WantedBy = [ "secrets-service.target" ];
       };
+
+      xdg.dataFile."dbus-1/services/org.freedesktop.secrets.service".source = "${pkgs.pass-secret-service}/share/dbus-1/services/org.freedesktop.secrets.service";
 
       systemd.user.targets.secrets-service.Unit = {
         Description = "Setup of a FreeDesktop secrets management service";
@@ -459,8 +527,8 @@ in
             Unit = {
               Description = "Remmina remote desktop client";
               Documentation = "man:remmina(1)";
-              Requires = [ "graphical-session-pre.target" "secret-service.target" ];
-              After = [ "graphial-session-pre.target" "secret-service.target" ];
+              Requires = [ "graphical-session-pre.target" "secrets-service.target" ];
+              After = [ "graphial-session-pre.target" "secrets-service.target" ];
             };
 
             Service = {

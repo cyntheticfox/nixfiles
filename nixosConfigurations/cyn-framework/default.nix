@@ -14,6 +14,8 @@
     ../../nixos/services/restic.nix
   ];
 
+  services.dbus.implementation = "broker";
+
   sops = {
     gnupg = {
       home = "/state/var/lib/sops";

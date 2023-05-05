@@ -93,9 +93,13 @@ in
     DCONF_PROFILE = "sway";
   };
 
+  # services.gnome.gnome-keyring.enable = true;
+  # security.pam.services.login.enableGnomeKeyring = true;
+  # security.pam.services.greetd.enableGnomeKeyring = true;
+  # programs.seahorse.enable = true;
+
   xdg.portal = {
     enable = true;
-    # extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
     wlr = {
       enable = true;
@@ -109,8 +113,6 @@ in
 
     xdgOpenUsePortal = true;
   };
-
-  # services.gnome.gnome-keyring.enable = true;
 
   gtk.iconCache.enable = true;
 
