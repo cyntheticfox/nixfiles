@@ -102,11 +102,11 @@
         "sops-nix": []
       },
       "locked": {
-        "lastModified": 1683250020,
-        "narHash": "sha256-yG3PNYYZzvM436SPngGTiHd1HjrhcdVpZWtjoJAUvSM=",
+        "lastModified": 1683336405,
+        "narHash": "sha256-Td6Wi4Y6xJlDbN2y2Eq/9xOG/5nVr+xuSW6tz67clHQ=",
         "owner": "lilyinstarlight",
         "repo": "foosteros",
-        "rev": "7746ae648bbbd9bf2c4d5fd5e0424a84017e08c9",
+        "rev": "13fa79a555141e08083b829cfdb99d5a58f12f41",
         "type": "github"
       },
       "original": {
@@ -280,11 +280,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1683194677,
-        "narHash": "sha256-Am7aCGNy/h6RMnvg7Pn4PHQXZZq9FyIUA9klYxBwyDI=",
+        "lastModified": 1683286087,
+        "narHash": "sha256-xseOd7W7xwF5GOF2RW8qhjmVGrKoBz+caBlreaNzoeI=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "0d8145a5d81ebf6698077b21042380a3a66a11c7",
+        "rev": "3e313808bd2e0a0669430787fb22e43b2f4bf8bf",
         "type": "github"
       },
       "original": {
