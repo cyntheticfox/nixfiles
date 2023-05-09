@@ -153,7 +153,6 @@
     restic
 
     bluez-tools
-    minikube
     nixos-icons
     piper
     wally-cli
