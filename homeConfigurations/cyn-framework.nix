@@ -1,5 +1,8 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
+    # pipewire
+    qpwgraph
+
     insomnia
     openshot-qt
     virt-manager
