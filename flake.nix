@@ -119,7 +119,7 @@
 
     # MISC
     flake-registry = {
-      url = "github:/NixOS/flake-registry";
+      url = "github:NixOS/flake-registry";
       flake = false;
     };
 
