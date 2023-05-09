@@ -124,7 +124,7 @@
     };
 
     nmt = {
-      url = "gitlab:rycee/nmt?rev=d83601002c99b78c89ea80e5e6ba21addcfe12ae&narHash=sha256-1xzwwxygzs1cmysg97hzd285r7n1g1lwx5y1ar68gwq07a1rczmv";
+      url = "gitlab:rycee/nmt";
       flake = false;
     };
   };

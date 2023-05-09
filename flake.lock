@@ -332,7 +332,6 @@
       "original": {
         "owner": "rycee",
         "repo": "nmt",
-        "rev": "d83601002c99b78c89ea80e5e6ba21addcfe12ae",
         "type": "gitlab"
       }
     },
