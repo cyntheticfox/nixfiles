@@ -758,7 +758,7 @@ in
                       };
 
                       mkCapture = audio: area:
-                        "${killRecorder} || ${lib.getExe cfg.screenRecording.wf-recorderPackage} ${audioBln audio} ${areas."${area}".arg} ${areas."${area}".command} -f ${recording-file}, ${recording-mode}";
+                        "${killRecorder} || ${lib.getExe cfg.screenRecording.wf-recorderPackage} ${audioBln audio} ${areas.${area}.arg} ${areas.${area}.command} -f ${recording-file}, ${recording-mode}";
                     in
                     builtins.mapAttrs (_: mkCapture true) keyMap
                     // lib.mapAttrs' (n: v: lib.nameValuePair "Shift+${n}" (mkCapture false v)) keyMap

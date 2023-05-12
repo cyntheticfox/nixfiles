@@ -12,7 +12,7 @@ let
     let
       dirAttr = builtins.readDir dir;
     in
-    builtins.filter (n: dirAttr."${n}" == "regular") (builtins.attrNames dirAttr);
+    builtins.filter (n: dirAttr.${n} == "regular") (builtins.attrNames dirAttr);
 in
 {
   options.sys.gnupg.enable = mkEnableOption "Enable GnuPG configuration management" // { default = true; };

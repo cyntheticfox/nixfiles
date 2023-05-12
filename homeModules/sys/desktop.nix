@@ -415,7 +415,7 @@ in
     (mkIf (cfg.defaultEditor != null) {
       home.sessionVariables =
         let
-          path = lib.getExe cfg."${cfg.defaultEditor}".package;
+          path = lib.getExe cfg.${cfg.defaultEditor}.package;
         in
         {
           EDITOR_GRAPHICAL = path;
@@ -499,7 +499,7 @@ in
     })
 
     (mkIf (cfg.defaultTerminal != null) {
-      home.sessionVariables.TERMINAL = lib.getExe cfg."${cfg.defaultTerminal}".package;
+      home.sessionVariables.TERMINAL = lib.getExe cfg.${cfg.defaultTerminal}.package;
     })
 
     (mkIf cfg.remmina.enable (

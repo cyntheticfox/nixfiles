@@ -158,7 +158,7 @@
     wally-cli
   ];
 
-  services.restic.backups."${config.networking.hostName}" = {
+  services.restic.backups.${config.networking.hostName} = {
     passwordFile = config.sops.secrets.restic-password.path;
     environmentFile = config.sops.secrets.restic-environment.path;
   };

@@ -1,5 +1,5 @@
 { mainDisk ? "/dev/sda", ... }: {
-  disk."${mainDisk}" = {
+  disk.${mainDisk} = {
     device = mainDisk;
     type = "disk";
 

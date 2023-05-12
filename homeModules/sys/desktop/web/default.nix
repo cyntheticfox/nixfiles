@@ -16,7 +16,7 @@ lib.recursiveUpdate
 
   config = lib.mkIf ((config.sys.desktop.chromium.enable || config.sys.desktop.web.firefox.enable) && cfg.defaultBrowser != null) (
     let
-      browserBin = lib.getExe config.programs."${cfg.defaultBrowser}".package;
+      browserBin = lib.getExe config.programs.${cfg.defaultBrowser}.package;
       setFileAssociation = list: lib.genAttrs list (_: "${cfg.defaultBrowser}.desktop");
     in
     {
@@ -36,7 +36,7 @@ lib.recursiveUpdate
         "x-scheme-handler/https"
       ];
 
-      systemd.user.services."${cfg.defaultBrowser}" = lib.mkIf cfg.autostartDefault {
+      systemd.user.services.${cfg.defaultBrowser} = lib.mkIf cfg.autostartDefault {
         Unit = {
           Description = "${cfg.defaultBrowser} instance managed by Systemd";
           Requires = [ "graphical-session-pre.target" ];

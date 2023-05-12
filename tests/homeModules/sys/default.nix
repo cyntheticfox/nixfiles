@@ -3,7 +3,7 @@ let
     let
       dirAttr = builtins.readDir dir;
     in
-    builtins.filter (n: dirAttr."${n}" == "regular") (builtins.attrNames dirAttr);
+    builtins.filter (n: dirAttr.${n} == "regular") (builtins.attrNames dirAttr);
 
   nixFilesInDir = dir:
     builtins.map (builtins.replaceStrings [ ".nix" ] [ "" ]) (builtins.filter (n: n != "default.nix") (listFilesInDir dir));

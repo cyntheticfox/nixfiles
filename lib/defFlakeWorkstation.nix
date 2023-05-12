@@ -116,7 +116,7 @@ nixpkgs.lib.nixosSystem {
               nix-index-database != null
             then
               ({ pkgs, ... }: {
-                home.file.".cache/nix-index/files".source = nix-index-database.legacyPackages."${pkgs.stdenv.hostPlatform.system}".database;
+                home.file.".cache/nix-index/files".source = nix-index-database.legacyPackages.${pkgs.stdenv.hostPlatform.system}.database;
               })
             else
               { }

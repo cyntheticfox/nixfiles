@@ -18,19 +18,22 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-{ config, lib, ... }: {
-  services.restic.backups."${config.networking.hostName}" = {
+{ config, ... }: {
+  services.restic.backups.${config.networking.hostName} = {
     initialize = true;
-    repository = "b2:${lib.replaceStrings ["."] ["-"] config.networking.fqdn}-backup";
+    repository = "b2:${builtins.replaceStrings ["."] ["-"] config.networking.fqdn}-backup";
+
     paths = [
       "/state"
     ];
+
     pruneOpts = [
       "--keep-daily 7"
       "--keep-weekly 5"
       "--keep-monthly 12"
       "--keep-yearly 2"
     ];
+
     timerConfig = {
       OnCalendar = "daily";
       Persistent = true;

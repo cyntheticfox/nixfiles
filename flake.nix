@@ -137,8 +137,8 @@
 
         homeConfigurations = {
           pbp = self.lib.hmConfig {
-            inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
-            inherit (self.outputs) homeModules;
+            inherit (inputs) home-manager nixpkgs nixpkgs-unstable;
+            inherit (self) homeModules;
 
             system = "aarch64-linux";
             username = "cynthia";
@@ -146,8 +146,8 @@
           };
 
           wsl = self.lib.hmConfig {
-            inherit (self.inputs) home-manager nixpkgs nixpkgs-unstable;
-            inherit (self.outputs) homeModules;
+            inherit (inputs) home-manager nixpkgs nixpkgs-unstable;
+            inherit (self) homeModules;
 
 
             username = "cynthia";
@@ -159,7 +159,7 @@
 
         nixosConfigurations = {
           min = self.lib.defFlakeServer {
-            inherit (self.inputs) flake-registry nixpkgs;
+            inherit (inputs) flake-registry nixpkgs;
 
             modules = [
               ./nixosConfigurations/min
@@ -187,8 +187,8 @@
           };
 
           cyn-framework = self.lib.defFlakeWorkstation {
-            inherit (self.inputs) flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
-            inherit (self.outputs) nixosModules;
+            inherit (inputs) flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
+            inherit (self) nixosModules;
 
             overlays = [
               (_: _: {
@@ -212,7 +212,7 @@
               ({ config, lib, ... }: {
                 home-manager.users."cynthia" = self.lib.personalNixosHMConfig {
                   inherit (config.networking) hostName;
-                  inherit (self.outputs) homeModules;
+                  inherit (self) homeModules;
                   inherit lib;
 
                   unstableLib = nixpkgs-unstable.lib;
@@ -233,8 +233,8 @@
           };
 
           ashley = self.lib.defFlakeServer {
-            inherit (self.inputs) flake-registry nixpkgs;
-            inherit (self.outputs) nixosModules;
+            inherit (inputs) flake-registry nixpkgs;
+            inherit (self) nixosModules;
 
             modules = [ ./nixosConfigurations/ashley ];
           };
@@ -266,15 +266,15 @@
         nixosModules = import ./nixosModules;
 
         checks.x86_64-linux = import ./tests {
-          inherit (self.inputs) home-manager nmt;
-          inherit (self.outputs) nixosConfigurations;
+          inherit (inputs) home-manager nmt;
+          inherit (self) nixosConfigurations;
 
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
         };
       }
 
       (flake-utils.lib.eachDefaultSystem (system: {
-        checks.pre-commit-check = pre-commit-hooks.lib."${system}".run {
+        checks.pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = gitignore.lib.gitignoreSource ./.;
 
           hooks = {
@@ -292,21 +292,23 @@
               overlays = [ sops-nix.overlays.default ];
             };
 
-            formatPackages = pkgs: with pkgs; [
+            inherit (pkgs) lib;
+
+            formatPackages = with pkgs; [
               pre-commit
               nixpkgs-fmt
               deadnix
               statix
             ];
 
-            editingPackages = pkgs: with pkgs; [
+            editingPackages = with pkgs; [
               git
               gnupg
               neovim
               pinentry
             ];
 
-            sopsPackages = pkgs: with pkgs; [
+            sopsPackages = with pkgs; [
               sops
               sops-init-gpg-key
               sops-import-keys-hook
@@ -335,21 +337,19 @@
           in
           {
             default = pkgs.mkShell {
-              inherit (self.checks."${system}".pre-commit-check) shellHook;
+              inherit (self.checks.${system}.pre-commit-check) shellHook;
               inherit sopsPGPKeyDirs;
 
-              packages = (formatPackages pkgs) ++ (sopsPackages pkgs);
+              packages = formatPackages ++ sopsPackages;
             };
 
             no-env = pkgs.mkShell {
               inherit sopsPGPKeyDirs;
 
-              packages = formatPackages pkgs
-                ++ sopsPackages pkgs
-                ++ editingPackages pkgs;
+              packages = formatPackages ++ sopsPackages ++ editingPackages;
 
-              shellHook = builtins.concatStringsSep "\n" [
-                self.checks."${system}".pre-commit-check.shellHook
+              shellHook = lib.concatLines [
+                self.checks.${system}.pre-commit-check.shellHook
                 posixShellAliases
               ];
             };
@@ -357,13 +357,11 @@
             no-env-desktop = pkgs.mkShell {
               inherit sopsPGPKeyDirs;
 
-              packages = formatPackages pkgs
-                ++ sopsPackages pkgs
-                ++ editingPackages pkgs
+              packages = formatPackages ++ sopsPackages ++ editingPackages
                 ++ [ pkgs.pinentry-qt ];
 
-              shellHook = builtins.concatStringsSep "\n" [
-                self.checks."${system}".pre-commit-check.shellHook
+              shellHook = lib.concatLines [
+                self.checks.${system}.pre-commit-check.shellHook
                 posixShellAliases
               ];
             };

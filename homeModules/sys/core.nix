@@ -202,7 +202,7 @@ in
     })
     (mkIf cfg.nix.enable
       {
-        home.packages = [ pkgs.comma ] ++ lib.optional (cfg.nix.diffProgram != "builtin") [ pkgs."${cfg.nix.diffProgram}" ];
+        home.packages = [ pkgs.comma ] ++ lib.optional (cfg.nix.diffProgram != "builtin") [ pkgs.${cfg.nix.diffProgram} ];
 
         home.shellAliases = {
           ### Nix Aliases
