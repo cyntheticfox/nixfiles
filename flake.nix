@@ -136,7 +136,7 @@
         lib = import ./lib;
 
         homeConfigurations = {
-          pbp = self.lib.hmConfig {
+          pbp = self.lib.mkHomeConfig {
             inherit (inputs) home-manager nixpkgs nixpkgs-unstable;
             inherit (self) homeModules;
 
@@ -145,7 +145,7 @@
             modules = [ ./homeConfigurations/pbp.nix ];
           };
 
-          wsl = self.lib.hmConfig {
+          wsl = self.lib.mkHomeConfig {
             inherit (inputs) home-manager nixpkgs nixpkgs-unstable;
             inherit (self) homeModules;
 
