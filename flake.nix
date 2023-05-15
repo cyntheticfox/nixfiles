@@ -210,7 +210,7 @@
               ./nixosConfigurations/cyn-framework
 
               ({ config, lib, ... }: {
-                home-manager.users."cynthia" = self.lib.personalNixosHMConfig {
+                home-manager.users."cynthia" = self.lib.mkNixosHomeConfig {
                   inherit (config.networking) hostName;
                   inherit (self) homeModules;
                   inherit lib;
