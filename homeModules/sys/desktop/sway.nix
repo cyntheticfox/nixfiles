@@ -646,6 +646,7 @@ in
                   { app_id = "^pavucontrol$"; }
                   { app_id = "^firefox$"; title = "^About Mozilla Firefox$"; }
                   { app_id = "^firefox$"; title = "^Firefox — Sharing Indicator$"; }
+                  { app_id = "^firefox$"; title = "^Extension: (NoScript) - NoScript Settings — Mozilla Firefox$"; }
                 ];
               };
 
