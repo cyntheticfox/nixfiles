@@ -44,9 +44,8 @@ lib.recursiveUpdate
 
         Service = {
           Type = "exec";
-          ExitType = "cgroup";
           ExecStart = browserBin;
-          Restart = "on-abort";
+          Restart = "on-failure";
         };
 
         Install.WantedBy = [ "graphical-session.target" ];
