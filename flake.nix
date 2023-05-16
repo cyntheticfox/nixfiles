@@ -149,7 +149,6 @@
             inherit (inputs) home-manager nixpkgs nixpkgs-unstable;
             inherit (self) homeModules;
 
-
             username = "cynthia";
             modules = [ ./homeConfigurations/wsl.nix ];
           };
