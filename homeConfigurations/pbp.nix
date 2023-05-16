@@ -5,10 +5,10 @@ _: {
     desktop = {
       enable = true;
 
-      defaultBroswer = "firefox";
-
-      discord.enable = true;
-      element.enable = true;
+      chat = {
+        discord.enable = true;
+        matrix.enable = true;
+      };
     };
 
     fonts.enable = true;

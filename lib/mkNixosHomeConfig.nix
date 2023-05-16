@@ -7,7 +7,6 @@
 , unstableLib
 }:
 
-# assert builtins.hasAttr "networking.hostName" config;
 assert builtins.isAttrs homeModules || builtins.isList homeModules;
 assert builtins.hasAttr "collect" lib;
 

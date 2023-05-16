@@ -1,26 +1,48 @@
 { nixpkgs
+, nixpkgs-unstable
 , home-manager
+, homeModules
+, unstableHomeModules
 , username
-, homeModules ? [ ]
+, hostname
 , system ? "x86_64-linux"
-, nixpkgs-unstable ? null
 , allowUnfree ? true
 , modules ? [ ]
 , specialArgs ? { }
 }:
+
+assert builtins.isAttrs homeModules || builtins.isList homeModules;
+
 let
-  unstable-overlay = _: super: {
-    nixpkgs-unstable =
-      if
-        nixpkgs-unstable != null
-      then
-        import nixpkgs-unstable
-          {
-            config.allowUnfree = true;
-          }
-      else
-        super;
+  inherit (nixpkgs) lib;
+
+  unstablePkgs = import nixpkgs-unstable {
+    inherit system;
+
+    config.allowUnfree = true;
   };
+
+  unstable-overlay = _: _: {
+    nixpkgs-unstable = unstablePkgs;
+  };
+
+  collectModules =
+    modules:
+    if
+      builtins.isAttrs modules
+    then
+      lib.collect builtins.isFunction modules
+    else
+      modules;
+
+  overrideModulePkgs =
+    module:
+    { pkgs, ... }@args:
+    module (args // {
+      inherit (nixpkgs-unstable) lib;
+
+      pkgs = unstablePkgs;
+    });
 in
 home-manager.lib.homeManagerConfiguration {
   extraSpecialArgs = specialArgs;
@@ -34,6 +56,7 @@ home-manager.lib.homeManagerConfiguration {
   };
 
   modules = [
+    "${../.}/homeConfigurations/${hostname}.nix"
     {
       home = {
         inherit username;
@@ -41,13 +64,12 @@ home-manager.lib.homeManagerConfiguration {
         stateVersion = "22.11";
         homeDirectory = "/home/${username}";
       };
-    }
-    { programs.home-manager.enable = true; }
-    {
+
+      programs.home-manager.enable = true;
+
       nixpkgs.config.allowUnfree = allowUnfree;
       nixpkgs.overlays = [ unstable-overlay ];
-    }
-    {
+
       nix.registry = {
         nixpkgs.to = {
           type = "github";
@@ -60,9 +82,10 @@ home-manager.lib.homeManagerConfiguration {
           type = "github";
           owner = "NixOS";
           repo = "nixpkgs";
-          ref = if nixpkgs-unstable != null then nixpkgs-unstable.sourceInfo.rev else nixpkgs.sourceInfo.rev;
+          ref = nixpkgs-unstable.sourceInfo.rev;
         };
       };
     }
-  ] ++ modules ++ (builtins.attrValues homeModules);
+  ] ++ collectModules homeModules
+  ++ builtins.map overrideModulePkgs (collectModules unstableHomeModules);
 }

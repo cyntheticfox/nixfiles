@@ -141,8 +141,12 @@
             inherit (self) homeModules;
 
             system = "aarch64-linux";
+            hostname = "pbp";
             username = "cynthia";
-            modules = [ ./homeConfigurations/pbp.nix ];
+
+            unstableHomeModules = [
+              nixvim.homeManagerModules.nixvim
+            ];
           };
 
           wsl = self.lib.mkHomeConfig {
@@ -150,7 +154,11 @@
             inherit (self) homeModules;
 
             username = "cynthia";
-            modules = [ ./homeConfigurations/wsl.nix ];
+            hostname = "wsl";
+
+            unstableHomeModules = [
+              nixvim.homeManagerModules.nixvim
+            ];
           };
         };
 
@@ -266,7 +274,7 @@
 
         checks.x86_64-linux = import ./tests {
           inherit (inputs) home-manager nmt;
-          inherit (self) nixosConfigurations;
+          inherit (self) nixosConfigurations homeConfigurations;
 
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
         };
