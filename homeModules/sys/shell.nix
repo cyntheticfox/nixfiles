@@ -33,7 +33,7 @@ in
 
     editor = lib.mkOption {
       type = with lib.types; nullOr str;
-      default = lib.getExe pkgs.neovim;
+      default = lib.getExe (config.sys.nixvim.finalPackage or pkgs.neovim);
 
       description = ''
         CLI editor to use for the user. This gets set to the EDITOR env
@@ -43,7 +43,7 @@ in
 
     viewer = lib.mkOption {
       type = with lib.types; nullOr str;
-      default = "${lib.getExe pkgs.neovim} -R";
+      default = "${lib.getExe (config.sys.nixvim.finalPackage or pkgs.neovim)} -R";
 
       description = ''
         CLI file viewer to use for the user. This gets set to the VISUAL env

@@ -112,7 +112,7 @@ in
 
     neovim-qt = mkOption {
       type = packageModule {
-        defaultEnable = config.sys.neovim.enable;
+        defaultEnable = config.sys.neovim.enable or false;
         package = "neovim-qt";
         name = "Neovim QT";
       };
@@ -122,7 +122,7 @@ in
 
     vscode = mkOption {
       type = packageModule {
-        defaultEnable = !config.sys.neovim.enable;
+        defaultEnable = !(config.sys.neovim.enable or false);
         package = "vscode";
         name = "Visual Studio Code";
       };

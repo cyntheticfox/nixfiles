@@ -1,10 +1,10 @@
 { config, lib, ... }:
 
 let
-  cfg = config.sys.neovim;
+  cfg = config.sys.nixvim;
 in
 {
-  options.sys.neovim = {
+  options.sys.nixvim = {
     enable = lib.mkEnableOption "Manage NeoVim editor configuration";
 
     colorlist = lib.mkOption {

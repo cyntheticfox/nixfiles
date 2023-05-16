@@ -13,7 +13,7 @@
   ./sys/gnupg.nix
   ./sys/keyboard.nix
   ./sys/music.nix
-  ./sys/neovim.nix
+  ./sys/nixvim.nix
   ./sys/podman.nix
   ./sys/sec.nix
   ./sys/shell.nix
