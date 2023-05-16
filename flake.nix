@@ -158,7 +158,7 @@
         homeModules = import ./homeModules;
 
         nixosConfigurations = {
-          min = self.lib.defFlakeServer {
+          min = self.lib.mkNixosServer {
             inherit (inputs) flake-registry nixpkgs;
 
             modules = [
@@ -186,7 +186,7 @@
             ];
           };
 
-          cyn-framework = self.lib.defFlakeWorkstation {
+          cyn-framework = self.lib.mkNixosWorkstation {
             inherit (inputs) flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
             inherit (self) nixosModules;
 
@@ -232,7 +232,7 @@
             ];
           };
 
-          ashley = self.lib.defFlakeServer {
+          ashley = self.lib.mkNixosServer {
             inherit (inputs) flake-registry nixpkgs;
             inherit (self) nixosModules;
 
