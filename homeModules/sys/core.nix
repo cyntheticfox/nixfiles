@@ -31,6 +31,7 @@ let
 
       # Document packages
       glow
+      ghostscript
       pandoc
       xsv
 
