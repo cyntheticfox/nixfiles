@@ -33,7 +33,7 @@ nixpkgs.lib.nixosSystem {
     home-manager.nixosModules.home-manager
     ../nixos/hardware-base.nix
 
-    (_: {
+    ({ config, ... }: {
       nix = {
         settings.flake-registry = "${flake-registry}/flake-registry.json";
 
@@ -53,9 +53,7 @@ nixpkgs.lib.nixosSystem {
           };
         };
       };
-    })
 
-    ({ config, ... }: {
       nixpkgs.overlays = [
         (_: super:
           let
@@ -78,9 +76,7 @@ nixpkgs.lib.nixosSystem {
             nixpkgs-unstable = unstablePkgs;
           })
       ] ++ overlays;
-    })
 
-    (_: {
       home-manager = {
         backupFileExtension = "bak";
         extraSpecialArgs = specialArgs;
@@ -126,9 +122,6 @@ nixpkgs.lib.nixosSystem {
         useGlobalPkgs = true;
         useUserPackages = true;
       };
-    })
-
-    (_: {
       system.stateVersion = "22.11";
     })
   ] ++ modules ++ builtins.attrValues nixosModules;
