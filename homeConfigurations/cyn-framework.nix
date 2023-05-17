@@ -114,7 +114,7 @@
     shell = {
       enable = true;
 
-      fcp = true;
+      fcp.enable = true;
     };
 
     ssh = {
