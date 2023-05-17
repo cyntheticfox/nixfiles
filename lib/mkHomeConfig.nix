@@ -56,7 +56,7 @@ home-manager.lib.homeManagerConfiguration {
   };
 
   modules = [
-    "${../.}/homeConfigurations/${hostname}.nix"
+    (../. + "/homeConfigurations/${hostname}.nix")
     {
       home = {
         inherit username;
