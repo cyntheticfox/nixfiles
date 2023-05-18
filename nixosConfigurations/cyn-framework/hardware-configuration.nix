@@ -27,15 +27,11 @@
       };
     };
 
-    kernel.sysctl."dev.i915.perf_stream_paranoid" = 0;
-
-    kernelPackages = pkgs.linuxPackages_latest;
-
-    extraModprobeConfig = ''
-      options v4l2loopback video_nr=63
-    '';
-    kernelModules = [ "v4l2loopback" ];
+    extraModprobeConfig = "options v4l2loopback video_nr=63";
     extraModulePackages = with config.boot.kernelPackages; [ acpi_call v4l2loopback ];
+    kernel.sysctl."dev.i915.perf_stream_paranoid" = 0;
+    kernelModules = [ "v4l2loopback" ];
+    kernelPackages = pkgs.linuxPackages_latest;
   };
 
   fileSystems =
@@ -65,10 +61,6 @@
         fsType = "vfat";
       };
     };
-
-  # Support Xbox One Controller
-  hardware.xone.enable = true;
-  hardware.xpadneo.enable = true;
 
   # Support mouse configuration
   services.ratbagd.enable = true;

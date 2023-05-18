@@ -53,7 +53,7 @@
           enable = true;
 
           systemd-service = true;
-          package = pkgs.foosteros.teams-for-linux;
+          package = pkgs.nixpkgs-unstable.teams-for-linux;
         };
       };
 
