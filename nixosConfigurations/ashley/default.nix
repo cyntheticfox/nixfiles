@@ -16,7 +16,6 @@
   };
 
   networking = {
-    hostName = "ashley";
     enableIPv6 = true;
     useDHCP = false;
     interfaces.enp2s0.useDHCP = true;

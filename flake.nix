@@ -168,11 +168,12 @@
           min = self.lib.mkNixosServer {
             inherit (inputs) flake-registry nixpkgs;
 
-            modules = [
-              ./nixosConfigurations/min
+            hostname = "nixos-minimal";
+            domain = "";
 
-              disko.nixosModules.disko
-            ];
+            path = ./nixosConfigurations/min;
+
+            modules = [ disko.nixosModules.disko ];
           };
 
           hcloud-init = nixpkgs.lib.nixosSystem {
@@ -197,6 +198,9 @@
             inherit (inputs) flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
             inherit (self) nixosModules;
 
+            hostname = "cyn-framework";
+            domain = "gh0st.network";
+
             overlays = [
               (_: _: {
                 foosteros = import foosteros {
@@ -214,15 +218,14 @@
               sops-nix.nixosModules.sops
               impermanence.nixosModules.impermanence
 
-              ./nixosConfigurations/cyn-framework
-
               ({ config, lib, ... }: {
                 home-manager.users."cynthia" = self.lib.mkNixosHomeConfig {
-                  inherit (config.networking) hostName;
                   inherit (self) homeModules;
                   inherit lib;
 
                   unstableLib = nixpkgs-unstable.lib;
+
+                  hostname = config.networking.hostName;
 
                   unstablePkgs = import nixpkgs-unstable {
                     system = "x86_64-linux";
@@ -243,7 +246,8 @@
             inherit (inputs) flake-registry nixpkgs;
             inherit (self) nixosModules;
 
-            modules = [ ./nixosConfigurations/ashley ];
+            hostname = "ashley";
+            domain = "gh0st.network";
           };
         };
 
@@ -287,7 +291,7 @@
           hooks = {
             deadnix.enable = true;
             nixpkgs-fmt.enable = true;
-            statix.enable = true;
+            # statix.enable = true;
           };
         };
 

@@ -5,6 +5,7 @@
 , unstableHomeModules
 , username
 , hostname
+, path ? ../homeConfigurations/${hostname}.nix
 , system ? "x86_64-linux"
 , allowUnfree ? true
 , modules ? [ ]
@@ -56,7 +57,7 @@ home-manager.lib.homeManagerConfiguration {
   };
 
   modules = [
-    (../. + "/homeConfigurations/${hostname}.nix")
+    path
     {
       home = {
         inherit username;

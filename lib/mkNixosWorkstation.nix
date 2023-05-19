@@ -1,6 +1,9 @@
 { nixpkgs
 , flake-registry
 , home-manager
+, hostname
+, domain
+, path ? ../nixosConfigurations/${hostname}
 , nixpkgs-unstable ? null
 , nix-index-database ? null
 , cpuVendor ? null
@@ -32,6 +35,7 @@ nixpkgs.lib.nixosSystem {
   modules = [
     home-manager.nixosModules.home-manager
     ../nixos/hardware-base.nix
+    path
 
     ({ config, ... }: {
       nix = {
@@ -82,7 +86,7 @@ nixpkgs.lib.nixosSystem {
         extraSpecialArgs = specialArgs;
 
         sharedModules = [
-          ({ pkgs, ... }: {
+          ({ pkgs, lib, ... }: {
             programs.nix-index.enable = true;
 
             systemd.user = {
@@ -106,23 +110,22 @@ nixpkgs.lib.nixosSystem {
                 };
               };
             };
+
+            home.file.".cache/nix-index/files".source = lib.mkIf (nix-index-database != null) nix-index-database.legacyPackages.${system}.database;
           })
-          (
-            if
-              nix-index-database != null
-            then
-              ({ pkgs, ... }: {
-                home.file.".cache/nix-index/files".source = nix-index-database.legacyPackages.${pkgs.stdenv.hostPlatform.system}.database;
-              })
-            else
-              { }
-          )
         ];
 
         useGlobalPkgs = true;
         useUserPackages = true;
       };
+
       system.stateVersion = "22.11";
+
+      networking = {
+        inherit domain;
+
+        hostName = hostname;
+      };
     })
   ] ++ modules ++ builtins.attrValues nixosModules;
 }

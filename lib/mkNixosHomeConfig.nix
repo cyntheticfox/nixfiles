@@ -1,10 +1,11 @@
 # A function to return the home-manager config suitable for use in NixOS
-{ hostName
+{ hostname
 , homeModules
 , lib
 , unstableHomeModules
 , unstablePkgs
 , unstableLib
+, path ? ../homeConfigurations/${hostname}.nix
 }:
 
 assert builtins.isAttrs homeModules || builtins.isList homeModules;
@@ -29,7 +30,7 @@ let
     });
 in
 _: {
-  imports = [ (../. + "/homeConfigurations/${hostName}.nix") ]
+  imports = [ path ]
     ++ collectModules homeModules
     ++ builtins.map overrideModulePkgs (collectModules unstableHomeModules);
 

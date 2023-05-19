@@ -1,5 +1,8 @@
 { nixpkgs
 , flake-registry
+, hostname
+, domain
+, path ? ../nixosConfigurations/${hostname}
 , nixpkgs-unstable ? null
 , cpuVendor ? null
 , system ? "x86_64-linux"
@@ -25,9 +28,10 @@ nixpkgs.lib.nixosSystem {
   };
 
   modules = [
+    path
     ../nixos/hardware-base.nix
 
-    (_: {
+    ({ config, ... }: {
       nix = {
         settings.flake-registry = "${flake-registry}/flake-registry.json";
 
@@ -47,9 +51,7 @@ nixpkgs.lib.nixosSystem {
           };
         };
       };
-    })
 
-    ({ config, ... }: {
       nixpkgs.overlays = [
         (_: super: {
           nixpkgs-unstable =
@@ -66,10 +68,14 @@ nixpkgs.lib.nixosSystem {
               super;
         })
       ] ++ overlays;
-    })
 
-    (_: {
       system.stateVersion = "22.11";
+
+      networking = {
+        inherit domain;
+
+        hostName = hostname;
+      };
     })
   ] ++ modules ++ builtins.attrValues nixosModules;
 }

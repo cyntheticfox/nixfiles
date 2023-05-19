@@ -92,9 +92,6 @@
   };
 
   networking = {
-    hostName = "cyn-framework";
-    domain = "gh0st.network";
-
     wireless.scanOnLowSignal = false;
     useNetworkd = true;
   };
