@@ -1,6 +1,4 @@
-{ config, lib, ... }:
-
-with lib;
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.sys.ssh;
@@ -30,93 +28,112 @@ let
   # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   # SOFTWARE.
   bindOptions = {
-    address = mkOption {
-      type = types.str;
+    address = lib.mkOption {
+      type = lib.types.str;
       default = "localhost";
       example = "example.org";
-      description = "The address where to bind the port.";
+
+      description = ''
+        The address where to bind the port.
+      '';
     };
 
-    port = mkOption {
-      type = types.nullOr types.port;
+    port = lib.mkOption {
+      type = with lib.types; nullOr port;
       default = null;
       example = 8080;
-      description = "Specifies port number to bind on bind address.";
+
+      description = ''
+        Specifies port number to bind on bind address.
+      '';
     };
   };
 
-  dynamicForwardModule = types.submodule {
+  dynamicForwardModule = lib.types.submodule {
     options = bindOptions;
   };
 
-  forwardModule = types.submodule {
+  forwardModule = lib.types.submodule {
     options = {
       bind = bindOptions;
 
       host = {
-        address = mkOption {
-          type = types.nullOr types.str;
+        address = lib.mkOption {
+          type = with lib.types; nullOr str;
           default = null;
           example = "example.org";
-          description = "The address where to forward the traffic to.";
+          description = ''
+            The address where to forward the traffic to.
+          '';
         };
 
-        port = mkOption {
-          type = types.nullOr types.port;
+        port = lib.mkOption {
+          type = with lib.types; nullOr port;
           default = null;
           example = 80;
-          description = "Specifies port number to forward the traffic to.";
+
+          description = ''
+            Specifies port number to forward the traffic to.
+          '';
         };
       };
     };
   };
 
-  matchBlockModule = types.submodule ({ dagName, ... }: {
+  matchBlockModule = lib.types.submodule ({ dagName, ... }: {
     options = {
-      host = mkOption {
-        type = types.str;
+      host = lib.mkOption {
+        type = lib.types.str;
         example = "*.example.org";
+
         description = ''
           The host pattern used by this conditional block.
         '';
       };
 
-      port = mkOption {
-        type = types.nullOr types.port;
+      port = lib.mkOption {
+        type = with lib.types; nullOr port;
         default = null;
-        description = "Specifies port number to connect on remote host.";
+
+        description = ''
+          Specifies port number to connect on remote host.
+        '';
       };
 
-      forwardAgent = mkOption {
+      forwardAgent = lib.mkOption {
         default = null;
-        type = types.nullOr types.bool;
+        type = with lib.types; nullOr bool;
+
         description = ''
           Whether the connection to the authentication agent (if any)
           will be forwarded to the remote machine.
         '';
       };
 
-      forwardX11 = mkOption {
-        type = types.bool;
+      forwardX11 = lib.mkOption {
+        type = lib.types.bool;
         default = false;
+
         description = ''
           Specifies whether X11 connections will be automatically redirected
           over the secure channel and <envar>DISPLAY</envar> set.
         '';
       };
 
-      forwardX11Trusted = mkOption {
-        type = types.bool;
+      forwardX11Trusted = lib.mkOption {
+        type = lib.types.bool;
         default = false;
+
         description = ''
           Specifies whether remote X11 clients will have full access to the
           original X11 display.
         '';
       };
 
-      identitiesOnly = mkOption {
-        type = types.bool;
+      identitiesOnly = lib.mkOption {
+        type = lib.types.bool;
         default = false;
+
         description = ''
           Specifies that ssh should only use the authentication
           identity explicitly configured in the
@@ -126,110 +143,128 @@ let
         '';
       };
 
-      identityFile = mkOption {
-        type = with types; either (listOf str) (nullOr str);
+      identityFile = lib.mkOption {
+        type = with lib.types; either (listOf str) (nullOr str);
         default = [ ];
+
         apply = p:
           if p == null then [ ]
-          else if isString p then [ p ]
+          else if builtins.isString p then [ p ]
           else p;
+
         description = ''
           Specifies files from which the user identity is read.
           Identities will be tried in the given order.
         '';
       };
 
-      user = mkOption {
-        type = types.nullOr types.str;
+      user = lib.mkOption {
+        type = with lib.types; nullOr str;
         default = null;
-        description = "Specifies the user to log in as.";
+
+        description = ''
+          Specifies the user to log in as.
+        '';
       };
 
-      hostname = mkOption {
-        type = types.nullOr types.str;
+      hostname = lib.mkOption {
+        type = with lib.types; nullOr str;
         default = null;
-        description = "Specifies the real host name to log into.";
+
+        description = ''
+          Specifies the real host name to log into.
+        '';
       };
 
-      serverAliveInterval = mkOption {
-        type = types.int;
+      serverAliveInterval = lib.mkOption {
+        type = lib.types.ints.unsigned;
         default = 0;
-        description =
-          "Set timeout in seconds after which response will be requested.";
+
+        description = ''
+          Set timeout in seconds after which response will be requested.
+        '';
       };
 
-      serverAliveCountMax = mkOption {
-        type = types.ints.positive;
+      serverAliveCountMax = lib.mkOption {
+        type = lib.types.ints.positive;
         default = 3;
+
         description = ''
           Sets the number of server alive messages which may be sent
           without SSH receiving any messages back from the server.
         '';
       };
 
-      sendEnv = mkOption {
-        type = types.listOf types.str;
+      sendEnv = lib.mkOption {
+        type = with lib.types; listOf str;
         default = [ ];
+
         description = ''
           Environment variables to send from the local host to the
           server.
         '';
       };
 
-      compression = mkOption {
-        type = types.nullOr types.bool;
+      compression = lib.mkOption {
+        type = with lib.types; nullOr bool;
         default = null;
+
         description = ''
           Specifies whether to use compression. Omitted from the host
           block when <literal>null</literal>.
         '';
       };
 
-      checkHostIP = mkOption {
-        type = types.bool;
+      checkHostIP = lib.mkOption {
+        type = lib.types.bool;
         default = true;
+
         description = ''
           Check the host IP address in the
           <filename>known_hosts</filename> file.
         '';
       };
 
-      proxyCommand = mkOption {
-        type = types.nullOr types.str;
+      proxyCommand = lib.mkOption {
+        type = with lib.types; nullOr str;
         default = null;
+
         description = "The command to use to connect to the server.";
       };
 
-      proxyJump = mkOption {
-        type = types.nullOr types.str;
+      proxyJump = lib.mkOption {
+        type = with lib.types; nullOr str;
         default = null;
+
         description = "The proxy host to use to connect to the server.";
       };
 
-      certificateFile = mkOption {
-        type = with types; either (listOf str) (nullOr str);
+      certificateFile = lib.mkOption {
+        type = with lib.types; either (listOf str) (nullOr str);
         default = [ ];
         apply = p:
           if p == null then [ ]
-          else if isString p then [ p ]
+          else if builtins.isString p then [ p ]
           else p;
         description = ''
           Specifies files from which the user certificate is read.
         '';
       };
 
-      addressFamily = mkOption {
+      addressFamily = lib.mkOption {
         default = null;
-        type = types.nullOr (types.enum [ "any" "inet" "inet6" ]);
+        type = with lib.types; nullOr (enum [ "any" "inet" "inet6" ]);
+
         description = ''
           Specifies which address family to use when connecting.
         '';
       };
 
-      localForwards = mkOption {
-        type = types.listOf forwardModule;
+      localForwards = lib.mkOption {
+        type = lib.types.listOf forwardModule;
         default = [ ];
-        example = literalExpression ''
+
+        example = lib.literalExpression ''
           [
             {
               bind.port = 8080;
@@ -238,6 +273,7 @@ let
             }
           ];
         '';
+
         description = ''
           Specify local port forwardings. See
           <citerefentry>
@@ -247,10 +283,11 @@ let
         '';
       };
 
-      remoteForwards = mkOption {
-        type = types.listOf forwardModule;
+      remoteForwards = lib.mkOption {
+        type = lib.types.listOf forwardModule;
         default = [ ];
-        example = literalExpression ''
+
+        example = lib.literalExpression ''
           [
             {
               bind.port = 8080;
@@ -259,6 +296,7 @@ let
             }
           ];
         '';
+
         description = ''
           Specify remote port forwardings. See
           <citerefentry>
@@ -268,12 +306,14 @@ let
         '';
       };
 
-      dynamicForwards = mkOption {
-        type = types.listOf dynamicForwardModule;
+      dynamicForwards = lib.mkOption {
+        type = lib.types.listOf dynamicForwardModule;
         default = [ ];
-        example = literalExpression ''
+
+        example = lib.literalExpression ''
           [ { port = 8080; } ];
         '';
+
         description = ''
           Specify dynamic port forwardings. See
           <citerefentry>
@@ -283,24 +323,29 @@ let
         '';
       };
 
-      extraOptions = mkOption {
-        type = types.attrsOf types.str;
+      extraOptions = lib.mkOption {
+        type = with lib.types; attrsOf str;
         default = { };
-        description = "Extra configuration options for the host.";
+
+        description = ''
+          Extra configuration options for the host.
+        '';
       };
     };
 
-    config.host = mkDefault dagName;
+    config.host = lib.mkDefault dagName;
   });
   # End of home-manager part
 in
 {
   options.sys.ssh = {
-    enable = mkEnableOption "Manage SSH configuration";
+    enable = lib.mkEnableOption "Manage SSH configuration";
+    package = lib.mkPackageOption pkgs "openssh" { };
 
-    extraMatchBlocks = mkOption {
-      type = hm.types.listOrDagOf matchBlockModule;
+    extraMatchBlocks = lib.mkOption {
+      type = lib.hm.types.listOrDagOf matchBlockModule;
       default = { };
+
       description = ''
         Additional per-host settings. If order of rules matter, then
         use DAG functions to express dependencies.
@@ -308,7 +353,10 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
+    home.packages = [ cfg.package ];
+    home.shellAliases."ssh" = "TERM=\"xterm-256color\" ssh";
+
     programs.ssh = {
       enable = true;
 
