@@ -105,9 +105,7 @@
 
     keyboard.enable = true;
     music.enable = true;
-
     nixvim.enable = true;
-
     podman.enable = true;
     sec.enable = true;
 
