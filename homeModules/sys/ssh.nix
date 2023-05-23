@@ -363,8 +363,6 @@ in
       compression = true;
       forwardAgent = false;
       hashKnownHosts = true;
-      extraOptionOverrides.IdentityFile = "~/.ssh/id_ed25519";
-
       includes = [ "config.d/*" ];
 
       matchBlocks = {
