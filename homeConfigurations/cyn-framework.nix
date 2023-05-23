@@ -18,9 +18,14 @@
     cloud = {
       enable = true;
 
-      manageAwsConfig = true;
-      manageAzureConfig = true;
-      manageGcpConfig = true;
+      aws = {
+        enable = true;
+
+        package = pkgs.nixpkgs-unstable.awscli2;
+      };
+
+      azure.enable = true;
+      gcp.enable = true;
     };
 
     core = {

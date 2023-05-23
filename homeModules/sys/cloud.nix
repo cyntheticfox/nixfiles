@@ -1,20 +1,38 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   cfg = config.sys.cloud;
 in
 {
   options.sys.cloud = {
-    enable = mkEnableOption "Provide cloud CLI packages and maybe config";
+    enable = lib.mkEnableOption "Provide cloud CLI packages and maybe config";
 
-    manageAwsConfig = mkEnableOption "Manage AWS configuration if so desired";
-    manageAzureConfig = mkEnableOption "Manage MS Azure configuration if so desired";
-    manageGcpConfig = mkEnableOption "Manage GCP configuration if so desired";
+    aws = {
+      enable = lib.mkEnableOption "Amazon Web Services";
+      package = lib.mkPackageOption pkgs "awscli2" { };
 
-    extraCloudPackages = mkOption {
-      type = with types; listOf package;
+      profiles = lib.mkOption {
+        type = with lib.types; attrsOf (attrsOf str);
+        default = { };
+        description = ''
+          AWS Profiles to declare in your <filename>~/.aws/config</filename>.
+        '';
+      };
+    };
+
+    azure = {
+      enable = lib.mkEnableOption "Microsoft Azure";
+      package = lib.mkPackageOption pkgs "azure-cli" { };
+    };
+
+    gcp = {
+      enable = lib.mkEnableOption "Google Cloud Platform";
+      package = lib.mkPackageOption pkgs "google-cloud-sdk" { };
+    };
+
+    extraCloudPackages = lib.mkOption {
+      type = with lib.types; listOf package;
+
       default = with pkgs; [
         backblaze-b2
         cloud-custodian
@@ -49,7 +67,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = with pkgs; [
         nodePackages.cdktf-cli
@@ -59,25 +77,29 @@ in
         terraform
       ] ++ cfg.extraCloudPackages;
     }
-    (mkIf cfg.manageAwsConfig {
-      home.packages = with pkgs; [
-        awscli2
-        # nodePackages.aws-cdk # TODO: fix when npmBuild is fixed
-        nodePackages.serverless
-      ];
 
-      # TODO: Make own module
-      home.file.".aws/config".text = ''
-        [default]
-        region = us-east-1
-        output = table
-        cli_pager = ${config.home.sessionVariables.PAGER or "less"}
-        retry_mode = standard
-      '';
-    })
-    (mkIf cfg.manageAzureConfig {
+    (lib.mkIf cfg.aws.enable (lib.mkMerge [
+      {
+        home.packages = with pkgs; [
+          cfg.aws.package
+          nodePackages.aws-cdk
+          nodePackages.serverless
+        ];
+      }
+
+      (lib.mkIf (cfg.aws.profiles != { }) {
+        home.file.".aws/config".text = builtins.concatStringsSep "\n" (lib.mapAttrsToList
+          (name: values: ''
+            [${name}]
+            ${builtins.concatStringsSep "\n" (lib.mapAttrsToList (n: v: "${n}=${v}") values)}
+          '')
+          cfg.aws.profiles);
+      })
+    ]))
+
+    (lib.mkIf cfg.azure.enable {
       home.packages = with pkgs; [
-        azure-cli
+        cfg.azure.package
         powershell
       ];
 
@@ -89,7 +111,7 @@ in
 
         [logging]
         enable_log_file=true
-        log_dir="${(config.xdg.dataHome + "/azure/logs")}
+        log_dir="${config.xdg.dataHome}/azure/logs"
 
         [defaults]
         location=eastus
@@ -98,8 +120,9 @@ in
         name=AzureCloud
       '';
     })
-    (mkIf cfg.manageGcpConfig {
-      home.packages = with pkgs; [ google-cloud-sdk ];
+
+    (lib.mkIf cfg.gcp.enable {
+      home.packages = [ cfg.gcp.package ];
     })
   ]);
 }
