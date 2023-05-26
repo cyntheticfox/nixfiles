@@ -102,11 +102,11 @@
         "sops-nix": []
       },
       "locked": {
-        "lastModified": 1684980373,
-        "narHash": "sha256-G5jDLU1UUYv+mdF6JaN2sG2HkC98o9tkpHL73jepBHI=",
+        "lastModified": 1685064496,
+        "narHash": "sha256-vEvKtB77LpPqeyW7zKFpwXXRcHn81YCQouuQOOrVwxQ=",
         "owner": "lilyinstarlight",
         "repo": "foosteros",
-        "rev": "055331a8d4ad2bb7b37e8fb9719f552775455966",
+        "rev": "456fc28c332d8b58d06dd8d947162c1547be7d1c",
         "type": "github"
       },
       "original": {
@@ -306,11 +306,11 @@
         "pre-commit-hooks": []
       },
       "locked": {
-        "lastModified": 1684995459,
-        "narHash": "sha256-cD9nGSEJIbH0PY9cyBfCuC++OGt0EEu87H4ZkuDEnz4=",
+        "lastModified": 1685036478,
+        "narHash": "sha256-KE5t2UI1K3hZujuAQTWyzDPJUAZbvJlCYRlj2UoHFvY=",
         "owner": "pta2002",
         "repo": "nixvim",
-        "rev": "b3cb98e4a84208d0ebe289e3eefd49a36f71025b",
+        "rev": "51afeda8e592a29b08b98e86b0e4e29d7eb7d5a5",
         "type": "github"
       },
       "original": {
