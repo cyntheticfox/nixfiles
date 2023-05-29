@@ -8,7 +8,6 @@
 , path ? ../homeConfigurations/${hostname}.nix
 , system ? "x86_64-linux"
 , allowUnfree ? true
-, modules ? [ ]
 , specialArgs ? { }
 }:
 

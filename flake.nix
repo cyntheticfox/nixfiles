@@ -291,6 +291,7 @@
           hooks = {
             deadnix.enable = true;
             nixpkgs-fmt.enable = true;
+            nil.enable = true;
             # statix.enable = true;
           };
         };

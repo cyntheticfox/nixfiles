@@ -176,8 +176,9 @@ in
           cmp-cmdline.enable = true;
           cmp-cmdline-history.enable = true;
           cmp-git.enable = true;
-          cmp-nvim-lsp-signature-help.enable = true;
           cmp-nvim-lsp.enable = true;
+          cmp-nvim-lsp-document-symbol.enable = true;
+          cmp-nvim-lsp-signature-help.enable = true;
           cmp-pandoc-nvim.enable = true;
           cmp-path.enable = true;
           cmp-treesitter.enable = true;
@@ -211,14 +212,20 @@ in
               hls.enable = true;
               html.enable = true;
               jsonls.enable = true;
-              # lua-ls.enable = true;
-              pylsp.enable = true;
+              lua-ls.enable = true;
+              nil_ls.enable = true;
+              # pylsp.enable = true;
               pyright.enable = true;
-              rnix-lsp.enable = true;
+              # rnix-lsp.enable = true;
+              ruff-lsp.enable = true;
               rust-analyzer.enable = true;
+              terraformls.enable = true;
               texlab.enable = true;
               tsserver.enable = true;
+              typst-lsp.enable = true;
               vuels.enable = true;
+              yamlls.enable = true;
+              zls.enable = true;
 
               # ccls = mkLspPlugin {
               #   name = "C Language Server";
@@ -234,22 +241,6 @@ in
               #   defaultArgs = [ "--stdio" ];
               # };
 
-              # vscode-eslint = mkLspPlugin {
-              #   name = "VSCode ESLint Language Server";
-              #   packageSet = pkgs.nodePackages;
-              #   package = "vscode-langservers-extracted";
-              #   moduleName = "eslint";
-              #   defaultArgs = [ "--stdio" ];
-              #   binPath = "/bin/vscode-eslint-language-server";
-              # };
-
-              # terraformls = mkLspPlugin {
-              #   name = "Terraform Language Server";
-              #   package = "terraform-ls";
-              #   moduleName = "terraformls";
-              #   defaultArgs = [ "serve" ];
-              # };
-
               # vimls = mkLspPlugin {
               #   name = "Vim Language Server";
               #   packageSet = pkgs.nodePackages;
@@ -257,15 +248,10 @@ in
               #   moduleName = "vimls";
               #   defaultArgs = [ "--stdio" ];
               # };
-
-              # yamlls = mkLspPlugin {
-              #   name = "YAML Language Server";
-              #   packageSet = pkgs.nodePackages;
-              #   package = "yaml-language-server";
-              #   moduleName = "yamlls";
-              # };
             };
           };
+
+          lsp-format.enable = true;
 
           lualine = {
             enable = true;
@@ -282,7 +268,8 @@ in
             };
           };
 
-          nix.enable = true;
+          neo-tree.enable = true;
+          # nix.enable = true;
 
           null-ls = {
             enable = true;
@@ -291,9 +278,11 @@ in
 
               diagnostics = {
                 cppcheck.enable = true;
+                deadnix.enable = true;
                 flake8.enable = true;
                 gitlint.enable = true;
                 shellcheck.enable = true;
+                statix.enable = true;
 
                 # ansible-lint
                 # cspell
@@ -301,7 +290,6 @@ in
                 # flawfinder
                 # nix-instantiate
                 # pylint
-                # statix
                 # nix-lint
               };
 
@@ -311,13 +299,14 @@ in
                 cbfmt.enable = true;
                 fnlfmt.enable = true;
                 fourmolu.enable = true;
+                nixpkgs_fmt.enable = true;
                 prettier.enable = true;
                 shfmt.enable = true;
                 stylua.enable = true;
                 taplo.enable = true;
+
                 # go fmt
                 # gofumpt
-                # nixpkgs-fmt
                 # rustfmt
                 # terraform fmt
               };
@@ -330,10 +319,37 @@ in
             checkTs = true;
           };
 
-          nvim-cmp.enable = true;
+          nvim-cmp = {
+            enable = true;
+
+            mapping = {
+              "<CR>" = "cmp.mapping.confirm({ select = true })";
+
+              "<Tab>" = {
+                modes = [ "i" "s" ];
+
+                action = ''
+                  function(fallback)
+                    if cmp.visible() then
+                      cmp.select_next_item()
+                    elseif luasnip.expandable() then
+                      luasnip.expand()
+                    elseif luasnip.expand_or_jumpable() then
+                      luasnip.expand_or_jump()
+                    elseif check_backspace() then
+                      fallback()
+                    else
+                      fallback()
+                    end
+                  end
+                '';
+              };
+            };
+          };
+
           nvim-colorizer.enable = true;
           surround.enable = true;
-          # telescope.enable = true; # TODO: Figure out how to fix
+          telescope.enable = true; # TODO: Figure out how to fix
           todo-comments.enable = true;
 
           treesitter = {

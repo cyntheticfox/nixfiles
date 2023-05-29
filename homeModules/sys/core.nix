@@ -124,9 +124,6 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = with pkgs; [
-      ];
-
       home.sessionPath = cfg.extraPaths;
 
       programs.man = {

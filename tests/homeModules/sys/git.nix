@@ -1,7 +1,4 @@
-{ lib, ... }:
-
-with lib;
-
+_:
 let
   testName = "John Smith";
   testEmail = "john@example.com";

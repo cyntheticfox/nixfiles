@@ -1,8 +1,4 @@
-{ lib, ... }:
-
-with lib;
-
-{
+_: {
   config = {
     sys.dev.enable = true;
 

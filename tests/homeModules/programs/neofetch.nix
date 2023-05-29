@@ -1,8 +1,4 @@
-{ lib, pkgs, ... }:
-
-with lib;
-
-{
+{ pkgs, ... }: {
   config = {
     programs.neofetch.enable = true;
 

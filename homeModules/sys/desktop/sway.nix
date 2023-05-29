@@ -1185,7 +1185,7 @@ in
         services.kanshi = {
           enable = true;
 
-          profiles = with screens; {
+          profiles = {
             undocked.outputs = [{
               inherit (screens.builtin) criteria scale;
               status = "enable";
