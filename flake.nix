@@ -292,7 +292,12 @@
             deadnix.enable = true;
             nixpkgs-fmt.enable = true;
             nil.enable = true;
-            # statix.enable = true;
+
+            yamllint = {
+              enable = true;
+
+              files = "(^secrets.(yml|yaml)$)";
+            };
           };
         };
 
