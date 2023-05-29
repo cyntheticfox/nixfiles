@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   cfg = config.sys.desktop.sway;
 
@@ -521,7 +519,7 @@ in
 
       finalWorkspaces = mkFinalWorkspaces cfg.workspaces;
     in
-    mkMerge [
+    lib.mkMerge [
       {
         # TODO: Make conditional on enabling an electron App
         home.sessionVariables."NIXOS_OZONE_WL" = 1;
