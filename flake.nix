@@ -289,6 +289,7 @@
           src = gitignore.lib.gitignoreSource ./.;
 
           hooks = {
+            actionlint.enable = true;
             deadnix.enable = true;
             nixpkgs-fmt.enable = true;
             nil.enable = true;
