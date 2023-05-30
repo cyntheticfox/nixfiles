@@ -3,9 +3,9 @@ _: {
     core = {
       enable = true;
 
-      manageFilePackages.enable = true;
-      manageNetworkPackages.enable = true;
-      manageProcessPackages.enable = true;
+      file.enable = true;
+      network.enable = true;
+      process.enable = true;
     };
 
     dev.enable = true;

@@ -1,74 +1,7 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   cfg = config.sys.core;
-
-  pkgModule = { packages, type, extraOptions ? { } }: types.submodule (_: {
-    options = {
-      enable = mkEnableOption "Manage ${type} packages";
-
-      packages = mkOption {
-        type = with types; listOf package;
-        default = packages;
-      };
-    } // extraOptions;
-  });
-
-  fileModule = pkgModule {
-    type = "file";
-
-    packages = with pkgs; [
-      fd
-      fq
-      man-pages
-      p7zip
-      ripgrep
-      sd
-      unzip
-      zip
-
-      # Document packages
-      glow
-      ghostscript
-      pandoc
-      xsv
-
-      # FUSE Packages
-      exfat
-      gocryptfs
-      fuseiso
-      jmtpfs
-      ntfs3g
-      smbnetfs
-    ];
-  };
-
-  netModule = pkgModule {
-    type = "network";
-
-    packages = with pkgs; [
-      bandwhich
-      curlie
-      dogdns
-      gping
-      mtr
-      traceroute
-      whois
-      xh
-    ];
-  };
-
-  procModule = pkgModule {
-    type = "process";
-    packages = with pkgs; [
-      nodePackages.fkill-cli
-      procs
-    ];
-
-    extraOptions.htopIntegration = mkEnableOption "Manage htop configuration" // { default = true; };
-  };
 
   nixDiffCommands = {
     builtin = "nix store diff-closures";
@@ -78,51 +11,113 @@ let
 in
 {
   options.sys.core = {
-    enable = mkEnableOption "Enable core configuration packages" // { default = true; };
+    enable = lib.mkEnableOption "Enable core configuration packages" // { default = true; };
 
-    extraPaths = mkOption {
-      type = with types; listOf string;
+    extraPaths = lib.mkOption {
+      type = with lib.types; listOf string;
       default = [ "${config.home.homeDirectory}/.cargo/bin" ];
-      description = "Additional packages to add to the user's session path.";
+
+      description = ''
+        Additional packages to add to the user's session path.
+      '';
     };
 
-    manageFilePackages = mkOption {
-      type = fileModule;
-      default = { };
-      description = "Options for managing installed file packages";
-    };
+    file = {
+      enable = lib.mkEnableOption "file packages";
 
-    manageNetworkPackages = mkOption {
-      type = netModule;
-      default = { };
-      description = "Options for managing installed network packages";
-    };
+      packages = lib.mkOption {
+        type = with lib.types; listOf package;
 
-    manageProcessPackages = mkOption {
-      type = procModule;
-      default = { };
-      description = "Options for managing installed process packages";
-    };
+        default = with pkgs; [
+          fd
+          fq
+          man-pages
+          p7zip
+          ripgrep
+          sd
+          unzip
+          zip
 
-    manageXDGConfig = mkEnableOption "Enable xdg dirs management" // { default = true; };
+          # Document packages
+          glow
+          ghostscript
+          pandoc
+          xsv
 
-    nix = {
-      enable = mkEnableOption "Enable Nix config management" // { default = true; };
+          # FUSE Packages
+          exfat
+          gocryptfs
+          fuseiso
+          jmtpfs
+          ntfs3g
+          smbnetfs
+        ];
 
-      diffProgram = mkOption {
-        type = types.enum (builtins.attrNames nixDiffCommands);
-        default =
-          let
-            mkDefaultBin = name: assert builtins.hasAttr name nixDiffCommands; name;
-          in
-          mkDefaultBin "builtin";
+        description = ''
+          Options for managing installed file packages.
+        '';
       };
     };
 
-    neofetch = mkEnableOption "Enable neofetch config" // { default = true; };
+    network = {
+      enable = lib.mkEnableOption "network packages";
+
+      packages = lib.mkOption {
+        type = with lib.types; listOf package;
+
+        default = with pkgs; [
+          bandwhich
+          curlie
+          dogdns
+          gping
+          mtr
+          traceroute
+          whois
+          xh
+        ];
+
+        description = ''
+          Packages for network management.
+        '';
+      };
+    };
+
+    process = {
+      enable = lib.mkEnableOption "process packages";
+
+      packages = lib.mkOption {
+        type = with lib.types; listOf package;
+
+        default = with pkgs; [
+          nodePackages.fkill-cli
+          procs
+        ];
+
+        description = ''
+          Packages for process management.
+        '';
+      };
+
+      htopIntegration = lib.mkEnableOption "Manage htop configuration" // { default = true; };
+    };
+
+    xdg.enable = lib.mkEnableOption "Enable xdg dirs management" // { default = true; };
+
+    nix = {
+      enable = lib.mkEnableOption "Enable Nix config management" // { default = true; };
+      package = lib.mkPackageOption pkgs "nixUnstable" { };
+
+      diffProgram = lib.mkOption {
+        type = lib.types.enum (builtins.attrNames nixDiffCommands);
+
+        default = assert builtins.hasAttr "builtin" nixDiffCommands; "builtin";
+      };
+    };
+
+    neofetch.enable = lib.mkEnableOption "Enable neofetch config" // { default = true; };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       home.sessionPath = cfg.extraPaths;
 
@@ -132,10 +127,13 @@ in
         generateCaches = true;
       };
     }
-    (mkIf cfg.manageFilePackages.enable {
-      home.packages = cfg.manageFilePackages.packages;
 
-      home.shellAliases."glow" = "glow -p";
+    (lib.mkIf cfg.file.enable {
+      home = {
+        inherit (cfg.file) packages;
+
+        shellAliases."glow" = "glow -p";
+      };
 
       programs.texlive = {
         enable = true;
@@ -143,17 +141,23 @@ in
         extraPackages = p: { inherit (p) collection-fontsrecommended; };
       };
     })
-    (mkIf cfg.manageNetworkPackages.enable {
-      home.packages = cfg.manageNetworkPackages.packages;
 
-      home.shellAliases."tracert" = "traceroute";
+    (lib.mkIf cfg.network.enable {
+      home = {
+        inherit (cfg.network) packages;
+
+        shellAliases."tracert" = "traceroute";
+      };
     })
-    (mkIf cfg.manageProcessPackages.enable {
-      home.packages = cfg.manageProcessPackages.packages;
 
-      home.shellAliases."top" = "htop";
+    (lib.mkIf cfg.process.enable {
+      home = {
+        inherit (cfg.process) packages;
 
-      programs.htop = mkIf cfg.manageProcessPackages.htopIntegration {
+        shellAliases."top" = "htop";
+      };
+
+      programs.htop = lib.mkIf cfg.process.htopIntegration {
         enable = true;
 
         settings = {
@@ -161,6 +165,7 @@ in
           detailed_cpu_time = 1;
           cpu_count_from_zero = 0;
           delay = 15;
+
           fields = with config.lib.htop.fields; [
             PID
             USER
@@ -175,6 +180,7 @@ in
             TIME
             COMM
           ];
+
           header_margin = 1;
           hide_threads = 0;
           hide_kernel_threads = 1;
@@ -198,11 +204,12 @@ in
         ]);
       };
     })
-    (mkIf cfg.nix.enable
-      {
-        home.packages = [ pkgs.comma ] ++ lib.optional (cfg.nix.diffProgram != "builtin") [ pkgs.${cfg.nix.diffProgram} ];
 
-        home.shellAliases = {
+    (lib.mkIf cfg.nix.enable {
+      home = {
+        packages = [ pkgs.comma ] ++ lib.optional (cfg.nix.diffProgram != "builtin") [ pkgs.${cfg.nix.diffProgram} ];
+
+        shellAliases = {
           ### Nix Aliases
           # TODO: Make this a separate like OMZ module?
           #
@@ -285,9 +292,13 @@ in
           "nosswfuc" = "nix flake update && nix flake check && home-manager switch --flake .#`hostname` -b '.bak'";
           # "nosswrb" = "home-manager switch --rollback"; # FIXME: Find a workaround?
         });
+      };
 
 
-        nix.registry = mkDefault {
+      nix = {
+        package = lib.mkDefault cfg.nix.package;
+
+        registry = {
           ### Other people's configs
           #
           foosteros.to = {
@@ -322,41 +333,42 @@ in
             repo = "pre-commit.nix";
           };
         };
+      };
 
-        nixpkgs.config.allowUnfree = mkDefault true;
+      nixpkgs.config.allowUnfree = true;
+    })
 
-        programs.nix-index.enable = mkDefault true;
-      })
-    (mkIf cfg.manageXDGConfig {
+    (lib.mkIf cfg.xdg.enable {
       xdg = {
-        enable = mkDefault true;
+        inherit (cfg.xdg) enable;
 
-        cacheHome = mkDefault "${config.home.homeDirectory}/.cache";
-        configHome = mkDefault "${config.home.homeDirectory}/.config";
-        dataHome = mkDefault "${config.home.homeDirectory}/.local/share";
-        stateHome = mkDefault "${config.home.homeDirectory}/.local/state";
+        cacheHome = lib.mkDefault "${config.home.homeDirectory}/.cache";
+        configHome = lib.mkDefault "${config.home.homeDirectory}/.config";
+        dataHome = lib.mkDefault "${config.home.homeDirectory}/.local/share";
+        stateHome = lib.mkDefault "${config.home.homeDirectory}/.local/state";
 
         userDirs = {
-          enable = mkDefault true;
+          enable = lib.mkDefault true;
 
-          createDirectories = mkDefault true;
+          createDirectories = lib.mkDefault true;
 
-          desktop = mkDefault "${config.home.homeDirectory}";
-          documents = mkDefault "${config.home.homeDirectory}/docs";
-          download = mkDefault "${config.home.homeDirectory}/tmp";
-          music = mkDefault "${config.home.homeDirectory}/music";
-          pictures = mkDefault "${config.home.homeDirectory}/pics";
-          publicShare = mkDefault "${config.home.homeDirectory}/public";
-          templates = mkDefault "${config.home.homeDirectory}/.templates";
-          videos = mkDefault "${config.home.homeDirectory}/videos";
+          desktop = lib.mkDefault "${config.home.homeDirectory}";
+          documents = lib.mkDefault "${config.home.homeDirectory}/docs";
+          download = lib.mkDefault "${config.home.homeDirectory}/tmp";
+          music = lib.mkDefault "${config.home.homeDirectory}/music";
+          pictures = lib.mkDefault "${config.home.homeDirectory}/pics";
+          publicShare = lib.mkDefault "${config.home.homeDirectory}/public";
+          templates = lib.mkDefault "${config.home.homeDirectory}/.templates";
+          videos = lib.mkDefault "${config.home.homeDirectory}/videos";
 
-          extraConfig = mkDefault {
+          extraConfig = lib.mkDefault {
             "XDG_SECRETS_DIR" = "${config.home.homeDirectory}/.secrets";
           };
         };
       };
     })
-    (mkIf cfg.neofetch {
+
+    (lib.mkIf cfg.neofetch.enable {
       home.packages = with pkgs; [ neofetch ];
 
       xdg.configFile."neofetch/config.conf".text = ''
