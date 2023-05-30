@@ -291,8 +291,11 @@
           hooks = {
             actionlint.enable = true;
             deadnix.enable = true;
+            editorconfig-checker.enable = true;
             nixpkgs-fmt.enable = true;
             nil.enable = true;
+            shellcheck.enable = true;
+            shfmt.enable = true;
 
             yamllint = {
               enable = true;

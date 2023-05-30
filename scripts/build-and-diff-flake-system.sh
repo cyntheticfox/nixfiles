@@ -8,11 +8,11 @@ SYSTEM_MANAGER=''
 PROFILE_PATH=''
 
 if command -v nixos-rebuild &>/dev/null; then
-  SYSTEM_MANAGER='nixos-rebuild'
-  PROFILE_PATH="$NIXROOT/var/nix/profiles/system"
+    SYSTEM_MANAGER='nixos-rebuild'
+    PROFILE_PATH="$NIXROOT/var/nix/profiles/system"
 else
-  SYSTEM_MANAGER='home-manager'
-  PROFILE_PATH="$HOME/.nix-profile"
+    SYSTEM_MANAGER='home-manager'
+    PROFILE_PATH="$HOME/.nix-profile"
 fi
 
 $SYSTEM_MANAGER build --flake "$GITROOT#$SYSTEM"
