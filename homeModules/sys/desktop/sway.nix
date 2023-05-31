@@ -256,6 +256,7 @@ in
           assigns = [
             { instance = "^discord$"; }
             { title = "^Discord$"; }
+            { title = "^Discord Updater$"; }
             { app_id = "WebCord"; }
           ];
         }
