@@ -2,7 +2,7 @@
   ./sys/cloud.nix
   ./sys/core.nix
   ./sys/dev.nix
-  ./sys/desktop.nix
+  ./sys/desktop
   ./sys/desktop/sway.nix
   ./sys/desktop/chat/discord.nix
   ./sys/desktop/chat/matrix.nix
