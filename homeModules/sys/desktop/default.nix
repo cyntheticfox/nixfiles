@@ -1,59 +1,50 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   cfg = config.sys.desktop;
 
-  packageModule = { package, name, extraOptions ? { }, defaultEnable ? false }: types.submodule (_: {
+  packageModule = { package, name, extraOptions ? { }, defaultEnable ? false }: lib.types.submodule (_: {
     options = {
-      enable = mkEnableOption "Enable ${name} configuration" // { default = defaultEnable; };
+      enable = lib.mkEnableOption "Enable ${name} configuration" // { default = defaultEnable; };
 
-      package = mkPackageOption pkgs package { };
-    } // extraOptions;
-  });
-
-  multipackageModule = { description, defaultPackages ? [ ], defaultEnable ? false, extraOptions ? { } }: types.submodule (_: {
-    options = {
-      enable = mkEnableOption description // { default = defaultEnable; };
-
-      packages = mkOption {
-        type = with types; listOf package;
-        default = defaultPackages;
-      };
+      package = lib.mkPackageOption pkgs package { };
     } // extraOptions;
   });
 in
 {
   options.sys.desktop = {
-    enable = mkEnableOption "Configure desktop environment, packages";
+    enable = lib.mkEnableOption "Configure desktop environment, packages";
 
-    defaultEditor = mkOption {
-      type = with types; nullOr (enum [ "vscode" "neovim-qt" ]);
-      default = "neovim-qt";
+    defaults = {
+      editor = lib.mkOption {
+        type = lib.types.enum [ "vscode" "neovim-qt" ];
+        default = "neovim-qt";
 
-      description = "Editor to set as default via environment variables.";
+        description = ''
+          Editor to set as default via environment variables.
+        '';
+      };
+
+      pdf = lib.mkOption {
+        type = with lib.types; nullOr (enum [ "mupdf" ]);
+        default = "mupdf";
+
+        description = ''
+          Editor to set as default via environment variables.
+        '';
+      };
+
+      terminal = lib.mkOption {
+        type = with lib.types; nullOr (enum [ "kitty" ]);
+        default = "kitty";
+
+        description = ''
+          Terminal to set as default via environment variables.
+        '';
+      };
     };
 
-    defaultPDFViewer = mkOption {
-      type = with types; nullOr (enum [ "mupdf" ]);
-      default = "mupdf";
-
-      description = ''
-        Editor to set as default via environment variables.
-      '';
-    };
-
-    defaultTerminal = mkOption {
-      type = with types; nullOr (enum [ "kitty" ]);
-      default = "kitty";
-
-      description = ''
-        Terminal to set as default via environment variables.
-      '';
-    };
-
-    ghidra = mkOption {
+    ghidra = lib.mkOption {
       type = packageModule {
         name = "Ghidra";
         package = "ghidra";
@@ -62,16 +53,7 @@ in
       default = { };
     };
 
-    edge = mkOption {
-      type = packageModule {
-        name = "Microsoft Edge";
-        package = "microsoft-edge";
-      };
-
-      default = { };
-    };
-
-    kitty = mkOption {
+    kitty = lib.mkOption {
       type = packageModule {
         defaultEnable = true;
         name = "Kitty";
@@ -81,16 +63,7 @@ in
       default = { };
     };
 
-    chromium = mkOption {
-      type = packageModule {
-        name = "Chromium";
-        package = "chromium";
-      };
-
-      default = { };
-    };
-
-    mupdf = mkOption {
+    mupdf = lib.mkOption {
       type = packageModule {
         defaultEnable = true;
         name = "MuPDF";
@@ -100,7 +73,7 @@ in
       default = { };
     };
 
-    libreoffice = mkOption {
+    libreoffice = lib.mkOption {
       type = packageModule {
         defaultEnable = true;
         package = "libreoffice";
@@ -110,7 +83,7 @@ in
       default = { };
     };
 
-    neovim-qt = mkOption {
+    neovim-qt = lib.mkOption {
       type = packageModule {
         defaultEnable = config.sys.neovim.enable or false;
         package = "neovim-qt";
@@ -120,7 +93,7 @@ in
       default = { };
     };
 
-    vscode = mkOption {
+    vscode = lib.mkOption {
       type = packageModule {
         defaultEnable = !(config.sys.neovim.enable or false);
         package = "vscode";
@@ -130,96 +103,83 @@ in
       default = { };
     };
 
-    games.steam = mkOption {
-      type = packageModule {
-        package = "steam";
-        name = "Steam";
+    games = {
+      steam = lib.mkOption {
+        type = packageModule {
+          package = "steam";
+          name = "Steam";
 
-        extraOptions.wine = mkOption {
-          type = multipackageModule {
-            description = ''
-              Additional packages to enable for Windows game support. Adds wine-wayland by default.
-            '';
+          extraOptions.wine = lib.mkOption {
+            type = with lib.types; listOf package;
 
-            defaultEnable = true;
-
-            defaultPackages = with pkgs; [
+            default = with pkgs; [
               winetricks
               wine-wayland
               protontricks
             ];
-          };
 
-          default = { };
-        };
-      };
-
-      default = { };
-
-      description = ''
-        Configure Valve's Steam launcher.
-      '';
-    };
-
-    games.itch = mkOption {
-      type = packageModule {
-        package = "itch";
-        name = "Itch.io Launcher";
-      };
-
-      default = { };
-
-      description = ''
-        Configure the Itch.io launcher
-      '';
-    };
-
-    games.lutris = mkOption {
-      type = packageModule {
-        package = "lutris";
-        name = "Lutris";
-      };
-
-      default = { };
-    };
-
-    games.retroarch = mkOption {
-      type = packageModule {
-        package = "retroarchFull";
-        name = "Retroarch Emulation Framework";
-      };
-
-      default = { };
-    };
-
-    games.minecraft = mkOption {
-      type = packageModule {
-        package = "minecraft";
-        name = "Minecraft";
-
-        extraOptions.extraLaunchers = mkOption {
-          type = multipackageModule {
             description = ''
-              Enable additional launchers for modded Minecraft or easier use.
+              Additional packages to enable for Windows game support. Adds wine-wayland by default.
             '';
-
-            defaultPackages = with pkgs; [ prismlauncher ];
           };
-
-          default = { };
         };
+
+        default = { };
+
+        description = ''
+          Configure Valve's Steam launcher.
+        '';
       };
 
-      default = { };
+      itch = lib.mkOption {
+        type = packageModule {
+          package = "itch";
+          name = "Itch.io Launcher";
+        };
+
+        default = { };
+
+        description = ''
+          Configure the Itch.io launcher
+        '';
+      };
+
+      lutris = lib.mkOption {
+        type = packageModule {
+          package = "lutris";
+          name = "Lutris";
+        };
+
+        default = { };
+      };
+
+      retroarch = {
+        enable = lib.mkEnableOption "Retroarch Emulation Framework";
+        package = lib.mkPackageOption pkgs "retroarchFull" { };
+      };
+
+      minecraft = {
+        enable = lib.mkEnableOption "Minecraft";
+        package = lib.mkPackageOption pkgs "minecraft" { };
+
+        extraLaunchers = lib.mkOption {
+          type = with lib.types; listOf package;
+          default = with pkgs; [ prismlauncher ];
+
+          description = ''
+            Enable additional launchers for modded Minecraft or easier use.
+          '';
+        };
+      };
     };
 
-    remmina = mkOption {
+    remmina = lib.mkOption {
       type = packageModule {
         package = "remmina";
         name = "Remmina";
 
         defaultEnable = true;
-        extraOptions.startService = mkEnableOption "Start the remmina service in the background" // { default = true; };
+        extraOptions.startService = lib.mkEnableOption "Start the remmina service in the background" // { default = true; };
       };
 
       default = { };
@@ -231,80 +191,9 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      #   home.packages = with pkgs; [
-      #     pcmanfm
-      #     xdg_utils
-      #     gnome.gnome-keyring
-      #   ];
-      #
-      #   systemd.user.sockets.gnome-keyring-daemon = {
-      #     Unit = {
-      #       Description = "GNOME Keyring daemon";
-      #       Documentation = "man:gnome-keyring-daemon(1)";
-      #     };
-      #
-      #     Socket = {
-      #       Priority = 6;
-      #       Backlog = 5;
-      #       ListenStream = "%t/keyring/control";
-      #       DirectoryMode = "0700";
-      #     };
-      #
-      #     Install.WantedBy = [ "sockets.target" ];
-      #   };
-      #
-      #   systemd.user.services.gnome-keyring-daemon = {
-      #     Unit = {
-      #       Description = "GNOME Keyring daemon";
-      #       Documentation = "man:gnome-keyring-daemon(1)";
-      #       PartOf = [ "secrets-service.target" ];
-      #       Requires = [ "gnome-keyring-daemon.socket" ];
-      #     };
-      #
-      #     Service = {
-      #       Type = "simple";
-      #       StandardError = "journal";
-      #       ExecStart = keyringCmd;
-      #       BusName = [
-      #         "org.freedesktop.impl.portal.Secret"
-      #         "org.freedesktop.secrets"
-      #         "org.gnome.keyring"
-      #       ];
-      #       Restart = "on-failure";
-      #     };
-      #
-      #     Install = {
-      #       Also = [ "gnome-keyring-daemon.socket" ];
-      #       RequiredBy = [ "secrets-service.target" ];
-      #     };
-      #   };
-      #
-      #   xdg.dataFile =
-      #     let
-      #       mapListToAttrs' = f: list: builtins.listToAttrs (builtins.map f list);
-      #
-      #       files = [
-      #         "org.freedesktop.impl.portal.Secret"
-      #         "org.freedesktop.secrets"
-      #         "org.gnome.keyring"
-      #       ];
-      #     in
-      #     mapListToAttrs'
-      #       (f: {
-      #         name = "dbus-1/services/${f}.service";
-      #         value = {
-      #           text = ''
-      #             [D-BUS Service]
-      #             Name=${f}
-      #             Exec=${keyringCmd}
-      #           '';
-      #         };
-      #       })
-      #       files;
-
-      # TODO: Replace when home-manager/release-22.11
+      # TODO: Replace when home-manager/release-23.05
       # services.pass-secret-service = {
       #   enable = true;
       #
@@ -354,91 +243,75 @@ in
       qt = {
         enable = true;
         platformTheme = "gnome";
+
         style = {
           name = "adwaita-dark";
           package = pkgs.adwaita-qt;
         };
       };
 
-      home.shellAliases."open" = "xdg-open";
+      home = {
+        shellAliases."open" = "xdg-open";
+        sessionVariables =
+          let
+            path = lib.getExe cfg.${cfg.defaults.editor}.package;
+          in
+          {
+            EDITOR_GRAPHICAL = path;
+            VISUAL_GRAPHICAL = path;
+          };
+
+        # Reload mime type associations on activation
+        activation.reload-mimetypes = lib.hm.dag.entryAfter [ "writeBoundary" "checkLinkTargets" ] ''
+          $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p $VERBOSE_ARG ${config.xdg.dataHome}/mime/packages
+          $DRY_RUN_CMD ${pkgs.shared-mime-info}/bin/update-mime-database $VERBOSE_ARG ${config.xdg.dataHome}/mime
+        '';
+      };
 
       xdg.mime.enable = true;
       xdg.mimeApps.enable = true;
-
-      # Reload mime type associations on activation
-      home.activation.reload-mimetypes = lib.hm.dag.entryAfter [ "writeBoundary" "checkLinkTargets" ] ''
-        $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p $VERBOSE_ARG ${config.xdg.dataHome}/mime/packages
-        $DRY_RUN_CMD ${pkgs.shared-mime-info}/bin/update-mime-database $VERBOSE_ARG ${config.xdg.dataHome}/mime
-      '';
     }
 
-    (mkIf cfg.chromium.enable {
-      programs.chromium = {
-        inherit (cfg.chromium) enable;
-
-        package = pkgs.ungoogled-chromium;
-      };
+    (lib.mkIf cfg.games.steam.enable {
+      home.packages = [ cfg.games.steam.package ] ++ cfg.games.steam.wine;
     })
 
-    (mkIf cfg.games.steam.enable (mkMerge [
-      { home.packages = [ cfg.games.steam.package ]; }
-
-      (mkIf cfg.games.steam.wine.enable {
-        home.packages = cfg.games.steam.wine.packages;
-      })
-    ]))
-
-    (mkIf cfg.games.itch.enable {
+    (lib.mkIf cfg.games.itch.enable {
       home.packages = [ cfg.games.itch.package ];
     })
 
-    (mkIf cfg.games.lutris.enable {
-      home.packages = [ cf.games.lutris.package ];
+    (lib.mkIf cfg.games.lutris.enable {
+      home.packages = [ cfg.games.lutris.package ];
     })
 
-    (mkIf cfg.games.minecraft.enable (mkMerge [
-      { home.packages = [ cfg.games.minecraft.package ]; }
+    (lib.mkIf cfg.games.retroarch.enable {
+      home.packages = [ cfg.games.retroarch.package ];
+    })
 
-      (mkIf cfg.games.minecraft.extraLaunchers.enable {
-        home.packages = cfg.games.minecraft.extraLaunchers.packages;
-      })
-    ]))
+    (lib.mkIf cfg.games.minecraft.enable {
+      home.packages = [ cfg.games.minecraft.package ] ++ cfg.games.minecraft.extraLaunchers;
+    })
 
-    (mkIf cfg.neovim-qt.enable {
+    (lib.mkIf cfg.neovim-qt.enable {
       home.packages = [ cfg.neovim-qt.package ];
     })
 
-    (mkIf cfg.vscode.enable {
+    (lib.mkIf cfg.vscode.enable {
       home.packages = [ cfg.vscode.package ];
     })
 
-    (mkIf (cfg.defaultEditor != null) {
-      home.sessionVariables =
-        let
-          path = lib.getExe cfg.${cfg.defaultEditor}.package;
-        in
-        {
-          EDITOR_GRAPHICAL = path;
-          VISUAL_GRAPHICAL = path;
-        };
-    })
-
-    (mkIf cfg.edge.enable {
-      home.packages = [ cfg.edge.package ];
-    })
-
-    (mkIf cfg.mupdf.enable {
+    (lib.mkIf cfg.mupdf.enable {
       home.packages = [ cfg.mupdf.package ];
     })
 
-    (mkIf cfg.libreoffice.enable {
+    (lib.mkIf cfg.libreoffice.enable {
       home.packages = [ cfg.libreoffice.package ];
     })
 
-    (mkIf (cfg.defaultPDFViewer != null) {
+    (lib.mkIf (cfg.defaults.pdf != null) {
       xdg.mimeApps.defaultApplications =
         let
-          app = "${cfg.defaultPDFViewer}.desktop";
+          app = "${cfg.defaults.pdf}.desktop";
         in
         {
           "application/pdf" = app;
@@ -450,11 +323,11 @@ in
         };
     })
 
-    (mkIf cfg.ghidra.enable {
+    (lib.mkIf cfg.ghidra.enable {
       home.packages = [ cfg.ghidra.package ];
     })
 
-    (mkIf cfg.kitty.enable {
+    (lib.mkIf cfg.kitty.enable {
       programs.kitty = {
         inherit (cfg.kitty) enable;
 
@@ -498,18 +371,18 @@ in
       };
     })
 
-    (mkIf (cfg.defaultTerminal != null) {
-      home.sessionVariables.TERMINAL = lib.getExe cfg.${cfg.defaultTerminal}.package;
+    (lib.mkIf (cfg.defaults.terminal != null) {
+      home.sessionVariables."TERMINAL" = lib.getExe cfg.${cfg.defaults.terminal}.package;
     })
 
-    (mkIf cfg.remmina.enable (
-      mkMerge [
-        {
-          home.packages = [ cfg.remmina.package ];
+    (lib.mkIf cfg.remmina.enable (lib.mkMerge [
+      {
+        home.packages = [ cfg.remmina.package ];
 
-          xdg.mimeApps.defaultApplications."application/x-rdp" = "org.remmina.Remmina.desktop";
+        xdg = {
+          mimeApps.defaultApplications."application/x-rdp" = "org.remmina.Remmina.desktop";
 
-          xdg.dataFile."mime/packages/application-x-rdp.xml".text = ''
+          dataFile."mime/packages/application-x-rdp.xml".text = ''
             <?xml version="1.0" encoding="UTF-8"?>
             <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
               <mime-type type="application/x-rdp">
@@ -520,27 +393,27 @@ in
               </mime-type>
             </mime-info>
           '';
-        }
+        };
+      }
 
-        (mkIf cfg.remmina.startService {
-          systemd.user.services.remmina = {
-            Unit = {
-              Description = "Remmina remote desktop client";
-              Documentation = "man:remmina(1)";
-              Requires = [ "graphical-session-pre.target" "secrets-service.target" ];
-              After = [ "graphial-session-pre.target" "secrets-service.target" ];
-            };
-
-            Service = {
-              Type = "simple";
-              ExecStart = "${lib.getExe cfg.remmina.package} --icon --enable-extra-hardening";
-              Restart = "on-abort";
-            };
-
-            Install.WantedBy = [ "graphical-session.target" ];
+      (lib.mkIf cfg.remmina.startService {
+        systemd.user.services.remmina = {
+          Unit = {
+            Description = "Remmina remote desktop client";
+            Documentation = "man:remmina(1)";
+            Requires = [ "graphical-session-pre.target" "secrets-service.target" ];
+            After = [ "graphial-session-pre.target" "secrets-service.target" ];
           };
-        })
-      ])
-    )
+
+          Service = {
+            Type = "simple";
+            ExecStart = "${lib.getExe cfg.remmina.package} --icon --enable-extra-hardening";
+            Restart = "on-abort";
+          };
+
+          Install.WantedBy = [ "graphical-session.target" ];
+        };
+      })
+    ]))
   ]);
 }

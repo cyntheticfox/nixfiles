@@ -62,14 +62,17 @@
         };
       };
 
-      chromium = {
-        enable = true;
+      web = {
+        chromium = {
+          enable = true;
 
-        package = pkgs.ungoogled-chromium;
+          package = pkgs.ungoogled-chromium;
+        };
+
+        edge.enable = true;
+        firefox.enable = true;
       };
 
-      edge.enable = true;
-      web.firefox.enable = true;
       ghidra.enable = true;
 
       games = {

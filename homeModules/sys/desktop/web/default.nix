@@ -1,12 +1,22 @@
-{ config, lib, pkgs, ... }@args:
+{ config, lib, ... }:
 let
   cfg = config.sys.desktop.web;
 in
-lib.recursiveUpdate
 {
+  imports = [
+    ./chromium.nix
+    ./edge.nix
+    ./firefox.nix
+  ];
+
   options.sys.desktop.web = {
     defaultBrowser = lib.mkOption {
-      type = with lib.types; nullOr (enum [ "chromium" "firefox" ]);
+      type = with lib.types; nullOr (enum [
+        "chromium"
+        "edge"
+        "firefox"
+      ]);
+
       default = "firefox";
       description = "Browser to set as the default via desktop files.";
     };
@@ -14,13 +24,13 @@ lib.recursiveUpdate
     autostartDefault = lib.mkEnableOption "Default browser on startup" // { default = true; };
   };
 
-  config = lib.mkIf ((config.sys.desktop.chromium.enable || config.sys.desktop.web.firefox.enable) && cfg.defaultBrowser != null) (
+  config = lib.mkIf (cfg.defaultBrowser != null) (
     let
       browserBin = lib.getExe config.programs.${cfg.defaultBrowser}.package;
       setFileAssociation = list: lib.genAttrs list (_: "${cfg.defaultBrowser}.desktop");
     in
     {
-      home.sessionVariables.BROWSER = browserBin;
+      home.sessionVariables."BROWSER" = browserBin;
 
       xdg.mimeApps.defaultApplications = setFileAssociation [
         "text/html"
@@ -53,4 +63,3 @@ lib.recursiveUpdate
     }
   );
 }
-  (import ./firefox.nix (args // { inherit pkgs; })) # FIXME: A Very dumb deadnix workaround
