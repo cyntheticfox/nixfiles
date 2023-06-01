@@ -332,14 +332,26 @@ in
                   function(fallback)
                     if cmp.visible() then
                       cmp.select_next_item()
-                    elseif luasnip.expandable() then
-                      luasnip.expand()
-                    elseif luasnip.expand_or_jumpable() then
-                      luasnip.expand_or_jump()
-                    elseif check_backspace() then
-                      fallback()
+                    elseif vim.fn["vsnip#available"](1) == 1 then
+                      feedkey("<Plug>(vsnip-expand-or-jump)", "")
+                    elseif has_words_before() then
+                      cmp.complete()
                     else
                       fallback()
+                    end
+                  end
+                '';
+              };
+
+              "<S-Tab>" = {
+                modes = [ "i" "s" ];
+
+                action = ''
+                  function()
+                    if cmp.visible() then
+                      cmp.select_next_item()
+                    elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+                      feedkey("<Plug>(vsnip-jump-prev)", "")
                     end
                   end
                 '';
@@ -359,6 +371,7 @@ in
           };
 
           treesitter-context.enable = true;
+
           treesitter-rainbow = {
             enable = true;
 
@@ -382,55 +395,6 @@ in
     #           autocmd WinEnter,FocusGained * silent! lua require('scrollbar').show()
     #           autocmd WinLeave,BufLeave,BufWinLeave,FocusLost * silent! lua require('scrollbar').clear()
     #         augroup end
-    #       '';
-    #     }
-    #     {
-    #       plugin = telescope-nvim;
-    #       type = "lua";
-    #       config = ''
-    #         require('telescope').setup({
-    #           defaults = {
-    #             vimgrep_arguments = {
-    #               'rg',
-    #               '--color=never',
-    #               '--no-heading',
-    #               '--with-filename',
-    #               '--line-number',
-    #               '--column',
-    #               '--smart-case'
-    #             },
-    #             prompt_prefix = "> ",
-    #             selection_caret = "> ",
-    #             entry_prefix = " ",
-    #             initial_mode = "insert",
-    #             selection_strategy = "reset",
-    #             sorting_strategy = "descending",
-    #             layout_strategy = "horizontal",
-    #             layout_config = {
-    #               horizontal = {
-    #                 mirror = false,
-    #               },
-    #               vertical = {
-    #                 mirror = false,
-    #               },
-    #             },
-    #             file_sorter = require'telescope.sorters'.get_fuzzy_file,
-    #             file_ignore_patterns = {},
-    #             eneric_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
-    #             winblend = 0,
-    #             border = {},
-    #             borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
-    #             color_devicons = true,
-    #             use_less = true,
-    #             set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
-    #             file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
-    #             grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
-    #             qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
-
-    #             -- Developer configurations: Not meant for general override
-    #             buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
-    #           }
-    #         })
     #       '';
     #     }
     #     vim-eunuch
