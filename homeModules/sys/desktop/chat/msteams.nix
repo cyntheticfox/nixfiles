@@ -32,6 +32,8 @@ in
         ExitType = "cgroup";
         ExecStart = lib.getExe cfg.package;
         Restart = "on-abort";
+        MountAPIVFS = true;
+        ProtectProc = "noaccess";
       } // lib.optionalAttrs (cfg.package.pname == "teams-for-linux" && (config.desktop.sway.enable or false)) {
         # Enable Electron on wayland
         Environment = "NIXOS_OZONE_WL=1";
