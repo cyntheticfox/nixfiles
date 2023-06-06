@@ -76,7 +76,7 @@ let
 
     homeDockCenter = mkScreenConfig {
       name = "ASUS High Refresh-Rate Monitor";
-      outputString = "Unknown VG28UQL1A 0x0000135C";
+      outputString = "ASUSTek COMPUTER INC VG28UQL1A 0x0000135C";
       scale = 1.75;
       xPixels = 3840;
       yPixels = 2160;
@@ -85,7 +85,7 @@ let
 
     homeDockLeft = mkScreenConfig {
       name = "ASUS Low Refresh-Rate Monitor";
-      outputString = "Unknown VA279 N2LMQS025509";
+      outputString = "ASUSTek COMPUTER INC VA279 N2LMQS025509";
       xPixels = 1920;
       yPixels = 1080;
       refreshRate = 60;
@@ -1327,13 +1327,14 @@ in
 
       (lib.mkIf cfg.mako.enable {
         home.packages = [ cfg.mako.notifysendPackage ];
+
         ### Mako Notification Daemon
         # Configure a notification daemon for Sway, providing
         #   `org.freedesktop.Notifications`.
         #
         # TODO: Add systemd service to home-manager module?
         #
-        programs.mako = {
+        services.mako = {
           inherit (cfg.mako) enable;
 
           defaultTimeout = 15 * 1000;

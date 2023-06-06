@@ -1,10 +1,16 @@
-{ config, ... }: {
+_: {
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
+
     allowSFTP = true;
-    passwordAuthentication = true;
-    forwardX11 = false;
+
+    settings = {
+      KbdInteractiveAuthentication = true;
+      PasswordAuthentication = true;
+      # ForwardX11 = false;
+    };
+
     hostKeys = [
       {
         bits = 4096;
@@ -17,15 +23,7 @@
         rounds = 100;
       }
     ];
+
     openFirewall = true;
-  } // (
-    if
-      config.system.stateVersion == "22.05"
-    then
-      {
-        kbdInteractiveAuthentication = true;
-      }
-    else
-      { }
-  );
+  };
 }

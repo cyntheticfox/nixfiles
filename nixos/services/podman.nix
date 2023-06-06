@@ -22,5 +22,5 @@
     };
   };
 
-  systemd.tmpfiles.packages = with pkgs; [ podman-unwrapped ];
+  systemd.tmpfiles.packages = with pkgs; [ podman ];
 }

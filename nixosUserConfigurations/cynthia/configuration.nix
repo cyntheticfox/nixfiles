@@ -48,6 +48,8 @@ let
   ];
 in
 {
+  programs.zsh.enable = true;
+
   sops.secrets = {
     cynthia-password = {
       sopsFile = ./secrets.yml;
@@ -69,7 +71,7 @@ in
     home = "/home/cynthia";
     extraGroups = [ "wheel" ] ++ optGroups;
     uid = 1000;
-    shell = pkgs.zsh;
+    shell = config.home-manager.users.cynthia.zsh.package or pkgs.zsh;
     passwordFile = config.sops.secrets.cynthia-password.path;
   };
 }

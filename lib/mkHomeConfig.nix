@@ -61,7 +61,7 @@ home-manager.lib.homeManagerConfiguration {
       home = {
         inherit username;
 
-        stateVersion = "22.11";
+        stateVersion = "23.05";
         homeDirectory = "/home/${username}";
       };
 

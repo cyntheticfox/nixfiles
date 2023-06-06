@@ -12,15 +12,15 @@
 
   inputs = {
     # Package Sets
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     nix-on-droid = {
       url = "github:t184256/nix-on-droid/release-22.11";
 
       inputs = {
-        home-manager.follows = "home-manager";
-        nixpkgs.follows = "nixpkgs";
+        # home-manager.follows = "home-manager";
+        # nixpkgs.follows = "nixpkgs";
 
         nix-formatter-pack.follows = "";
         nmd.follows = "";
@@ -78,12 +78,9 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-22.11";
+      url = "github:nix-community/home-manager/release-23.05";
 
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        utils.follows = "flake-utils";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixvim = {

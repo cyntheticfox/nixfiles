@@ -37,6 +37,7 @@ in
     enable = true;
 
     wrapperFeatures.gtk = true;
+
     extraPackages = with pkgs; [
       # Theming
       gnome-themes-extra
@@ -65,21 +66,14 @@ in
   ### Force GTK settings via dconf
   #
   programs.dconf.profiles.sway = sway-dconf-profile;
+  programs.xwayland.enable = true;
+  programs.light.enable = true;
 
   services.xserver.libinput = {
     enable = true;
 
     mouse.accelProfile = "flat";
   };
-
-  ### Add X11 Compatibility
-  #
-  programs.xwayland.enable = true;
-
-  ### Enable backlight control
-  # Users must be added to the "video" group
-  #
-  programs.light.enable = true;
 
   ### Define compatibility variables
   # Some Programs don't use wayland by default and have to be told, so tell
@@ -116,8 +110,9 @@ in
 
   gtk.iconCache.enable = true;
 
-  qt5 = {
+  qt = {
     enable = true;
+
     style = "adwaita-dark";
     platformTheme = "gnome";
   };
@@ -127,6 +122,7 @@ in
   #
   services.greetd = {
     enable = true;
+
     settings = {
       terminal.vt = 7;
 
