@@ -172,17 +172,6 @@ in
             };
           };
 
-          cmp-buffer.enable = true;
-          cmp-cmdline.enable = true;
-          cmp-cmdline-history.enable = true;
-          cmp-git.enable = true;
-          cmp-nvim-lsp.enable = true;
-          cmp-nvim-lsp-document-symbol.enable = true;
-          cmp-nvim-lsp-signature-help.enable = true;
-          cmp-pandoc-nvim.enable = true;
-          cmp-path.enable = true;
-          cmp-treesitter.enable = true;
-          cmp-vsnip.enable = true;
           comment-nvim.enable = true;
           dashboard.enable = true;
           emmet.enable = true;
@@ -323,6 +312,9 @@ in
             enable = true;
 
             mapping = {
+              "<C-b>" = "cmp.mapping.scroll_docs(-4)";
+              "<C-f>" = "cmp.mapping.scroll_docs(4)";
+              "<C-e>" = "cmp.mapping.abort()";
               "<CR>" = "cmp.mapping.confirm({ select = true })";
 
               "<Tab>" = {
@@ -330,14 +322,25 @@ in
 
                 action = ''
                   function(fallback)
+                    unpack = unpack or table.unpack
+                    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+
                     if cmp.visible() then
                       cmp.select_next_item()
-                    elseif vim.fn["vsnip#available"](1) == 1 then
-                      feedkey("<Plug>(vsnip-expand-or-jump)", "")
-                    elseif has_words_before() then
-                      cmp.complete()
                     else
-                      fallback()
+                      local _, err = pcall(function()
+                        if vim.fn["vsnip#available"](1) == 1 then
+                          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(vsnip-expand-or-jump)", true, true, true), "", true)
+                        else
+                          error({code=121})
+                        end
+                      end)
+
+                      if err.code == 121 and col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil then
+                        cmp.complete()
+                      else
+                        fallback()
+                      end
                     end
                   end
                 '';
@@ -350,13 +353,34 @@ in
                   function()
                     if cmp.visible() then
                       cmp.select_next_item()
-                    elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-                      feedkey("<Plug>(vsnip-jump-prev)", "")
+                    elseif vim.call('vsnip#jumpable', -1) == 1 then
+                      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-prev)", true, true, true), "", true)
                     end
                   end
                 '';
               };
             };
+
+            mappingPresets = [ "cmdline" ];
+            snippet.expand = "vsnip";
+
+            sources = [
+              { name = "nvim_lsp"; }
+              { name = "nvim_lsp_document_symbol"; }
+              { name = "nvim_lsp_signature_help"; }
+              { name = "vsnip"; }
+              { name = "treesitter"; }
+              { name = "buffer"; }
+              { name = "pandoc_references"; }
+              { name = "git"; }
+              { name = "path"; }
+              { name = "cmdline"; }
+              { name = "cmp-cmdline-history"; }
+              { name = "spell"; }
+              { name = "calc"; }
+            ];
+
+            view.entries = "native";
           };
 
           nvim-colorizer.enable = true;
