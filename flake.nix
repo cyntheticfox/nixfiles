@@ -216,6 +216,8 @@
               impermanence.nixosModules.impermanence
 
               ({ config, lib, ... }: {
+                nixpkgs.config.permittedInsecurePackages = [ "openssl-1.1.1u" ];
+
                 home-manager.users."cynthia" = self.lib.mkNixosHomeConfig {
                   inherit (self) homeModules;
                   inherit lib;
