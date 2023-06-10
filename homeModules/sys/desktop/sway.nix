@@ -208,15 +208,15 @@ in
       default = [
         {
           index = 1;
-          icon = "";
+          icon = "󰖟 ";
           title = "Web";
           output = defaultScreenLeft;
           assigns = [{ app_id = "^firefox$"; }];
         }
         {
           index = 2;
-          icon = "";
-          title = "Microsoft Stuff";
+          icon = "󰍲 ";
+          title = "Microsoft Teams";
           output = defaultScreenRight;
 
           assigns = [
@@ -234,7 +234,7 @@ in
         }
         {
           index = 3;
-          icon = "";
+          icon = "󰭹 ";
           title = "Matrix";
           output = defaultScreenRight;
 
@@ -249,7 +249,7 @@ in
         }
         {
           index = 4;
-          icon = "";
+          icon = "󰙯 ";
           title = "Discord";
           output = defaultScreenRight;
 
@@ -262,7 +262,7 @@ in
         }
         {
           index = 5;
-          icon = "";
+          icon = "󰇮 ";
           title = "Email";
           output = defaultScreenLeft;
         }
@@ -927,15 +927,15 @@ in
               critical = 15;
             };
 
-            format-charging = " {icon} {capacity}%"; # Icon: bolt
+            format-charging = " {icon}  {capacity}%"; # Icon: bolt
             format = "{icon}  {capacity}%";
 
             format-icons = [
-              "" # Icon: battery-empty
-              "" # Icon: battery-quarter
-              "" # Icon: battery-half
-              "" # Icon: battery-three-quarters
-              "" # Icon: battery-full
+              " " # Icon: battery-empty
+              " " # Icon: battery-quarter
+              " " # Icon: battery-half
+              " " # Icon: battery-three-quarters
+              " " # Icon: battery-full
             ];
 
             tooltip = false;
@@ -950,7 +950,7 @@ in
 
           cpu = {
             interval = 5;
-            format = "  {usage}%"; # Icon: microchip
+            format = "   {usage}%"; # Icon: microchip
 
             states = {
               warning = 70;
@@ -960,7 +960,7 @@ in
 
           memory = {
             interval = 5;
-            format = "  {}%"; # Icon: memory
+            format = "   {}%"; # Icon: memory
 
             states = {
               warning = 70;
@@ -970,9 +970,9 @@ in
 
           network = {
             interval = 5;
-            format-wifi = "  {essid} ({signalStrength}%)"; # Icon: wifi
-            format-ethernet = "  {ifname}: {ipaddr}/{cidr}"; # Icon: ethernet
-            format-disconnected = "⚠  Disconnected";
+            format-wifi = "󰖩   {essid} ({signalStrength}%)"; # Icon: wifi
+            format-ethernet = "󰈀   {ifname}: {ipaddr}/{cidr}"; # Icon: ethernet
+            format-disconnected = "󰌙   Disconnected";
             tooltip-format = "{ifname}: {ipaddr}";
           };
 
@@ -994,7 +994,7 @@ in
 
           backlight = {
             format = "{icon} {percent}%";
-            format-icons = [ "" "◐" "" ];
+            format-icons = [ "󱃓 " "󰪞 " "󰪟 " "󰪠 " "󰪡 " "󰪢 " "󰪣 " "󰪤 " "󰪥 " ];
             on-scroll-down = lib.escapeShellArgs [ (lib.getExe cfg.backlight.package) cfg.backlight.decreaseCmd ];
             on-scroll-up = lib.escapeShellArgs [ (lib.getExe cfg.backlight.package) cfg.backlight.increaseCmd ];
           };
@@ -1002,16 +1002,16 @@ in
           pulseaudio = {
             format = "{icon}  {volume}%";
             format-bluetooth = "{icon}  {volume}%";
-            format-muted = "";
+            format-muted = "󰝟 ";
 
             format-icons = {
-              headphones = "";
-              handsfree = "";
-              headset = "";
-              phone = "";
-              portable = "";
-              car = "";
-              default = [ "" "" ];
+              headphones = " ";
+              handsfree = " ";
+              headset = " ";
+              phone = " ";
+              portable = " ";
+              car = " ";
+              default = [ "󰕿 " "󰖀 " "󰕾 " ];
             };
 
             on-scroll-down = "${lib.getExe cfg.mixerPackage} -d 2";
