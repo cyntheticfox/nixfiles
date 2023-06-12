@@ -71,8 +71,7 @@ in
           dogdns
           gping
           mtr
-          traceroute
-          whois
+          inetutils
           xh
         ];
 

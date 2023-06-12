@@ -4,7 +4,12 @@
     qpwgraph
 
     insomnia
+    pciutils
+    usbutils
+    nvme-cli
+    minicom
     openshot-qt
+    screen
     virt-manager
     virt-viewer
     wl-color-picker
