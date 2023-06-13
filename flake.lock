@@ -79,7 +79,6 @@
     },
     "foosteros": {
       "inputs": {
-        "crane": [],
         "disko": [],
         "flake-compat": [],
         "flake-parts": [],
@@ -98,15 +97,14 @@
           "nixpkgs"
         ],
         "pre-commit-hooks-nix": [],
-        "rust-overlay": [],
         "sops-nix": []
       },
       "locked": {
-        "lastModified": 1686533364,
-        "narHash": "sha256-znswxekHLrS9SvEjZq0MPUP6NUsHKHBeuds77kAutB4=",
+        "lastModified": 1686619720,
+        "narHash": "sha256-7jzkv5SEh3psHVQ3b5xYcLU1LHgFHv3kh1T0qnPv1cI=",
         "owner": "lilyinstarlight",
         "repo": "foosteros",
-        "rev": "b3271c3e256781ecf2234b0d48b114132ddc5752",
+        "rev": "e7ff1876468703def7a553d6babfa1b299673d2f",
         "type": "github"
       },
       "original": {
