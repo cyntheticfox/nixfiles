@@ -35,7 +35,6 @@
         nixpkgs.follows = "nixpkgs-unstable";
 
         # Unused dependencies
-        crane.follows = "";
         disko.follows = "";
         flake-compat.follows = "";
         flake-parts.follows = "";
@@ -48,7 +47,6 @@
         nix-index-database.follows = "";
         nixos-hardware.follows = "";
         pre-commit-hooks-nix.follows = "";
-        rust-overlay.follows = "";
         sops-nix.follows = "";
       };
     };
