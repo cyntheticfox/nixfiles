@@ -2,14 +2,12 @@
   home.packages = with pkgs; [
     # pipewire
     qpwgraph
+    pulseaudioFull
 
+    git-remote-codecommit
     insomnia
-    pciutils
-    usbutils
-    nvme-cli
-    minicom
+    moar
     openshot-qt
-    screen
     virt-manager
     virt-viewer
     wl-color-picker
@@ -31,14 +29,6 @@
 
       azure.enable = true;
       gcp.enable = true;
-    };
-
-    core = {
-      enable = true;
-
-      file.enable = true;
-      network.enable = true;
-      process.enable = true;
     };
 
     desktop = {

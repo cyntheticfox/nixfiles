@@ -23,12 +23,14 @@ in
     };
 
     file = {
-      enable = lib.mkEnableOption "file packages";
+      enable = lib.mkEnableOption "file packages" // { default = true; };
 
       packages = lib.mkOption {
         type = with lib.types; listOf package;
 
         default = with pkgs; [
+          coreutils-full
+          file
           fd
           fq
           man-pages
@@ -37,6 +39,7 @@ in
           sd
           unzip
           zip
+          xdg-utils
 
           # Document packages
           glow
@@ -60,19 +63,41 @@ in
     };
 
     network = {
-      enable = lib.mkEnableOption "network packages";
+      enable = lib.mkEnableOption "network packages" // { default = true; };
 
       packages = lib.mkOption {
         type = with lib.types; listOf package;
 
         default = with pkgs; [
           bandwhich
+          cifs-utils
           curlie
           dogdns
           gping
-          mtr
           inetutils
+          mtr
+          nfs-utils
           xh
+        ];
+
+        description = ''
+          Packages for network management.
+        '';
+      };
+    };
+
+    hardware = {
+      enable = lib.mkEnableOption "hardware packages" // { default = true; };
+
+      packages = lib.mkOption {
+        type = with lib.types; listOf package;
+
+        default = with pkgs; [
+          minicom
+          screen
+          usbutils
+          pciutils
+          nvme-cli
         ];
 
         description = ''
@@ -202,6 +227,10 @@ in
           (text "Uptime")
         ]);
       };
+    })
+
+    (lib.mkIf cfg.hardware.enable {
+      home.packages = cfg.hardware.packages;
     })
 
     (lib.mkIf cfg.nix.enable {
