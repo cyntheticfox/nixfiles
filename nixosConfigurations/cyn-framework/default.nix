@@ -157,6 +157,7 @@
 
     libvirtd.enable = true;
     print.enable = true;
+    podman.enable = true;
   };
 
   systemd = {
