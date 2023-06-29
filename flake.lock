@@ -100,11 +100,11 @@
         "sops-nix": []
       },
       "locked": {
-        "lastModified": 1687915812,
-        "narHash": "sha256-+nFTCt+FxpW/8+BN7X0u9JGBSJmr0tl4NKbYHnzGrgU=",
+        "lastModified": 1688002159,
+        "narHash": "sha256-Jw3U2UsNxYahDgQ7Ob/mcxzwMfBECDaeC8tGJduCY3U=",
         "owner": "lilyinstarlight",
         "repo": "foosteros",
-        "rev": "6968913381221b34979f82ac24930d0d8de4bd97",
+        "rev": "fcccc1bd55df92b06f21e2f2d5140a23b57f0920",
         "type": "github"
       },
       "original": {
