@@ -44,6 +44,7 @@
             mode = "u=rwx,g=x,o=";
           }
           "/var/lib/fprint"
+          "/var/lib/fwupd"
           "/var/lib/libvirt"
           "/var/lib/minikube"
           "/var/lib/systemd/coredump"
