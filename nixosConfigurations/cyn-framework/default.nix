@@ -8,9 +8,6 @@
 
     # Desktop
     ../../nixos/desktops/sway.nix
-
-    # Services
-    ../../nixos/services/restic.nix
   ];
 
   environment = {
@@ -111,11 +108,6 @@
       wireplumber.enable = true;
     };
 
-    restic.backups.${config.networking.hostName} = {
-      passwordFile = config.sops.secrets.restic-password.path;
-      environmentFile = config.sops.secrets.restic-environment.path;
-    };
-
     udisks2.enable = true;
     upower.enable = true;
   };
@@ -150,6 +142,14 @@
   sound.enable = true;
 
   sys = {
+    backup = {
+      enable = true;
+      paths = [ "/state" ];
+
+      passwordFile = config.sops.secrets.restic-password.path;
+      environmentFile = config.sops.secrets.restic-environment.path;
+    };
+
     core.nix-experimental-features = [
       "nix-command"
       "flakes"
