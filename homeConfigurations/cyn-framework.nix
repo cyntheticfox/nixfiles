@@ -4,7 +4,6 @@
     qpwgraph
     pulseaudioFull
 
-    git-remote-codecommit
     insomnia
     moar
     openshot-qt
@@ -48,13 +47,21 @@
           autostart = true;
           package = pkgs.nixpkgs-unstable.nheko;
         };
+      };
 
-        msteams = {
-          enable = true;
+      games = {
+        retroarch.enable = true;
+        steam.enable = true;
+        minecraft.enable = true;
+      };
 
-          systemd-service = true;
-          package = pkgs.nixpkgs-unstable.teams-for-linux;
-        };
+      ghidra.enable = true;
+      remmina.enable = true;
+
+      sway = {
+        enable = true;
+
+        package = pkgs.nixpkgs-unstable.sway;
       };
 
       web = {
@@ -64,32 +71,7 @@
           package = pkgs.ungoogled-chromium;
         };
 
-        edge.enable = true;
         firefox.enable = true;
-      };
-
-      ghidra.enable = true;
-
-      games = {
-        retroarch.enable = true;
-        steam.enable = true;
-        minecraft.enable = true;
-      };
-
-      remmina = {
-        enable = true;
-
-        package = pkgs.remmina.override {
-          freerdp = pkgs.freerdp.override {
-            openssl = pkgs.openssl_1_1;
-          };
-        };
-      };
-
-      sway = {
-        enable = true;
-
-        package = pkgs.nixpkgs-unstable.sway;
       };
     };
 
@@ -118,18 +100,7 @@
       fcp.enable = true;
     };
 
-    ssh = {
-      enable = true;
-
-      extraMatchBlocks = {
-        "ghec" = {
-          hostname = "github.com";
-          user = "git";
-          port = 22;
-          identityFile = "~/.ssh/ghec_id_ed25519_sk";
-        };
-      };
-    };
+    ssh.enable = true;
 
     video.ffmpeg = {
       enable = true;
@@ -175,12 +146,9 @@
       ".config/gcloud"
       ".config/lagrange"
       ".config/libvirt"
-      ".config/microsoft-edge"
       ".config/nheko"
       ".config/obs-studio"
       ".config/pipewire"
-      ".config/teams"
-      ".config/teams-for-linux"
       ".config/WebCord"
       ".docker"
       ".gnupg"
@@ -235,7 +203,6 @@
       "iso"
       "opt"
       "tmp"
-      "wrk"
     ];
 
     files = [
