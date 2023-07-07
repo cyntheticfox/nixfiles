@@ -51,16 +51,7 @@ in
       {
         inherit (cfg) enable;
 
-        autoGroups.FlakeLockFix = { };
-
-        autoCmd = [
-          {
-            group = "FlakeLockFix";
-            event = [ "BufNewFile" "BufRead" ];
-            pattern = [ "flake.lock" ];
-            command = "set filetype=json";
-          }
-        ];
+        filetype.filename."flake.lock" = "json";
 
         options = {
           colorcolumn = "80";
