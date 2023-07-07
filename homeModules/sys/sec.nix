@@ -1,16 +1,14 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   cfg = config.sys.sec;
 in
 {
   options.sys.sec = {
-    enable = mkEnableOption "Manage security packages and tools";
+    enable = lib.mkEnableOption "Manage security packages and tools";
 
-    packages = mkOption {
-      type = with types; listOf package;
+    packages = lib.mkOption {
+      type = with lib.types; listOf package;
       default = with pkgs; [
         # Android scanning
         trueseeing
@@ -43,11 +41,14 @@ in
         nikto
         wapiti
       ];
-      description = "Security-oriented packages and tools to install";
+
+      description = ''
+        Security-oriented packages and tools to install
+      '';
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = cfg.packages;
   };
 }
