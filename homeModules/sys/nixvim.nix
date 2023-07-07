@@ -39,7 +39,6 @@ in
     home.shellAliases = {
       "vdiff" = "$EDITOR -d";
       "vsplit" = "$EDITOR -O2"; # Kinda wish I could just change the default behavior instead of this
-      # "vsudo" = "sudo -- $EDITOR -u ~/.config/nvim/init.vim";
     };
 
     programs.nixvim =
@@ -401,6 +400,9 @@ in
 
             hlgroups = charHighlightList;
           };
+
+          ts-autotag.enable = true;
+          ts-context-commentstring.enable = true;
         };
       };
 
@@ -422,7 +424,5 @@ in
     #       '';
     #     }
     #     vim-eunuch
-    #     nvim-ts-autotag
-    #     nvim-ts-context-commentstring
   };
 }

@@ -2,93 +2,18 @@
 
 let
   cfg = config.sys.dev;
-
-  # lib.types.attrsWithMatch = pattern: lib.mkOptionType {
-  #   name = "attrsWithMatch";
-  #   description = "attribute set with names of a certain pattern";
-  #   check = x: builtins.isAttrs x && builtins.all (i: (builtins.match pattern i) != null) (builtins.attrNames x);
-  #   merge = foldl' (res: def: res // def.value) { };
-  #   emptyValue = { value = { }; };
-  # };
-
-  # lib.types.attrsOfWithMatch = pattern: elemType: lib.mkOptionType {
-  #   name = "attrsOfWithMatch";
-  #   description = "attribute set of ${optionDescriptionPhrase (class: class == "noun" || class == "composite") elemType} with names of a certain pattern";
-  #   check = x: builtins.isAttrs x && builtins.all (i: (builtins.match pattern i) != null) (builtins.attrNames x);
-  #
-  #   merge = loc: defs:
-  #     builtins.mapAttrs (_: v: v.value) (lib.filterAttrs (_: v: v ? value) (builtins.zipAttrsWith
-  #       (name: defs:
-  #         (mergeDefinitions (loc ++ [ name ]) elemType defs).optionalValue
-  #       )
-  #       (builtins.map (def: builtins.mapAttrs (_: value: { inherit (def) file; inherit value; }) def.value) defs)));
-  #
-  #   emptyValue = { value = { }; };
-  # };
-  #
-  # # See https://spec.editorconfig.org/
-  # styleModule = lib.types.submodule ({ config, ... }: {
-  #   options = {
-  #     indent_style = lib.mkOption {
-  #       type = with lib.types; nullOr (enum [ "tab" "space" "unset" ]);
-  #       default = null;
-  #     };
-  #
-  #     indent_size = lib.mkOption {
-  #       type = with lib.types; nullOr (either ints.unsigned "unset");
-  #       default = null;
-  #     };
-  #
-  #     tab_width = lib.mkOption {
-  #       type = with lib.types; nullOr (either ints.unsigned "unset");
-  #       default = null;
-  #     };
-  #
-  #     end_of_line = lib.mkOption {
-  #       type = with lib.types; nullOr (enum [ "lf" "cr" "crlf" "unset" ]);
-  #       default = null;
-  #     };
-  #
-  #     charset = lib.mkOption {
-  #       type = with lib.types; nullOr (enum [ "latin1" "utf-8" "utf-8-bom" "utf-16be" "utf-16le" "unset" ]);
-  #       default = null;
-  #     };
-  #
-  #     trim_trailing_whitespace = lib.mkOption {
-  #       type = with lib.types; nullOr (either bool "unset");
-  #       default = null;
-  #     };
-  #
-  #     insert_final_newline = lib.mkOption {
-  #       type = with lib.types; nullOr (either bool "unset");
-  #       default = null;
-  #     };
-  #   };
-  # });
 in
 {
   options.sys.dev = {
-    enable = lib.mkEnableOption "Enable dev configuration packages";
+    enable = lib.mkEnableOption "dev configuration packages";
 
-    # TODO: Make this a thing
-    # defaultStyle = lib.mkOption {
-    #   type = styleModule;
-    #
-    #   default = {
-    #     indent_style = "space";
-    #     indent_size = 2;
-    #     tab_width = 8;
-    #     end_of_line = "lf";
-    #     charset = "utf-8";
-    #     trim_trailing_whitespace = true;
-    #     insert_final_newline = true;
-    #   };
-    # };
-    #
-    # styles = lib.mkOption {
-    #   type = lib.types.attrsOfWithMatch "^/?$" styleModule;
-    #   default = { };
-    # };
+    java = {
+      enable = lib.mkEnableOption "Java user-wide";
+
+      package = lib.mkPackageOption pkgs "openjdk" { };
+
+      debugPackage = lib.mkPackageOption pkgs "jdb" { };
+    };
 
     packages = lib.mkOption {
       type = with lib.types; listOf package;
@@ -100,7 +25,6 @@ in
         deno
         gcc_latest
         grex
-        hexyl
         htmlq
         hyperfine
         jq
@@ -113,10 +37,6 @@ in
         nodejs_latest
         pastel
         python3
-
-        # Repository Management
-        pre-commit
-        git-secrets
 
         # Manuals
         man-pages-posix
@@ -135,11 +55,16 @@ in
 
         # RE/General
         cutter
+        exiftool
+        hexyl
         radare2
         rehex
+        xxd
       ];
 
-      description = "Options for managing installed file packages";
+      description = ''
+        Options for managing installed dev packages.
+      '';
     };
 
     manageDirenvConfig = lib.mkEnableOption "Enable direnv management" // { default = true; };
@@ -155,12 +80,6 @@ in
       };
 
       home.packages = cfg.packages;
-
-      programs.java = {
-        enable = true;
-
-        package = pkgs.openjdk;
-      };
 
       # Load editorconfig file as well
       home.file.".editorconfig".text = ''
@@ -187,6 +106,9 @@ in
         insert_final_newline = true
         trim_trailing_whitespace = true
 
+        [*.{rs,py}]
+        indent_size = 4
+
         [*.md]
         trim_trailing_whitespace = false
 
@@ -195,6 +117,14 @@ in
         indent_style = tab
       '';
     }
+
+    (lib.mkIf cfg.java.enable {
+      home.packages = [ cfg.java.debugPackage ];
+
+      programs.java = {
+        inherit (cfg.java) enable package;
+      };
+    })
 
     (lib.mkIf cfg.manageDirenvConfig {
       programs.direnv = {

@@ -1,39 +1,41 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   cfg = config.sys.git;
 in
 {
   options.sys.git = {
-    enable = mkEnableOption "Enable configuration of git environment";
+    enable = lib.mkEnableOption "Enable configuration of git environment";
 
-    package = mkPackageOption pkgs "git" { };
+    package = lib.mkPackageOption pkgs "git" { };
 
-    name = mkOption {
-      type = types.str;
+    name = lib.mkOption {
+      type = lib.types.str;
+
       description = ''
         User's full name to pass for Git commits.
       '';
     };
 
-    email = mkOption {
-      type = types.str;
+    email = lib.mkOption {
+      type = lib.types.str;
+
       description = ''
         User's email address to pass for Git commits.
       '';
     };
 
-    gpgkey = mkOption {
-      type = types.str;
+    gpgkey = lib.mkOption {
+      type = lib.types.str;
+
       description = ''
         User's GnuPG/PGP key to use for signing commits.
       '';
     };
 
-    extraPackages = mkOption {
-      type = with types; listOf package;
+    extraPackages = lib.mkOption {
+      type = with lib.types; listOf package;
+
       default = with pkgs; [
         git-doc
         git-filter-repo
@@ -42,16 +44,18 @@ in
         gitflow
         octofetch
         onefetch
+        pre-commit
         sops
         tig
       ];
+
       description = ''
         Additional packages to install aside git.
       '';
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = cfg.extraPackages;
 
     programs.git = {
