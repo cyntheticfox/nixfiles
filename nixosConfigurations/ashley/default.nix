@@ -1,10 +1,13 @@
 { pkgs, ... }: {
-  imports = [
-    ./hardware-configuration.nix
-    ../../nixos/services/sshd.nix
-  ];
+  imports = [ ./hardware-configuration.nix ];
 
-  sys.podman.enable = true;
+  sys = {
+    podman.enable = true;
+    sshd = {
+      enable = true;
+      openFirewall = true;
+    };
+  };
 
   boot = {
     # loader.grub = {
