@@ -5,9 +5,6 @@
 
     # Users
     ../../nixosUserConfigurations/cynthia/configuration.nix
-
-    # Desktop
-    ../../nixos/desktops/sway.nix
   ];
 
   environment = {
@@ -156,6 +153,7 @@
       "ca-derivations"
     ];
 
+    desktop.sway.enable = true;
     libvirtd.enable = true;
     print.enable = true;
     podman.enable = true;
