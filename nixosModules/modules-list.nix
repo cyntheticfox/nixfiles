@@ -2,6 +2,7 @@
   ./sys/backup.nix
   ./sys/clamav.nix
   ./sys/core.nix
+  ./sys/desktop/gnome.nix
   ./sys/desktop/sway.nix
   ./sys/libvirtd.nix
   ./sys/print.nix
