@@ -4,11 +4,12 @@
 , domain
 , path ? ../nixosConfigurations/${hostname}
 , nixpkgs-unstable ? null
-, cpuVendor ? null
+, cpuVendor ? "other"
 , system ? "x86_64-linux"
-, nixosModules ? { }
+, nixosModules ? import ../nixosModules
 , modules ? [ ]
 , overlays ? [ ]
+, specialArgs ? { }
 }:
 
 assert cpuVendor == null || builtins.isString cpuVendor;
@@ -19,17 +20,10 @@ let
   nz = v: x: if v != null then v else x;
 in
 nixpkgs.lib.nixosSystem {
-  inherit system;
-
-  specialArgs = {
-    inherit cpuVendor;
-
-    workstation = false;
-  };
+  inherit system specialArgs;
 
   modules = [
     path
-    ../nixos/hardware-base.nix
 
     ({ config, ... }: {
       nix = {
@@ -69,6 +63,7 @@ nixpkgs.lib.nixosSystem {
         })
       ] ++ overlays;
 
+      sys.hardware.cpuVendor = cpuVendor;
       system.stateVersion = "23.05";
 
       networking = {

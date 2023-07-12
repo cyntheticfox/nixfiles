@@ -6,9 +6,9 @@
 , path ? ../nixosConfigurations/${hostname}
 , nixpkgs-unstable ? null
 , nix-index-database ? null
-, cpuVendor ? null
+, cpuVendor ? "other"
 , system ? "x86_64-linux"
-, nixosModules ? { }
+, nixosModules ? import ../nixosModules
 , modules ? [ ]
 , overlays ? [ ]
 , specialArgs ? { }
@@ -24,17 +24,10 @@ let
   nz = a: b: if a != null then a else b;
 in
 nixpkgs.lib.nixosSystem {
-  inherit system;
-
-  specialArgs = specialArgs // {
-    inherit cpuVendor;
-
-    workstation = true;
-  };
+  inherit system specialArgs;
 
   modules = [
     home-manager.nixosModules.home-manager
-    ../nixos/hardware-base.nix
     path
 
     ({ config, ... }: {
@@ -117,6 +110,12 @@ nixpkgs.lib.nixosSystem {
 
         useGlobalPkgs = true;
         useUserPackages = true;
+      };
+
+      sys.hardware = {
+        inherit cpuVendor;
+
+        isWorkstation = true;
       };
 
       system.stateVersion = "23.05";

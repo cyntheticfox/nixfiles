@@ -4,6 +4,7 @@
   ./sys/core.nix
   ./sys/desktop/gnome.nix
   ./sys/desktop/sway.nix
+  ./sys/hardware.nix
   ./sys/libvirtd.nix
   ./sys/print.nix
   ./sys/podman.nix
