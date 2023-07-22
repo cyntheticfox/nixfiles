@@ -7,8 +7,6 @@
     insomnia
     moar
     openshot-qt
-    virt-manager
-    virt-viewer
     wl-color-picker
     zap
   ];
@@ -109,6 +107,7 @@
     };
 
     video.mpv.enable = true;
+    virt.libvirt.enable = true;
   };
 
   xdg.configFile."wireplumber/main.lua.d/51-fix-dac-rate.lua".text = ''

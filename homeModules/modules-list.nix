@@ -19,5 +19,6 @@
   ./sys/shell.nix
   ./sys/ssh.nix
   ./sys/video.nix
+  ./sys/virt.nix
   ./programs/neofetch.nix
 ]
