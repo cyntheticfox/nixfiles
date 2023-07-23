@@ -100,11 +100,11 @@
         "sops-nix": []
       },
       "locked": {
-        "lastModified": 1689989302,
-        "narHash": "sha256-jeg2K3JqdtG8dM3MP9DXNPTTbOTQ0ga2/sMjEljMBzc=",
+        "lastModified": 1690075711,
+        "narHash": "sha256-ESG6o5yULNKC55ZUEFmPnQL4oo0YPA6gmNZOfQAj64U=",
         "owner": "lilyinstarlight",
         "repo": "foosteros",
-        "rev": "a3ef89cc0983bb6696fa14e5bb3481ed7ebf0012",
+        "rev": "fc8eb1a8e8df7ff83f952bcf5ed0bf5fa658801b",
         "type": "github"
       },
       "original": {
@@ -193,11 +193,11 @@
     },
     "nix-index-database": {
       "locked": {
-        "lastModified": 1689478129,
-        "narHash": "sha256-hUdqGXeUzyBWlFFcCA3lxKT43JNWvEVXt+gKA6TQFnA=",
+        "lastModified": 1690081917,
+        "narHash": "sha256-CWCOBFHAfNgF68oihAq9eendjsQG1Y6y9nBzwBjCjY0=",
         "owner": "cyntheticfox",
         "repo": "nix-index-database-stable",
-        "rev": "ee14bb98e4e98216368c30006119b91516f80641",
+        "rev": "ff1f886a6759a25c7fe95ade347881bbf7fc9d17",
         "type": "github"
       },
       "original": {
@@ -277,11 +277,11 @@
     },
     "nixpkgs-lib": {
       "locked": {
-        "lastModified": 1689469483,
-        "narHash": "sha256-2SBhY7rZQ/iNCxe04Eqxlz9YK9KgbaTMBssq3/BgdWY=",
+        "lastModified": 1690073998,
+        "narHash": "sha256-qmK+VMvflwUzQSQl4XVP5kbodYLAKThNzq6mZrOM2Mo=",
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "rev": "02fea408f27186f139153e1ae88f8ab2abd9c22c",
+        "rev": "d0545f65611a9625f161d0ff02627bc364e024f6",
         "type": "github"
       },
       "original": {
@@ -292,11 +292,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1689940971,
-        "narHash": "sha256-397xShPnFqPC59Bmpo3lS+/Aw0yoDRMACGo1+h2VJMo=",
+        "lastModified": 1690031011,
+        "narHash": "sha256-kzK0P4Smt7CL53YCdZCBbt9uBFFhE0iNvCki20etAf4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9ca785644d067445a4aa749902b29ccef61f7476",
+        "rev": "12303c652b881435065a98729eb7278313041e49",
         "type": "github"
       },
       "original": {
@@ -334,11 +334,11 @@
         "pre-commit-hooks": []
       },
       "locked": {
-        "lastModified": 1689925150,
-        "narHash": "sha256-0BvQE0jA2XzmdmBNydYt239sm6W5oNo6cTM5/2oDf2o=",
+        "lastModified": 1690107839,
+        "narHash": "sha256-ll3j+g3qz239sfLHYhHynKRWhMkxFXsJ9MOAXzSqQMc=",
         "owner": "pta2002",
         "repo": "nixvim",
-        "rev": "6152f77a63c22353c7d4f592487143bbb2fbb557",
+        "rev": "4c25722d73694245e767839b462026ab2296542b",
         "type": "github"
       },
       "original": {
