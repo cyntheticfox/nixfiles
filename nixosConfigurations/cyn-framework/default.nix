@@ -154,6 +154,7 @@
     ];
 
     desktop.sway.enable = true;
+    hardware.systemdPackage = pkgs.nixpkgs-unstable.systemd;
     libvirtd.enable = true;
     print.enable = true;
     podman.enable = true;

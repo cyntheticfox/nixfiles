@@ -15,6 +15,8 @@ in
     };
 
     isWorkstation = lib.mkEnableOption "Workstation-related settings";
+
+    systemdPackage = lib.mkPackageOption pkgs "systemd" { };
   };
 
   config = lib.mkIf cfg.enable {
@@ -98,7 +100,7 @@ in
     };
 
     services.fwupd.enable = true;
-
+    systemd.package = cfg.systemdPackage;
     zramSwap.enable = true;
   };
 }
