@@ -37,6 +37,7 @@ in
       type = with lib.types; listOf package;
 
       default = with pkgs; [
+        git-crypt
         git-doc
         git-filter-repo
         git-ignore

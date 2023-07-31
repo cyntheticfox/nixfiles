@@ -51,7 +51,10 @@ in
       {
         inherit (cfg) enable;
 
-        filetype.filename."flake.lock" = "json";
+        filetype.filename = {
+          "flake.lock" = "json";
+          ".ecrc" = "json";
+        };
 
         options = {
           colorcolumn = "80";

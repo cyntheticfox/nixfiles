@@ -315,12 +315,14 @@
             formatPackages = with pkgs; [
               pre-commit
               nixpkgs-fmt
+              editorconfig-checker
               deadnix
               statix
             ];
 
             editingPackages = with pkgs; [
               git
+              git-crypt
               gnupg
               neovim
               pinentry
