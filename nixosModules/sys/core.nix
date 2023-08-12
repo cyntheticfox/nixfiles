@@ -113,7 +113,6 @@ in
       #
       "AC RAIZ FNMT-RCM SERVIDORES SEGUROS"
       "Autoridad de Certificacion Firmaprofesional CIF A62634068"
-      "Camerfirma Chambers of Commerce Root"
 
       # China Financial Certification Authority
       "CFCA EV ROOT"
@@ -126,18 +125,10 @@ in
       "Certigna"
       "Certigna Root CA"
 
-      # E-Tugra EBG A.S.
-      "E-Tugra Global Root CA RSA v3"
-      "E-Tugra Global Root CA ECC v3"
-
-      # E-Tugra EBG Bilisim Teknolojileri ve Hizmetleri A.S.
-      "E-Tugra Certification Authority"
-
       # GUANG DONG CERTIFICATE AUTHORITY
       "GDCA TrustAUTH R5 ROOT"
 
       # Hongkong Post
-      "Hongkong Post Root CA 1"
       "Hongkong Post Root CA 3"
 
       # iTrusChina Co.,Ltd.
