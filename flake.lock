@@ -101,11 +101,11 @@
         "systemd-254": "systemd-254"
       },
       "locked": {
-        "lastModified": 1692792661,
-        "narHash": "sha256-qfT93Mn2YpyI2g7at+KMvZN9ZGgnQt/oktfHjM8oqAA=",
+        "lastModified": 1692873718,
+        "narHash": "sha256-fG/5+HkKPxZ8kuG7AH9IraBg07tPfBkE9WBmD6YE87Y=",
         "owner": "lilyinstarlight",
         "repo": "foosteros",
-        "rev": "6ef4cbf2d1cbabcf30b33be4c749336a0cd620ec",
+        "rev": "d4002f9f69004ed7e5dc626cbd28057be76070e4",
         "type": "github"
       },
       "original": {
@@ -309,11 +309,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1692698134,
-        "narHash": "sha256-YtMmZWR/dlTypOcwiZfZTMPr3tj9fwr05QTStfSyDSg=",
+        "lastModified": 1692794066,
+        "narHash": "sha256-H0aG8r16dj0x/Wz6wQhQxc9V7AsObOiHPaKxQgH6Y08=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "a16f7eb56e88c8985fcc6eb81dabd6cade4e425a",
+        "rev": "fc944919f743bb22379dddf18dcb72db6cff84aa",
         "type": "github"
       },
       "original": {
@@ -335,11 +335,11 @@
         "pre-commit-hooks": []
       },
       "locked": {
-        "lastModified": 1692807485,
-        "narHash": "sha256-MYWWVJe8bTBUz62shoT89OYoFKHAxuBxawATl+IET8k=",
+        "lastModified": 1692876635,
+        "narHash": "sha256-P8kHKXD7rpKdPJ7phGkLjhmG/pzbxOwLyL1Dpu50vBA=",
         "owner": "pta2002",
         "repo": "nixvim",
-        "rev": "2e7137058d6686f42e99696ca6564cc39ba92c1f",
+        "rev": "1cc77f425218a0250582ab2798799909dd36b123",
         "type": "github"
       },
       "original": {
