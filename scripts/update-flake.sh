@@ -51,6 +51,8 @@ for INPUT in $INPUTS; do
     if [[ $INPUT_TYPE == "github" ]]; then
         RESPONSE=$($CHECK_UPDATE_CMD -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "$INPUT_URL")
 
+        # Pretty sure this is how to do it...
+        # shellcheck disable=SC2181
         if [[ $? -ne 0 ]]; then
             echo "Unable to check input \"$INPUT_NAME\". Possible rate limiting?"
 
@@ -71,6 +73,7 @@ for INPUT in $INPUTS; do
     elif [[ $INPUT_TYPE == "gitlab" ]]; then
         RESPONSE=$($CHECK_UPDATE_CMD "$INPUT_URL")
 
+        # shellcheck disable=SC2181
         if [[ $? -ne 0 ]]; then
             echo "Unable to check input \"$INPUT_NAME\". Possible rate limiting?"
 
