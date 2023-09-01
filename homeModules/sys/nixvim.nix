@@ -389,10 +389,10 @@ in
 
           treesitter-context.enable = true;
 
-          treesitter-rainbow = {
+          rainbow-delimiters = {
             enable = true;
 
-            hlgroups = charHighlightList;
+            highlight = charHighlightList;
           };
 
           ts-autotag.enable = true;
