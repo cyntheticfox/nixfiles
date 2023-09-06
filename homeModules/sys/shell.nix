@@ -103,7 +103,12 @@ in
 
     bash.enable = lib.mkEnableOption "Enable default bash config" // { default = true; };
     bat.enable = lib.mkEnableOption "Enable default bat config" // { default = true; };
-    exa.enable = lib.mkEnableOption "Enable default exa config" // { default = true; };
+
+    exa = {
+      enable = lib.mkEnableOption "Default exa config" // { default = true; };
+      package = lib.mkPackageOption pkgs "exa" { };
+    };
+
     less.enable = lib.mkEnableOption "Enable default less config" // { default = true; };
     tmux.enable = lib.mkEnableOption "Enable deafult tmux config" // { default = true; };
     starship.enable = lib.mkEnableOption "Enable default starship config" // { default = true; };
@@ -203,14 +208,16 @@ in
 
     (lib.mkIf cfg.exa.enable {
       home.shellAliases = {
-        "l" = "exa --classify --color=always --icons";
-        "ls" = "exa --classify --color=always --icons";
-        "la" = "exa --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
-        "ll" = "exa --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
-        "tree" = "exa --classify --color=always --icons --long --all --binary --group --header --git --color-scale --tree";
+        "l" = "${lib.getExe cfg.exa.package} --classify --color=always --icons";
+        "ls" = "${lib.getExe cfg.exa.package} --classify --color=always --icons";
+        "la" = "${lib.getExe cfg.exa.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
+        "ll" = "${lib.getExe cfg.exa.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
+        "tree" = "${lib.getExe cfg.exa.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale --tree";
       };
 
-      programs.exa.enable = true;
+      programs.exa = {
+        inherit (cfg.exa) enable package;
+      };
     })
 
     (lib.mkIf cfg.less.enable {
