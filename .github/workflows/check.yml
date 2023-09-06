@@ -6,7 +6,7 @@ jobs:
     name: Install Nix
     runs-on: ubuntu-latest
     steps:
-      - uses: cachix/install-nix-action@v21
+      - uses: cachix/install-nix-action@v23
         with:
           extra_nix_config: |
             system-features = benchmark big-parallel kvm nixos-test
