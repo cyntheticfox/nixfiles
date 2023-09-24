@@ -3,7 +3,7 @@ on:
   push:
 jobs:
   check-eval:
-    name: Install Nix
+    name: Check flake eval
     runs-on: ubuntu-latest
     steps:
       - uses: cachix/install-nix-action@v23
