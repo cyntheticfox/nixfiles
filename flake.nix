@@ -82,7 +82,8 @@
     };
 
     nixvim = {
-      url = "github:pta2002/nixvim";
+      # TODO: Find another framework or something that doesn't use IFD
+      url = "github:pta2002/nixvim/26626aa1b1610d3270b7a38cf610b0d1a237e3f9";
 
       inputs = {
         nixpkgs.follows = "nixpkgs-unstable";

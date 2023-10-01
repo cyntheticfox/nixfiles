@@ -101,11 +101,11 @@
         "systemd-254": "systemd-254"
       },
       "locked": {
-        "lastModified": 1695864201,
-        "narHash": "sha256-TDs2e2kkpOD4AXy28e12IAuIVD8VNlvn5B3SrWCCvEA=",
+        "lastModified": 1696109660,
+        "narHash": "sha256-vEQZPjsmWSVTGsws5kgEyrJ/H7tkLS5UcX1o9jr1Lt0=",
         "owner": "lilyinstarlight",
         "repo": "foosteros",
-        "rev": "232ab882ec58d958ad4927b1c57236fa37a9780f",
+        "rev": "54cb67d95792eeb70a48eb720ceb2b8a688b267e",
         "type": "github"
       },
       "original": {
@@ -278,11 +278,11 @@
     },
     "nixpkgs-lib": {
       "locked": {
-        "lastModified": 1695516402,
-        "narHash": "sha256-pL7m8iu1OLs/7ywhh+Q8ltPgmtwbMpi7484yr32zgYI=",
+        "lastModified": 1696121361,
+        "narHash": "sha256-sstnEW0Qwqo3MHmy1In/hJHjypfsSDlnhegNKw5eplk=",
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "rev": "01fc4cd75e577ac00e7c50b7e5f16cd9b6d633e8",
+        "rev": "56992d3dfd3b8cee5c5b5674c1a477446839b6ad",
         "type": "github"
       },
       "original": {
@@ -293,11 +293,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1694422566,
-        "narHash": "sha256-lHJ+A9esOz9vln/3CJG23FV6Wd2OoOFbDeEs4cMGMqc=",
+        "lastModified": 1695830400,
+        "narHash": "sha256-gToZXQVr0G/1WriO83olnqrLSHF2Jb8BPcmCt497ro0=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "3a2786eea085f040a66ecde1bc3ddc7099f6dbeb",
+        "rev": "8a86b98f0ba1c405358f1b71ff8b5e1d317f5db2",
         "type": "github"
       },
       "original": {
@@ -335,16 +335,17 @@
         "pre-commit-hooks": []
       },
       "locked": {
-        "lastModified": 1695804493,
-        "narHash": "sha256-LcHdI5TjeomY7Q244iKwcZUUwT5uZUUFANORNIoslKY=",
+        "lastModified": 1693235277,
+        "narHash": "sha256-oQdfEnKlUiTtRV3a89Xr3pUfCgckzAavcCPQ0x9udfQ=",
         "owner": "pta2002",
         "repo": "nixvim",
-        "rev": "9e448b7ff002505774c53b815726edbb677afea6",
+        "rev": "26626aa1b1610d3270b7a38cf610b0d1a237e3f9",
         "type": "github"
       },
       "original": {
         "owner": "pta2002",
         "repo": "nixvim",
+        "rev": "26626aa1b1610d3270b7a38cf610b0d1a237e3f9",
         "type": "github"
       }
     },
