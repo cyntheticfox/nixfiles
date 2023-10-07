@@ -48,14 +48,10 @@ let
       assert builtins.isFloat refreshRate || builtins.isInt refreshRate;
       assert builtins.isFloat scale;
       assert xor (id != null) (outputString != null);
-
-      let
-        resolution = "${xPixels}x${yPixels}";
-      in
       {
-        inherit name refreshRate resolution scale xPixels yPixels;
+        inherit name refreshRate scale xPixels yPixels;
 
-        modeString = "${resolution} @ ${refreshRate} Hz";
+        mode = "${builtins.toString xPixels}x${builtins.toString yPixels}@${builtins.toString refreshRate}Hz";
 
         # criteria = if id != null then id else outputString;
         criteria = nz id outputString;
@@ -77,10 +73,10 @@ let
     homeDockCenter = mkScreenConfig {
       name = "ASUS High Refresh-Rate Monitor";
       outputString = "ASUSTek COMPUTER INC VG28UQL1A 0x0000135C";
-      scale = 1.75;
-      xPixels = 3840;
-      yPixels = 2160;
-      refreshRate = 30; # High refresh rate/resolution, but can't run it at such
+      # scale = 1.75;
+      xPixels = 1920; # 3840; # NOTE: Wish I could afford better.
+      yPixels = 1080; # 2160;
+      refreshRate = 50; # 30; # High refresh rate, but can't run it at such
     };
 
     homeDockLeft = mkScreenConfig {
@@ -88,7 +84,7 @@ let
       outputString = "ASUSTek COMPUTER INC VA279 N2LMQS025509";
       xPixels = 1920;
       yPixels = 1080;
-      refreshRate = 60;
+      refreshRate = 50;
     };
 
     homeDockRight = mkScreenConfig {
@@ -1186,13 +1182,14 @@ in
 
           profiles = {
             undocked.outputs = [{
-              inherit (screens.builtin) criteria scale;
+              inherit (screens.builtin) criteria mode scale;
+
               status = "enable";
             }];
 
             singleMonitor.outputs = [
               {
-                inherit (screens.builtin) criteria scale;
+                inherit (screens.builtin) criteria mode scale;
 
                 status = "enable";
                 position = "0,0";
@@ -1206,21 +1203,21 @@ in
 
             homeDockedFull.outputs = [
               {
-                inherit (screens.builtin) criteria scale;
+                inherit (screens.builtin) criteria mode scale;
                 status = "disable";
               }
               {
-                inherit (screens.homeDockLeft) criteria scale;
+                inherit (screens.homeDockLeft) criteria mode scale;
                 status = "enable";
                 position = "0,0";
               }
               {
-                inherit (screens.homeDockCenter) criteria scale;
+                inherit (screens.homeDockCenter) criteria mode scale;
                 status = "enable";
                 position = "${builtins.toString screens.homeDockLeft.xPixelsOut},0";
               }
               {
-                inherit (screens.homeDockRight) criteria scale;
+                inherit (screens.homeDockRight) criteria mode scale;
                 status = "enable";
                 position = "${builtins.toString (screens.homeDockLeft.xPixelsOut + screens.homeDockCenter.xPixelsOut)},0";
               }
@@ -1228,21 +1225,21 @@ in
 
             homeDockedFullFallback.outputs = [
               {
-                inherit (screens.builtin) criteria scale;
+                inherit (screens.builtin) criteria mode scale;
                 status = "disable";
               }
               {
-                inherit (screens.homeDockLeft) criteria scale;
+                inherit (screens.homeDockLeft) criteria mode scale;
                 status = "enable";
                 position = "0,0";
               }
               {
-                inherit (screens.homeDockCenter) criteria scale;
+                inherit (screens.homeDockCenter) criteria mode scale;
                 status = "enable";
                 position = "${builtins.toString screens.homeDockLeft.xPixelsOut},0";
               }
               {
-                inherit (screens.homeDockRightFallback) criteria scale;
+                inherit (screens.homeDockRightFallback) criteria mode scale;
                 status = "enable";
                 position = "${builtins.toString (screens.homeDockLeft.xPixelsOut + screens.homeDockCenter.xPixelsOut)},0";
               }
@@ -1250,16 +1247,16 @@ in
 
             homeDockedPartialNoLeft.outputs = [
               {
-                inherit (screens.builtin) criteria scale;
+                inherit (screens.builtin) criteria mode scale;
                 status = "disable";
               }
               {
-                inherit (screens.homeDockCenter) criteria scale;
+                inherit (screens.homeDockCenter) criteria mode scale;
                 status = "enable";
                 position = "0,0";
               }
               {
-                inherit (screens.homeDockRight) criteria scale;
+                inherit (screens.homeDockRight) criteria mode scale;
                 status = "enable";
                 position = "${builtins.toString screens.homeDockCenter.xPixelsOut},0";
               }
@@ -1267,16 +1264,16 @@ in
 
             homeDockedPartialNoCenter.outputs = [
               {
-                inherit (screens.builtin) criteria scale;
+                inherit (screens.builtin) criteria mode scale;
                 status = "disable";
               }
               {
-                inherit (screens.homeDockLeft) criteria scale;
+                inherit (screens.homeDockLeft) criteria mode scale;
                 status = "enable";
                 position = "0,0";
               }
               {
-                inherit (screens.homeDockRight) criteria scale;
+                inherit (screens.homeDockRight) criteria mode scale;
                 status = "enable";
                 position = "${builtins.toString screens.homeDockLeft.xPixelsOut},0";
               }
@@ -1284,16 +1281,16 @@ in
 
             homeDockedPartialNoRight.outputs = [
               {
-                inherit (screens.builtin) criteria scale;
+                inherit (screens.builtin) criteria mode scale;
                 status = "disable";
               }
               {
-                inherit (screens.homeDockLeft) criteria scale;
+                inherit (screens.homeDockLeft) criteria mode scale;
                 status = "enable";
                 position = "0,0";
               }
               {
-                inherit (screens.homeDockCenter) criteria scale;
+                inherit (screens.homeDockCenter) criteria mode scale;
                 status = "enable";
                 position = "${builtins.toString screens.homeDockLeft.xPixelsOut},0";
               }
