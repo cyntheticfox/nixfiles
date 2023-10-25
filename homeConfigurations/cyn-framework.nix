@@ -1,15 +1,96 @@
 { pkgs, ... }: {
-  home.packages = with pkgs; [
-    # pipewire
-    qpwgraph
-    pulseaudioFull
+  home = {
+    packages = with pkgs; [
+      # pipewire
+      qpwgraph
+      pulseaudioFull
 
-    insomnia
-    moar
-    openshot-qt
-    wl-color-picker
-    zap
-  ];
+      insomnia
+      moar
+      openshot-qt
+      wl-color-picker
+      zap
+    ];
+
+    persistence = {
+      "/state/home" = {
+        allowOther = false;
+
+        directories = [
+          ".aws"
+          ".azure"
+          ".config/cutter"
+          ".config/dconf"
+          ".config/discord" # TODO: Put into discord module
+          ".config/gcloud"
+          ".config/lagrange"
+          ".config/libvirt"
+          ".config/nheko"
+          ".config/obs-studio"
+          ".config/pipewire"
+          ".config/WebCord"
+          ".docker"
+          ".gnupg"
+          ".mozilla"
+          ".ssh"
+          "archive"
+          "docs"
+          "emu"
+          "games"
+          "music"
+          "pics"
+          "repos"
+          "videos"
+        ];
+
+        files = [
+          "wallpaper.png"
+          "lockscreen.jpg"
+          ".local/share/beets/musiclibrary.db"
+          ".config/pavucontrol.ini"
+        ];
+      };
+
+      "/persist/home" = {
+        allowOther = false;
+
+        directories = [
+          ".cache/fontconfig"
+          ".cache/mesa_shader_cache"
+          ".cache/mopidy"
+          ".cache/nheko"
+          ".cache/pre-commit"
+          ".cache/virt-manager"
+          ".cargo/registry"
+          ".local/share/PrismLauncher"
+          ".local/share/Steam"
+          ".local/share/bash"
+          ".local/share/containers"
+          ".local/share/direnv/allow"
+          ".local/share/libvirt"
+          ".local/share/mime"
+          ".local/share/mopidy"
+          ".local/share/nheko"
+          ".local/share/nvim/site"
+          ".local/share/password-store"
+          ".local/share/zoxide"
+          ".local/share/zsh"
+          ".local/state/wireplumber"
+          ".minikube/cache"
+          ".terraform.d"
+          "dbg"
+          "iso"
+          "opt"
+          "tmp"
+        ];
+
+        files = [
+          ".local/share/beets/import.log"
+          ".local/share/nix/trusted-settings.json"
+        ];
+      };
+    };
+  };
 
   programs.obs-studio.enable = true;
 
@@ -36,10 +117,6 @@
           enable = true;
 
           autostart = true;
-          package = pkgs.nixpkgs-unstable.discord.override {
-            withOpenASAR = true;
-            withVencord = true;
-          };
         };
 
         matrix = {
@@ -136,81 +213,4 @@
 
     table.insert(alsa_monitor.rules, rule)
   '';
-
-  home.persistence."/state/home" = {
-    allowOther = false;
-
-    directories = [
-      ".aws"
-      ".azure"
-      ".config/cutter"
-      ".config/dconf"
-      ".config/discord" # TODO: Put into discord module
-      ".config/gcloud"
-      ".config/lagrange"
-      ".config/libvirt"
-      ".config/nheko"
-      ".config/obs-studio"
-      ".config/pipewire"
-      ".config/WebCord"
-      ".docker"
-      ".gnupg"
-      ".mozilla"
-      ".ssh"
-      "archive"
-      "docs"
-      "emu"
-      "games"
-      "music"
-      "pics"
-      "repos"
-      "videos"
-    ];
-
-    files = [
-      "wallpaper.png"
-      "lockscreen.jpg"
-      ".local/share/beets/musiclibrary.db"
-      ".config/pavucontrol.ini"
-    ];
-  };
-
-  home.persistence."/persist/home" = {
-    allowOther = false;
-
-    directories = [
-      ".cache/fontconfig"
-      ".cache/mesa_shader_cache"
-      ".cache/mopidy"
-      ".cache/nheko"
-      ".cache/pre-commit"
-      ".cache/virt-manager"
-      ".cargo/registry"
-      ".local/share/PrismLauncher"
-      ".local/share/Steam"
-      ".local/share/bash"
-      ".local/share/containers"
-      ".local/share/direnv/allow"
-      ".local/share/libvirt"
-      ".local/share/mime"
-      ".local/share/mopidy"
-      ".local/share/nheko"
-      ".local/share/nvim/site"
-      ".local/share/password-store"
-      ".local/share/zoxide"
-      ".local/share/zsh"
-      ".local/state/wireplumber"
-      ".minikube/cache"
-      ".terraform.d"
-      "dbg"
-      "iso"
-      "opt"
-      "tmp"
-    ];
-
-    files = [
-      ".local/share/beets/import.log"
-      ".local/share/nix/trusted-settings.json"
-    ];
-  };
 }

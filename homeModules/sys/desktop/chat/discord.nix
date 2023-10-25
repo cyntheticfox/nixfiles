@@ -10,16 +10,33 @@ in
     package = lib.mkPackageOption pkgs "discord" { };
     systemd-service = lib.mkEnableOption "discord Systemd user service" // { default = true; };
     autostart = lib.mkEnableOption "Discord client on startup";
+
+    config = lib.mkOption {
+      type = lib.types.attrs;
+
+      default = {
+        IS_MAXIMIZED = true;
+        IS_MINIMIZED = false;
+        SKIP_HOST_UPDATE = true;
+
+        WINDOW_BOUNDS = {
+          x = 0;
+          y = 0;
+          width = 1600;
+          height = 1149;
+        };
+      };
+
+      description = ''
+        A series of <code>attrs</code> matching discord's <file>settings.json</file>.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."discord/settings.json".source = (pkgs.formats.json { }).generate "discord-settings.json" {
-      IS_MAXIMIZED = true;
-      IS_MINIMIZED = false;
-      SKIP_HOST_UPDATE = true;
-    };
+    xdg.configFile."discord/settings.json".source = (pkgs.formats.json { }).generate "discord-settings.json" cfg.config;
 
     systemd.user.services.discord-client = lib.mkIf cfg.systemd-service {
       Unit = {
