@@ -63,55 +63,58 @@
     };
 
   # Support mouse configuration
-  services.ratbagd.enable = true;
+  services = {
+    ratbagd.enable = true;
+    thermald.enable = true;
 
-  hardware.keyboard.zsa.enable = true;
+    tlp = {
+      enable = true;
 
-  hardware.opengl = {
-    enable = true;
+      settings = {
+        CPU_SCALING_GOVERNOR_ON_AC = "powersave";
+        CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+        CPU_ENERGY_PERF_POLICY_ON_AC = "balance_power";
+        CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
 
-    driSupport32Bit = true;
+        INTEL_GPU_MIN_FREQ_ON_AC = 100;
+        INTEL_GPU_MIN_FREQ_ON_BAT = 100;
+        INTEL_GPU_MAX_FREQ_ON_AC = 1000;
+        INTEL_GPU_MAX_FREQ_ON_BAT = 1000;
+        INTEL_GPU_BOOST_FREQ_ON_AC = 1000;
+        INTEL_GPU_BOOST_FREQ_ON_BAT = 1000;
 
-    extraPackages = with pkgs; [
-      beignet
-      intel-media-driver
-      libvdpau-va-gl
-      mesa
-      vaapiIntel
-      vaapiVdpau
-    ];
-
-    extraPackages32 = with pkgs.driversi686Linux; [
-      beignet
-      libvdpau-va-gl
-      mesa
-      vaapiIntel
-      vaapiVdpau
-    ];
+        START_CHARGE_THRESH_BAT0 = 75;
+        STOP_CHARGE_THRESH_BAT0 = 80;
+        START_CHARGE_THRESH_BAT1 = 75;
+        STOP_CHARGE_THRESH_BAT1 = 80;
+      };
+    };
   };
 
-  services.thermald.enable = true;
+  hardware = {
+    keyboard.zsa.enable = true;
 
-  services.tlp = {
-    enable = true;
+    opengl = {
+      enable = true;
 
-    settings = {
-      CPU_SCALING_GOVERNOR_ON_AC = "powersave";
-      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-      CPU_ENERGY_PERF_POLICY_ON_AC = "balance_power";
-      CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
+      driSupport32Bit = true;
 
-      INTEL_GPU_MIN_FREQ_ON_AC = 100;
-      INTEL_GPU_MIN_FREQ_ON_BAT = 100;
-      INTEL_GPU_MAX_FREQ_ON_AC = 1000;
-      INTEL_GPU_MAX_FREQ_ON_BAT = 1000;
-      INTEL_GPU_BOOST_FREQ_ON_AC = 1000;
-      INTEL_GPU_BOOST_FREQ_ON_BAT = 1000;
+      extraPackages = with pkgs; [
+        beignet
+        intel-media-driver
+        libvdpau-va-gl
+        mesa
+        vaapiIntel
+        vaapiVdpau
+      ];
 
-      START_CHARGE_THRESH_BAT0 = 75;
-      STOP_CHARGE_THRESH_BAT0 = 80;
-      START_CHARGE_THRESH_BAT1 = 75;
-      STOP_CHARGE_THRESH_BAT1 = 80;
+      extraPackages32 = with pkgs.driversi686Linux; [
+        beignet
+        libvdpau-va-gl
+        mesa
+        vaapiIntel
+        vaapiVdpau
+      ];
     };
   };
 }
