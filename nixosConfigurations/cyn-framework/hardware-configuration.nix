@@ -9,6 +9,7 @@
         "thunderbolt"
         "usb_storage"
         "usbcore"
+        "usbhid"
         "xhci_pci"
       ];
 
@@ -17,7 +18,6 @@
         "i915"
         "nls_cp437"
         "nls_iso8859-1"
-        "usbhid"
         "vfat"
       ];
 
@@ -92,6 +92,7 @@
   };
 
   hardware = {
+    cpu.intel.updateMicrocode = true;
     keyboard.zsa.enable = true;
 
     opengl = {
@@ -117,4 +118,7 @@
       ];
     };
   };
+
+  nixpkgs.hostPlatform = "x86_64-linux";
+  swapDevices = [ ];
 }
