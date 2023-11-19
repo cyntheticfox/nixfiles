@@ -5,7 +5,7 @@
 , unstableHomeModules
 , username
 , hostname
-, path ? ../homeConfigurations/${hostname}.nix
+, path ? ../homeConfigurations/${hostname}
 , system ? "x86_64-linux"
 , allowUnfree ? true
 , specialArgs ? { }

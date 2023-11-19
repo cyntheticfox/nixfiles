@@ -5,7 +5,7 @@
 , unstableHomeModules
 , unstablePkgs
 , unstableLib
-, path ? ../homeConfigurations/${hostname}.nix
+, path ? ../homeConfigurations/${hostname}
 }:
 
 assert builtins.isAttrs homeModules || builtins.isList homeModules;
