@@ -5,6 +5,8 @@
       qpwgraph
       pulseaudioFull
 
+      rclone
+      rclone-browser
       insomnia
       moar
       openshot-qt
