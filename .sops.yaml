@@ -3,6 +3,10 @@ keys:
   - &cynthia 73C1C5DF51E7BB9285E9A2625960278CE235F821
   - &cyn-framework 3727C581CD4E4DF55F66FDA9C04B64DABDB187CB
 creation_rules:
+  - path_regex: homeConfigurations/cyn-framework/[^/]+\.(yml|yaml)$
+    key_groups:
+    - pgp:
+        - *cynthia
   - path_regex: nixosConfigurations/cyn-framework/[^/]+\.(yml|yaml)$
     key_groups:
     - pgp:
