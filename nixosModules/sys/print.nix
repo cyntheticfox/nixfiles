@@ -3,9 +3,11 @@ let
   cfg = config.sys.print;
 in
 {
-  options.sys.print.enable = lib.mkEnableOption "Printing";
+  options.sys.print.enable = lib.mkEnableOption "paper document printing and scanning";
 
   config = lib.mkIf cfg.enable {
+    services.avahi.enable = true;
+
     services.printing = {
       enable = true;
 
@@ -14,13 +16,13 @@ in
 
     hardware = {
       printers = {
-        ensureDefaultPrinter = "Home-Printer";
+        ensureDefaultPrinter = "cyn-print";
 
         ensurePrinters = [{
           description = "Canon ImageCLASS MF642CDW";
           deviceUri = "ipp://192.168.2.7:631/ipp";
           model = "everywhere";
-          name = "Home-Printer";
+          name = "cyn-print";
         }];
       };
 
