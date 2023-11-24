@@ -232,6 +232,7 @@
                   };
 
                   unstableHomeModules = [
+                    sops-nix.homeManagerModules.sops
                     nixvim.homeManagerModules.nixvim
                     impermanence.nixosModules.home-manager.impermanence
                   ];
@@ -330,6 +331,9 @@
             ];
 
             sopsPackages = with pkgs; [
+              age
+              ssh-to-age
+              ssh-to-pgp
               sops
               sops-init-gpg-key
               sops-import-keys-hook

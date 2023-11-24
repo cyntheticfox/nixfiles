@@ -50,20 +50,9 @@ in
 {
   programs.zsh.enable = true;
 
-  sops.secrets = {
-    cynthia-password = {
-      sopsFile = ./secrets.yml;
-      neededForUsers = true;
-    };
-
-    # gh-config = {
-    #   inherit (config.users.users.cynthia) group;
-    #
-    #   sopsFile = ./secrets.yml;
-    #   mode = "0400";
-    #   owner = config.users.users.cynthia.name;
-    #   path = "${config.users.users.cynthia.home}/.config/gh/hosts.yml";
-    # };
+  sops.secrets.cynthia-password = {
+    sopsFile = ./secrets.yml;
+    neededForUsers = true;
   };
 
   users.users."cynthia" = {

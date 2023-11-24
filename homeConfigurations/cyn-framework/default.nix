@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   home = {
     packages = with pkgs; [
       # pipewire
@@ -95,6 +95,12 @@
   };
 
   programs.obs-studio.enable = true;
+
+  sops = {
+    defaultSopsFile = ./secrets.yml;
+    age.sshKeyPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
+    secrets.rclone-conf.path = "${config.home.homeDirectory}/.config/rclone/rclone.conf";
+  };
 
   # Using my home-manager modules
   sys = {
@@ -200,9 +206,11 @@
           {
             "node.name",
             "equals",
-            "alsa_output.usb-xDuoo_USB_Audio_2.0_xDuoo_USB_Audio_2.0-00.analog-stereo" },
+            "alsa_output.usb-xDuoo_USB_Audio_2.0_xDuoo_USB_Audio_2.0-00.analog-stereo"
+          },
         },
       },
+
       apply_properties = {
         ["node.description"] = "xDuoo USB DAC",
         ["audio.rate"] = 176400, -- supports 44100 48000 88200 96000 176400 352800 and 384000 supposedly
