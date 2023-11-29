@@ -6,7 +6,7 @@ jobs:
     name: Check flake eval
     runs-on: ubuntu-latest
     steps:
-      - uses: cachix/install-nix-action@v23
+      - uses: cachix/install-nix-action@v24
         with:
           extra_nix_config: |
             system-features = benchmark big-parallel kvm nixos-test
