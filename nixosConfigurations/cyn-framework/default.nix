@@ -69,11 +69,13 @@
   };
 
   networking = {
-    wireless.scanOnLowSignal = false;
-    useNetworkd = true;
-  };
+    networkmanager = {
+      enable = true;
 
-  networking = {
+      insertNameservers = [ "9.9.9.9" "149.112.112.112" ];
+      wifi.powersave = true;
+    };
+
     interfaces.wlp0s20f3.useDHCP = true;
 
     supplicant.wlp0s20f3 = {
@@ -82,6 +84,9 @@
       configFile.path = config.sops.secrets.wireless.path;
       userControlled.enable = true;
     };
+
+    useNetworkd = true;
+    wireless.scanOnLowSignal = false;
   };
 
   programs = {
