@@ -74,7 +74,7 @@ in
         packer
         kubectl
         kubernetes-helm
-        terraform
+        opentofu # Open Source Terraform
       ] ++ cfg.extraCloudPackages;
     }
 
