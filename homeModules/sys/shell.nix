@@ -104,9 +104,9 @@ in
     bash.enable = lib.mkEnableOption "Enable default bash config" // { default = true; };
     bat.enable = lib.mkEnableOption "Enable default bat config" // { default = true; };
 
-    exa = {
-      enable = lib.mkEnableOption "Default exa config" // { default = true; };
-      package = lib.mkPackageOption pkgs "exa" { };
+    eza = {
+      enable = lib.mkEnableOption "Default eza config" // { default = true; };
+      package = lib.mkPackageOption pkgs "eza" { };
     };
 
     less.enable = lib.mkEnableOption "Enable default less config" // { default = true; };
@@ -206,17 +206,17 @@ in
       };
     })
 
-    (lib.mkIf cfg.exa.enable {
+    (lib.mkIf cfg.eza.enable {
       home.shellAliases = {
-        "l" = "${lib.getExe cfg.exa.package} --classify --color=always --icons";
-        "ls" = "${lib.getExe cfg.exa.package} --classify --color=always --icons";
-        "la" = "${lib.getExe cfg.exa.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
-        "ll" = "${lib.getExe cfg.exa.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
-        "tree" = "${lib.getExe cfg.exa.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale --tree";
+        "l" = "${lib.getExe cfg.eza.package} --classify --color=always --icons";
+        "ls" = "${lib.getExe cfg.eza.package} --classify --color=always --icons";
+        "la" = "${lib.getExe cfg.eza.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
+        "ll" = "${lib.getExe cfg.eza.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
+        "tree" = "${lib.getExe cfg.eza.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale --tree";
       };
 
       programs.exa = {
-        inherit (cfg.exa) enable package;
+        inherit (cfg.eza) enable package;
       };
     })
 
@@ -344,7 +344,6 @@ in
             "systemd"
             "systemadmin"
             "tig"
-            "terraform"
             "tmux"
             "urltools"
             "web-search"

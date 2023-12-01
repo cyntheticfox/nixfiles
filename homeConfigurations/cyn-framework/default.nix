@@ -184,7 +184,6 @@
       enable = true;
 
       fcp.enable = true;
-      exa.package = pkgs.nixpkgs-unstable.eza;
     };
 
     ssh.enable = true;
