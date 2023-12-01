@@ -89,7 +89,7 @@ in
         enable = true;
 
         powerOnBoot = false;
-        package = pkgs.bluezFull;
+        package = pkgs.bluez;
         settings.General.Name = config.networking.hostName;
       };
 
