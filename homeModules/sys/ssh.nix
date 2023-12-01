@@ -343,7 +343,7 @@ in
     package = lib.mkPackageOption pkgs "openssh" { };
 
     extraMatchBlocks = lib.mkOption {
-      type = lib.hm.types.listOrDagOf matchBlockModule;
+      type = lib.hm.types.dagOf matchBlockModule;
       default = { };
 
       description = ''
