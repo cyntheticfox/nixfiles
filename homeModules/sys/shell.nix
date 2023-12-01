@@ -215,7 +215,7 @@ in
         "tree" = "${lib.getExe cfg.eza.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale --tree";
       };
 
-      programs.exa = {
+      programs.eza = {
         inherit (cfg.eza) enable package;
       };
     })
