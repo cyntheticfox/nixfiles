@@ -25,6 +25,6 @@
 
     uid = 1000;
     shell = config.home-manager.users.cynthia.zsh.package or pkgs.zsh;
-    passwordFile = config.sops.secrets.cynthia-password.path;
+    hashedPasswordFile = config.sops.secrets.cynthia-password.path;
   };
 }

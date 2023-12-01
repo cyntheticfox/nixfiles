@@ -65,7 +65,7 @@
 
   users = {
     mutableUsers = false;
-    users.root.passwordFile = config.sops.secrets.root-password.path;
+    users.root.hashedPasswordFile = config.sops.secrets.root-password.path;
   };
 
   networking = {
