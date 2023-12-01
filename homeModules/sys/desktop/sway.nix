@@ -525,7 +525,7 @@ in
           inherit (cfg) package enable;
 
           wrapperFeatures.gtk = true;
-          systemdIntegration = true;
+          systemd.enable = true;
 
           config =
             let
