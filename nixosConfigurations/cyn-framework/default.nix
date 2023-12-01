@@ -73,7 +73,7 @@
       enable = true;
 
       insertNameservers = [ "9.9.9.9" "149.112.112.112" ];
-      wifi.powersave = true;
+      unmanaged = [ "wlp0s20f3" ];
     };
 
     interfaces.wlp0s20f3.useDHCP = true;
