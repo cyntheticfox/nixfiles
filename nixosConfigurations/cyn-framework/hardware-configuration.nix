@@ -103,17 +103,18 @@
       extraPackages = with pkgs; [
         beignet
         intel-media-driver
+        intel-vaapi-driver
         libvdpau-va-gl
         mesa
-        vaapiIntel
         vaapiVdpau
+        vdpauinfo
       ];
 
       extraPackages32 = with pkgs.driversi686Linux; [
         beignet
+        intel-vaapi-driver
         libvdpau-va-gl
         mesa
-        vaapiIntel
         vaapiVdpau
       ];
     };
