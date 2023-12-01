@@ -330,7 +330,7 @@ in
       inherit (cfg) enable;
 
       package = cfg.package.override {
-        cfg.enableTridactylNative = true;
+        cfg.nativeMessagingHosts.packages = with pkgs; [ tridactyl-native ];
       };
     };
   };
