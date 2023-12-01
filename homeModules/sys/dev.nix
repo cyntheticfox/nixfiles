@@ -54,7 +54,7 @@ in
         rr
 
         # RE/General
-        cutter
+        # cutter # TODO: Uncomment when fixed
         exiftool
         hexyl
         radare2
