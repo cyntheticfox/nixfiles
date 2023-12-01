@@ -147,19 +147,6 @@ in
 
       # Turkiye
       "TUBITAK Kamu SM SSL Kok Sertifikasi - Surum 1"
-
-      ### Malware/Misuse
-      #
-      "COMODO Certification Authority"
-      "COMODO ECC Certification Authority"
-      "COMODO RSA Certification Authority"
-      "Comodo AAA Services root"
-
-      ### Might be malicious
-      #
-      "TrustCor ECA-1"
-      "TrustCor RootCert CA-1"
-      "TrustCor RootCert CA-2"
     ];
 
     services.logind = {
