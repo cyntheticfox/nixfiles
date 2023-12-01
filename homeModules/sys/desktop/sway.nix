@@ -104,8 +104,7 @@ let
     };
 
     # Functions
-    screenOrder = list:
-      lib.escapeShellArgs (builtins.map ({ criteria, ... }: criteria) list);
+    screenOrder = builtins.map (builtins.getAttr "criteria");
   };
 
   defaultScreenCenter = with screens; screenOrder [
@@ -193,8 +192,8 @@ in
             description = "pattern matches to use to assign windows";
           };
 
-          output = lib.mkOption {
-            type = lib.types.str;
+          outputs = lib.mkOption {
+            type = with lib.types; listOf str;
             default = defaultScreenLaptop;
             description = "Where to put the workspace by default";
           };
@@ -206,14 +205,14 @@ in
           index = 1;
           icon = "󰖟 ";
           title = "Web";
-          output = defaultScreenLeft;
+          outputs = defaultScreenLeft;
           assigns = [{ app_id = "^firefox$"; }];
         }
         {
           index = 2;
           icon = "󰍲 ";
           title = "Microsoft Teams";
-          output = defaultScreenRight;
+          outputs = defaultScreenRight;
 
           assigns = [
             # Microsoft Edge X11
@@ -232,7 +231,7 @@ in
           index = 3;
           icon = "󰭹 ";
           title = "Matrix";
-          output = defaultScreenRight;
+          outputs = defaultScreenRight;
 
           # Element is a little finicky
           assigns = [
@@ -247,7 +246,7 @@ in
           index = 4;
           icon = "󰙯 ";
           title = "Discord";
-          output = defaultScreenRight;
+          outputs = defaultScreenRight;
 
           assigns = [
             { instance = "^discord$"; }
@@ -260,35 +259,35 @@ in
           index = 5;
           icon = "󰇮 ";
           title = "Email";
-          output = defaultScreenLeft;
+          outputs = defaultScreenLeft;
         }
         {
           index = 6;
           isDefault = true;
           icon = "";
           title = "Etc 1";
-          output = defaultScreenCenter;
+          outputs = defaultScreenCenter;
         }
         {
           index = 7;
           isDefault = true;
           icon = "";
           title = "Etc 2";
-          output = defaultScreenCenter;
+          outputs = defaultScreenCenter;
         }
         {
           index = 8;
           isDefault = true;
           icon = "";
           title = "Etc 3";
-          output = defaultScreenCenter;
+          outputs = defaultScreenCenter;
         }
         {
           index = 9;
           isDefault = true;
           icon = "";
           title = "Etc 4";
-          output = defaultScreenCenter;
+          outputs = defaultScreenCenter;
         }
       ];
 
@@ -446,7 +445,7 @@ in
           isDefault = true;
           icon = "";
           title = "Etc ${builtins.toString index}";
-          output = defaultScreenCenter;
+          outputs = defaultScreenCenter;
         };
 
       # mkExpandedWorkspaces :: [Workspace] -> [Workspace]
@@ -763,7 +762,7 @@ in
 
               # Default to outputting some workspaces on other monitors if available
               workspaceOutputAssign =
-                builtins.map ({ name, output, ... }: { inherit output; workspace = name; }) finalWorkspaces;
+                builtins.map ({ name, outputs, ... }: { output = outputs; workspace = name; }) finalWorkspaces;
 
               colors = with palletes.nord; {
                 background = base07;
