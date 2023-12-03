@@ -197,7 +197,14 @@ in
               pyright.enable = true;
               # rnix-lsp.enable = true;
               ruff-lsp.enable = true;
-              rust-analyzer.enable = true;
+
+              rust-analyzer = {
+                enable = true;
+
+                installCargo = true;
+                installRustc = true;
+              };
+
               terraformls.enable = true;
               texlab.enable = true;
               tsserver.enable = true;
