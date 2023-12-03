@@ -1,5 +1,7 @@
-{ config, lib, ... }:
-
+{ config
+, lib
+, ...
+}:
 let
   cfg = config.sys.nixvim;
 in
@@ -98,43 +100,86 @@ in
           undofile = true;
         };
 
-        maps = {
-          normal = {
-            # leader mappings
-            "<leader>et".action = ":tabe<CR>";
-            "<leader>w".action = ":set wrap! wrap?<CR>";
+        keymaps = [
+          # leader mappings
+          {
+            mode = "n";
+            key = "<leader>et";
+            action = ":tabe<CR>";
+          }
+          {
+            mode = "n";
+            key = "<leader>w";
+            action = ":set wrap! wrap?<CR>";
+          }
 
-            # Easier buffer switching
-            "<leader>h".action = "<C-w>h";
-            "<leader>j".action = "<C-w>j";
-            "<leader>k".action = "<C-w>k";
-            "<leader>l".action = "<C-w>l";
+          # Easier buffer switching
+          {
+            mode = "n";
+            key = "<leader>h";
+            action = "<C-w>h";
+          }
+          {
+            mode = "n";
+            key = "<leader>j";
+            action = "<C-w>j";
+          }
+          {
+            mode = "n";
+            key = "<leader>k";
+            action = "<C-w>k";
+          }
+          {
+            mode = "n";
+            key = "<leader>l";
+            action = "<C-w>l";
+          }
 
-            # Easier terminal launch
-            "<leader>tt" = {
-              silent = true;
-              action = ":terminal<CR>";
-            };
-
-            "<leader>tv" = {
-              silent = true;
-              action = ":vnew<CR>:terminal<CR>";
-            };
-
-            "<leader>th" = {
-              silent = true;
-              action = ":new<CR>:terminal<CR>";
-            };
-          };
-
-          terminal = {
-            "<C-x>".action = "<C-\><C-n><C-w>q";
-            "<C-w>h".action = "<C-\><C-n><C-w>h";
-            "<C-w>j".action = "<C-\><C-n><C-w>j";
-            "<C-w>k".action = "<C-\><C-n><C-w>k";
-            "<C-w>l".action = "<C-\><C-n><C-w>l";
-          };
-        };
+          # Easier terminal launch
+          {
+            mode = "n";
+            key = "<leader>tt";
+            action = ":terminal<CR>";
+            options.silent = true;
+          }
+          {
+            mode = "n";
+            key = "<leader>tv";
+            action = ":vnew<CR>:terminal<CR>";
+            options.silent = true;
+          }
+          {
+            mode = "n";
+            key = "<leader>th";
+            action = ":new<CR>:terminal<CR>";
+            options.silent = true;
+          }
+          {
+            mode = "t";
+            key = "<C-x>";
+            action = "<C-\><C-n><C-w>q";
+          }
+          {
+            mode = "t";
+            key = "<C-w>h";
+            action = "<C-\><C-n><C-w>h";
+          }
+          {
+            mode = "t";
+            key = "<C-w>j";
+            action = "<C-\><C-n><C-w>j";
+          }
+          {
+            mode = "t";
+            key = "<C-w>k";
+            action = "<C-\><C-n><C-w>k";
+          }
+          {
+            mode = "t";
+            key = "<C-w>l";
+            action = "<C-\><C-n><C-w>l";
+          }
+        ];
 
         extraConfigLuaPost = vimHLString;
         colorschemes.nord.enable = true;
@@ -245,7 +290,12 @@ in
             theme = "nord";
 
             sections = {
-              lualine_a = [{ name = "mode"; extraConfig.upper = true; }];
+              lualine_a = [
+                {
+                  name = "mode";
+                  extraConfig.upper = true;
+                }
+              ];
               lualine_b = [ "branch" ];
               lualine_c = [ "diff" "hostname" "filename" ];
               lualine_x = [ "encoding" "fileformat" "filetype" ];
