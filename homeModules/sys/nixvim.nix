@@ -171,12 +171,9 @@ in
           gitgutter.enable = true;
 
           indent-blankline = {
-            # inherit charHighlightList;
+            # inherit charHighlightList; # TODO: Fix
 
             enable = true;
-
-            showCurrentContext = true;
-            showCurrentContextStart = true;
           };
 
           lastplace.enable = true;
