@@ -253,7 +253,7 @@ in
           neo-tree.enable = true;
           # nix.enable = true;
 
-          null-ls = {
+          none-ls = {
             enable = true;
             sources = {
               code_actions.shellcheck.enable = true;
