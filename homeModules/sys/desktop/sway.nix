@@ -64,7 +64,7 @@ let
     builtin = mkScreenConfig {
       name = "Built-in display";
       id = "eDP-1";
-      scale = 1.25;
+      scale = 1.5;
       xPixels = 2256;
       yPixels = 1504;
       refreshRate = 59.999;
