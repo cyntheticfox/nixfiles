@@ -330,13 +330,17 @@ in
               };
 
               formatting = {
-                alejandra.enable = true;
                 black.enable = true;
                 cbfmt.enable = true;
                 fnlfmt.enable = true;
                 fourmolu.enable = true;
                 nixpkgs_fmt.enable = true;
-                prettier.enable = true;
+
+                prettier = {
+                  enable = true;
+                  disableTsServerFormatter = true;
+                };
+
                 shfmt.enable = true;
                 stylua.enable = true;
                 taplo.enable = true;
