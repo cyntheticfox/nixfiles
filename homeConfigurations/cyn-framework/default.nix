@@ -5,11 +5,12 @@
       qpwgraph
       pulseaudioFull
 
-      rclone
-      rclone-browser
+      flips
       insomnia
       moar
       openshot-qt
+      rclone
+      rclone-browser
       wl-color-picker
       zap
     ];
