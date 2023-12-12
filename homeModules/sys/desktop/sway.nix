@@ -591,17 +591,21 @@ in
               );
 
               input = {
-                "type:keyboard" = {
+                "type:keyboard".xkb_options = "caps:escape";
+
+                "1:1:AT_Translated_Set_2_keyboard" = {
                   xkb_layout = "us";
                   xkb_numlock = "enabled";
                 };
 
                 "type:touchpad" = {
-                  accel_profile = "flat";
-                  pointer_accel = "1";
-
                   dwt = "enabled";
                   tap = "enabled";
+                };
+
+                "2362:628:PIXA3854:00_093A:0274_Touchpad" = {
+                  accel_profile = "flat";
+                  pointer_accel = "1";
                   natural_scroll = "disabled";
                 };
               };
