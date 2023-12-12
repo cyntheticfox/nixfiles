@@ -30,6 +30,7 @@
           ".config/nheko"
           ".config/obs-studio"
           ".config/pipewire"
+          ".config/retroarch"
           ".config/WebCord"
           ".docker"
           ".gnupg"
