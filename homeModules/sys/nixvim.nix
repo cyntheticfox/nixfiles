@@ -253,7 +253,7 @@ in
               terraformls.enable = true;
               texlab.enable = true;
               tsserver.enable = true;
-              typst-lsp.enable = true;
+              # typst-lsp.enable = true;
               vuels.enable = true;
               yamlls.enable = true;
               zls.enable = true;
