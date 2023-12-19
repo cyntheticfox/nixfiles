@@ -170,11 +170,11 @@
     },
     "nix-index-database": {
       "locked": {
-        "lastModified": 1702782101,
-        "narHash": "sha256-6USmdb361O76rw5wXPMqk4fAmGa6Wb9CJEdqSiT4cSk=",
+        "lastModified": 1702935467,
+        "narHash": "sha256-aKDfISpTa8S0FGq7wfC8Bpp4BMpZ1++eR2lvGIppDLc=",
         "owner": "cyntheticfox",
         "repo": "nix-index-database-stable",
-        "rev": "838f942dae7db55afc68c74b436f8602ade8d869",
+        "rev": "78fa868d6b3f6a9cf1f7ea509210016826652ea0",
         "type": "github"
       },
       "original": {
