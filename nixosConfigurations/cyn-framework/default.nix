@@ -169,7 +169,7 @@
       "40-wlp0s20f3" = {
         dhcpV4Config = {
           ClientIdentifier = "mac";
-          RouteMetric = 600;
+          RouteMetric = 650;
         };
 
         dhcpV6Config.RouteMetric = 600;
@@ -181,7 +181,7 @@
 
         dhcpV4Config = {
           ClientIdentifier = "mac";
-          RouteMetric = 700;
+          RouteMetric = 750;
         };
 
         dhcpV6Config.RouteMetric = 700;
@@ -195,7 +195,7 @@
 
         dhcpV4Config = {
           ClientIdentifier = "mac";
-          RouteMetric = 200;
+          RouteMetric = 250;
         };
 
         dhcpV6Config.RouteMetric = 200;
