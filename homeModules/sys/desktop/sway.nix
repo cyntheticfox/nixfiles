@@ -72,7 +72,7 @@ let
 
     homeDockCenter = mkScreenConfig {
       name = "ASUS High Refresh-Rate Monitor";
-      outputString = "ASUSTek COMPUTER INC VG28UQL1A 0x0000135C";
+      outputString = "ASUSTek COMPUTER INC VG28UQL1A 0x00000101";
       # scale = 1.75;
       xPixels = 1920; # 3840; # NOTE: Wish I could afford better.
       yPixels = 1080; # 2160;
