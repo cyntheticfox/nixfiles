@@ -22,7 +22,7 @@ FLAKE_CHECK_FLAGS=(
 
 CHECK_UPDATE_CMD="$CURL_BIN --location --silent"
 UPDATE_INPUT_CMD="$NIX_BIN flake lock ${GENERAL_FLAGS[*]}"
-EVAL_CHECK_CMD="$NIX_BIN flake check --no-build ${FLAKE_CHECK_FLAGS[*]}"
+# EVAL_CHECK_CMD="$NIX_BIN flake check --no-build ${FLAKE_CHECK_FLAGS[*]}"
 BUILD_CHECK_CMD="$NIX_BIN flake check ${FLAKE_CHECK_FLAGS[*]}"
 
 if [ ! -e "$LOCKFILE" ]; then
@@ -108,14 +108,16 @@ for INPUT in $INPUTS; do
 
     echo "Testing eval for \"$INPUT_NAME\""
 
-    if ! $EVAL_CHECK_CMD; then
-        echo "Check eval for updated input \"$INPUT_NAME\" failed."
-        echo "$ORIGINAL_FLAKE" >$LOCKFILE
-
-        FAIL+=("$INPUT_NAME: Check eval failed")
-
-        continue
-    fi
+    # TODO: Find way around IFD
+    #
+    # if ! $EVAL_CHECK_CMD; then
+    #     echo "Check eval for updated input \"$INPUT_NAME\" failed."
+    #     echo "$ORIGINAL_FLAKE" >$LOCKFILE
+    #
+    #     FAIL+=("$INPUT_NAME: Check eval failed")
+    #
+    #     continue
+    # fi
 
     echo "Testing build for \"$INPUT_NAME\""
 

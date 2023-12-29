@@ -1,0 +1,58 @@
+name: Checks
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        default: ${{ github.ref }}
+        required: false
+        type: string
+      impure:
+        default: false
+        required: false
+        type: boolean
+
+jobs:
+  check-eval:
+    name: Check flake eval
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Nix
+        uses: cachix/install-nix-action@v24
+        with:
+          extra_nix_config: |
+            system-features = benchmark big-parallel kvm nixos-test
+
+      - name: Check out git repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Evaluate derivation type outputs if possible
+        if: inputs.impure != 'true'
+        run: |
+          nix -vL --show-trace flake check --no-build --system x86_64-linux
+
+  check:
+    name: Check flake build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Maximize Build Space
+        uses: easimon/maximize-build-space@v10
+        with:
+          remove-dotnet: true
+          remove-android: true
+          remove-haskell: true
+          remove-codeql: true
+          remove-docker-images: true
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v24
+        with:
+          extra_nix_config: |
+            system-features = benchmark big-parallel kvm nixos-test
+
+      - name: Build checks
+        run: |
+          nix -vL --show-trace flake check --system x86_64-linux
