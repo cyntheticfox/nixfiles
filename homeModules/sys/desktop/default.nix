@@ -268,8 +268,8 @@ in
 
       xdg = {
         dataFile."dbus-1/services/org.freedesktop.secrets.service".source = "${pkgs.pass-secret-service}/share/dbus-1/services/org.freedesktop.secrets.service";
-        xdg.mime.enable = true;
-        xdg.mimeApps.enable = true;
+        mime.enable = true;
+        mimeApps.enable = true;
       };
     }
 

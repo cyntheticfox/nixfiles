@@ -241,14 +241,6 @@
               })
             ];
           };
-
-          ashley = self.lib.mkNixosServer {
-            inherit (inputs) flake-registry nixpkgs;
-            inherit (self) nixosModules;
-
-            hostname = "ashley";
-            domain = "gh0st.network";
-          };
         };
 
         nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
@@ -296,6 +288,7 @@
             nil.enable = true;
             shellcheck.enable = true;
             shfmt.enable = true;
+            statix.enable = true;
 
             yamllint = {
               enable = true;
