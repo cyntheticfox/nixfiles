@@ -43,9 +43,12 @@ let
     {
       # Fix impurities
       xdg.enable = true;
-      home.username = "hm-user";
-      home.homeDirectory = "/home/hm-user";
-      home.stateVersion = lib.mkDefault "18.09";
+
+      home = {
+        username = "hm-user";
+        homeDirectory = "/home/hm-user";
+        stateVersion = lib.mkDefault "18.09";
+      };
 
       # Test docs separately
       manual.manpages.enable = false;
