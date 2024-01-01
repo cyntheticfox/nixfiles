@@ -40,41 +40,42 @@ in
       '';
     in
     {
-      programs.sway = {
-        enable = true;
+      programs = {
+        sway = {
+          enable = true;
 
-        wrapperFeatures.gtk = true;
+          wrapperFeatures.gtk = true;
 
-        extraPackages = with pkgs; [
-          # Theming
-          gnome-themes-extra
+          extraPackages = with pkgs; [
+            # Theming
+            gnome-themes-extra
 
-          # Util
-          grim
-          imv
-          jq
-          kanshi
-          mako
-          pavucontrol
-          playerctl
-          qt5.qtwayland
-          slurp
-          swayidle
-          swaylock-effects
-          sway-contrib.grimshot
-          sway-contrib.inactive-windows-transparency
-          wf-recorder
-          wl-clipboard
-          wlogout
-          wofi
-        ];
+            # Util
+            grim
+            imv
+            jq
+            kanshi
+            mako
+            pavucontrol
+            playerctl
+            qt5.qtwayland
+            slurp
+            swayidle
+            swaylock-effects
+            sway-contrib.grimshot
+            sway-contrib.inactive-windows-transparency
+            wf-recorder
+            wl-clipboard
+            wlogout
+            wofi
+          ];
+        };
+
+        # Force GTK settings via dconf
+        dconf.profiles.sway = sway-dconf-profile;
+        xwayland.enable = true;
+        light.enable = true;
       };
-
-      ### Force GTK settings via dconf
-      #
-      programs.dconf.profiles.sway = sway-dconf-profile;
-      programs.xwayland.enable = true;
-      programs.light.enable = true;
 
       services.xserver.libinput = {
         enable = true;
@@ -93,11 +94,6 @@ in
         XDG_SESSION_TYPE = "wayland";
         DCONF_PROFILE = "sway";
       };
-
-      # services.gnome.gnome-keyring.enable = true;
-      # security.pam.services.login.enableGnomeKeyring = true;
-      # security.pam.services.greetd.enableGnomeKeyring = true;
-      # programs.seahorse.enable = true;
 
       xdg.portal = {
         enable = true;
