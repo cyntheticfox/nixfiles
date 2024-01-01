@@ -55,6 +55,12 @@
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
 
+    devshell = {
+      url = "github:numtide/devshell";
+
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     # NixOS Modules
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     impermanence.url = "github:nix-community/impermanence";
@@ -303,86 +309,129 @@
             pkgs = import nixpkgs-unstable {
               inherit system;
 
-              overlays = [ sops-nix.overlays.default ];
+              overlays = [
+                devshell.overlays.default
+                sops-nix.overlays.default
+              ];
             };
 
-            inherit (pkgs) lib;
-
-            formatPackages = with pkgs; [
-              pre-commit
-              nixpkgs-fmt
-              editorconfig-checker
+            packages = with pkgs; [
+              age
               deadnix
+              editorconfig-checker
+              nixpkgs-fmt
+              pre-commit
+              sops
+              sops-init-gpg-key
+              ssh-to-age
+              ssh-to-pgp
               statix
             ];
 
-            editingPackages = with pkgs; [
-              git
-              git-crypt
-              gnupg
-              neovim
-              pinentry
+            commands = [
+              { package = pkgs.git-crypt; }
+              { package = pkgs.gnupg; }
+              { package = pkgs.pinentry; }
+              {
+                name = "g";
+                package = pkgs.git;
+              }
+              {
+                name = "ga";
+                package = pkgs.git;
+                command = "git add";
+              }
+              {
+                name = "gaa";
+                package = pkgs.git;
+                command = "git add --all";
+              }
+              {
+                name = "gc";
+                package = pkgs.git;
+                command = "git commit";
+              }
+              {
+                name = "gca";
+                package = pkgs.git;
+                command = "git commit --all";
+              }
+              {
+                name = "gcmsg";
+                package = pkgs.git;
+                command = "git commit -m";
+              }
+              {
+                name = "gd";
+                package = pkgs.git;
+                command = "git diff";
+              }
+              {
+                name = "gl";
+                package = pkgs.git;
+                command = "git pull";
+              }
+              {
+                name = "gsb";
+                package = pkgs.git;
+                command = "git status -sb";
+              }
+              {
+                name = "n";
+                package = pkgs.nix;
+              }
+              {
+                name = "nfu";
+                package = pkgs.nix;
+                command = "nix flake update";
+              }
+              {
+                name = "nosswf";
+                command = "nixos-rebuild switch --use-remote-sudo --flake .";
+              }
+              {
+                name = "v";
+                package = pkgs.neovim;
+              }
             ];
-
-            sopsPackages = with pkgs; [
-              age
-              ssh-to-age
-              ssh-to-pgp
-              sops
-              sops-init-gpg-key
-              sops-import-keys-hook
-            ];
-
-            sopsPGPKeyDirs = [
-              ./keys/hosts
-              ./keys/users
-            ];
-
-            posixShellAliases = ''
-              alias g="git"
-              alias ga="git add"
-              alias gaa="git add --all"
-              alias gc="git commit"
-              alias gcmsg="git commit -m"
-              alias gd="git diff"
-              alias gl="git pull"
-              alias gp="git push"
-              alias gsb="git status -sb"
-              alias n="nix"
-              alias nfu="nix flake update"
-              alias nosswf="nixos-rebuild switch --use-remote-sudo --flake ."
-              alias v="nvim"
-            '';
           in
           {
-            default = pkgs.mkShell {
-              inherit (self.checks.${system}.pre-commit-check) shellHook;
-              inherit sopsPGPKeyDirs;
+            default = pkgs.devshell.mkShell {
+              inherit packages;
 
-              packages = formatPackages ++ sopsPackages;
+              devshell = {
+                startup.pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
+                motd = "";
+                meta.description = ''
+                  Config for systems already set up
+                '';
+              };
             };
 
-            no-env = pkgs.mkShell {
-              inherit sopsPGPKeyDirs;
+            no-env = pkgs.devshell.mkShell {
+              inherit commands packages;
 
-              packages = formatPackages ++ sopsPackages ++ editingPackages;
+              devshell = {
+                startup.pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
 
-              shellHook = lib.concatLines [
-                self.checks.${system}.pre-commit-check.shellHook
-                posixShellAliases
-              ];
+                meta.description = ''
+                  Config for systems NOT already set up
+                '';
+              };
             };
 
-            no-env-desktop = pkgs.mkShell {
-              inherit sopsPGPKeyDirs;
+            no-env-desktop = pkgs.devshell.mkShell {
+              inherit commands;
 
-              packages = formatPackages ++ sopsPackages ++ editingPackages
-                ++ [ pkgs.pinentry-qt ];
+              packages = packages ++ [ pkgs.pinentry-qt ];
 
-              shellHook = lib.concatLines [
-                self.checks.${system}.pre-commit-check.shellHook
-                posixShellAliases
-              ];
+              devshell = {
+                startup.pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
+
+                meta.description = ''
+                  Config for systems NOT already set up
+                '';
+              };
             };
           };
       })));
