@@ -20,7 +20,7 @@ in
 
         ensurePrinters = [{
           description = "Canon ImageCLASS MF642CDW";
-          deviceUri = "ipp://192.168.2.7:631/ipp";
+          deviceUri = "ipp://cyn-print.gh0st.network:631/ipp";
           model = "everywhere";
           name = "cyn-print";
         }];
