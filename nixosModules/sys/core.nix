@@ -34,13 +34,14 @@ in
 
     nix-experimental-features = mkOption {
       type = with types; listOf (enum [
-        # "auto-allocate-uids" # Added in 23.05
+        "auto-allocate-uids" # Added in 23.05
         "ca-derivations"
         "cgroup"
         "flakes"
         "nix-command"
         "repl-flake"
       ]);
+
       default = [ "nix-command" "flakes" ];
     };
   };
@@ -53,25 +54,29 @@ in
 
     i18n.defaultLocale = "en_US.UTF-8";
 
-    environment.etc."nix/nixpkgs-config.nix".text = lib.mkDefault ''
-      {
-        allowUnfree = ${lib.boolToString config.nixpkgs.config.allowUnfree};
-      }
-    '';
+    environment = {
+      inherit (cfg) defaultPackages;
 
-    environment.defaultPackages = cfg.defaultPackages;
+      etc."nix/nixpkgs-config.nix".text = lib.mkDefault ''
+        {
+          allowUnfree = ${lib.boolToString config.nixpkgs.config.allowUnfree};
+        }
+      '';
 
-    environment.homeBinInPath = true;
-    environment.localBinInPath = true;
+      homeBinInPath = true;
+      localBinInPath = true;
 
-    environment.shellAliases = {
-      ll = "ls -al";
-      la = "ls -al";
+      shellAliases = {
+        ll = "ls -al";
+        la = "ls -al";
+      };
     };
 
-    programs.mtr.enable = true;
-    programs.tmux.enable = true;
-    programs.vim.defaultEditor = true;
+    programs = {
+      mtr.enable = true;
+      tmux.enable = true;
+      vim.defaultEditor = true;
+    };
 
     networking = {
       useDHCP = false;
