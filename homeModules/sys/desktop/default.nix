@@ -216,8 +216,6 @@ in
         Install.WantedBy = [ "secrets-service.target" ];
       };
 
-      xdg.dataFile."dbus-1/services/org.freedesktop.secrets.service".source = "${pkgs.pass-secret-service}/share/dbus-1/services/org.freedesktop.secrets.service";
-
       systemd.user.targets.secrets-service.Unit = {
         Description = "Setup of a FreeDesktop secrets management service";
         Documentation = "man:systemd.special(7)";
@@ -268,8 +266,11 @@ in
         '';
       };
 
-      xdg.mime.enable = true;
-      xdg.mimeApps.enable = true;
+      xdg = {
+        dataFile."dbus-1/services/org.freedesktop.secrets.service".source = "${pkgs.pass-secret-service}/share/dbus-1/services/org.freedesktop.secrets.service";
+        xdg.mime.enable = true;
+        xdg.mimeApps.enable = true;
+      };
     }
 
     (lib.mkIf cfg.games.steam.enable {
