@@ -98,11 +98,11 @@
         "sops-nix": []
       },
       "locked": {
-        "lastModified": 1704400805,
-        "narHash": "sha256-Z9VmeM9YwspkxSSNi1NUrAxwo8G1KLf/D9Hoev7tySA=",
+        "lastModified": 1704417948,
+        "narHash": "sha256-+/GXJak6qgiMFQArhhQnwhp/3Afpe9uJLMoMJF3z4Cw=",
         "owner": "lilyinstarlight",
         "repo": "foosteros",
-        "rev": "cf2206fad24be1672166b3041bced3ba7ac35457",
+        "rev": "cf7f687b45abf2efe5e3574366b18be2cc2c471c",
         "type": "github"
       },
       "original": {
@@ -229,11 +229,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1704266875,
-        "narHash": "sha256-luA5SGmeIRZlgLfSLUuR3eacS63q2bJ0Yywqak5lj3E=",
+        "lastModified": 1704458188,
+        "narHash": "sha256-f6BYEuIqnbrs6J/9m1/1VdkJ6d63hO9kUC09kTPuOqE=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "8e34f33464d77bea2d5cf7dc1066647b1ad2b324",
+        "rev": "172385318068519900a7d71c1024242fa6af75f0",
         "type": "github"
       },
       "original": {
@@ -331,11 +331,11 @@
         "pre-commit-hooks": []
       },
       "locked": {
-        "lastModified": 1704356551,
-        "narHash": "sha256-CIznfohcfLRrjRC03QW+tiDeYrJ+Pw10Ny8KPXex1RU=",
+        "lastModified": 1704466181,
+        "narHash": "sha256-ZpH8AkzTqai8zdBOVls8hQZnYg3ld94u7/qrQAlEfwI=",
         "owner": "pta2002",
         "repo": "nixvim",
-        "rev": "10d114f5a6e0a9591d13a28a92905e71cc100b39",
+        "rev": "1f1065df1efa716686b9357b4b5e0e4fa4a0af7e",
         "type": "github"
       },
       "original": {
