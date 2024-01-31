@@ -80,7 +80,7 @@ in
 
     networking = {
       useDHCP = false;
-      firewall.pingLimit = lib.mkIf config.networking.firewall.enable "--limit 1/minute --limit-burst 5";
+      firewall.pingLimit = lib.mkIf config.networking.firewall.enable "1/minute";
     };
 
     nix = {

@@ -69,11 +69,19 @@
   };
 
   networking = {
+    firewall.enable = true;
+
     networkmanager = {
       enable = true;
 
       insertNameservers = [ "9.9.9.9" "149.112.112.112" ];
       unmanaged = [ "wlp0s20f3" ];
+    };
+
+    nftables = {
+      enable = true;
+      ruleset = ''
+      '';
     };
 
     interfaces.wlp0s20f3.useDHCP = true;
