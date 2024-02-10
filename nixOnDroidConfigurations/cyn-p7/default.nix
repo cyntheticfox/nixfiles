@@ -24,8 +24,6 @@
   # Backup etc files instead of failing to activate
   environment.etcBackupExtension = ".bak";
 
-  system.stateVersion = "22.11";
-
   # Set up nix for flakes
   nix.extraOptions = "experimental-features = nix-command flakes";
 

@@ -145,6 +145,7 @@
             system = "aarch64-linux";
             hostname = "pbp";
             username = "cynthia";
+            stateVersion = "23.05";
 
             unstableHomeModules = [
               nixvim.homeManagerModules.nixvim
@@ -157,6 +158,7 @@
 
             username = "cynthia";
             hostname = "wsl";
+            stateVersion = "23.05";
 
             unstableHomeModules = [
               nixvim.homeManagerModules.nixvim
@@ -172,6 +174,7 @@
 
             hostname = "nixos-minimal";
             domain = "";
+            stateVersion = "23.05";
 
             path = ./nixosConfigurations/min;
 
@@ -202,6 +205,7 @@
 
             hostname = "cyn-framework";
             domain = "gh0st.network";
+            stateVersion = "23.05";
 
             overlays = [
               (_: _: {
@@ -228,7 +232,6 @@
                   inherit lib;
 
                   unstableLib = nixpkgs-unstable.lib;
-
                   hostname = config.networking.hostName;
 
                   unstablePkgs = import nixpkgs-unstable {
@@ -242,6 +245,8 @@
                     nixvim.homeManagerModules.nixvim
                     impermanence.nixosModules.home-manager.impermanence
                   ];
+
+                  stateVersion = "23.05";
                 };
               })
             ];
@@ -249,6 +254,7 @@
         };
 
         nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
+          system.stateVersion = "22.11";
           modules = [ ./nixOnDroidConfigurations/cyn-p7 ];
         };
 

@@ -5,6 +5,7 @@
 , unstableHomeModules
 , unstablePkgs
 , unstableLib
+, stateVersion
 , path ? ../homeConfigurations/${hostname}
 }:
 
@@ -37,7 +38,8 @@ _: {
   programs.home-manager.enable = true;
 
   home = {
-    stateVersion = "23.05";
+    inherit stateVersion;
+
     sessionVariables."ON_NIXOS" = "1";
   };
 }

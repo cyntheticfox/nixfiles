@@ -2,6 +2,7 @@
 , flake-registry
 , hostname
 , domain
+, stateVersion
 , path ? ../nixosConfigurations/${hostname}
 , nixpkgs-unstable ? null
 , cpuVendor ? "other"
@@ -64,7 +65,7 @@ nixpkgs.lib.nixosSystem {
       ] ++ overlays;
 
       sys.hardware.cpuVendor = cpuVendor;
-      system.stateVersion = "23.05";
+      system.stateVersion = stateVersion;
 
       networking = {
         inherit domain;

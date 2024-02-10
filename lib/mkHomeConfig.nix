@@ -5,6 +5,7 @@
 , unstableHomeModules
 , username
 , hostname
+, stateVersion
 , path ? ../homeConfigurations/${hostname}
 , system ? "x86_64-linux"
 , allowUnfree ? true
@@ -59,9 +60,8 @@ home-manager.lib.homeManagerConfiguration {
     path
     {
       home = {
-        inherit username;
+        inherit username stateVersion;
 
-        stateVersion = "23.05";
         homeDirectory = "/home/${username}";
       };
 

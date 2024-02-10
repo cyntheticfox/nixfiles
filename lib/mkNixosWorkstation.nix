@@ -3,6 +3,7 @@
 , home-manager
 , hostname
 , domain
+, stateVersion
 , path ? ../nixosConfigurations/${hostname}
 , nixpkgs-unstable ? null
 , nix-index-database ? null
@@ -118,7 +119,7 @@ nixpkgs.lib.nixosSystem {
         isWorkstation = true;
       };
 
-      system.stateVersion = "23.05";
+      system.stateVersion = stateVersion;
 
       networking = {
         inherit domain;
