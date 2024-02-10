@@ -158,7 +158,7 @@
 
             username = "cynthia";
             hostname = "wsl";
-            stateVersion = "23.05";
+            stateVersion = "23.11";
 
             unstableHomeModules = [
               nixvim.homeManagerModules.nixvim
@@ -174,7 +174,7 @@
 
             hostname = "nixos-minimal";
             domain = "";
-            stateVersion = "23.05";
+            stateVersion = "23.11";
 
             path = ./nixosConfigurations/min;
 
@@ -205,7 +205,7 @@
 
             hostname = "cyn-framework";
             domain = "gh0st.network";
-            stateVersion = "23.05";
+            stateVersion = "23.11";
 
             overlays = [
               (_: _: {
