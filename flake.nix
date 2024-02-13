@@ -145,7 +145,7 @@
             system = "aarch64-linux";
             hostname = "pbp";
             username = "cynthia";
-            stateVersion = "23.05";
+            stateVersion = "23.11";
 
             unstableHomeModules = [
               nixvim.homeManagerModules.nixvim
