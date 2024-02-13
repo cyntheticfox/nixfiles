@@ -194,7 +194,7 @@
 
                 services.openssh.enable = true;
                 users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhQjUo/lBb2+WUaU1grNi88Yi+WdhEAy8p6CRcc6DTE cynthia@cyn-framework" ];
-                system.stateVersion = "22.11";
+                system.stateVersion = "23.11";
               })
             ];
           };
@@ -254,7 +254,7 @@
         };
 
         nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
-          system.stateVersion = "22.11";
+          system.stateVersion = "23.05";
           modules = [ ./nixOnDroidConfigurations/cyn-p7 ];
         };
 
