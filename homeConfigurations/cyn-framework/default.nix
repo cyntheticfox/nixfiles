@@ -66,6 +66,7 @@
           ".cache/pre-commit"
           ".cache/virt-manager"
           ".cargo/registry"
+          ".config/hcloud"
           ".local/share/PrismLauncher"
           ".local/share/Steam"
           ".local/share/bash"
