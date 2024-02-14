@@ -61,6 +61,10 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    terranix = {
+      url = "github:terranix/terranix";
+    };
+
     # NixOS Modules
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     impermanence.url = "github:nix-community/impermanence";
