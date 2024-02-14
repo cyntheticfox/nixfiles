@@ -324,6 +324,7 @@
               age
               deadnix
               editorconfig-checker
+              hcloud
               nixpkgs-fmt
               pre-commit
               sops
