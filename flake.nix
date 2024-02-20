@@ -179,27 +179,25 @@
             hostname = "nixos-minimal";
             domain = "";
             stateVersion = "23.11";
-
             path = ./nixosConfigurations/min;
-
             modules = [ disko.nixosModules.disko ];
           };
 
-          hcloud-init = nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
+          hcloud-init = self.lib.mkNixosServer {
+            inherit (inputs) flake-registry nixpkgs;
+
+            hostname = "hcloud-init";
+            domain = "";
+            stateVersion = "23.11";
+            path = ./nixosConfigurations/min;
 
             modules = [
-              ./nixosConfigurations/min
-
               disko.nixosModules.disko
 
-              ({ modulesPath, ... }: {
-                imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
-
+              {
                 services.openssh.enable = true;
                 users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhQjUo/lBb2+WUaU1grNi88Yi+WdhEAy8p6CRcc6DTE cynthia@cyn-framework" ];
-                system.stateVersion = "23.11";
-              })
+              }
             ];
           };
 

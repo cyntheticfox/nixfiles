@@ -1,45 +1,39 @@
 { mainDisk ? "/dev/sda", ... }: {
-  disk.${mainDisk} = {
+  disk.sda = {
     device = mainDisk;
     type = "disk";
 
     # MBR-compatible GPT
     content = {
-      type = "table";
-      format = "gpt";
+      type = "gpt";
 
-      partitions = [
-        {
-          name = "boot";
-          start = "0";
-          end = "1M";
-          flags = [ "bios_grub" ];
-        }
-        {
-          name = "esp";
-          start = "1MiB";
-          end = "100MiB";
-          bootable = true;
+      partitions = {
+        boot = {
+          size = "1M";
+          type = "EF02";
+        };
+
+        esp = {
+          size = "512M";
+          type = "EF00";
 
           content = {
             type = "filesystem";
             format = "vfat";
             mountpoint = "/boot";
           };
-        }
-        {
-          name = "root";
-          start = "100MiB";
-          end = "100%";
-          bootable = true;
+        };
+
+        root = {
+          size = "100%";
 
           content = {
             type = "filesystem";
             format = "btrfs";
             mountpoint = "/";
           };
-        }
-      ];
+        };
+      };
     };
   };
 }
