@@ -53,6 +53,12 @@ jobs:
           extra_nix_config: |
             system-features = benchmark big-parallel kvm nixos-test
 
+      - name: Check out git repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
       - name: Build checks
         run: |
           nix -vL --show-trace flake check --system x86_64-linux
