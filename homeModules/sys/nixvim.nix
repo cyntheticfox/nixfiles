@@ -53,6 +53,8 @@ in
       {
         inherit (cfg) enable;
 
+        enableMan = false;
+
         filetype.filename = {
           "flake.lock" = "json";
           ".ecrc" = "json";
