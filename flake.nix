@@ -206,7 +206,7 @@
             inherit (self) nixosModules;
 
             hostname = "cyn-framework";
-            domain = "gh0st.network";
+            domain = "gh0st.internal";
             stateVersion = "23.11";
 
             overlays = [
