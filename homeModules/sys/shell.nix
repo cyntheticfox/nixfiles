@@ -208,11 +208,12 @@ in
 
     (lib.mkIf cfg.eza.enable {
       home.shellAliases = {
-        "l" = "${lib.getExe cfg.eza.package} --classify --color=always --icons";
         "ls" = "${lib.getExe cfg.eza.package} --classify --color=always --icons";
-        "la" = "${lib.getExe cfg.eza.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
-        "ll" = "${lib.getExe cfg.eza.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale";
-        "tree" = "${lib.getExe cfg.eza.package} --classify --color=always --icons --long --all --binary --group --header --git --color-scale --tree";
+        "la" = "ls --long --all --binary --group --header --git-repos --color-scale";
+        "tree" = "la --tree";
+        # Re-alias
+        "l" = "ls";
+        "ll" = "la";
       };
 
       programs.eza = {
