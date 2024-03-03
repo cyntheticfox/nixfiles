@@ -72,6 +72,7 @@
           ".local/share/bash"
           ".local/share/containers"
           ".local/share/direnv/allow"
+          ".local/share/fish"
           ".local/share/libvirt"
           ".local/share/mime"
           ".local/share/mopidy"
