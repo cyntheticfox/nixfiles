@@ -5,15 +5,11 @@ let
 
   posixGitFunctions = ''
     function gcmsgp() {
-      git commit -m $@ && git push
+      git commit --message $@ && git push
     }
 
     function gcmsgpf() {
-      git commit -m $@ && git push --force-with-lease
-    }
-
-    function gcmsgpf!() {
-      git commit -m $@ && git push --force
+      git commit --message $@ && git push --force-with-lease --force-if-includes
     }
   '';
 in
@@ -174,16 +170,6 @@ in
         shellAliases = lib.mkIf cfg.trashy.enableAliases {
           "tp" = "trash put";
         };
-      };
-    })
-
-    (lib.mkIf config.sys.git.enable {
-      home.shellAliases = {
-        "gi" = "git ignore";
-
-        # Additional git aliases
-        "gcmsg" = "git commit --signoff -m";
-        "gcmsga" = "git commit --signoff --all -m";
       };
     })
 
