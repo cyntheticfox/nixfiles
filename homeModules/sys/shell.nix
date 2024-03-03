@@ -79,6 +79,7 @@ in
         Aliases to add for the shell.
       '';
     };
+    alias = { };
 
     historyIgnore = lib.mkOption {
       type = with lib.types; listOf str;
@@ -112,7 +113,13 @@ in
     less.enable = lib.mkEnableOption "Enable default less config" // { default = true; };
     tmux.enable = lib.mkEnableOption "Enable deafult tmux config" // { default = true; };
     starship.enable = lib.mkEnableOption "Enable default starship config" // { default = true; };
-    zsh.enable = lib.mkEnableOption "Enable default zsh config" // { default = true; };
+    zsh.enable = lib.mkEnableOption "Enable default zsh config";
+
+    fish = {
+      enable = lib.mkEnableOption "fish config";
+
+      package = lib.mkPackageOption pkgs "fish" { };
+    };
 
     trashy = {
       enable = lib.mkEnableOption "trashy, a rm alternative" // { default = true; };
@@ -305,6 +312,37 @@ in
           set-window-option -g window-status-current-format '#[fg=colour8,bg=colour4]#[fg=colour0] #I  #W #[fg=colour4,bg=colour8]'
         '';
       };
+    })
+
+    (lib.mkIf cfg.fish.enable {
+      programs.fish = {
+        inherit (cfg.fish) enable;
+        plugins = [
+          {
+            name = "sponge";
+            src = pkgs.fishPlugins.sponge;
+          }
+          {
+            name = "pisces";
+            src = pkgs.fishPlugins.pisces;
+          }
+          {
+            name = "colored-man-pages";
+            src = pkgs.fishPlugins.colored-man-pages;
+          }
+
+          # TODO: Try these out
+          # {
+          #   name = "grc";
+          #   src = pkgs.fishPlugins.grc;
+          # }
+          # {
+          #   name = "humantime-fish";
+          #   src = pkgs.fishPlugins.humantime-fish;
+          # }
+        ];
+      };
+
     })
 
     (lib.mkIf cfg.zsh.enable {

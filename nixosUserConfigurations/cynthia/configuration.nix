@@ -1,5 +1,5 @@
 { config, pkgs, ... }: {
-  programs.zsh.enable = true;
+  programs.fish.enable = true;
 
   sops.secrets.cynthia-password = {
     sopsFile = ./secrets.yml;
@@ -24,7 +24,7 @@
     ];
 
     uid = 1000;
-    shell = config.home-manager.users.cynthia.zsh.package or pkgs.zsh;
+    shell = config.home-manager.users.cynthia.fish.package or pkgs.fish;
     hashedPasswordFile = config.sops.secrets.cynthia-password.path;
   };
 }

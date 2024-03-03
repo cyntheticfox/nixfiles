@@ -1,6 +1,10 @@
 _: {
   config = {
-    sys.shell.enable = true;
+    sys.shell = {
+      enable = true;
+
+      zsh.enable = true;
+    };
 
     test.stubs.zsh = { };
 

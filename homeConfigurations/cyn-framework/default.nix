@@ -186,6 +186,7 @@
     shell = {
       enable = true;
 
+      fish.enable = true;
       fcp.enable = true;
     };
 
