@@ -355,15 +355,17 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    home.shellAliases."ssh" = "TERM=\"xterm-256color\" ssh";
 
     programs.ssh = {
       enable = true;
 
       compression = true;
-      forwardAgent = false;
-      hashKnownHosts = true;
       includes = [ "config.d/*" ];
+
+      extraOptionOverrides = {
+        HashKnownHosts = "true";
+        SetEnv = "TERM=xterm-256color";
+      };
 
       matchBlocks = {
         "github github.com" = {
