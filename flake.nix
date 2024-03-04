@@ -183,27 +183,43 @@
             modules = [ disko.nixosModules.disko ];
           };
 
-          hcloud-init = self.lib.mkNixosServer {
-            inherit (inputs) flake-registry nixpkgs;
+          marisa = self.lib.mkNixosServer (
+            let
+              enc = import ./enc/marisa-state.nix;
+            in
+            {
+              inherit (inputs) flake-registry nixpkgs;
+              inherit (enc) domain;
 
-            hostname = "hcloud-init";
-            domain = "";
-            stateVersion = "23.11";
-            path = ./nixosConfigurations/min;
+              hostname = "marisa";
+              stateVersion = "23.11";
+              path = ./nixosConfigurations/min;
 
-            modules = [
-              disko.nixosModules.disko
+              modules = [
+                disko.nixosModules.disko
 
-              {
-                sys.sshd = {
-                  enable = true;
-                  openFirewall = true;
-                };
+                {
+                  networking.useDHCP = false;
+                  systemd.network = {
+                    enable = true;
 
-                users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII64wfkU3TOxShXERJfMlF8xk+woM9IM62VrqXT9ieG3" ];
-              }
-            ];
-          };
+                    networks."40-eth" = {
+                      inherit (enc) address gateway;
+                      name = "en*";
+                      DHCP = "no";
+                    };
+                  };
+
+                  sys.sshd = {
+                    enable = true;
+                    openFirewall = true;
+                  };
+
+                  users.users.root.openssh.authorizedKeys.keys = [ enc.root-key ];
+                }
+              ];
+            }
+          );
 
           cyn-framework = self.lib.mkNixosWorkstation {
             inherit (inputs) flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
