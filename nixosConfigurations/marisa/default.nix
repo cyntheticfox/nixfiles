@@ -7,14 +7,21 @@ in
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
-  networking.useDHCP = false;
+
+  networking = {
+    firewall.enable = true;
+    useDHCP = false;
+    usePredictableInterfaceNames = false;
+  };
+
   systemd.network = {
     enable = true;
 
-    networks."40-eth" = {
+    networks."40-eth0" = {
       inherit (enc) address gateway;
-      name = "en*";
-      DHCP = "no";
+
+      name = "eth0";
+      dns = [ "[2620:fe::fe]" "[2620:fe::9]" ];
     };
   };
 
