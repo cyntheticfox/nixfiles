@@ -18,7 +18,6 @@ in
         coreutils
         bash
         gnupg
-        neofetch
       ];
     };
 
