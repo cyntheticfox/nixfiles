@@ -69,6 +69,7 @@ in
         type = with lib.types; listOf package;
 
         default = with pkgs; [
+          aria
           bandwhich
           cifs-utils
           curlie
@@ -115,6 +116,7 @@ in
         default = with pkgs; [
           nodePackages.fkill-cli
           procs
+          strace
         ];
 
         description = ''
@@ -122,13 +124,13 @@ in
         '';
       };
 
-      htopIntegration = lib.mkEnableOption "Manage htop configuration" // { default = true; };
+      htopIntegration = lib.mkEnableOption "htop configuration" // { default = true; };
     };
 
-    xdg.enable = lib.mkEnableOption "Enable xdg dirs management" // { default = true; };
+    xdg.enable = lib.mkEnableOption "xdg dirs management" // { default = true; };
 
     nix = {
-      enable = lib.mkEnableOption "Enable Nix config management" // { default = true; };
+      enable = lib.mkEnableOption "Nix config management" // { default = true; };
       package = lib.mkPackageOption pkgs "nixUnstable" { };
 
       diffProgram = lib.mkOption {
@@ -136,9 +138,14 @@ in
 
         default = assert builtins.hasAttr "builtin" nixDiffCommands; "builtin";
       };
+
+      cachix = {
+        enable = lib.mkEnableOption "cachix" // { default = true; };
+        package = lib.mkPackageOption pkgs "cachix" { };
+      };
     };
 
-    neofetch.enable = lib.mkEnableOption "Enable neofetch config" // { default = true; };
+    neofetch.enable = lib.mkEnableOption "neofetch config" // { default = true; };
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -235,7 +242,10 @@ in
 
     (lib.mkIf cfg.nix.enable {
       home = {
-        packages = [ pkgs.comma ] ++ lib.optional (cfg.nix.diffProgram != "builtin") [ pkgs.${cfg.nix.diffProgram} ];
+        packages = [ pkgs.comma ]
+          ++ lib.optional (cfg.nix.diffProgram != "builtin") [ pkgs.${cfg.nix.diffProgram} ]
+          # ++ lib.optional cfg.nix.cachix.enable [ cfg.nix.cachix.package ]
+        ;
 
         shellAliases = {
           ### Nix Aliases

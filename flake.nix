@@ -195,7 +195,11 @@
               disko.nixosModules.disko
 
               {
-                services.openssh.enable = true;
+                sys.sshd = {
+                  enable = true;
+                  openFirewall = true;
+                };
+
                 users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII64wfkU3TOxShXERJfMlF8xk+woM9IM62VrqXT9ieG3" ];
               }
             ];

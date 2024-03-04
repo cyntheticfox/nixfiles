@@ -12,23 +12,13 @@ in
     defaultPackages = mkOption {
       type = with types; listOf package;
       default = with pkgs; [
-        aria
-        bc
-        cachix
-        fd
         file
         git
+        curl
+        coreutils
+        bash
         gnupg
-        hexyl
-        man-pages
-        man-pages-posix
-        nix-index
         neofetch
-        progress
-        ripgrep
-        strace
-        tree
-        unzip
       ];
     };
 
@@ -72,16 +62,9 @@ in
       };
     };
 
-    programs = {
-      mtr.enable = true;
-      tmux.enable = true;
-      vim.defaultEditor = true;
-    };
+    programs.vim.defaultEditor = true;
 
-    networking = {
-      useDHCP = false;
-      firewall.pingLimit = lib.mkIf config.networking.firewall.enable "1/minute";
-    };
+    networking.firewall.pingLimit = lib.mkIf config.networking.firewall.enable "1/minute";
 
     nix = {
       gc = {

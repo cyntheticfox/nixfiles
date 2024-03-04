@@ -6,6 +6,10 @@ in
   options.sys.hardware = {
     enable = lib.mkEnableOption "hardware defaults" // { default = true; };
 
+    systemdBoot = lib.mkEnableOption "common boot config";
+    hardenKernel = lib.mkEnableOption "kernel hardening options" // { default = cfg.isWorkstation; };
+    enableKvm = lib.mkEnableOption "kernel hardening options";
+
     cpuVendor = lib.mkOption {
       type = lib.types.enum [ "intel" "amd" "other" ];
 
@@ -19,11 +23,11 @@ in
 
   config = lib.mkIf cfg.enable {
     boot = {
-      extraModprobeConfig = ''
+      extraModprobeConfig = lib.mkIf cfg.enableKvm ''
         options ${lib.optionalString (cfg.cpuVendor != "other") "kvm_${cfg.cpuVendor}" } nested=1
       '';
 
-      kernel.sysctl = {
+      kernel.sysctl = lib.mkIf cfg.hardenKernel {
         # Prevent unintentional fifo writes
         "fs.protected_fifos" = 2;
 
@@ -39,9 +43,6 @@ in
         # Prevent printing kernel pointers
         "kernel.kptr_restrict" = 2;
 
-        # # Disable late module loading
-        # "kernel.modules_disabled" = 1;
-
         # Disallow profiling at all levels without CAP_SYS_ADMIN
         "kernel.perf_event_paranoid" = 3;
 
@@ -50,9 +51,6 @@ in
 
         # Require CAP_BPF to use bpf
         "kernel.unprvileged_bpf_disabled" = 1;
-
-        # Require process to have CAP_SYS_PTRACE and use PTRACE_ATTACH or PTRACE_TRACEME
-        #"kernel.yama.ptrace_scope" = 2;
 
         # Filter ARP packets to be responded on per-interface. Not sure why this isn't the default
         "net.ipv4.conf.all.arp_filter" = 1;
@@ -68,7 +66,7 @@ in
       kernelParams = (lib.optional cfg.isWorkstation "quiet")
         ++ (lib.optional (cfg.cpuVendor == "intel") "intel_iommu=on");
 
-      loader = {
+      loader = lib.mkIf cfg.systemdBoot {
         efi.canTouchEfiVariables = true;
 
         systemd-boot = {
@@ -97,7 +95,7 @@ in
       enableRedistributableFirmware = true;
     };
 
-    services.fwupd.enable = true;
+    services.fwupd.enable = cfg.isWorkstation;
     zramSwap.enable = true;
   };
 }

@@ -122,4 +122,9 @@
 
   nixpkgs.hostPlatform = "x86_64-linux";
   swapDevices = [ ];
+
+  sys.hardware = {
+    systemdBoot = true;
+    enableKvm = true;
+  };
 }
