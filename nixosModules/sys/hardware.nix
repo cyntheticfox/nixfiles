@@ -77,7 +77,7 @@ in
         };
       };
 
-      plymouth.enable = true;
+      plymouth.enable = cfg.isWorkstation;
     };
 
     environment.systemPackages = lib.optionals cfg.isWorkstation (with pkgs; [ usbutils pciutils ]);
