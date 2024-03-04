@@ -7,29 +7,25 @@ in
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
-  networking.useDHCP = false;
+
+  networking = {
+    useDHCP = false;
+    usePredictableInterfaceNames = false;
+  };
+
   systemd.network = {
     enable = true;
 
-    networks."40-eth" = {
-      inherit (enc) address gateway;
-      name = "en*";
-      DHCP = "no";
+    networks."eth0" = {
+      inherit (enc) Address Gateway;
     };
   };
 
-  sys.sshd = {
-    enable = true;
-    openFirewall = true;
-  };
-
+  boot.loader.grub.enable = true;
+  sys.sshd.enable = true;
   users.users.root.openssh.authorizedKeys.keys = [ enc.root-key ];
 
   disko.devices = import ./disk-config.nix {
     inherit lib;
-  };
-
-  boot.loader.grub = {
-    enable = true;
   };
 }
