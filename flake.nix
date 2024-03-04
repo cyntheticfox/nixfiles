@@ -193,31 +193,8 @@
 
               hostname = "marisa";
               stateVersion = "23.11";
-              path = ./nixosConfigurations/min;
 
-              modules = [
-                disko.nixosModules.disko
-
-                {
-                  networking.useDHCP = false;
-                  systemd.network = {
-                    enable = true;
-
-                    networks."40-eth" = {
-                      inherit (enc) address gateway;
-                      name = "en*";
-                      DHCP = "no";
-                    };
-                  };
-
-                  sys.sshd = {
-                    enable = true;
-                    openFirewall = true;
-                  };
-
-                  users.users.root.openssh.authorizedKeys.keys = [ enc.root-key ];
-                }
-              ];
+              modules = [ disko.nixosModules.disko ];
             }
           );
 
