@@ -8,8 +8,7 @@
   };
 
   boot.loader.grub = {
-    devices = [ "/dev/sda" ];
-    # efiSupport = true;
-    # efiInstallAsRemovable = true;
+    efiSupport = true;
+    efiInstallAsRemovable = true;
   };
 }
