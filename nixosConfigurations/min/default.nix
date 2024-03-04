@@ -1,5 +1,14 @@
-_: {
+{ lib, modulesPath, ... }: {
   imports = [
-    ./hardware-configuration.nix
+    (modulesPath + "/installer/scan/not-detected.nix")
   ];
+
+  disko.devices = import ./disk-config.nix {
+    inherit lib;
+  };
+
+  boot.loader.grub = {
+    efiSupport = true;
+    efiInstallAsRemovable = true;
+  };
 }
