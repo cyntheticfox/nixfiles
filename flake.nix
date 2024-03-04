@@ -196,7 +196,7 @@
 
               {
                 services.openssh.enable = true;
-                users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhQjUo/lBb2+WUaU1grNi88Yi+WdhEAy8p6CRcc6DTE cynthia@cyn-framework" ];
+                users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII64wfkU3TOxShXERJfMlF8xk+woM9IM62VrqXT9ieG3" ];
               }
             ];
           };
