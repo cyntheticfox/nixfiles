@@ -23,8 +23,6 @@ in
     };
 
     file = {
-      enable = lib.mkEnableOption "file packages" // { default = true; };
-
       packages = lib.mkOption {
         type = with lib.types; listOf package;
 
@@ -60,56 +58,48 @@ in
           Options for managing installed file packages.
         '';
       };
+
+      texlive.enable = lib.mkEnableOption "texlive";
     };
 
-    network = {
-      enable = lib.mkEnableOption "network packages" // { default = true; };
+    network.packages = lib.mkOption {
+      type = with lib.types; listOf package;
 
-      packages = lib.mkOption {
-        type = with lib.types; listOf package;
+      default = with pkgs; [
+        aria
+        bandwhich
+        cifs-utils
+        curlie
+        dogdns
+        gping
+        inetutils
+        mtr
+        nfs-utils
+        xh
+      ];
 
-        default = with pkgs; [
-          aria
-          bandwhich
-          cifs-utils
-          curlie
-          dogdns
-          gping
-          inetutils
-          mtr
-          nfs-utils
-          xh
-        ];
-
-        description = ''
-          Packages for network management.
-        '';
-      };
+      description = ''
+        Packages for network management.
+      '';
     };
 
-    hardware = {
-      enable = lib.mkEnableOption "hardware packages" // { default = true; };
+    hardware.packages = lib.mkOption {
+      type = with lib.types; listOf package;
 
-      packages = lib.mkOption {
-        type = with lib.types; listOf package;
+      default = with pkgs; [
+        minicom
+        screen
+        usbutils
+        pciutils
+        nvme-cli
+      ];
 
-        default = with pkgs; [
-          minicom
-          screen
-          usbutils
-          pciutils
-          nvme-cli
-        ];
-
-        description = ''
-          Packages for network management.
-        '';
-      };
+      description = ''
+        Packages for network management.
+      '';
     };
 
     process = {
-      enable = lib.mkEnableOption "process packages";
-
       packages = lib.mkOption {
         type = with lib.types; listOf package;
 
@@ -146,99 +136,189 @@ in
     };
 
     neofetch.enable = lib.mkEnableOption "neofetch config" // { default = true; };
+
+    systemd.shellAliases = lib.mkOption {
+      type = with lib.types; attrsOf str;
+
+      default =
+        let
+          userCommands = [
+            "cat"
+            "get-default"
+            "help"
+            "is-active"
+            "is-enabled"
+            "is-failed"
+            "is-system-running"
+            "list-dependencies"
+            "list-jobs"
+            "list-sockets"
+            "list-timers"
+            "list-unit-files"
+            "list-units"
+            "show"
+            "show-environment"
+            "status"
+          ];
+
+          sudoCommands = [
+            "add-requires"
+            "add-wants"
+            "cancel"
+            "daemon-reexec"
+            "daemon-reload"
+            "default"
+            "disable"
+            "edit"
+            "emergency"
+            "enable"
+            "halt"
+            "import-environment"
+            "isolate"
+            "kexec"
+            "kill"
+            "link"
+            "list-machines"
+            "load"
+            "mask"
+            "preset"
+            "preset-all"
+            "reenable"
+            "reload"
+            "reload-or-restart"
+            "reset-failed"
+            "rescue"
+            "restart"
+            "revert"
+            "set-default"
+            "set-environment"
+            "set-property"
+            "start"
+            "stop"
+            "switch-root"
+            "try-reload-or-restart"
+            "try-restart"
+            "unmask"
+            "unset-environment"
+          ];
+
+          powerCommands = [
+            "hibernate"
+            "hybrid-sleep"
+            "poweroff"
+            "reboot"
+            "suspend"
+          ];
+
+          # mkSystemCommand :: String -> { name :: String, value :: String }
+          mkSystemCommand = c: { name = "sc-${c}"; value = "systemctl ${c}"; };
+
+          # mkUserCommand :: String -> { name :: String, value :: String }
+          mkUserCommand = c: { name = "scu-${c}"; value = "systemctl --user ${c}"; };
+
+          # mkSudoCommand :: String -> { name :: String, value :: String }
+          mkSudoCommand = c: { name = "sc-${c}"; value = "sudo systemctl ${c}"; };
+        in
+        builtins.listToAttrs
+          (lib.flatten [
+            (builtins.map mkSudoCommand sudoCommands)
+            (builtins.map mkSystemCommand powerCommands)
+            (builtins.map mkSystemCommand userCommands)
+            (builtins.map mkUserCommand userCommands)
+            (builtins.map mkUserCommand userCommands)
+          ]) // {
+          sc-enable-now = "sc-enable --now";
+          scu-enable-now = "scu-enable --now";
+          sc-disable-now = "sc-disable --now";
+          scu-disable-now = "scu-disable --now";
+          sc-mask-now = "sc-mask --now";
+          scu-mask-now = "scu-mask --now";
+          sc-failed = "systemctl --failed";
+          scu-failed = "systemctl --user --failed";
+        };
+
+      description = ''
+        Create Aliases for systemd tools.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      home.sessionPath = cfg.extraPaths;
+      home = {
+        inherit (cfg.systemd) shellAliases;
+
+        packages = lib.flatten [
+          cfg.file.packages
+          cfg.network.packages
+          cfg.process.packages
+          cfg.hardware.packages
+        ];
+
+        sessionPath = cfg.extraPaths;
+      };
 
       programs.man = {
         enable = true;
 
         generateCaches = true;
       };
+
+      programs = {
+        texlive = {
+          inherit (cfg.file.texlive) enable;
+
+          extraPackages = p: { inherit (p) collection-fontsrecommended; };
+        };
+
+        htop = {
+          enable = cfg.process.htopIntegration;
+
+          settings = {
+            color_scheme = 0;
+            detailed_cpu_time = 1;
+            cpu_count_from_zero = 0;
+            delay = 15;
+
+            fields = with config.lib.htop.fields; [
+              PID
+              USER
+              PRIORITY
+              NICE
+              M_SIZE
+              M_RESIDENT
+              M_SHARE
+              STATE
+              PERCENT_CPU
+              PERCENT_MEM
+              TIME
+              COMM
+            ];
+
+            header_margin = 1;
+            hide_threads = 0;
+            hide_kernel_threads = 1;
+            hide_userland_threads = 0;
+            highlight_base_name = 1;
+            highlight_megabytes = 1;
+            highlight_thread = 1;
+            sort_key = config.lib.htop.fields.PERCENT_MEM;
+            sort_direction = 1;
+            tree_view = 1;
+            update_process_names = 0;
+          } // (with config.lib.htop; leftMeters [
+            (bar "LeftCPUs")
+            (bar "Memory")
+            (bar "Swap")
+          ]) // (with config.lib.htop; rightMeters [
+            (bar "RightCPUs")
+            (text "Tasks")
+            (text "LoadAverage")
+            (text "Uptime")
+          ]);
+        };
+      };
     }
-
-    (lib.mkIf cfg.file.enable {
-      home = {
-        inherit (cfg.file) packages;
-
-        shellAliases."glow" = "glow -p";
-      };
-
-      programs.texlive = {
-        enable = true;
-
-        extraPackages = p: { inherit (p) collection-fontsrecommended; };
-      };
-    })
-
-    (lib.mkIf cfg.network.enable {
-      home = {
-        inherit (cfg.network) packages;
-
-        shellAliases."tracert" = "traceroute";
-      };
-    })
-
-    (lib.mkIf cfg.process.enable {
-      home = {
-        inherit (cfg.process) packages;
-
-        shellAliases."top" = "htop";
-      };
-
-      programs.htop = lib.mkIf cfg.process.htopIntegration {
-        enable = true;
-
-        settings = {
-          color_scheme = 0;
-          detailed_cpu_time = 1;
-          cpu_count_from_zero = 0;
-          delay = 15;
-
-          fields = with config.lib.htop.fields; [
-            PID
-            USER
-            PRIORITY
-            NICE
-            M_SIZE
-            M_RESIDENT
-            M_SHARE
-            STATE
-            PERCENT_CPU
-            PERCENT_MEM
-            TIME
-            COMM
-          ];
-
-          header_margin = 1;
-          hide_threads = 0;
-          hide_kernel_threads = 1;
-          hide_userland_threads = 0;
-          highlight_base_name = 1;
-          highlight_megabytes = 1;
-          highlight_thread = 1;
-          sort_key = config.lib.htop.fields.PERCENT_MEM;
-          sort_direction = 1;
-          tree_view = 1;
-          update_process_names = 0;
-        } // (with config.lib.htop; leftMeters [
-          (bar "LeftCPUs")
-          (bar "Memory")
-          (bar "Swap")
-        ]) // (with config.lib.htop; rightMeters [
-          (bar "RightCPUs")
-          (text "Tasks")
-          (text "LoadAverage")
-          (text "Uptime")
-        ]);
-      };
-    })
-
-    (lib.mkIf cfg.hardware.enable {
-      home.packages = cfg.hardware.packages;
-    })
 
     (lib.mkIf cfg.nix.enable {
       home = {
