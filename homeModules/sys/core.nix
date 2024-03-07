@@ -224,17 +224,71 @@ in
             (builtins.map mkSudoCommand sudoCommands)
             (builtins.map mkSystemCommand powerCommands)
             (builtins.map mkSystemCommand userCommands)
-            (builtins.map mkUserCommand userCommands)
+            (builtins.map mkUserCommand sudoCommands)
             (builtins.map mkUserCommand userCommands)
           ]) // {
-          sc-enable-now = "sc-enable --now";
-          scu-enable-now = "scu-enable --now";
+          # Extra systemctl commands
           sc-disable-now = "sc-disable --now";
-          scu-disable-now = "scu-disable --now";
-          sc-mask-now = "sc-mask --now";
-          scu-mask-now = "scu-mask --now";
+          sc-enable-now = "sc-enable --now";
           sc-failed = "systemctl --failed";
+          sc-mask-now = "sc-mask --now";
+          scu-disable-now = "scu-disable --now";
+          scu-enable-now = "scu-enable --now";
           scu-failed = "systemctl --user --failed";
+          scu-mask-now = "scu-mask --now";
+
+          # Journalctl commands
+          jc-boot = "journalctl -b";
+          jc-kernel = "journalctl -k";
+          jc-list-boot = "journalctl --list-boots";
+          jc-service = "journalctl -u";
+          jc-usage = "journalctl --disk-usage";
+          jcu-service = "journalctl --user -u";
+
+          # Networkctl commands
+          nc-cat = "networkctl cat";
+          nc-delete = "networkctl delete";
+          nc-down = "networkctl down";
+          nc-edit = "networkctl edit";
+          nc-frenew = "networkctl forcerenew";
+          nc-label = "networkctl label";
+          nc-list = "networkctl list";
+          nc-lldp = "networkctl lldp";
+          nc-mask = "networkctl mask";
+          nc-reconfig = "networkctl reconfigure";
+          nc-reload = "networkctl reload";
+          nc-renew = "networkctl renew";
+          nc-status = "networkctl status";
+          nc-unmask = "networkctl unmask";
+          nc-up = "networkctl up";
+
+          # Resolvectl commands
+          rc-query = "resolvectl query";
+          rc-service = "resolvectl service";
+          rc-openpgp = "resolvectl openpgp";
+          rc-tlsa = "resolvectl tlsa";
+          rc-status = "resolvectl status";
+          rc-stat = "resolvectl statistics";
+          rc-reset-stat = "resolvectl reset-statistics";
+          rc-flush = "resolvectl flush-caches";
+          rc-reset = "resolvectl reset-server-features";
+          rc-dns = "resolvectl dns";
+          rc-domain = "resolvectl domain";
+          rc-default-route = "resolvectl default-route";
+          rc-llmnr = "resolvectl llmnr";
+          rc-mdns = "resolvectl mdns";
+          rc-dnssec = "resolvectl dnssec";
+          rc-dnsovertls = "resolvectl dnsovertls";
+          rc-nta = "resolvectl nta";
+          rc-revert = "resolvectl revert";
+          rc-monitor = "resolvectl monitor";
+          rc-show-cache = "resolvectl show-cache";
+          rc-show-server-state = "resolvectl show-server-state";
+          rc-log-level = "resolvectl log-level";
+
+          # Systemd nspawn
+          nspawn = "systemd-nspawn";
+
         };
 
       description = ''
