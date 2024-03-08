@@ -53,29 +53,28 @@ in
       type = with lib.types; attrsOf str;
 
       default = {
-        "h" = "history";
-        "pg" = "pgrep";
-        "cp" = "cp -r";
+        h = "history";
+        pg = "pgrep";
+        cp = "cp -r";
 
         # Make things human-readable
-        "dd" = "dd status=progress";
-        "df" = "df -Th";
-        "du" = "du -h";
-        "free" = "free -h";
-        "pkill" = "pkill -e";
+        dd = "dd status=progress";
+        df = "df -Th";
+        du = "du -h";
+        free = "free -h";
+        pkill = "pkill -e";
 
         # VI Keys pls
-        "info" = "info --vi-keys";
+        info = "info --vi-keys";
 
         # Dissuade bad behavior
-        "rm" = "rm --interactive";
+        rm = "rm --interactive";
       };
 
       description = ''
         Aliases to add for the shell.
       '';
     };
-    alias = { };
 
     historyIgnore = lib.mkOption {
       type = with lib.types; listOf str;
@@ -159,8 +158,10 @@ in
         };
       };
 
-      programs.autojump.enable = cfg.autojump.enable;
-      programs.z-lua.enable = cfg.z-lua.enable;
+      programs = {
+        autojump.enable = cfg.autojump.enable;
+        z-lua.enable = cfg.z-lua.enable;
+      };
     }
 
     (lib.mkIf cfg.trashy.enable {

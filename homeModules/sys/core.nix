@@ -444,7 +444,6 @@ in
           "nosb" = "nixos-rebuild build";
           "nosbf" = "nixos-rebuild build --flake .";
           "nosc" = "nixos-container";
-          "nosd" = "";
           "nosg" = "nixos-generate-config";
           "nosp" = "read-link '/nix/var/nix/profiles/system'";
           "nospl" = "ls -r '/nix/var/nix/profiles/system-*'";
