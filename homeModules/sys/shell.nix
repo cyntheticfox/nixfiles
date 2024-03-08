@@ -114,6 +114,15 @@ in
       enable = lib.mkEnableOption "fish config";
 
       package = lib.mkPackageOption pkgs "fish" { };
+
+      theme = lib.mkOption {
+        type = lib.types.str;
+        default = "Nord";
+
+        description = ''
+          The theme to set for the command line.
+        '';
+      };
     };
 
     trashy = {
@@ -314,6 +323,14 @@ in
             git commit --verbose --message $argv && git push --verbose --force-with-lease --force-if-includes
           '';
         };
+
+        loginShellInit = ''
+          set -U fish_features all
+        '';
+
+        interactiveShellInit = ''
+          fish_config theme choose '${cfg.fish.theme}'
+        '';
 
         plugins = [
           {
