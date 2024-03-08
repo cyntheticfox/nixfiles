@@ -303,6 +303,17 @@ in
     (lib.mkIf cfg.fish.enable {
       programs.fish = {
         inherit (cfg.fish) enable;
+
+        functions = {
+          gcmsgp = ''
+            git commit --verbose --message $argv && git push --verbose
+          '';
+
+          gcmsgpf = ''
+            git commit --verbose --message $argv && git push --verbose --force-with-lease --force-if-includes
+          '';
+        };
+
         plugins = [
           {
             name = "sponge";

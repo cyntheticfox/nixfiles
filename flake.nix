@@ -33,11 +33,11 @@
       inputs = {
         nixpkgs-stable.follows = "nixpkgs";
         nixpkgs.follows = "nixpkgs-unstable";
+        flake-parts.follows = "flake-parts";
 
         # Unused dependencies
         disko.follows = "";
         flake-compat.follows = "";
-        flake-parts.follows = "";
         flake-registry.follows = "";
         flake-utils.follows = "";
         home-manager.follows = "";
@@ -53,7 +53,7 @@
 
     # Libraries
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
+    nixpkgs-lib.url = "github:nixos/nixpkgs/nixos-unstable?dir=lib";
 
     devshell = {
       url = "github:numtide/devshell";
@@ -99,6 +99,9 @@
       inputs = {
         nixpkgs.follows = "nixpkgs-unstable";
         pre-commit-hooks.follows = "pre-commit-hooks";
+        home-manager.follows = "home-manager";
+        flake-parts.follows = "flake-parts";
+        nix-darwin.follows = "";
       };
     };
 
@@ -132,6 +135,11 @@
     nmt = {
       url = "gitlab:rycee/nmt";
       flake = false;
+    };
+
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs-lib";
     };
   };
 
@@ -296,7 +304,6 @@
             editorconfig-checker.enable = true;
             nixpkgs-fmt.enable = true;
             nil.enable = true;
-            shellcheck.enable = true;
             shfmt.enable = true;
             statix.enable = true;
 

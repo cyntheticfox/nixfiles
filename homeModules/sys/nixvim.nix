@@ -211,37 +211,32 @@ in
           };
 
           comment-nvim.enable = true;
-          dashboard.enable = true;
           emmet.enable = true;
           gitgutter.enable = true;
-
-          indent-blankline = {
-            # inherit charHighlightList; # TODO: Fix
-
-            enable = true;
-          };
-
+          indent-blankline.enable = true;
           lastplace.enable = true;
 
           lsp = {
             enable = true;
 
             servers = {
-              bashls.enable = true;
-              clangd.enable = true;
-              cssls.enable = true;
-              elixirls.enable = true;
-              eslint.enable = true;
-              gopls.enable = true;
-              hls.enable = true;
-              html.enable = true;
-              jsonls.enable = true;
-              lua-ls.enable = true;
-              nil_ls.enable = true;
-              # pylsp.enable = true;
-              pyright.enable = true;
-              # rnix-lsp.enable = true;
-              ruff-lsp.enable = true;
+              ansiblels.enable = true; # Ansible
+              bashls.enable = true; # Bash
+              clangd.enable = true; # C/C++
+              cssls.enable = true; # CSS
+              # elixirls.enable = true; # Elixir
+              dockerls.enable = true; # Docker
+              # elmls.enable = true; # Elm
+              # gopls.enable = true; # Go
+              # hls.enable = true; # Haskell
+              html.enable = true; # HTML
+              jsonls.enable = true; # Json
+              lua-ls.enable = true; # Lua
+              nil_ls.enable = true; # Nix
+              # pylsp.enable = true; # Python
+              # pyright.enable = true; # Python
+              # rnix-lsp.enable = true; # Nix
+              ruff-lsp.enable = true; # Python
 
               # rust-analyzer = {
               #   enable = true;
@@ -250,35 +245,14 @@ in
               #   installRustc = true;
               # };
 
-              terraformls.enable = true;
-              texlab.enable = true;
-              tsserver.enable = true;
+              # terraformls.enable = true; # Terraform
+              texlab.enable = true; # TeX
+              # tsserver.enable = true; # TypeScript
               # typst-lsp.enable = true;
-              vuels.enable = true;
-              yamlls.enable = true;
-              zls.enable = true;
-
-              # ccls = mkLspPlugin {
-              #   name = "C Language Server";
-              #   package = "ccls";
-              #   moduleName = "ccls";
-              # };
-
-              # dockerfile-language-server = mkLspPlugin {
-              #   name = "Dockerfile Language Server";
-              #   packageSet = pkgs.nodePackages;
-              #   package = "dockerfile-language-server-nodejs";
-              #   moduleName = "dockerls";
-              #   defaultArgs = [ "--stdio" ];
-              # };
-
-              # vimls = mkLspPlugin {
-              #   name = "Vim Language Server";
-              #   packageSet = pkgs.nodePackages;
-              #   package = "vim-language-server";
-              #   moduleName = "vimls";
-              #   defaultArgs = [ "--stdio" ];
-              # };
+              # vuels.enable = true; # Vue
+              yamlls.enable = true; # YAML
+              # zls.enable = true; # Zig
+              # ccls.enable = true; # C/C++
             };
           };
 
@@ -305,50 +279,67 @@ in
           };
 
           neo-tree.enable = true;
-          # nix.enable = true;
 
           none-ls = {
             enable = true;
+            enableLspFormat = true;
+
             sources = {
-              code_actions.shellcheck.enable = true;
+              code_actions = {
+                proselint.enable = true;
+                statix.enable = true;
+              };
+
+              completion = {
+                luasnip.enable = true;
+                spell.enable = true;
+                vsnip.enable = true;
+              };
 
               diagnostics = {
-                cppcheck.enable = true;
-                deadnix.enable = true;
-                flake8.enable = true;
-                gitlint.enable = true;
-                shellcheck.enable = true;
-                statix.enable = true;
-
-                # ansible-lint
-                # cspell
-                # clippy
-                # flawfinder
-                # nix-instantiate
-                # pylint
-                # nix-lint
+                actionlint.enable = true; # GitHub Actions
+                ansiblelint.enable = true; # Ansible
+                checkmake.enable = true; # Makefile
+                # codespell.enable = true; # TODO: FIX
+                commitlint.enable = true; # Gitcommit
+                deadnix.enable = true; # Nix
+                dotenv_linter.enable = true; # .env
+                fish.enable = true; # fish script
+                hadolint.enable = true; # Docker
+                proselint.enable = true; # Markdown/Tex
+                rstcheck.enable = true; # reStructuredText
+                selene.enable = true; # Lua
+                semgrep.enable = true; # Bunch of stuff
+                markdownlint.enable = true; # Markdown
+                sqlfluff.enable = true; # SQL
+                statix.enable = true; # Nix
+                stylelint.enable = true; # CSS
+                tidy.enable = true; # HTML
+                yamllint.enable = true; # YAML
               };
 
               formatting = {
-                black.enable = true;
-                cbfmt.enable = true;
-                fnlfmt.enable = true;
-                fourmolu.enable = true;
-                nixpkgs_fmt.enable = true;
+                bibclean.enable = true; # BibTex
+                cbfmt.enable = true; # Markdown codeblocks
+                # codespell.enable = true; # TODO: Fix
+                crystal_format.enable = true; # Crystal
+                fish_indent.enable = true; # Fish
+                hclfmt.enable = true; # HCL
+                markdownlint.enable = true; # Markdown
+                nixpkgs_fmt.enable = true; # Nix
 
-                prettier = {
-                  enable = true;
-                  disableTsServerFormatter = true;
-                };
+                prettier = { enable = true; disableTsServerFormatter = true; };
 
-                shfmt.enable = true;
-                stylua.enable = true;
-                taplo.enable = true;
+                shellharden.enable = true; # Shell
+                shfmt.enable = true; # Bash
+                sqlfluff.enable = true; # SQL
+                stylua.enable = true; # Lua
+                tidy.enable = true; # HTML
+              };
 
-                # go fmt
-                # gofumpt
-                # rustfmt
-                # terraform fmt
+              hover = {
+                dictionary.enable = true;
+                printenv.enable = true;
               };
             };
           };
@@ -359,82 +350,73 @@ in
             checkTs = true;
           };
 
-          nvim-cmp = {
+          cmp = {
             enable = true;
 
-            mapping = {
-              "<C-b>" = "cmp.mapping.scroll_docs(-4)";
-              "<C-f>" = "cmp.mapping.scroll_docs(4)";
-              "<C-e>" = "cmp.mapping.abort()";
-              "<CR>" = "cmp.mapping.confirm({ select = false })";
-
-              "<Tab>" = {
-                modes = [ "i" "s" ];
-
-                action = ''
-                  function(fallback)
-                    unpack = unpack or table.unpack
-                    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-
-                    if cmp.visible() then
-                      cmp.select_next_item()
-                    else
-                      local _, err = pcall(function()
-                        if vim.fn["vsnip#available"](1) == 1 then
-                          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(vsnip-expand-or-jump)", true, true, true), "", true)
-                        else
-                          error({code=121})
-                        end
-                      end)
-
-                      if err.code == 121 and col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil then
-                        cmp.complete()
-                      else
-                        fallback()
-                      end
-                    end
-                  end
-                '';
-              };
-
-              "<S-Tab>" = {
-                modes = [ "i" "s" ];
-
-                action = ''
-                  function()
-                    if cmp.visible() then
-                      cmp.select_next_item()
-                    elseif vim.call('vsnip#jumpable', -1) == 1 then
-                      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-prev)", true, true, true), "", true)
-                    end
-                  end
-                '';
-              };
+            settings = {
+              #   mapping = {
+              #     "<C-b>" = "cmp.mapping.scroll_docs(-4)";
+              #     "<C-f>" = "cmp.mapping.scroll_docs(4)";
+              #     "<C-e>" = "cmp.mapping.abort()";
+              #     "<CR>" = "cmp.mapping.confirm({ select = false })";
+              #
+              #     "<Tab>" = {
+              #       modes = [ "i" "s" ];
+              #
+              #       action = ''
+              #         function(fallback)
+              #           unpack = unpack or table.unpack
+              #           local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+              #
+              #           if cmp.visible() then
+              #             cmp.select_next_item()
+              #           else
+              #             local _, err = pcall(function()
+              #               if vim.fn["vsnip#available"](1) == 1 then
+              #                 vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(vsnip-expand-or-jump)", true, true, true), "", true)
+              #               else
+              #                 error({code=121})
+              #               end
+              #             end)
+              #
+              #             if err.code == 121 and col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil then
+              #               cmp.complete()
+              #             else
+              #               fallback()
+              #             end
+              #           end
+              #         end
+              #       '';
+              #     };
+              #
+              #     "<S-Tab>" = {
+              #       modes = [ "i" "s" ];
+              #
+              #       action = ''
+              #         function()
+              #           if cmp.visible() then
+              #             cmp.select_next_item()
+              #           elseif vim.call('vsnip#jumpable', -1) == 1 then
+              #             vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-prev)", true, true, true), "", true)
+              #           end
+              #         end
+              #       '';
+              #     };
+              #   };
+              #
+              #   # mappingPresets = [ "cmdline" ];
+              view.entries = "native";
             };
-
-            mappingPresets = [ "cmdline" ];
-            snippet.expand = "vsnip";
-
-            sources = [
-              { name = "nvim_lsp"; }
-              { name = "nvim_lsp_document_symbol"; }
-              { name = "nvim_lsp_signature_help"; }
-              { name = "vsnip"; }
-              { name = "treesitter"; }
-              { name = "buffer"; }
-              { name = "pandoc_references"; }
-              { name = "git"; }
-              { name = "path"; }
-              { name = "cmdline"; }
-              { name = "cmp-cmdline-history"; }
-              { name = "spell"; }
-              { name = "calc"; }
-            ];
-
-            view.entries = "native";
           };
 
           nvim-colorizer.enable = true;
+
+          rainbow-delimiters = {
+            enable = true;
+
+            highlight = charHighlightList;
+          };
+
           surround.enable = true;
           telescope.enable = true; # TODO: Figure out how to fix
           todo-comments.enable = true;
@@ -446,13 +428,6 @@ in
           };
 
           treesitter-context.enable = true;
-
-          rainbow-delimiters = {
-            enable = true;
-
-            highlight = charHighlightList;
-          };
-
           ts-autotag.enable = true;
           ts-context-commentstring.enable = true;
         };
