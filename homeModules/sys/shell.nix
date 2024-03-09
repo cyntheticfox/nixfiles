@@ -326,10 +326,12 @@ in
 
         loginShellInit = ''
           set -U fish_features all
+          set -U fish_greeting
         '';
 
         interactiveShellInit = ''
           fish_config theme choose '${cfg.fish.theme}'
+          fish_vi_key_bindings
         '';
 
         plugins = [
