@@ -16,7 +16,7 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     nix-on-droid = {
-      url = "github:t184256/nix-on-droid/release-23.05";
+      url = "github:t184256/nix-on-droid/release-23.11";
 
       inputs = {
         # home-manager.follows = "home-manager";
@@ -181,31 +181,6 @@
         homeModules = import ./homeModules;
 
         nixosConfigurations = {
-          min = self.lib.mkNixosServer {
-            inherit (inputs) flake-registry nixpkgs;
-
-            hostname = "nixos-minimal";
-            domain = "";
-            stateVersion = "23.11";
-            path = ./nixosConfigurations/min;
-            modules = [ disko.nixosModules.disko ];
-          };
-
-          marisa = self.lib.mkNixosServer (
-            let
-              enc = import ./enc/marisa-state.nix;
-            in
-            {
-              inherit (inputs) flake-registry nixpkgs;
-              inherit (enc) domain;
-
-              hostname = "marisa";
-              stateVersion = "23.11";
-
-              modules = [ disko.nixosModules.disko ];
-            }
-          );
-
           cyn-framework = self.lib.mkNixosWorkstation {
             inherit (inputs) flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
             inherit (self) nixosModules;
@@ -258,10 +233,35 @@
               })
             ];
           };
+
+          enc-marisa = self.lib.mkNixosServer (
+            let
+              enc = import ./enc/marisa-state.nix;
+            in
+            {
+              inherit (inputs) flake-registry nixpkgs;
+              inherit (enc) domain;
+
+              hostname = "marisa";
+              stateVersion = "23.11";
+
+              modules = [ disko.nixosModules.disko ];
+            }
+          );
+
+          min = self.lib.mkNixosServer {
+            inherit (inputs) flake-registry nixpkgs;
+
+            hostname = "nixos-minimal";
+            domain = "";
+            stateVersion = "23.11";
+            path = ./nixosConfigurations/min;
+            modules = [ disko.nixosModules.disko ];
+          };
         };
 
         nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
-          system.stateVersion = "23.05";
+          system.stateVersion = "23.11";
           modules = [ ./nixOnDroidConfigurations/cyn-p7 ];
         };
 
