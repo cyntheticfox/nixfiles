@@ -36,7 +36,5 @@ in
     inherit lib;
   };
 
-  boot.loader.grub = {
-    enable = true;
-  };
+  boot.loader.grub.enable = true;
 }
