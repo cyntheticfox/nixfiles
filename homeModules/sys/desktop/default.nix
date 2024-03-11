@@ -114,7 +114,7 @@ in
 
             default = with pkgs; [
               winetricks
-              wine-wayland
+              wineWow64Packages.waylandFull
               protontricks
             ];
 
