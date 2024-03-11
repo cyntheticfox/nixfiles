@@ -234,21 +234,6 @@
             ];
           };
 
-          enc-marisa = self.lib.mkNixosServer (
-            let
-              enc = import ./enc/marisa-state.nix;
-            in
-            {
-              inherit (inputs) flake-registry nixpkgs;
-              inherit (enc) domain;
-
-              hostname = "marisa";
-              stateVersion = "23.11";
-
-              modules = [ disko.nixosModules.disko ];
-            }
-          );
-
           min = self.lib.mkNixosServer {
             inherit (inputs) flake-registry nixpkgs;
 
