@@ -43,6 +43,7 @@
           "games"
           "music"
           "pics"
+          "srv"
           "repos"
           "videos"
         ];
