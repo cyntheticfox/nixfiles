@@ -93,14 +93,15 @@
 
     nixvim = {
       # TODO: Find another framework or something that doesn't use IFD
-      # url = "github:pta2002/nixvim/26626aa1b1610d3270b7a38cf610b0d1a237e3f9";
-      url = "github:pta2002/nixvim";
+      # url = "github:nix-community/nixvim/26626aa1b1610d3270b7a38cf610b0d1a237e3f9";
+      url = "github:nix-community/nixvim";
 
       inputs = {
         nixpkgs.follows = "nixpkgs-unstable";
         pre-commit-hooks.follows = "pre-commit-hooks";
         home-manager.follows = "home-manager";
         flake-parts.follows = "flake-parts";
+        devshell.follows = "devshell";
         nix-darwin.follows = "";
       };
     };

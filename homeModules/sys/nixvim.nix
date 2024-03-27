@@ -182,7 +182,14 @@ in
         ];
 
         extraConfigLuaPost = vimHLString;
-        colorschemes.nord.enable = true;
+        colorschemes.onedark = {
+          enable = true;
+
+          settings = {
+            style = "darker";
+            transparent = true;
+          };
+        };
 
         plugins = {
           barbar = {
@@ -261,7 +268,7 @@ in
           lualine = {
             enable = true;
 
-            theme = "nord";
+            theme = "onedark";
 
             sections = {
               lualine_a = [
