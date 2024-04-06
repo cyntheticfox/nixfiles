@@ -1,20 +1,20 @@
 ---
 keys:
   - &cynthia 73C1C5DF51E7BB9285E9A2625960278CE235F821
-  - &cyn-framework 3727C581CD4E4DF55F66FDA9C04B64DABDB187CB
-  - &cynthia_cyn-framework age1vg6650fraek034pe8n3snvljnn3v6vacn07jw0f5lav2qene4sespz2zpp
+  - &yukari 3727C581CD4E4DF55F66FDA9C04B64DABDB187CB
+  - &cynthia_yukari age1vg6650fraek034pe8n3snvljnn3v6vacn07jw0f5lav2qene4sespz2zpp
 creation_rules:
-  - path_regex: homeConfigurations/cyn-framework/[^/]+\.(yml|yaml)$
+  - path_regex: homeConfigurations/yukari/[^/]+\.(yml|yaml)$
     key_groups:
-    - age:
-      - *cynthia_cyn-framework
-  - path_regex: nixosConfigurations/cyn-framework/[^/]+\.(yml|yaml)$
+      - age:
+          - *cynthia_yukari
+  - path_regex: nixosConfigurations/yukari/[^/]+\.(yml|yaml)$
     key_groups:
-    - pgp:
-      - *cyn-framework
+      - pgp:
+          - *yukari
   # TODO: Migrate secrets and delete this
   - path_regex: nixosUserConfigurations/cynthia/[^/]+\.(yml|yaml)$
     key_groups:
-    - pgp:
-      - *cynthia
-      - *cyn-framework
+      - pgp:
+          - *cynthia
+          - *yukari

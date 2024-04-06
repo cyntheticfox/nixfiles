@@ -185,10 +185,7 @@ in
         colorschemes.onedark = {
           enable = true;
 
-          settings = {
-            style = "darker";
-            transparent = true;
-          };
+          settings.style = "darker";
         };
 
         plugins = {

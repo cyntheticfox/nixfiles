@@ -182,11 +182,11 @@
         homeModules = import ./homeModules;
 
         nixosConfigurations = {
-          cyn-framework = self.lib.mkNixosWorkstation {
+          yukari = self.lib.mkNixosWorkstation {
             inherit (inputs) flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
             inherit (self) nixosModules;
 
-            hostname = "cyn-framework";
+            hostname = "yukari";
             domain = "gh0st.internal";
             stateVersion = "23.11";
 
@@ -248,7 +248,7 @@
 
         nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
           system.stateVersion = "23.11";
-          modules = [ ./nixOnDroidConfigurations/cyn-p7 ];
+          modules = [ ./nixOnDroidConfigurations/ran ];
         };
 
         apps.x86_64-linux =
