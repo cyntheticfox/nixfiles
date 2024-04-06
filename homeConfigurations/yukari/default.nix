@@ -142,6 +142,11 @@
         };
       };
 
+      kitty.theme = {
+        enable = true;
+        name = "OneDark";
+      };
+
       games = {
         retroarch.enable = true;
         steam.enable = true;

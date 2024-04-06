@@ -53,14 +53,22 @@ in
       default = { };
     };
 
-    kitty = lib.mkOption {
-      type = packageModule {
-        defaultEnable = true;
-        name = "Kitty";
-        package = "kitty";
-      };
+    kitty = {
+      enable = lib.mkEnableOption "Kitty Terminal" // { default = true; };
+      package = lib.mkPackageOption pkgs "kitty" { };
 
-      default = { };
+      theme = {
+        enable = lib.mkEnableOption "Kitty theme";
+        package = lib.mkPackageOption pkgs "kitty-themes" { };
+
+        name = lib.mkOption {
+          type = lib.types.str;
+
+          description = ''
+            Theme file to use.
+          '';
+        };
+      };
     };
 
     mupdf = lib.mkOption {
@@ -350,25 +358,10 @@ in
           tab_bar_background = "#222";
 
           # Set background Opacity
-          background_opacity = "0.9";
+          background_opacity = "0.95";
         };
 
-        extraConfig =
-          let
-            themefile =
-              let
-                owner = "connorholyday";
-                repo = "nord-kitty";
-                rev = "3a819c1f207cd2f98a6b7c7f9ebf1c60da91c9e9";
-                sha256 = "sha256:1fbnc6r9mbqb6wxqqi9z8hjhfir44rqd6ynvbc49kn6gd8v707p1";
-              in
-              pkgs.fetchurl {
-                inherit sha256;
-
-                url = "https://raw.githubusercontent.com/${owner}/${repo}/${rev}/nord.conf";
-              };
-          in
-          "include ${themefile}";
+        extraConfig = lib.optionalString cfg.kitty.theme.enable "include ${cfg.kitty.theme.package}/share/kitty-themes/themes/${cfg.kitty.theme.name}.conf";
       };
     })
 
