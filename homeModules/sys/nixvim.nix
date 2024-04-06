@@ -58,7 +58,7 @@ in
           ".ecrc" = "json";
         };
 
-        options = {
+        opts = {
           colorcolumn = "80";
           completeopt = "menu,menuone,noinsert,noselect,preview";
           whichwrap = "b,s,<,>,h,l";
