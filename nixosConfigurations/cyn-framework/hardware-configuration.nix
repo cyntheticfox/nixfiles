@@ -31,7 +31,7 @@
     extraModulePackages = with config.boot.kernelPackages; [ acpi_call v4l2loopback ];
     kernel.sysctl."dev.i915.perf_stream_paranoid" = 0;
     kernelModules = [ "v4l2loopback" ];
-    kernelPackages = pkgs.linuxPackages_latest;
+    # kernelPackages = pkgs.linuxPackages_latest;
   };
 
   fileSystems =
