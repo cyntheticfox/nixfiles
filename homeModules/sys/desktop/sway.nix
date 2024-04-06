@@ -5,23 +5,141 @@ let
 
   maxWorkspaces = 9; # Only 9 number keys, with 0 used for "last workspace"
 
-  palletes.nord = {
-    base00 = "#2E3440";
-    base01 = "#3B4252";
-    base02 = "#434C5E";
-    base03 = "#4C566A";
-    base04 = "#D8DEE9";
-    base05 = "#E5E9F0";
-    base06 = "#ECEFF4";
-    base07 = "#8FBCBB";
-    base08 = "#88C0D0";
-    base09 = "#81A1C1";
-    base0A = "#5E81AC";
-    base0B = "#BF616A";
-    base0C = "#D08770";
-    base0D = "#EBCB8B";
-    base0E = "#A3BE8C";
-    base0F = "#B48EAD";
+  # Base 16 map
+  # base00 = "black"
+  # base01 = "dark-gray";
+  # base02 = "medium-dark-gray";
+  # base03 = "slightly-dark-gray";
+  # base04 = "slightly-light-gray";
+  # base05 = "medium-light-gray";
+  # base06 = "light-gray";
+  # base07 = "white";
+  # base08 = "red";
+  # base09 = "orange";
+  # base0A = "yellow";
+  # base0B = "green";
+  # base0C = "cyan";
+  # base0D = "blue";
+  # base0E = "purple";
+  # base0F = "brown";
+  #
+
+  palettes = {
+    nord = {
+      base00 = "#2E3440";
+      base01 = "#3B4252";
+      base02 = "#434C5E";
+      base03 = "#4C566A";
+      base04 = "#D8DEE9";
+      base05 = "#E5E9F0";
+      base06 = "#ECEFF4";
+      base07 = "#8FBCBB";
+      base08 = "#88C0D0";
+      base09 = "#81A1C1";
+      base0A = "#5E81AC";
+      base0B = "#BF616A";
+      base0C = "#D08770";
+      base0D = "#EBCB8B";
+      base0E = "#A3BE8C";
+      base0F = "#B48EAD";
+    };
+
+    html = {
+      lightgray = "#d3d3d3";
+      silver = "#c0c0c0";
+      darkgray = "#a9a9a9";
+      gray = "#808080";
+      dimgray = "#696969";
+      lightslategray = "#778899";
+      slategray = "#708090";
+      darkslategray = "#2f4f4f";
+      black = "#000000";
+      blue = "#0000ff";
+      violet = "#ee82ee";
+      darkviolet = "#9400d3";
+      darkmagenta = "#8b008b";
+      indigo = "#4b0082";
+      slateblue = "#6a5acd";
+      darkslateblue = "#483D8B";
+      lavender = "#e6e6fa";
+      fuchsia = "#ff00ff";
+      cyan = "#00ffff";
+      lightcyan = "#e0ffff";
+      aquamarine = "#7fffd4";
+      powderblue = "#b0e0e6";
+      skyblue = "#87ceeb";
+      turquoise = "#40e0d0";
+      azure = "#f0ffff";
+      ghostwhite = "#f8f8ff";
+      lavenderblush = "#fff0f5";
+      crimson = "#dc143c";
+      maroon = "#800000";
+      red = "#ff0000";
+      darkred = "#8b0000";
+      yellow = "#ffff00";
+      gold = "#ffd700";
+      deeppink = "#ff1493";
+      mediumvioletred = "#c61585";
+      rebeccapurple = "#663399";
+    };
+
+    onedark-darker = {
+      black = "#0e1013";
+      bg0 = "#1f2329";
+      bg1 = "#282c34";
+      bg2 = "#30363f";
+      bg3 = "#323641";
+      bg_d = "#181b20";
+      bg_blue = "#61afef";
+      bg_yellow = "#e8c88c";
+      fg = "#a0a8b7";
+      purple = "#bf68d9";
+      green = "#8ebd6b";
+      orange = "#cc9057";
+      blue = "#4fa6ed";
+      yellow = "#e2b86b";
+      cyan = "#48b0bd";
+      red = "#e55561";
+      gray = "#535965";
+      light_gray = "#7a818e";
+      dark_cyan = "#266269";
+      dark_red = "#8b3434";
+      dark_yellow = "#835d1a";
+      dark_purple = "#7e3992";
+      diff_add = "#272e23";
+      diff_delete = "#2d2223";
+      diff_change = "#172a3a";
+      diff_text = "#274964";
+    };
+
+    # Taken mostly from Wikipedia
+    custom = {
+
+      apple-red = "#be0032"; # ISCC-NBS
+      pale-lilac = "#dcd0ff"; # ISCC-NBS
+      bright-lilac = "#d891ef"; # Crayola
+      mauve = "#e0b0ff"; # Maerz and Paul
+      electric-purple = "#bf00ff"; # X11
+      veronica = "#a020f0"; # X11
+      heliotrope = "#df73ff"; # Maerz and Paul
+      phlox = "#df00ff"; # Maerz and Paul
+      byzantium = "#702963"; # ISCC-NBS
+      dark-purple = "#301934"; # ISCC-NBS
+      davys-gray = "#555555"; # ISCC-NBS
+      platinum = "#e5e4e2"; # Maerz and Paul
+      ash-gray = "#b2beb5"; # ISCC-NBS
+      gunmetal = "#2a3439"; # Chrysler?
+      charcoal = "#36454f"; # ISCC-NBS
+      rose-quartz = "#aa98a9"; # ISCC-NBS
+      battleship-gray = "#848482"; # ISCC-NBS
+      ebony = "#555d50"; # Maerz and Paul
+      outer-space = "#414a4c"; # Crayola
+      onyx = "#353839"; # Crayola
+      jet = "#343434"; # ISCC-NBS
+      jet-black = "#0e0e10"; # RAL Classic
+      eerie-black = "#1b1b1b"; # Crayola
+      licorice = "#1a1110"; # Crayola
+    };
   };
 
   mapListToAttrs' = f: list: builtins.listToAttrs (builtins.map f list);
@@ -768,51 +886,51 @@ in
               workspaceOutputAssign =
                 builtins.map ({ name, outputs, ... }: { output = outputs; workspace = name; }) finalWorkspaces;
 
-              colors = with palletes.nord; {
-                background = base07;
+              colors = with palettes.custom; {
+                background = jet;
 
                 focused = {
-                  border = base05;
-                  background = base0C;
-                  text = base00;
-                  indicator = base0C;
-                  childBorder = base0C;
+                  border = bright-lilac;
+                  background = gunmetal;
+                  text = platinum;
+                  indicator = electric-purple;
+                  childBorder = bright-lilac;
                 };
 
                 focusedInactive = {
-                  border = base01;
-                  background = base01;
-                  text = base05;
-                  indicator = base03;
-                  childBorder = base01;
+                  border = mauve;
+                  background = charcoal;
+                  text = battleship-gray;
+                  indicator = veronica;
+                  childBorder = mauve;
                 };
 
                 unfocused = {
-                  border = base01;
-                  background = base00;
-                  text = base05;
-                  indicator = base01;
-                  childBorder = base01;
+                  border = pale-lilac;
+                  background = charcoal;
+                  text = davys-gray;
+                  indicator = heliotrope;
+                  childBorder = pale-lilac;
                 };
 
                 urgent = {
-                  border = base08;
-                  background = base08;
-                  text = base00;
-                  indicator = base08;
-                  childBorder = base08;
+                  border = apple-red;
+                  background = eerie-black;
+                  text = platinum;
+                  indicator = byzantium;
+                  childBorder = apple-red;
                 };
 
                 placeholder = {
-                  border = base00;
-                  background = base00;
-                  text = base05;
-                  indicator = base00;
-                  childBorder = base00;
+                  border = jet-black;
+                  background = jet-black;
+                  text = platinum;
+                  indicator = phlox;
+                  childBorder = jet-black;
                 };
               };
 
-              output."*".bg = "~/wallpaper.png fill #000000";
+              output."*".bg = "~/wallpaper.png fill ${palettes.custom.eerie-black}";
             };
 
           extraConfig = builtins.concatStringsSep "\n" (builtins.map ({ name, ... }: "workspace \"${name}\"") (lib.reverseList finalWorkspaces));
@@ -1024,7 +1142,7 @@ in
         ### Waybar Style configuration
         # NOTE: See https://github.com/Alexays/Waybar/wiki/Configuration
         #
-        xdg.configFile."waybar/style.css".text = ''
+        xdg.configFile."waybar/style.css".text = with palettes; ''
           /*** Base Styles ***/
           * {
             border: none;
@@ -1037,8 +1155,8 @@ in
 
           /* The whole bar */
           #waybar {
-            background: @theme_base_color;
-            color: @theme_text_color;
+            background: ${custom.gunmetal};
+            color: ${custom.platinum};
             font-family: "Fira Sans", Roboto, sans-serif;
             font-size: 14px;
           }
@@ -1066,11 +1184,12 @@ in
           }
 
           #battery.warning {
-            background: @warning_color;
+            background: ${html.yellow};
+            color: ${custom.jet-black}
           }
 
           #battery.critical {
-            background: @error_color;
+            background: ${custom.apple-red};
           }
 
           #clock {
@@ -1082,23 +1201,25 @@ in
           }
 
           #cpu.warning {
-            background: @warning_color;
+            background: ${html.yellow};
+            color: ${custom.jet-black}
           }
 
           #cpu.critical {
-            background: @error_color;
+            background: ${custom.apple-red};
           }
 
           #memory.warning {
-            background: @warning_color;
+            background: ${html.yellow};
+            color: ${custom.jet-black}
           }
 
           #memory.critical {
-            background: @error_color;
+            background: ${custom.apple-red};
           }
 
           #mode {
-            background: @theme_focused_fg_color;
+            background: ${custom.bright-lilac};
           }
 
           #network {
@@ -1106,7 +1227,7 @@ in
           }
 
           #network.disconnected {
-            color: @error_color;
+            color: ${custom.apple-red};
           }
 
           #pulseaudio {
@@ -1132,18 +1253,18 @@ in
             padding-bottom: 2px;
             padding-left: 10px;
             padding-right: 10px;
-            color: @theme_unfocused_text_color;
+            color: ${custom.platinum};
           }
 
           #workspaces button.focused {
-            border-color: @theme_selected_bg_color;
-            color: @theme_selected_fg_color;
-            background-color: @theme_selected_bg_color;
+            border-color: ${custom.bright-lilac};
+            color: ${custom.jet-black};
+            background-color: ${custom.pale-lilac};
           }
 
           #workspaces button.urgent {
-            border-color: @warning_color;
-            color: @warning_color;
+            border-color: ${custom.apple-red};
+            color: ${custom.platinum};
           }
         '';
       })
