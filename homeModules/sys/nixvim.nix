@@ -214,7 +214,7 @@ in
             };
           };
 
-          comment-nvim.enable = true;
+          comment.enable = true;
           emmet.enable = true;
           gitgutter.enable = true;
           indent-blankline.enable = true;
