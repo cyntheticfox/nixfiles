@@ -52,8 +52,13 @@
     };
 
     # Libraries
-    flake-utils.url = "github:numtide/flake-utils";
     nixpkgs-lib.url = "github:nixos/nixpkgs/nixos-unstable?dir=lib";
+
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+
+      inputs.systems.follows = "systems";
+    };
 
     devshell = {
       url = "github:numtide/devshell";
@@ -61,9 +66,7 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    terranix = {
-      url = "github:terranix/terranix";
-    };
+    terranix.url = "github:terranix/terranix";
 
     # NixOS Modules
     nixos-hardware.url = "github:NixOS/nixos-hardware";
@@ -142,6 +145,8 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs-lib";
     };
+
+    systems.url = "github:nix-systems/default-linux";
   };
 
   outputs = { self, ... }@inputs:
