@@ -98,7 +98,7 @@
 
       inputs = {
         nixpkgs.follows = "nixpkgs-unstable";
-        pre-commit-hooks.follows = "pre-commit-hooks";
+        pre-commit-hooks.follows = "git-hooks";
         home-manager.follows = "home-manager";
         flake-parts.follows = "flake-parts";
         devshell.follows = "devshell";
@@ -113,8 +113,8 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    pre-commit-hooks = {
-      url = "github:cachix/pre-commit-hooks.nix";
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
 
       inputs = {
         flake-utils.follows = "flake-utils";
@@ -281,7 +281,7 @@
       }
 
       (flake-utils.lib.eachDefaultSystem (system: {
-        checks.pre-commit-check = pre-commit-hooks.lib.${system}.run {
+        checks.pre-commit-check = git-hooks.lib.${system}.run {
           src = gitignore.lib.gitignoreSource ./.;
 
           hooks = {
