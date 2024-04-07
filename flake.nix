@@ -16,7 +16,7 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     nix-on-droid = {
-      url = "github:t184256/nix-on-droid/release-23.11";
+      url = "github:nix-community/nix-on-droid/release-23.11";
 
       inputs = {
         # home-manager.follows = "home-manager";
