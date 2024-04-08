@@ -19,10 +19,12 @@
       url = "github:nix-community/nix-on-droid/release-23.11";
 
       inputs = {
-        # home-manager.follows = "home-manager";
-        # nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-for-bootstrap.follows = "nixpkgs";
 
         nix-formatter-pack.follows = "";
+        nixpkgs-docs.follows = "";
         nmd.follows = "";
       };
     };
