@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, lib, pkgs, ... }: {
   # Import other configuration files
   imports = [
     ./hardware-configuration.nix
@@ -54,7 +54,7 @@
       lethe
       ntfs3g
       parted
-      restic
+      rustic-rs
 
       bluez-tools
       nixos-icons
@@ -123,41 +123,34 @@
   };
 
   sops = {
+    defaultSopsFile = ./secrets.yml;
+
     gnupg = {
       home = "/state/var/lib/sops";
       sshKeyPaths = [ ];
     };
 
     secrets = {
-      root-password = {
-        sopsFile = ./secrets.yml;
-        neededForUsers = true;
-      };
-
-      wireless = {
-        sopsFile = ./secrets.yml;
-        restartUnits = [ "supplicant-wlp0s20f3" ];
-      };
-
-      restic-password = {
-        sopsFile = ./secrets.yml;
-      };
-
-      restic-environment = {
-        sopsFile = ./secrets.yml;
-      };
+      root-password.neededForUsers = true;
+      rustic-app-key = { };
+      rustic-app-key-id = { };
+      rustic-bucket-id = { };
+      rustic-environment = { };
+      rustic-password = { };
+      wireless.restartUnits = [ "supplicant-wlp0s20f3" ];
     };
   };
 
   sound.enable = true;
 
   sys = {
-    backup = {
+    rustic-b2 = {
       enable = true;
-      paths = [ "/state" ];
-
-      passwordFile = config.sops.secrets.restic-password.path;
-      environmentFile = config.sops.secrets.restic-environment.path;
+      package = pkgs.nixpkgs-unstable.rustic-rs;
+      sources = [{ source = "/state"; }];
+      passwordFile = config.sops.secrets.rustic-password.path;
+      environmentFile = config.sops.secrets.rustic-environment.path;
+      configOverrideSource = config.sops.templates."rustic.toml".path;
     };
 
     core.nix-experimental-features = [
@@ -171,6 +164,28 @@
     print.enable = true;
     podman.enable = true;
   };
+
+  sops.templates."rustic.toml".content = ''
+    [repository]
+    repository = "opendal:b2";
+    password-file = ${config.sys.rustic-b2.passwordFile}
+
+    [repository.options]
+    bucket = "${config.sys.rustic-b2.bucket}"
+    bucket_id = "${config.sops.placeholder.rustic-bucket-id}";
+    application_key_id = "${config.sops.placeholder.rustic-app-key-id}";
+    application_key = "${config.sops.placeholder.rustic-app-key}";
+
+    [[backup.sources]]
+    source = /persist
+
+    [forget]
+    keep-daily = 7;
+    keep-weekly = 5;
+    keep-monthly = 12;
+    keep-yearly = 2;
+    prune = true;
+  '';
 
   systemd = {
     network.networks = {
@@ -212,7 +227,17 @@
       };
     };
 
-    services."restic-backups-${config.networking.hostName}".serviceConfig.ExecCondition = "${config.systemd.package}/lib/systemd/systemd-networkd-wait-online --interface=enp0s13f0u4u4:routable --timeout=5";
+    services."rustic-backups-${config.networking.hostName}".serviceConfig =
+      let
+        interface = "wlp0s20f3";
+        ssid = "Spectre";
+      in
+      {
+        ExecCondition = [
+          "${config.systemd.package}/lib/systemd/systemd-networkd-wait-online --interface=${interface}:routable --timeout=5"
+          "+${lib.getExe pkgs.bash} -c '${pkgs.wpa_supplicant}/bin/wpa_cli -i ${interface} status | ${lib.getExe pkgs.gnugrep} ^ssid=${ssid}'"
+        ];
+      };
 
     user.services.pipewire-pulse.path = [ pkgs.pulseaudio ];
     tmpfiles.packages = with pkgs; [ openvpn man-db ];
