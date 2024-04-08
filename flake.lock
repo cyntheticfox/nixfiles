@@ -462,17 +462,17 @@
     "nmt": {
       "flake": false,
       "locked": {
-        "lastModified": 1684189666,
-        "narHash": "sha256-vglxIg/b+8qr+ZsSsBqZIqGpsYWzRuMyz74/sy765Uk=",
-        "owner": "rycee",
+        "lastModified": 1705307515,
+        "narHash": "sha256-krVKx3/u1mDo8qe5qylYgmwAmlAPHa1BSPDzxq09FmI=",
+        "owner": "~rycee",
         "repo": "nmt",
-        "rev": "d045f22e1f56ff5a6e4caf365532fb7afc1a7371",
-        "type": "gitlab"
+        "rev": "1562940b7765a32f1987bd9a3ee6a4fa034c9429",
+        "type": "sourcehut"
       },
       "original": {
-        "owner": "rycee",
+        "owner": "~rycee",
         "repo": "nmt",
-        "type": "gitlab"
+        "type": "sourcehut"
       }
     },
     "root": {

@@ -139,7 +139,7 @@
     };
 
     nmt = {
-      url = "gitlab:rycee/nmt";
+      url = "sourcehut:~rycee/nmt";
       flake = false;
     };
 
