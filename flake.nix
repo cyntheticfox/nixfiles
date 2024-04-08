@@ -72,7 +72,19 @@
       };
     };
 
-    terranix.url = "github:terranix/terranix";
+    terranix = {
+      url = "github:terranix/terranix";
+
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+        flake-utils.follows = "flake-utils";
+
+        # Unused dependencies
+        terranix-examples.follows = "";
+        bats-support.follows = "";
+        bats-assert.follows = "";
+      };
+    };
 
     # NixOS Modules
     nixos-hardware.url = "github:NixOS/nixos-hardware";
