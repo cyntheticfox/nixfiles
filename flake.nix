@@ -23,6 +23,7 @@
         nixpkgs.follows = "nixpkgs";
         nixpkgs-for-bootstrap.follows = "nixpkgs";
 
+        # Unused dependencies
         nix-formatter-pack.follows = "";
         nixpkgs-docs.follows = "";
         nmd.follows = "";
@@ -65,7 +66,10 @@
     devshell = {
       url = "github:numtide/devshell";
 
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+        flake-utils.follows = "flake-utils";
+      };
     };
 
     terranix.url = "github:terranix/terranix";
