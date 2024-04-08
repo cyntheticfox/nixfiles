@@ -102,11 +102,14 @@
       url = "github:nix-community/nixvim";
 
       inputs = {
+        devshell.follows = "devshell";
+        flake-parts.follows = "flake-parts";
+        home-manager.follows = "home-manager";
         nixpkgs.follows = "nixpkgs-unstable";
         pre-commit-hooks.follows = "git-hooks";
-        home-manager.follows = "home-manager";
-        flake-parts.follows = "flake-parts";
-        devshell.follows = "devshell";
+
+        # Unused Inputs
+        flake-compat.follows = "";
         nix-darwin.follows = "";
       };
     };
