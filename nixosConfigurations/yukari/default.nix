@@ -167,24 +167,24 @@
 
   sops.templates."rustic.toml".content = ''
     [repository]
-    repository = "opendal:b2";
-    password-file = ${config.sys.rustic-b2.passwordFile}
+    repository = "opendal:b2"
+    password-file = "${config.sys.rustic-b2.passwordFile}"
 
     [repository.options]
     bucket = "${config.sys.rustic-b2.bucket}"
-    bucket_id = "${config.sops.placeholder.rustic-bucket-id}";
-    application_key_id = "${config.sops.placeholder.rustic-app-key-id}";
-    application_key = "${config.sops.placeholder.rustic-app-key}";
+    bucket_id = "${config.sops.placeholder.rustic-bucket-id}"
+    application_key_id = "${config.sops.placeholder.rustic-app-key-id}"
+    application_key = "${config.sops.placeholder.rustic-app-key}"
 
     [[backup.sources]]
-    source = /persist
+    source = "/state"
 
     [forget]
-    keep-daily = 7;
-    keep-weekly = 5;
-    keep-monthly = 12;
-    keep-yearly = 2;
-    prune = true;
+    keep-daily = 7
+    keep-weekly = 5
+    keep-monthly = 12
+    keep-yearly = 2
+    prune = true
   '';
 
   systemd = {
