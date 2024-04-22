@@ -158,7 +158,8 @@
     };
 
     nmt = {
-      url = "sourcehut:~rycee/nmt";
+      # url = "sourcehut:~rycee/nmt"; # TODO: fix
+      url = "git+https://git.sr.ht/~rycee/nmt";
       flake = false;
     };
 

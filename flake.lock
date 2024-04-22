@@ -372,15 +372,15 @@
       "locked": {
         "lastModified": 1705307515,
         "narHash": "sha256-krVKx3/u1mDo8qe5qylYgmwAmlAPHa1BSPDzxq09FmI=",
-        "owner": "~rycee",
-        "repo": "nmt",
+        "ref": "refs/heads/master",
         "rev": "1562940b7765a32f1987bd9a3ee6a4fa034c9429",
-        "type": "sourcehut"
+        "revCount": 29,
+        "type": "git",
+        "url": "https://git.sr.ht/~rycee/nmt"
       },
       "original": {
-        "owner": "~rycee",
-        "repo": "nmt",
-        "type": "sourcehut"
+        "type": "git",
+        "url": "https://git.sr.ht/~rycee/nmt"
       }
     },
     "root": {
