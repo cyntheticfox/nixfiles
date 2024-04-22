@@ -20,6 +20,7 @@ in
 
         Requires = [
           "graphical-session-pre.target"
+          "network-online.target"
         ] ++ lib.optional (cfg.package.name == "nheko") "secrets-service.target";
 
         After = lib.mkIf (cfg.package.name == "nheko") "secrets-service.target";

@@ -14,7 +14,7 @@ in
     enable = lib.mkEnableOption "Enable core configuration packages" // { default = true; };
 
     extraPaths = lib.mkOption {
-      type = with lib.types; listOf string;
+      type = with lib.types; listOf str;
       default = [ "${config.home.homeDirectory}/.cargo/bin" ];
 
       description = ''
@@ -312,19 +312,7 @@ in
         sessionPath = cfg.extraPaths;
       };
 
-      programs.man = {
-        enable = true;
-
-        generateCaches = true;
-      };
-
       programs = {
-        texlive = {
-          inherit (cfg.file.texlive) enable;
-
-          extraPackages = p: { inherit (p) collection-fontsrecommended; };
-        };
-
         htop = {
           enable = cfg.process.htopIntegration;
 
@@ -370,6 +358,47 @@ in
             (text "LoadAverage")
             (text "Uptime")
           ]);
+        };
+
+        man = {
+          enable = true;
+
+          generateCaches = true;
+        };
+
+        texlive = {
+          inherit (cfg.file.texlive) enable;
+
+          extraPackages = p: { inherit (p) collection-fontsrecommended; };
+        };
+      };
+
+      systemd.user = {
+        services."systemd-networkd-wait-online" = {
+          Unit = {
+            Description = "User Wait for Network to be Configured";
+            DefaultDependencies = "no";
+            Documentation = "man:systemd-networkd-wait-online.service(8)";
+            Before = [ "network-online.target" ];
+          };
+
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online";
+            RemainAfterExit = "yes";
+          };
+
+          Install.RequiredBy = [ "default.target" ];
+        };
+
+        targets."network-online" = {
+          Unit = {
+            Description = "Network is online";
+            Before = [ "default.target" ];
+            BindsTo = [ "network-online.target" ];
+          };
+
+          Install.WantedBy = [ "default.target" ];
         };
       };
     }
