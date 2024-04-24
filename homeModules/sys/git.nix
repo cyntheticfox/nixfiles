@@ -120,7 +120,6 @@ in
         "grrm" = "git remote remove --verbose";
         "grmv" = "git remote rename --verbose";
         "grset" = "git remote set-url --verbose";
-        "grup" = "git remote update";
         "grh" = "git reset";
         "grhh" = "git reset --hard";
         "grhk" = "git reset --keep";

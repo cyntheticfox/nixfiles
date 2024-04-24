@@ -415,59 +415,43 @@ in
           # TODO: Make this a separate like OMZ module?
           #
           "n" = "nix";
-
           "nb" = "nix build";
           "nbr" = "nix build --rebuild";
-
-          "nd" = builtins.getAttr cfg.nix.diffProgram nixDiffCommands; # TODO: Make diff
-
           "ndev" = "nix develop";
-
+          "ndiff" = builtins.getAttr cfg.nix.diffProgram nixDiffCommands;
           "ne" = "nix edit";
-
           "nf" = "nix flake";
           "nfc" = "nix flake check";
           "nfcl" = "nix flake clone";
           "nfi" = "nix flake init";
           "nfl" = "nix flake lock";
           "nfm" = "nix flake metadata";
+          "nfmt" = "nix fmt";
           "nfs" = "nix flake show";
           "nfu" = "nix flake update";
           "nfuc" = "nix flake update && nix flake check";
-
-          "nfmt" = "nix fmt";
-
           "nlog" = "nix log";
-
           "np" = "nix profile";
+          "npath" = "nix path-info";
           "nph" = "nix profile history";
           "npi" = "nix profile install";
           "npl" = "nix profile list";
-          "npu" = "nix profile upgrade";
-          "nprm" = "nix profile remove";
           "nprb" = "nix profile rollback";
+          "nprm" = "nix profile remove";
+          "npu" = "nix profile upgrade";
           "npw" = "nix profile wipe-history";
-
-          "npath" = "nix path-info";
-
           "nr" = "nix run";
-
-          "nrepl" = "nix repl";
-
           "nreg" = "nix registry";
           "nregls" = "nix registry list";
-
+          "nrepl" = "nix repl";
           "ns" = "nix search";
-          "nsn" = "nix search nixpkgs";
-          "nsu" = "nix search nixpkgs-unstable";
-
+          "nsd" = "nix show-derivation";
           "nsh" = "nix shell";
+          "nsn" = "nix search nixpkgs";
+          "nst" = "nix store";
+          "nsu" = "nix search nixpkgs-unstable";
           # TODO: Replace w/ working function
           # "nshn" = "nix shell nixpkgs";
-
-          "nsd" = "nix show-derivation";
-
-          "nst" = "nix store";
         } // (if builtins.hasAttr "ON_NIXOS" config.home.sessionVariables then {
           "nos" = "nixos-rebuild";
           "nosb" = "nixos-rebuild build";

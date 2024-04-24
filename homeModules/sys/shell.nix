@@ -106,7 +106,7 @@ in
     };
 
     less.enable = lib.mkEnableOption "Enable default less config" // { default = true; };
-    tmux.enable = lib.mkEnableOption "Enable deafult tmux config" // { default = true; };
+    tmux.enable = lib.mkEnableOption "Enable default tmux config" // { default = true; };
     starship.enable = lib.mkEnableOption "Enable default starship config" // { default = true; };
     zsh.enable = lib.mkEnableOption "Enable default zsh config";
 

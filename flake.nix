@@ -321,6 +321,12 @@
             shfmt.enable = true;
             statix.enable = true;
 
+            typos = {
+              enable = true;
+
+              files = "(^.asc$)";
+            };
+
             yamllint = {
               enable = true;
 
@@ -352,6 +358,7 @@
               ssh-to-age
               ssh-to-pgp
               statix
+              typos
             ];
 
             commands = [

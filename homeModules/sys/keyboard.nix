@@ -83,7 +83,7 @@ in
         [Behavior]
         ActiveByDefault=False
         ShareInputState=No
-        PreeditEnabledByDefault=Ture
+        PreeditEnabledByDefault=True
         ShowInputMethodInformation=True
         ShowInputMethodInformationWhenFocusIn=False
         CompactInputMethodInformation=True

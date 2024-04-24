@@ -1,0 +1,4 @@
+[default]
+
+[files]
+extend-exclude = [ "*.asc" ]
