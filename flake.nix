@@ -313,6 +313,7 @@
 
           hooks = {
             actionlint.enable = true;
+            check-added-large-files.enable = true;
             deadnix.enable = true;
             detect-private-keys.enable = true;
             editorconfig-checker.enable = true;
