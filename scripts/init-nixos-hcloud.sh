@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 # PARAMETERS
 SERVER_IMAGE='debian-12'
