@@ -315,6 +315,7 @@
             actionlint.enable = true;
             check-added-large-files.enable = true;
             check-shebang-scripts-are-executable.enable = true;
+            check-symlinks.enable = true;
             deadnix.enable = true;
             detect-private-keys.enable = true;
             editorconfig-checker.enable = true;
