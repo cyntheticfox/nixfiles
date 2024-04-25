@@ -314,6 +314,7 @@
           hooks = {
             actionlint.enable = true;
             deadnix.enable = true;
+            detect-private-keys.enable = true;
             editorconfig-checker.enable = true;
             fix-byte-order-marker.enable = true;
             nixpkgs-fmt.enable = true;
