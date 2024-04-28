@@ -381,6 +381,13 @@ in
           port = 22;
           identityFile = "~/.ssh/gitlab_id_ed25519";
         };
+
+        "sourcehut git.sr.ht" = {
+          hostname = "git.sr.ht";
+          user = "git";
+          port = 22;
+          identityFile = "~/.ssh/sourcehut_id_ed25519";
+        };
       } // cfg.extraMatchBlocks;
     };
   };
