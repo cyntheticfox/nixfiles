@@ -8,7 +8,6 @@ result
 # Pre-commit (managed by flake)
 /.pre-commit-config.yaml
 
-
 ### Created by https://www.gitignore.io
 ### Linux ###
 *~
@@ -24,8 +23,6 @@ result
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
-
-
 
 ### Created by https://www.gitignore.io
 ### Vim ###
@@ -48,8 +45,6 @@ Sessionx.vim
 tags
 # Persistent undo
 [._]*.un~
-
-
 
 ### Created by https://www.gitignore.io
 ### VisualStudioCode ###

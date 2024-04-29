@@ -1,9 +1,0 @@
-name: Branch-Tests
-on:
-  push:
-jobs:
-  check:
-    name: Run Nix flake checks
-    uses: ./.github/workflows/check.yml
-    with:
-      impure: true
