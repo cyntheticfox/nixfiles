@@ -5,8 +5,6 @@ let
 in
 {
   options.sys.cloud = {
-    enable = lib.mkEnableOption "Provide cloud CLI packages and maybe config";
-
     aws = {
       enable = lib.mkEnableOption "Amazon Web Services";
       package = lib.mkPackageOption pkgs "awscli2" { };
@@ -30,54 +28,53 @@ in
       package = lib.mkPackageOption pkgs "google-cloud-sdk" { };
     };
 
-    extraCloudPackages = lib.mkOption {
-      type = with lib.types; listOf package;
+    openshift = {
+      enable = lib.mkEnableOption "OpenShift tools";
+      ocm.package = lib.mkPackageOption pkgs "ocm" { };
+      odo.package = lib.mkPackageOption pkgs "odo" { };
+    };
 
-      default = with pkgs; [
-        backblaze-b2
-        cloud-custodian
-        flyctl
-        linode-cli
+    opentofu = {
+      enable = lib.mkEnableOption "OpenTofu";
+      package = lib.mkPackageOption pkgs "opentofu" { };
+    };
 
-        # Terraform/Hashicorp
-        infracost
-        terrascan
-        tflint
-        tfsec
+    backup = {
+      b2 = {
+        enable = lib.mkEnableOption "Backblaze B2";
+        package = lib.mkPackageOption pkgs "backblaze-b2" { };
+      };
 
-        # Kubernetes
-        chart-testing
-        datree
-        kube-hunter
-        kube-linter
-        kustomize
-        minikube
-        rancher
+      rclone = {
+        enable = lib.mkEnableOption "rclone";
+        package = lib.mkPackageOption pkgs "rclone" { };
+      };
+    };
 
-        # Cloud-Native tools
-        istioctl
-        kn
-        open-policy-agent
-        tektoncd-cli
+    flyctl = {
+      enable = lib.mkEnableOption "Fly.io CLI";
+      package = lib.mkPackageOption pkgs "flyctl" { };
+    };
 
-        # OpenShift
-        ocm
-        odo
-      ];
+    kubernetes = {
+      kubectl = {
+        enable = lib.mkEnableOption "Kubernetes CLI";
+        package = lib.mkPackageOption "kubectl" { };
+      };
+
+      helm = {
+        enable = lib.mkEnableOption "Kubernetes Helm package manager";
+        package = lib.mkPackageOption "kubernetes-helm" { };
+      };
+
+      minikube = {
+        enable = lib.mkEnableOption "Local Kubernetes test cluster";
+        package = lib.mkPackageOption "minikube" { };
+      };
     };
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      home.packages = with pkgs; [
-        nodePackages.cdktf-cli
-        packer
-        kubectl
-        kubernetes-helm
-        opentofu # Open Source Terraform
-      ] ++ cfg.extraCloudPackages;
-    }
-
+  config = lib.mkMerge [
     (lib.mkIf cfg.aws.enable (lib.mkMerge [
       {
         home.packages = with pkgs; [
@@ -124,5 +121,40 @@ in
     (lib.mkIf cfg.gcp.enable {
       home.packages = [ cfg.gcp.package ];
     })
-  ]);
+
+    (lib.mkIf cfg.opentofu.enable {
+      home.packages = [ cfg.opentofu.package ];
+    })
+
+    (lib.mkIf cfg.backup.b2.enable {
+      home.packages = [ cfg.backup.b2.package ];
+    })
+
+    (lib.mkIf cfg.backup.rclone.enable {
+      home.packages = [ cfg.backup.rclone.package ];
+    })
+
+    (lib.mkIf cfg.flyctl.enable {
+      home.packages = [ cfg.flyctl.package ];
+    })
+
+    (lib.mkIf cfg.kubernetes.kubectl.enable {
+      home.packages = [ cfg.kubernetes.kubectl.enable ];
+    })
+
+    (lib.mkIf cfg.kubernetes.helm.enable {
+      home.packages = [ cfg.kubernetes.helm.enable ];
+    })
+
+    (lib.mkIf cfg.kubernetes.minikube.enable {
+      home.packages = [ cfg.kubernetes.minikube.enable ];
+    })
+
+    (lib.mkIf cfg.openshift.enable {
+      home.packages = [
+        cfg.openshift.odo.package
+        cfg.openshift.ocm.package
+      ];
+    })
+  ];
 }

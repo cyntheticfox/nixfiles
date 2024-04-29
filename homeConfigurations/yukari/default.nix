@@ -9,8 +9,6 @@
       insomnia
       moar
       openshot-qt
-      rclone
-      rclone-browser
       wl-color-picker
       zap
     ];
@@ -20,12 +18,9 @@
         allowOther = false;
 
         directories = [
-          ".aws"
-          ".azure"
           ".config/cutter"
           ".config/dconf"
           ".config/discord" # TODO: Put into discord module
-          ".config/gcloud"
           ".config/lagrange"
           ".config/libvirt"
           ".config/nheko"
@@ -33,7 +28,6 @@
           ".config/pipewire"
           ".config/retroarch"
           ".config/WebCord"
-          ".docker"
           ".gnupg"
           ".mozilla"
           ".ssh"
@@ -66,8 +60,6 @@
           ".cache/nheko"
           ".cache/pre-commit"
           ".cache/virt-manager"
-          ".cargo/registry"
-          ".config/hcloud"
           ".local/share/PrismLauncher"
           ".local/share/Steam"
           ".local/share/bash"
@@ -82,11 +74,8 @@
           ".local/share/password-store"
           ".local/share/wineprefixes"
           ".local/share/zoxide"
-          ".local/share/zsh"
           ".local/state/wireplumber"
-          ".minikube/cache"
           ".steam"
-          ".terraform.d"
           ".wine"
           "dbg"
           "iso"
@@ -113,16 +102,12 @@
   # Using my home-manager modules
   sys = {
     cloud = {
-      enable = true;
-
-      aws = {
-        enable = true;
-
-        package = pkgs.nixpkgs-unstable.awscli2;
+      backup = {
+        b2.enable = true;
+        rclone.enable = true;
       };
 
-      azure.enable = true;
-      gcp.enable = true;
+      opentofu.enable = true;
     };
 
     desktop = {
