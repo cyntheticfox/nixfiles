@@ -11,6 +11,7 @@
   ./sys/fonts.nix
   ./sys/git.nix
   ./sys/gnupg.nix
+  ./sys/helix.nix
   ./sys/keyboard.nix
   ./sys/music.nix
   ./sys/nixvim.nix

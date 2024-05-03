@@ -26,6 +26,8 @@ in
         List of colors to use in rainbow for indent, brackets.
       '';
     };
+
+    defaultEditor = lib.mkEnableOption "NixVim as the default editor";
   };
 
   config = lib.mkIf cfg.enable {
@@ -33,7 +35,7 @@ in
       let
         nvimBin = lib.getExe config.programs.nixvim.finalPackage;
       in
-      {
+      lib.mkIf cfg.defaultEditor {
         "EDITOR" = nvimBin;
         "VISUAL" = "${nvimBin} -R";
       };

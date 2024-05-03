@@ -172,6 +172,11 @@
       gpgkey = "5960278CE235F821!";
     };
 
+    helix = {
+      enable = true;
+      defaultEditor = true;
+    };
+
     keyboard.enable = true;
     music.enable = true;
     nixvim.enable = true;
