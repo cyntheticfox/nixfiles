@@ -3,19 +3,6 @@
 let
   cfg = config.sys.git;
 
-  # posixGitFunctions = ''
-  #   function gcmsgp() {
-  #     git commit -m $@ && git push
-  #   }
-  #
-  #   function gcmsgpf() {
-  #     git commit -m $@ && git push --force-with-lease
-  #   }
-  #
-  #   function gcmsgpf!() {
-  #     git commit -m $@ && git push --force
-  #   }
-  # '';
 in
 {
   options.sys.git = {
@@ -115,11 +102,11 @@ in
         "grbm" = "git rebase main"; #TODO: Make use helper func
         "grbom" = "git rebase origin/main"; #TODO: Make use helper func
         "grf" = "git reflog";
-        "gr" = "git remote --verbose";
-        "gra" = "git remote add --verbose";
-        "grrm" = "git remote remove --verbose";
-        "grmv" = "git remote rename --verbose";
-        "grset" = "git remote set-url --verbose";
+        "gr" = "git remote";
+        "gra" = "git remote add";
+        "grrm" = "git remote remove";
+        "grmv" = "git remote rename";
+        "grset" = "git remote set-url";
         "grh" = "git reset";
         "grhh" = "git reset --hard";
         "grhk" = "git reset --keep";
@@ -149,6 +136,15 @@ in
         "gtsm" = "git tag --sign --modified";
       };
     };
+
+    fishFunctions = lib.mkOption {
+      type = with lib.types; attrsOf str;
+      default = {
+        "gcmsgp" = "git commit -m $argv; and git push";
+        "gcmsgpf" = "git commit -m $argv; and git push --force-with-lease";
+        "gcmsgpf!" = "git commit -m $argv; and git push --force";
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -157,6 +153,8 @@ in
 
       packages = cfg.extraPackages;
     };
+
+    programs.fish.functions = cfg.fishFunctions;
 
     programs.git = {
       inherit (cfg) enable package;
