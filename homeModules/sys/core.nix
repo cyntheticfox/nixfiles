@@ -94,8 +94,7 @@ in
       type = with lib.types; listOf package;
 
       default = with pkgs; [
-        minicom
-        screen
+        picocom
         usbutils
         pciutils
         nvme-cli
