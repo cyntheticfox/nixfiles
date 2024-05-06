@@ -476,6 +476,8 @@
                 };
               };
             };
+
+          formatter = nixpkgs-unstable.legacyPackages.${system}.nixfmt-rfc-style;
         })
       )
     );
