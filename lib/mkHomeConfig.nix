@@ -1,11 +1,11 @@
 { nixpkgs
 , nixpkgs-unstable
 , home-manager
-, homeModules
-, unstableHomeModules
 , username
 , hostname
 , stateVersion
+, homeModules ? [ ]
+, unstableHomeModules ? [ ]
 , path ? ../homeConfigurations/${hostname}
 , system ? "x86_64-linux"
 , allowUnfree ? true

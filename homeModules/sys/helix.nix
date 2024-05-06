@@ -26,14 +26,13 @@ in
     enable = lib.mkEnableOption "Helix text editor";
     package = lib.mkPackageOption pkgs "helix" { };
     lsp = mkLspOptions lsps;
-    defaultEditor = lib.mkEnableOption "helix as the default editor";
   };
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge (
       [{
         programs.helix = {
-          inherit (cfg) enable package defaultEditor;
+          inherit (cfg) enable package;
 
           settings = {
             theme = "onedark";

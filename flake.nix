@@ -112,24 +112,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixvim = {
-      # TODO: Find another framework or something that doesn't use IFD
-      # url = "github:nix-community/nixvim/26626aa1b1610d3270b7a38cf610b0d1a237e3f9";
-      url = "github:nix-community/nixvim";
-
-      inputs = {
-        devshell.follows = "devshell";
-        flake-parts.follows = "flake-parts";
-        home-manager.follows = "home-manager";
-        nixpkgs.follows = "nixpkgs-unstable";
-        pre-commit-hooks.follows = "git-hooks";
-
-        # Unused Inputs
-        flake-compat.follows = "";
-        nix-darwin.follows = "";
-      };
-    };
-
     # Extra flake utilities
     gitignore = {
       url = "github:hercules-ci/gitignore.nix";
@@ -186,10 +168,6 @@
             hostname = "pbp";
             username = "cynthia";
             stateVersion = "23.11";
-
-            unstableHomeModules = [
-              nixvim.homeManagerModules.nixvim
-            ];
           };
 
           wsl = self.lib.mkHomeConfig {
@@ -199,10 +177,6 @@
             username = "cynthia";
             hostname = "wsl";
             stateVersion = "23.11";
-
-            unstableHomeModules = [
-              nixvim.homeManagerModules.nixvim
-            ];
           };
         };
 
@@ -252,7 +226,6 @@
 
                   unstableHomeModules = [
                     sops-nix.homeManagerModules.sops
-                    nixvim.homeManagerModules.nixvim
                     impermanence.nixosModules.home-manager.impermanence
                   ];
 

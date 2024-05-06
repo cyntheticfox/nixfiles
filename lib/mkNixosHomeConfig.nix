@@ -1,11 +1,11 @@
 # A function to return the home-manager config suitable for use in NixOS
 { hostname
-, homeModules
 , lib
-, unstableHomeModules
 , unstablePkgs
 , unstableLib
 , stateVersion
+, homeModules ? [ ]
+, unstableHomeModules ? [ ]
 , path ? ../homeConfigurations/${hostname}
 }:
 

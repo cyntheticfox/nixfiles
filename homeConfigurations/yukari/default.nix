@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, lib, pkgs, ... }: {
   home = {
     packages = with pkgs; [
       # pipewire
@@ -172,19 +172,19 @@
       gpgkey = "5960278CE235F821!";
     };
 
-    helix = {
-      enable = true;
-      defaultEditor = true;
-    };
+    helix.enable = true;
 
     keyboard.enable = true;
     music.enable = true;
-    nixvim.enable = true;
     podman.enable = true;
     sec.enable = true;
 
     shell = {
       enable = true;
+      defaults = {
+        editor = lib.getExe config.sys.helix.package;
+        viewer = "${lib.getExe config.sys.helix.package} -R";
+      };
 
       fish.enable = true;
       fcp.enable = true;
