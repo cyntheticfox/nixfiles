@@ -48,7 +48,7 @@ in
               rulers = [ 80 ];
               bufferline = "always";
               color-modes = true;
-              popup-border = "all";
+              # popup-border = "all"; # TODO: Undo once 24.03
 
               statusline = {
                 left = [
@@ -98,25 +98,25 @@ in
               };
 
               gutters.line-numbers.min-width = 1;
+            };
 
-              keys = {
-                normal = {
-                  "A-," = "goto_previous_buffer";
-                  "A-." = "goto_next_buffer";
-                  "A-x" = "extend_to_line_bounds";
-                  "X" = [
-                    "extend_line_up"
-                    "extend_to_line_bounds"
-                  ];
-                };
+            keys = {
+              normal = {
+                "A-," = "goto_previous_buffer";
+                "A-." = "goto_next_buffer";
+                "A-x" = "extend_to_line_bounds";
+                "X" = [
+                  "extend_line_up"
+                  "extend_to_line_bounds"
+                ];
+              };
 
-                select = {
-                  "A-x" = "extend_to_line_bounds";
-                  "X" = [
-                    "extend_line_up"
-                    "extend_to_line_bounds"
-                  ];
-                };
+              select = {
+                "A-x" = "extend_to_line_bounds";
+                "X" = [
+                  "extend_line_up"
+                  "extend_to_line_bounds"
+                ];
               };
             };
           };
