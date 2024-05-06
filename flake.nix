@@ -321,6 +321,7 @@
             editorconfig-checker.enable = true;
             fix-byte-order-marker.enable = true;
             forbid-new-submodules.enable = true;
+            mdl.enable = true;
             nixpkgs-fmt.enable = true;
             nil.enable = true;
             shfmt.enable = true;
