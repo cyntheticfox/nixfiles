@@ -2,11 +2,11 @@
   description = "Personal dotfiles";
 
   nixConfig = {
+    allow-import-from-derivation = false;
     extra-experimental-features = "ca-derivations";
     extra-substituters = "https://cache.nixos.org https://nix-community.cachix.org";
     extra-trusted-public-keys = "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
     pure-eval = true;
-    allow-import-from-derivation = false;
   };
 
   inputs = {
@@ -14,6 +14,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    # Config stuff
     nix-on-droid = {
       url = "github:nix-community/nix-on-droid/release-23.11";
 
@@ -54,14 +55,6 @@
     };
 
     # Libraries
-    nixpkgs-lib.url = "github:nixos/nixpkgs/nixos-unstable?dir=lib";
-
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-
-      inputs.systems.follows = "systems";
-    };
-
     devshell = {
       url = "github:numtide/devshell";
 
@@ -70,6 +63,14 @@
         flake-utils.follows = "flake-utils";
       };
     };
+
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+
+      inputs.systems.follows = "systems";
+    };
+
+    nixpkgs-lib.url = "github:nixos/nixpkgs/nixos-unstable?dir=lib";
 
     terranix = {
       url = "github:terranix/terranix";
@@ -86,15 +87,21 @@
     };
 
     # NixOS Modules
-    nixos-hardware.url = "github:NixOS/nixos-hardware";
-    impermanence.url = "github:nix-community/impermanence";
-    nix-index-database.url = "github:cyntheticfox/nix-index-database-stable";
-
     disko = {
       url = "github:nix-community/disko";
 
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
+    home-manager = {
+      url = "github:nix-community/home-manager/release-23.11";
+
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    impermanence.url = "github:nix-community/impermanence";
+    nix-index-database.url = "github:cyntheticfox/nix-index-database-stable";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -105,19 +112,7 @@
       };
     };
 
-    home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
-
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Extra flake utilities
-    gitignore = {
-      url = "github:hercules-ci/gitignore.nix";
-
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
     git-hooks = {
       url = "github:cachix/git-hooks.nix";
 
@@ -132,7 +127,18 @@
       };
     };
 
+    gitignore = {
+      url = "github:hercules-ci/gitignore.nix";
+
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     # MISC
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs-lib";
+    };
+
     flake-registry = {
       url = "github:NixOS/flake-registry";
       flake = false;
@@ -144,11 +150,6 @@
       flake = false;
     };
 
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs-lib";
-    };
-
     systems.url = "github:nix-systems/default-linux";
   };
 
@@ -157,7 +158,37 @@
     with inputs;
     (nixpkgs-lib.lib.recursiveUpdate
       {
-        lib = import ./lib;
+        apps.x86_64-linux =
+          let
+            pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          in
+          {
+            build-and-diff-flake-system = {
+              type = "app";
+
+              program = builtins.toString (
+                pkgs.writers.writeBash "build-and-diff-flake-system" (
+                  builtins.readFile ./scripts/build-and-diff-flake-system.sh
+                )
+              );
+            };
+
+            update-flake = {
+              type = "app";
+
+              # FIXME: Use patchShebangs
+              program = builtins.toString (
+                pkgs.writers.writeBash "update-flake" (builtins.readFile ./scripts/update-flake.sh)
+              );
+            };
+          };
+
+        checks.x86_64-linux = import ./tests {
+          inherit (inputs) home-manager nmt;
+          inherit (self) nixosConfigurations homeConfigurations;
+
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        };
 
         homeConfigurations = {
           pbp = self.lib.mkHomeConfig {
@@ -182,7 +213,24 @@
 
         homeModules = import ./homeModules;
 
+        lib = import ./lib;
+
+        nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
+          system.stateVersion = "23.11";
+          modules = [ ./nixOnDroidConfigurations/ran ];
+        };
+
         nixosConfigurations = {
+          min = self.lib.mkNixosServer {
+            inherit (inputs) flake-registry nixpkgs;
+
+            hostname = "nixos-minimal";
+            domain = "";
+            stateVersion = "23.11";
+            path = ./nixosConfigurations/min;
+            modules = [ disko.nixosModules.disko ];
+          };
+
           yukari = self.lib.mkNixosWorkstation {
             inherit (inputs)
               flake-registry
@@ -243,56 +291,9 @@
               )
             ];
           };
-
-          min = self.lib.mkNixosServer {
-            inherit (inputs) flake-registry nixpkgs;
-
-            hostname = "nixos-minimal";
-            domain = "";
-            stateVersion = "23.11";
-            path = ./nixosConfigurations/min;
-            modules = [ disko.nixosModules.disko ];
-          };
         };
-
-        nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
-          system.stateVersion = "23.11";
-          modules = [ ./nixOnDroidConfigurations/ran ];
-        };
-
-        apps.x86_64-linux =
-          let
-            pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          in
-          {
-            update-flake = {
-              type = "app";
-
-              # FIXME: Use patchShebangs
-              program = builtins.toString (
-                pkgs.writers.writeBash "update-flake" (builtins.readFile ./scripts/update-flake.sh)
-              );
-            };
-
-            build-and-diff-flake-system = {
-              type = "app";
-
-              program = builtins.toString (
-                pkgs.writers.writeBash "build-and-diff-flake-system" (
-                  builtins.readFile ./scripts/build-and-diff-flake-system.sh
-                )
-              );
-            };
-          };
 
         nixosModules = import ./nixosModules;
-
-        checks.x86_64-linux = import ./tests {
-          inherit (inputs) home-manager nmt;
-          inherit (self) nixosConfigurations homeConfigurations;
-
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        };
       }
 
       (
