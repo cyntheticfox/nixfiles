@@ -29,41 +29,47 @@ with pkgs;
 let
   # type NixosConfig = AttrSet # too much work to figure out right now
 
-  testHostModules = [
-    {
-      nixpkgs.config.allowUnfree = false;
-    }
-  ];
+  testHostModules = [ { nixpkgs.config.allowUnfree = false; } ];
 
   # hasTestableSystem :: NixosConfig -> NixosConfig
-  hasTestableSystem = lib.attrsets.hasAttrByPath [ "config" "system" "build" "toplevel" ];
+  hasTestableSystem = lib.attrsets.hasAttrByPath [
+    "config"
+    "system"
+    "build"
+    "toplevel"
+  ];
 
   # hasInstaller :: NixosConfig -> NixosConfig
-  hasInstaller = lib.attrsets.hasAttrByPath [ "config" "system" "build" "installer" ];
+  hasInstaller = lib.attrsets.hasAttrByPath [
+    "config"
+    "system"
+    "build"
+    "installer"
+  ];
 
   # isBuildableOnHost :: NixosConfig -> Bool
-  isBuildableOnHost = cfg:
-    cfg.pkgs.stdenv.hostPlatform.system == pkgs.stdenv.hostPlatform.system;
+  isBuildableOnHost = cfg: cfg.pkgs.stdenv.hostPlatform.system == pkgs.stdenv.hostPlatform.system;
 
   # isTestableOnHost :: NixosConfig -> Bool
-  isTestableOnHost = cfg:
-    hasTestableSystem cfg && isBuildableOnHost cfg;
+  isTestableOnHost = cfg: hasTestableSystem cfg && isBuildableOnHost cfg;
 
   # mkTestConfig :: NixosConfig -> NixosConfig
-  mkTestConfig = cfg:
-    cfg // {
-      modules = testHostModules ++ (cfg.modules or [ ]);
-    };
+  mkTestConfig = cfg: cfg // { modules = testHostModules ++ (cfg.modules or [ ]); };
 
   # mkConfigListItem :: NixosConfig -> AttrSet
-  mkConfigListItem = cfg:
+  mkConfigListItem =
+    cfg:
     {
       "host-test-${cfg.config.networking.hostName}" = (mkTestConfig cfg).config.system.build.toplevel;
-    } // lib.attrsets.optionalAttrs (hasInstaller cfg) {
-      "installer-test-${cfg.config.networking.hostName}" = (mkTestConfig cfg).config.system.build.installer;
+    }
+    // lib.attrsets.optionalAttrs (hasInstaller cfg) {
+      "installer-test-${cfg.config.networking.hostName}" =
+        (mkTestConfig cfg).config.system.build.installer;
     };
 
   # mergeAttrsList :: [AttrSet] -> AttrSet
   mergeAttrsList = builtins.foldl' lib.trivial.mergeAttrs { };
 in
-mergeAttrsList (builtins.map mkConfigListItem (lib.attrsets.collect isTestableOnHost nixosConfigurations))
+mergeAttrsList (
+  builtins.map mkConfigListItem (lib.attrsets.collect isTestableOnHost nixosConfigurations)
+)

@@ -1,17 +1,31 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 let
   cfg = config.sys.video;
 
-  packageModule = { package, name, extraOptions ? { }, defaultEnable ? false }: types.submodule (_: {
-    options = {
-      enable = mkEnableOption "Enable ${name} configuration" // { default = defaultEnable; };
+  packageModule =
+    {
+      package,
+      name,
+      extraOptions ? { },
+      defaultEnable ? false,
+    }:
+    types.submodule (_: {
+      options = {
+        enable = mkEnableOption "Enable ${name} configuration" // {
+          default = defaultEnable;
+        };
 
-      package = mkPackageOption pkgs package { };
-    } // extraOptions;
-  });
+        package = mkPackageOption pkgs package { };
+      } // extraOptions;
+    });
 in
 {
   options.sys.video = {
@@ -35,12 +49,8 @@ in
   };
 
   config = mkMerge [
-    (mkIf cfg.ffmpeg.enable {
-      home.packages = [ cfg.ffmpeg.package ];
-    })
+    (mkIf cfg.ffmpeg.enable { home.packages = [ cfg.ffmpeg.package ]; })
 
-    (mkIf cfg.mpv.enable {
-      home.packages = [ cfg.mpv.package ];
-    })
+    (mkIf cfg.mpv.enable { home.packages = [ cfg.mpv.package ]; })
   ];
 }

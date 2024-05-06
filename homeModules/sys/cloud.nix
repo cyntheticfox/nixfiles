@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.cloud;
@@ -75,24 +80,26 @@ in
   };
 
   config = lib.mkMerge [
-    (lib.mkIf cfg.aws.enable (lib.mkMerge [
-      {
-        home.packages = with pkgs; [
-          cfg.aws.package
-          nodePackages.aws-cdk
-          nodePackages.serverless
-        ];
-      }
+    (lib.mkIf cfg.aws.enable (
+      lib.mkMerge [
+        {
+          home.packages = with pkgs; [
+            cfg.aws.package
+            nodePackages.aws-cdk
+            nodePackages.serverless
+          ];
+        }
 
-      (lib.mkIf (cfg.aws.profiles != { }) {
-        home.file.".aws/config".text = builtins.concatStringsSep "\n" (lib.mapAttrsToList
-          (name: values: ''
-            [${name}]
-            ${builtins.concatStringsSep "\n" (lib.mapAttrsToList (n: v: "${n}=${v}") values)}
-          '')
-          cfg.aws.profiles);
-      })
-    ]))
+        (lib.mkIf (cfg.aws.profiles != { }) {
+          home.file.".aws/config".text = builtins.concatStringsSep "\n" (
+            lib.mapAttrsToList (name: values: ''
+              [${name}]
+              ${builtins.concatStringsSep "\n" (lib.mapAttrsToList (n: v: "${n}=${v}") values)}
+            '') cfg.aws.profiles
+          );
+        })
+      ]
+    ))
 
     (lib.mkIf cfg.azure.enable {
       home.packages = with pkgs; [
@@ -118,37 +125,21 @@ in
       '';
     })
 
-    (lib.mkIf cfg.gcp.enable {
-      home.packages = [ cfg.gcp.package ];
-    })
+    (lib.mkIf cfg.gcp.enable { home.packages = [ cfg.gcp.package ]; })
 
-    (lib.mkIf cfg.opentofu.enable {
-      home.packages = [ cfg.opentofu.package ];
-    })
+    (lib.mkIf cfg.opentofu.enable { home.packages = [ cfg.opentofu.package ]; })
 
-    (lib.mkIf cfg.backup.b2.enable {
-      home.packages = [ cfg.backup.b2.package ];
-    })
+    (lib.mkIf cfg.backup.b2.enable { home.packages = [ cfg.backup.b2.package ]; })
 
-    (lib.mkIf cfg.backup.rclone.enable {
-      home.packages = [ cfg.backup.rclone.package ];
-    })
+    (lib.mkIf cfg.backup.rclone.enable { home.packages = [ cfg.backup.rclone.package ]; })
 
-    (lib.mkIf cfg.flyctl.enable {
-      home.packages = [ cfg.flyctl.package ];
-    })
+    (lib.mkIf cfg.flyctl.enable { home.packages = [ cfg.flyctl.package ]; })
 
-    (lib.mkIf cfg.kubernetes.kubectl.enable {
-      home.packages = [ cfg.kubernetes.kubectl.enable ];
-    })
+    (lib.mkIf cfg.kubernetes.kubectl.enable { home.packages = [ cfg.kubernetes.kubectl.enable ]; })
 
-    (lib.mkIf cfg.kubernetes.helm.enable {
-      home.packages = [ cfg.kubernetes.helm.enable ];
-    })
+    (lib.mkIf cfg.kubernetes.helm.enable { home.packages = [ cfg.kubernetes.helm.enable ]; })
 
-    (lib.mkIf cfg.kubernetes.minikube.enable {
-      home.packages = [ cfg.kubernetes.minikube.enable ];
-    })
+    (lib.mkIf cfg.kubernetes.minikube.enable { home.packages = [ cfg.kubernetes.minikube.enable ]; })
 
     (lib.mkIf cfg.openshift.enable {
       home.packages = [

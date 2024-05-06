@@ -1,4 +1,8 @@
-{ mainDisk ? "/dev/sda", ... }: {
+{
+  mainDisk ? "/dev/sda",
+  ...
+}:
+{
   disk.sda = {
     device = mainDisk;
     type = "disk";

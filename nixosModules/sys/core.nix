@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,7 +12,9 @@ let
 in
 {
   options.sys.core = {
-    enable = mkEnableOption "base configuration" // { default = true; };
+    enable = mkEnableOption "base configuration" // {
+      default = true;
+    };
 
     defaultPackages = mkOption {
       type = with types; listOf package;
@@ -22,16 +29,21 @@ in
     };
 
     nix-experimental-features = mkOption {
-      type = with types; listOf (enum [
-        "auto-allocate-uids" # Added in 23.05
-        "ca-derivations"
-        "cgroup"
-        "flakes"
-        "nix-command"
-        "repl-flake"
-      ]);
+      type =
+        with types;
+        listOf (enum [
+          "auto-allocate-uids" # Added in 23.05
+          "ca-derivations"
+          "cgroup"
+          "flakes"
+          "nix-command"
+          "repl-flake"
+        ]);
 
-      default = [ "nix-command" "flakes" ];
+      default = [
+        "nix-command"
+        "flakes"
+      ];
     };
   };
 

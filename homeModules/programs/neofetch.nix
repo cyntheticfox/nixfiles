@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -21,13 +26,7 @@ let
       '';
     };
   };
-  mkInfoArgs = a:
-    if
-      builtins.isAttrs a
-    then
-      "\"${a.subtitle}\" ${a.function}"
-    else
-      a;
+  mkInfoArgs = a: if builtins.isAttrs a then "\"${a.subtitle}\" ${a.function}" else a;
   mkInfoList = builtins.map (f: "info ${mkInfoArgs f}");
 in
 {
@@ -103,23 +102,74 @@ in
       default = [
         "title"
         "underline"
-        { subtitle = "Host"; function = "model"; }
-        { subtitle = "OS"; function = "distro"; }
-        { subtitle = "Kernel"; function = "kernel"; }
-        { subtitle = "Uptime"; function = "uptime"; }
-        { subtitle = "Packages"; function = "packages"; }
-        { subtitle = "Shell"; function = "shell"; }
-        { subtitle = "Resolution"; function = "resolution"; }
-        { subtitle = "DE"; function = "de"; }
-        { subtitle = "WM"; function = "wm"; }
-        { subtitle = "WM Theme"; function = "wm_theme"; }
-        { subtitle = "Theme"; function = "theme"; }
-        { subtitle = "Icons"; function = "icons"; }
-        { subtitle = "Terminal"; function = "term"; }
-        { subtitle = "Terminal Font"; function = "term_font"; }
-        { subtitle = "CPU"; function = "cpu"; }
-        { subtitle = "GPU"; function = "gpu"; }
-        { subtitle = "Memory"; function = "memory"; }
+        {
+          subtitle = "Host";
+          function = "model";
+        }
+        {
+          subtitle = "OS";
+          function = "distro";
+        }
+        {
+          subtitle = "Kernel";
+          function = "kernel";
+        }
+        {
+          subtitle = "Uptime";
+          function = "uptime";
+        }
+        {
+          subtitle = "Packages";
+          function = "packages";
+        }
+        {
+          subtitle = "Shell";
+          function = "shell";
+        }
+        {
+          subtitle = "Resolution";
+          function = "resolution";
+        }
+        {
+          subtitle = "DE";
+          function = "de";
+        }
+        {
+          subtitle = "WM";
+          function = "wm";
+        }
+        {
+          subtitle = "WM Theme";
+          function = "wm_theme";
+        }
+        {
+          subtitle = "Theme";
+          function = "theme";
+        }
+        {
+          subtitle = "Icons";
+          function = "icons";
+        }
+        {
+          subtitle = "Terminal";
+          function = "term";
+        }
+        {
+          subtitle = "Terminal Font";
+          function = "term_font";
+        }
+        {
+          subtitle = "CPU";
+          function = "cpu";
+        }
+        {
+          subtitle = "GPU";
+          function = "gpu";
+        }
+        {
+          subtitle = "Memory";
+          function = "memory";
+        }
         "cols"
       ];
     };

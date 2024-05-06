@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.desktop.chat.msteams;
@@ -8,7 +13,9 @@ in
     enable = lib.mkEnableOption "Microsoft Teams";
 
     package = lib.mkPackageOption pkgs "teams" { };
-    systemd-service = lib.mkEnableOption "ms-teams Systemd user service" // { default = true; };
+    systemd-service = lib.mkEnableOption "ms-teams Systemd user service" // {
+      default = true;
+    };
     autostart = lib.mkEnableOption "Microsoft Teams on startup";
   };
 
@@ -27,17 +34,21 @@ in
         After = [ "secrets-service.target" ];
       };
 
-      Service = {
-        Type = "exec";
-        ExitType = "cgroup";
-        ExecStart = lib.getExe cfg.package;
-        Restart = "on-abort";
-        MountAPIVFS = true;
-        ProtectProc = "noaccess";
-      } // lib.optionalAttrs (cfg.package.pname == "teams-for-linux" && (config.desktop.sway.enable or false)) {
-        # Enable Electron on wayland
-        Environment = "NIXOS_OZONE_WL=1";
-      };
+      Service =
+        {
+          Type = "exec";
+          ExitType = "cgroup";
+          ExecStart = lib.getExe cfg.package;
+          Restart = "on-abort";
+          MountAPIVFS = true;
+          ProtectProc = "noaccess";
+        }
+        // lib.optionalAttrs
+          (cfg.package.pname == "teams-for-linux" && (config.desktop.sway.enable or false))
+          {
+            # Enable Electron on wayland
+            Environment = "NIXOS_OZONE_WL=1";
+          };
 
       Install.WantedBy = lib.mkIf cfg.autostart [ "graphical-session.target" ];
     };
@@ -45,16 +56,15 @@ in
     # For whatever reason, teams likes to overwrite the mimetypes, even if it's
     #   fine. So, add a step to activation to remove the file if it's not a link.
     #
-    home.activation.remove-mimeapps = lib.mkIf (cfg.package.pname == "teams")
-      (
-        let
-          filename = "${config.xdg.configHome}/mimeapps.list";
-        in
-        lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
-          if [ -e ${filename} ] && [ ! -L ${filename} ]; then
-            $DRY_RUN_CMD rm $VERBOSE_ARG ${filename}
-          fi
-        ''
-      );
+    home.activation.remove-mimeapps = lib.mkIf (cfg.package.pname == "teams") (
+      let
+        filename = "${config.xdg.configHome}/mimeapps.list";
+      in
+      lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+        if [ -e ${filename} ] && [ ! -L ${filename} ]; then
+          $DRY_RUN_CMD rm $VERBOSE_ARG ${filename}
+        fi
+      ''
+    );
   };
 }

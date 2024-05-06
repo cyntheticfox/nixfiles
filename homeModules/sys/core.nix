@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.core;
@@ -11,7 +16,9 @@ let
 in
 {
   options.sys.core = {
-    enable = lib.mkEnableOption "Enable core configuration packages" // { default = true; };
+    enable = lib.mkEnableOption "Enable core configuration packages" // {
+      default = true;
+    };
 
     extraPaths = lib.mkOption {
       type = with lib.types; listOf str;
@@ -114,28 +121,40 @@ in
         '';
       };
 
-      htopIntegration = lib.mkEnableOption "htop configuration" // { default = true; };
+      htopIntegration = lib.mkEnableOption "htop configuration" // {
+        default = true;
+      };
     };
 
-    xdg.enable = lib.mkEnableOption "xdg dirs management" // { default = true; };
+    xdg.enable = lib.mkEnableOption "xdg dirs management" // {
+      default = true;
+    };
 
     nix = {
-      enable = lib.mkEnableOption "Nix config management" // { default = true; };
+      enable = lib.mkEnableOption "Nix config management" // {
+        default = true;
+      };
       package = lib.mkPackageOption pkgs "nixUnstable" { };
 
       diffProgram = lib.mkOption {
         type = lib.types.enum (builtins.attrNames nixDiffCommands);
 
-        default = assert builtins.hasAttr "builtin" nixDiffCommands; "builtin";
+        default =
+          assert builtins.hasAttr "builtin" nixDiffCommands;
+          "builtin";
       };
 
       cachix = {
-        enable = lib.mkEnableOption "cachix" // { default = true; };
+        enable = lib.mkEnableOption "cachix" // {
+          default = true;
+        };
         package = lib.mkPackageOption pkgs "cachix" { };
       };
     };
 
-    neofetch.enable = lib.mkEnableOption "neofetch config" // { default = true; };
+    neofetch.enable = lib.mkEnableOption "neofetch config" // {
+      default = true;
+    };
 
     systemd.shellAliases = lib.mkOption {
       type = with lib.types; attrsOf str;
@@ -211,22 +230,33 @@ in
           ];
 
           # mkSystemCommand :: String -> { name :: String, value :: String }
-          mkSystemCommand = c: { name = "sc-${c}"; value = "systemctl ${c}"; };
+          mkSystemCommand = c: {
+            name = "sc-${c}";
+            value = "systemctl ${c}";
+          };
 
           # mkUserCommand :: String -> { name :: String, value :: String }
-          mkUserCommand = c: { name = "scu-${c}"; value = "systemctl --user ${c}"; };
+          mkUserCommand = c: {
+            name = "scu-${c}";
+            value = "systemctl --user ${c}";
+          };
 
           # mkSudoCommand :: String -> { name :: String, value :: String }
-          mkSudoCommand = c: { name = "sc-${c}"; value = "sudo systemctl ${c}"; };
+          mkSudoCommand = c: {
+            name = "sc-${c}";
+            value = "sudo systemctl ${c}";
+          };
         in
-        builtins.listToAttrs
-          (lib.flatten [
+        builtins.listToAttrs (
+          lib.flatten [
             (builtins.map mkSudoCommand sudoCommands)
             (builtins.map mkSystemCommand powerCommands)
             (builtins.map mkSystemCommand userCommands)
             (builtins.map mkUserCommand sudoCommands)
             (builtins.map mkUserCommand userCommands)
-          ]) // {
+          ]
+        )
+        // {
           # Extra systemctl commands
           sc-disable-now = "sc-disable --now";
           sc-enable-now = "sc-enable --now";
@@ -288,7 +318,6 @@ in
 
           # Systemd nspawn
           nspawn = "systemd-nspawn";
-
         };
 
       description = ''
@@ -297,302 +326,318 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      home = {
-        inherit (cfg.systemd) shellAliases;
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        home = {
+          inherit (cfg.systemd) shellAliases;
 
-        packages = lib.flatten [
-          cfg.file.packages
-          cfg.network.packages
-          cfg.process.packages
-          cfg.hardware.packages
-        ];
+          packages = lib.flatten [
+            cfg.file.packages
+            cfg.network.packages
+            cfg.process.packages
+            cfg.hardware.packages
+          ];
 
-        sessionPath = cfg.extraPaths;
-      };
-
-      programs = {
-        htop = {
-          enable = cfg.process.htopIntegration;
-
-          settings = {
-            color_scheme = 0;
-            detailed_cpu_time = 1;
-            cpu_count_from_zero = 0;
-            delay = 15;
-
-            fields = with config.lib.htop.fields; [
-              PID
-              USER
-              PRIORITY
-              NICE
-              M_SIZE
-              M_RESIDENT
-              M_SHARE
-              STATE
-              PERCENT_CPU
-              PERCENT_MEM
-              TIME
-              COMM
-            ];
-
-            header_margin = 1;
-            hide_threads = 0;
-            hide_kernel_threads = 1;
-            hide_userland_threads = 0;
-            highlight_base_name = 1;
-            highlight_megabytes = 1;
-            highlight_thread = 1;
-            sort_key = config.lib.htop.fields.PERCENT_MEM;
-            sort_direction = 1;
-            tree_view = 1;
-            update_process_names = 0;
-          } // (with config.lib.htop; leftMeters [
-            (bar "LeftCPUs")
-            (bar "Memory")
-            (bar "Swap")
-          ]) // (with config.lib.htop; rightMeters [
-            (bar "RightCPUs")
-            (text "Tasks")
-            (text "LoadAverage")
-            (text "Uptime")
-          ]);
+          sessionPath = cfg.extraPaths;
         };
 
-        man = {
-          enable = true;
+        programs = {
+          htop = {
+            enable = cfg.process.htopIntegration;
 
-          generateCaches = true;
-        };
+            settings =
+              {
+                color_scheme = 0;
+                detailed_cpu_time = 1;
+                cpu_count_from_zero = 0;
+                delay = 15;
 
-        texlive = {
-          inherit (cfg.file.texlive) enable;
+                fields = with config.lib.htop.fields; [
+                  PID
+                  USER
+                  PRIORITY
+                  NICE
+                  M_SIZE
+                  M_RESIDENT
+                  M_SHARE
+                  STATE
+                  PERCENT_CPU
+                  PERCENT_MEM
+                  TIME
+                  COMM
+                ];
 
-          extraPackages = p: { inherit (p) collection-fontsrecommended; };
-        };
-      };
-
-      systemd.user = {
-        services."systemd-networkd-wait-online" = {
-          Unit = {
-            Description = "User Wait for Network to be Configured";
-            DefaultDependencies = "no";
-            Documentation = "man:systemd-networkd-wait-online.service(8)";
-            Before = [ "network-online.target" ];
+                header_margin = 1;
+                hide_threads = 0;
+                hide_kernel_threads = 1;
+                hide_userland_threads = 0;
+                highlight_base_name = 1;
+                highlight_megabytes = 1;
+                highlight_thread = 1;
+                sort_key = config.lib.htop.fields.PERCENT_MEM;
+                sort_direction = 1;
+                tree_view = 1;
+                update_process_names = 0;
+              }
+              // (
+                with config.lib.htop;
+                leftMeters [
+                  (bar "LeftCPUs")
+                  (bar "Memory")
+                  (bar "Swap")
+                ]
+              )
+              // (
+                with config.lib.htop;
+                rightMeters [
+                  (bar "RightCPUs")
+                  (text "Tasks")
+                  (text "LoadAverage")
+                  (text "Uptime")
+                ]
+              );
           };
 
-          Service = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online";
-            RemainAfterExit = "yes";
+          man = {
+            enable = true;
+
+            generateCaches = true;
           };
 
-          Install.RequiredBy = [ "default.target" ];
+          texlive = {
+            inherit (cfg.file.texlive) enable;
+
+            extraPackages = p: { inherit (p) collection-fontsrecommended; };
+          };
         };
 
-        targets."network-online" = {
-          Unit = {
-            Description = "Network is online";
-            Before = [ "default.target" ];
-            BindsTo = [ "network-online.target" ];
+        systemd.user = {
+          services."systemd-networkd-wait-online" = {
+            Unit = {
+              Description = "User Wait for Network to be Configured";
+              DefaultDependencies = "no";
+              Documentation = "man:systemd-networkd-wait-online.service(8)";
+              Before = [ "network-online.target" ];
+            };
+
+            Service = {
+              Type = "oneshot";
+              ExecStart = "${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online";
+              RemainAfterExit = "yes";
+            };
+
+            Install.RequiredBy = [ "default.target" ];
           };
 
-          Install.WantedBy = [ "default.target" ];
-        };
-      };
-    }
+          targets."network-online" = {
+            Unit = {
+              Description = "Network is online";
+              Before = [ "default.target" ];
+              BindsTo = [ "network-online.target" ];
+            };
 
-    (lib.mkIf cfg.nix.enable {
-      home = {
-        packages = [ pkgs.comma ]
-          ++ lib.optional (cfg.nix.diffProgram != "builtin") [ pkgs.${cfg.nix.diffProgram} ]
+            Install.WantedBy = [ "default.target" ];
+          };
+        };
+      }
+
+      (lib.mkIf cfg.nix.enable {
+        home = {
+          packages = [
+            pkgs.comma
+          ] ++ lib.optional (cfg.nix.diffProgram != "builtin") [ pkgs.${cfg.nix.diffProgram} ]
           # ++ lib.optional cfg.nix.cachix.enable [ cfg.nix.cachix.package ]
-        ;
+          ;
 
-        shellAliases = {
-          ### Nix Aliases
-          # TODO: Make this a separate like OMZ module?
-          #
-          "n" = "nix";
-          "nb" = "nix build";
-          "nbr" = "nix build --rebuild";
-          "ndev" = "nix develop";
-          "ndiff" = builtins.getAttr cfg.nix.diffProgram nixDiffCommands;
-          "ne" = "nix edit";
-          "nf" = "nix flake";
-          "nfc" = "nix flake check";
-          "nfcl" = "nix flake clone";
-          "nfi" = "nix flake init";
-          "nfl" = "nix flake lock";
-          "nfm" = "nix flake metadata";
-          "nfmt" = "nix fmt";
-          "nfs" = "nix flake show";
-          "nfu" = "nix flake update";
-          "nfuc" = "nix flake update && nix flake check";
-          "nlog" = "nix log";
-          "np" = "nix profile";
-          "npath" = "nix path-info";
-          "nph" = "nix profile history";
-          "npi" = "nix profile install";
-          "npl" = "nix profile list";
-          "nprb" = "nix profile rollback";
-          "nprm" = "nix profile remove";
-          "npu" = "nix profile upgrade";
-          "npw" = "nix profile wipe-history";
-          "nr" = "nix run";
-          "nreg" = "nix registry";
-          "nregls" = "nix registry list";
-          "nrepl" = "nix repl";
-          "ns" = "nix search";
-          "nsd" = "nix show-derivation";
-          "nsh" = "nix shell";
-          "nsn" = "nix search nixpkgs";
-          "nst" = "nix store";
-          "nsu" = "nix search nixpkgs-unstable";
-          # TODO: Replace w/ working function
-          # "nshn" = "nix shell nixpkgs";
-        } // (if builtins.hasAttr "ON_NIXOS" config.home.sessionVariables then {
-          "nos" = "nixos-rebuild";
-          "nosb" = "nixos-rebuild build";
-          "nosbf" = "nixos-rebuild build --flake .";
-          "nosc" = "nixos-container";
-          "nosg" = "nixos-generate-config";
-          "nosp" = "read-link '/nix/var/nix/profiles/system'";
-          "nospl" = "ls -r '/nix/var/nix/profiles/system-*'";
-          "nossw" = "nixos-rebuild switch --use-remote-sudo";
-          "nosswf" = "nixos-rebuild switch --use-remote-sudo --flake .";
-          "nosswfc" = "nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
-          "nosswfuc" = "nix flake update && nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
-          "nosswrb" = "nixos-rebuild switch --use-remote-sudo --rollback";
-          "nosv" = "nixos-version";
-        } else {
-          "nos" = "home-manager";
-          "nosb" = "home-manager build";
-          "nosbf" = "home-manager build --flake .#`hostname`";
-          "nossw" = "home-manager switch";
-          "nosswf" = "home-manager switch --flake .#`hostname` -b '.bak'";
-          "nosswfc" = "nix flake check && home-manager switch --flake .#`hostname` -b '.bak'";
-          "nosswfuc" = "nix flake update && nix flake check && home-manager switch --flake .#`hostname` -b '.bak'";
-          # "nosswrb" = "home-manager switch --rollback"; # FIXME: Find a workaround?
-        });
-      };
+          shellAliases =
+            {
+              ### Nix Aliases
+              # TODO: Make this a separate like OMZ module?
+              #
+              "n" = "nix";
+              "nb" = "nix build";
+              "nbr" = "nix build --rebuild";
+              "ndev" = "nix develop";
+              "ndiff" = builtins.getAttr cfg.nix.diffProgram nixDiffCommands;
+              "ne" = "nix edit";
+              "nf" = "nix flake";
+              "nfc" = "nix flake check";
+              "nfcl" = "nix flake clone";
+              "nfi" = "nix flake init";
+              "nfl" = "nix flake lock";
+              "nfm" = "nix flake metadata";
+              "nfmt" = "nix fmt";
+              "nfs" = "nix flake show";
+              "nfu" = "nix flake update";
+              "nfuc" = "nix flake update && nix flake check";
+              "nlog" = "nix log";
+              "np" = "nix profile";
+              "npath" = "nix path-info";
+              "nph" = "nix profile history";
+              "npi" = "nix profile install";
+              "npl" = "nix profile list";
+              "nprb" = "nix profile rollback";
+              "nprm" = "nix profile remove";
+              "npu" = "nix profile upgrade";
+              "npw" = "nix profile wipe-history";
+              "nr" = "nix run";
+              "nreg" = "nix registry";
+              "nregls" = "nix registry list";
+              "nrepl" = "nix repl";
+              "ns" = "nix search";
+              "nsd" = "nix show-derivation";
+              "nsh" = "nix shell";
+              "nsn" = "nix search nixpkgs";
+              "nst" = "nix store";
+              "nsu" = "nix search nixpkgs-unstable";
+              # TODO: Replace w/ working function
+              # "nshn" = "nix shell nixpkgs";
+            }
+            // (
+              if builtins.hasAttr "ON_NIXOS" config.home.sessionVariables then
+                {
+                  "nos" = "nixos-rebuild";
+                  "nosb" = "nixos-rebuild build";
+                  "nosbf" = "nixos-rebuild build --flake .";
+                  "nosc" = "nixos-container";
+                  "nosg" = "nixos-generate-config";
+                  "nosp" = "read-link '/nix/var/nix/profiles/system'";
+                  "nospl" = "ls -r '/nix/var/nix/profiles/system-*'";
+                  "nossw" = "nixos-rebuild switch --use-remote-sudo";
+                  "nosswf" = "nixos-rebuild switch --use-remote-sudo --flake .";
+                  "nosswfc" = "nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
+                  "nosswfuc" = "nix flake update && nix flake check && nixos-rebuild switch --use-remote-sudo --flake .";
+                  "nosswrb" = "nixos-rebuild switch --use-remote-sudo --rollback";
+                  "nosv" = "nixos-version";
+                }
+              else
+                {
+                  "nos" = "home-manager";
+                  "nosb" = "home-manager build";
+                  "nosbf" = "home-manager build --flake .#`hostname`";
+                  "nossw" = "home-manager switch";
+                  "nosswf" = "home-manager switch --flake .#`hostname` -b '.bak'";
+                  "nosswfc" = "nix flake check && home-manager switch --flake .#`hostname` -b '.bak'";
+                  "nosswfuc" = "nix flake update && nix flake check && home-manager switch --flake .#`hostname` -b '.bak'";
+                  # "nosswrb" = "home-manager switch --rollback"; # FIXME: Find a workaround?
+                }
+            );
+        };
 
+        nix = {
+          package = lib.mkDefault cfg.nix.package;
 
-      nix = {
-        package = lib.mkDefault cfg.nix.package;
+          registry = {
+            ### Other people's configs
+            #
+            foosteros.to = {
+              type = "github";
+              owner = "lilyinstarlight";
+              repo = "foosteros";
+            };
 
-        registry = {
-          ### Other people's configs
-          #
-          foosteros.to = {
-            type = "github";
-            owner = "lilyinstarlight";
-            repo = "foosteros";
-          };
+            ### Build tools
+            #
+            naersk.to = {
+              type = "github";
+              owner = "nix-community";
+              repo = "naersk";
+            };
 
-          ### Build tools
-          #
-          naersk.to = {
-            type = "github";
-            owner = "nix-community";
-            repo = "naersk";
-          };
+            napalm.to = {
+              type = "github";
+              owner = "nix-community";
+              repo = "napalm";
+            };
 
-          napalm.to = {
-            type = "github";
-            owner = "nix-community";
-            repo = "napalm";
-          };
+            node2nix.to = {
+              type = "github";
+              owner = "svanderburg";
+              repo = "node2nix";
+            };
 
-          node2nix.to = {
-            type = "github";
-            owner = "svanderburg";
-            repo = "node2nix";
-          };
-
-          pre-commit-nix.to = {
-            type = "github";
-            owner = "cachix";
-            repo = "pre-commit.nix";
+            pre-commit-nix.to = {
+              type = "github";
+              owner = "cachix";
+              repo = "pre-commit.nix";
+            };
           };
         };
-      };
 
-      nixpkgs.config.allowUnfree = true;
-    })
+        nixpkgs.config.allowUnfree = true;
+      })
 
-    (lib.mkIf cfg.xdg.enable {
-      xdg = {
-        inherit (cfg.xdg) enable;
+      (lib.mkIf cfg.xdg.enable {
+        xdg = {
+          inherit (cfg.xdg) enable;
 
-        cacheHome = lib.mkDefault "${config.home.homeDirectory}/.cache";
-        configHome = lib.mkDefault "${config.home.homeDirectory}/.config";
-        dataHome = lib.mkDefault "${config.home.homeDirectory}/.local/share";
-        stateHome = lib.mkDefault "${config.home.homeDirectory}/.local/state";
+          cacheHome = lib.mkDefault "${config.home.homeDirectory}/.cache";
+          configHome = lib.mkDefault "${config.home.homeDirectory}/.config";
+          dataHome = lib.mkDefault "${config.home.homeDirectory}/.local/share";
+          stateHome = lib.mkDefault "${config.home.homeDirectory}/.local/state";
 
-        userDirs = {
-          enable = lib.mkDefault true;
+          userDirs = {
+            enable = lib.mkDefault true;
 
-          createDirectories = lib.mkDefault true;
+            createDirectories = lib.mkDefault true;
 
-          desktop = lib.mkDefault "${config.home.homeDirectory}";
-          documents = lib.mkDefault "${config.home.homeDirectory}/docs";
-          download = lib.mkDefault "${config.home.homeDirectory}/tmp";
-          music = lib.mkDefault "${config.home.homeDirectory}/music";
-          pictures = lib.mkDefault "${config.home.homeDirectory}/pics";
-          publicShare = lib.mkDefault "${config.home.homeDirectory}/public";
-          templates = lib.mkDefault "${config.home.homeDirectory}/.templates";
-          videos = lib.mkDefault "${config.home.homeDirectory}/videos";
+            desktop = lib.mkDefault "${config.home.homeDirectory}";
+            documents = lib.mkDefault "${config.home.homeDirectory}/docs";
+            download = lib.mkDefault "${config.home.homeDirectory}/tmp";
+            music = lib.mkDefault "${config.home.homeDirectory}/music";
+            pictures = lib.mkDefault "${config.home.homeDirectory}/pics";
+            publicShare = lib.mkDefault "${config.home.homeDirectory}/public";
+            templates = lib.mkDefault "${config.home.homeDirectory}/.templates";
+            videos = lib.mkDefault "${config.home.homeDirectory}/videos";
 
-          extraConfig = lib.mkDefault {
-            "XDG_SECRETS_DIR" = "${config.home.homeDirectory}/.secrets";
+            extraConfig = lib.mkDefault { "XDG_SECRETS_DIR" = "${config.home.homeDirectory}/.secrets"; };
           };
         };
-      };
-    })
+      })
 
-    (lib.mkIf cfg.neofetch.enable {
-      home.packages = with pkgs; [ neofetch ];
+      (lib.mkIf cfg.neofetch.enable {
+        home.packages = with pkgs; [ neofetch ];
 
-      xdg.configFile."neofetch/config.conf".text = ''
-        print_info() {
-            info title
-            info underline
+        xdg.configFile."neofetch/config.conf".text = ''
+          print_info() {
+              info title
+              info underline
 
-            info "OS" distro
-            info "Host" model
-            info "Kernel" kernel
-            info "Uptime" uptime
-            info "Packages" packages
-            info "Shell" shell
-            info "Resolution" resolution
-            info "DE" de
-            info "WM" wm
-            info "WM Theme" wm_theme
-            info "Theme" theme
-            info "Icons" icons
-            info "Terminal" term
-            info "Terminal Font" term_font
-            info "CPU" cpu
-            info "GPU" gpu
-            info "Memory" memory
+              info "OS" distro
+              info "Host" model
+              info "Kernel" kernel
+              info "Uptime" uptime
+              info "Packages" packages
+              info "Shell" shell
+              info "Resolution" resolution
+              info "DE" de
+              info "WM" wm
+              info "WM Theme" wm_theme
+              info "Theme" theme
+              info "Icons" icons
+              info "Terminal" term
+              info "Terminal Font" term_font
+              info "CPU" cpu
+              info "GPU" gpu
+              info "Memory" memory
 
-            info cols
-        }
+              info cols
+          }
 
-        kernel_shorthand="on"
-        distro_shorthand="off"
-        os_arch="on"
-        uptime_shorthand="tiny"
-        memory_percent="on"
-        package_managers="on"
-        speed_shorthand="on"
-        cpu_temp="on"
-        refresh_rate="on"
-        gtk_shorthand="on"
-        image_backend="kitty"
-      '';
-    })
-  ]);
+          kernel_shorthand="on"
+          distro_shorthand="off"
+          os_arch="on"
+          uptime_shorthand="tiny"
+          memory_percent="on"
+          package_managers="on"
+          speed_shorthand="on"
+          cpu_temp="on"
+          refresh_rate="on"
+          gtk_shorthand="on"
+          image_backend="kitty"
+        '';
+      })
+    ]
+  );
 }

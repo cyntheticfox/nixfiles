@@ -1,18 +1,19 @@
-{ nixpkgs
-, flake-registry
-, home-manager
-, hostname
-, domain
-, stateVersion
-, path ? ../nixosConfigurations/${hostname}
-, nixpkgs-unstable ? null
-, nix-index-database ? null
-, cpuVendor ? "other"
-, system ? "x86_64-linux"
-, nixosModules ? import ../nixosModules
-, modules ? [ ]
-, overlays ? [ ]
-, specialArgs ? { }
+{
+  nixpkgs,
+  flake-registry,
+  home-manager,
+  hostname,
+  domain,
+  stateVersion,
+  path ? ../nixosConfigurations/${hostname},
+  nixpkgs-unstable ? null,
+  nix-index-database ? null,
+  cpuVendor ? "other",
+  system ? "x86_64-linux",
+  nixosModules ? import ../nixosModules,
+  modules ? [ ],
+  overlays ? [ ],
+  specialArgs ? { },
 }:
 
 assert cpuVendor == null || builtins.isString cpuVendor;
@@ -31,101 +32,108 @@ nixpkgs.lib.nixosSystem {
     home-manager.nixosModules.home-manager
     path
 
-    ({ config, ... }: {
-      nix = {
-        settings.flake-registry = "${flake-registry}/flake-registry.json";
+    (
+      { config, ... }:
+      {
+        nix = {
+          settings.flake-registry = "${flake-registry}/flake-registry.json";
 
-        registry = {
-          nixpkgs.to = {
-            type = "github";
-            owner = "NixOS";
-            repo = "nixpkgs";
-            ref = nixpkgs.sourceInfo.rev;
-          };
+          registry = {
+            nixpkgs.to = {
+              type = "github";
+              owner = "NixOS";
+              repo = "nixpkgs";
+              ref = nixpkgs.sourceInfo.rev;
+            };
 
-          nixpkgs-unstable.to = {
-            type = "github";
-            owner = "NixOS";
-            repo = "nixpkgs";
-            ref = (nz nixpkgs-unstable nixpkgs).sourceInfo.rev;
+            nixpkgs-unstable.to = {
+              type = "github";
+              owner = "NixOS";
+              repo = "nixpkgs";
+              ref = (nz nixpkgs-unstable nixpkgs).sourceInfo.rev;
+            };
           };
         };
-      };
 
-      nixpkgs.overlays = [
-        (_: super:
-          let
-            unstablePkgs =
-              if
-                nixpkgs-unstable != null
-              then
-                import nixpkgs-unstable
-                  {
+        nixpkgs.overlays = [
+          (
+            _: super:
+            let
+              unstablePkgs =
+                if nixpkgs-unstable != null then
+                  import nixpkgs-unstable {
                     inherit system;
 
                     config.allowUnfree = config.nixpkgs.config.allowUnfree;
                   }
-              else
-                super;
-          in
-          {
-            inherit (unstablePkgs) vimPlugins;
+                else
+                  super;
+            in
+            {
+              inherit (unstablePkgs) vimPlugins;
 
-            nixpkgs-unstable = unstablePkgs;
-          })
-      ] ++ overlays;
+              nixpkgs-unstable = unstablePkgs;
+            }
+          )
+        ] ++ overlays;
 
-      home-manager = {
-        backupFileExtension = "bak";
-        extraSpecialArgs = specialArgs;
+        home-manager = {
+          backupFileExtension = "bak";
+          extraSpecialArgs = specialArgs;
 
-        sharedModules = [
-          ({ pkgs, lib, ... }: {
-            programs.nix-index.enable = true;
+          sharedModules = [
+            (
+              { pkgs, lib, ... }:
+              {
+                programs.nix-index.enable = true;
 
-            systemd.user = {
-              services.nix-index = {
-                Unit.Description = "Update nix-index cache";
+                systemd.user = {
+                  services.nix-index = {
+                    Unit.Description = "Update nix-index cache";
 
-                Service = {
-                  Type = "oneshot";
-                  ExecStart = "${pkgs.nix-index}/bin/nix-index";
+                    Service = {
+                      Type = "oneshot";
+                      ExecStart = "${pkgs.nix-index}/bin/nix-index";
+                    };
+                  };
+
+                  timers.nix-index = {
+                    Install.WantedBy = [ "timers.target" ];
+
+                    Unit.Description = "Update nix-index cache";
+
+                    Timer = {
+                      OnCalendar = "weekly";
+                      Persistent = true;
+                    };
+                  };
                 };
-              };
 
-              timers.nix-index = {
-                Install.WantedBy = [ "timers.target" ];
+                home.file.".cache/nix-index/files".source = lib.mkIf (
+                  nix-index-database != null
+                ) nix-index-database.legacyPackages.${system}.database;
+              }
+            )
+          ];
 
-                Unit.Description = "Update nix-index cache";
+          useGlobalPkgs = true;
+          useUserPackages = true;
+        };
 
-                Timer = {
-                  OnCalendar = "weekly";
-                  Persistent = true;
-                };
-              };
-            };
+        sys.hardware = {
+          inherit cpuVendor;
 
-            home.file.".cache/nix-index/files".source = lib.mkIf (nix-index-database != null) nix-index-database.legacyPackages.${system}.database;
-          })
-        ];
+          isWorkstation = true;
+        };
 
-        useGlobalPkgs = true;
-        useUserPackages = true;
-      };
+        system.stateVersion = stateVersion;
 
-      sys.hardware = {
-        inherit cpuVendor;
+        networking = {
+          inherit domain;
 
-        isWorkstation = true;
-      };
-
-      system.stateVersion = stateVersion;
-
-      networking = {
-        inherit domain;
-
-        hostName = hostname;
-      };
-    })
+          hostName = hostname;
+        };
+      }
+    )
   ] ++ modules ++ builtins.attrValues nixosModules;
 }

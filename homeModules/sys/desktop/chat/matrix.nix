@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.desktop.chat.matrix;
@@ -7,7 +12,9 @@ in
   options.sys.desktop.chat.matrix = {
     enable = lib.mkEnableOption "Matrix client";
     package = lib.mkPackageOption pkgs "nheko" { };
-    systemd-service = lib.mkEnableOption "Matrix client systemd service" // { default = true; };
+    systemd-service = lib.mkEnableOption "Matrix client systemd service" // {
+      default = true;
+    };
     autostart = lib.mkEnableOption "Matrix client on startup";
   };
 

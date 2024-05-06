@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   boot = {
     initrd = {
       availableKernelModules = [
@@ -28,7 +29,10 @@
     };
 
     extraModprobeConfig = "options v4l2loopback video_nr=63";
-    extraModulePackages = with config.boot.kernelPackages; [ acpi_call v4l2loopback ];
+    extraModulePackages = with config.boot.kernelPackages; [
+      acpi_call
+      v4l2loopback
+    ];
     kernel.sysctl."dev.i915.perf_stream_paranoid" = 0;
     kernelModules = [ "v4l2loopback" ];
     # kernelPackages = pkgs.linuxPackages_latest;
@@ -48,7 +52,11 @@
       "/" = {
         device = "none";
         fsType = "tmpfs";
-        options = [ "defaults" "size=12G" "mode=755" ];
+        options = [
+          "defaults"
+          "size=12G"
+          "mode=755"
+        ];
       };
 
       "/state" = fsroot_subvol "state" true;

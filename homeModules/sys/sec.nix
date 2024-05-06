@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.sec;
@@ -48,7 +53,5 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = cfg.packages;
-  };
+  config = lib.mkIf cfg.enable { home.packages = cfg.packages; };
 }

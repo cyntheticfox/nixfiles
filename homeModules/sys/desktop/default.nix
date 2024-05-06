@@ -1,15 +1,29 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.desktop;
 
-  packageModule = { package, name, extraOptions ? { }, defaultEnable ? false }: lib.types.submodule (_: {
-    options = {
-      enable = lib.mkEnableOption "Enable ${name} configuration" // { default = defaultEnable; };
+  packageModule =
+    {
+      package,
+      name,
+      extraOptions ? { },
+      defaultEnable ? false,
+    }:
+    lib.types.submodule (_: {
+      options = {
+        enable = lib.mkEnableOption "Enable ${name} configuration" // {
+          default = defaultEnable;
+        };
 
-      package = lib.mkPackageOption pkgs package { };
-    } // extraOptions;
-  });
+        package = lib.mkPackageOption pkgs package { };
+      } // extraOptions;
+    });
 in
 {
   options.sys.desktop = {
@@ -17,7 +31,10 @@ in
 
     defaults = {
       editor = lib.mkOption {
-        type = lib.types.enum [ "vscode" "neovim-qt" ];
+        type = lib.types.enum [
+          "vscode"
+          "neovim-qt"
+        ];
         default = "neovim-qt";
 
         description = ''
@@ -54,7 +71,9 @@ in
     };
 
     kitty = {
-      enable = lib.mkEnableOption "Kitty Terminal" // { default = true; };
+      enable = lib.mkEnableOption "Kitty Terminal" // {
+        default = true;
+      };
       package = lib.mkPackageOption pkgs "kitty" { };
 
       theme = {
@@ -187,7 +206,9 @@ in
         name = "Remmina";
 
         defaultEnable = true;
-        extraOptions.startService = lib.mkEnableOption "Start the remmina service in the background" // { default = true; };
+        extraOptions.startService = lib.mkEnableOption "Start the remmina service in the background" // {
+          default = true;
+        };
       };
 
       default = { };
@@ -199,215 +220,215 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      # TODO: Replace when home-manager/release-23.05
-      # services.pass-secret-service = {
-      #   enable = true;
-      #
-      #   storePath = "${config.home.homeDirectory}/.local/share/password-store";
-      # };
-      systemd.user.services.pass-secret-service = {
-        Unit = {
-          AssertFileIsExecutable = "${pkgs.pass-secret-service}/bin/pass_secret_service";
-          Description = "Pass libsecret service";
-          Documentation = "https://github.com/mdellweg/pass_secret_service";
-          PartOf = [ "secrets-service.target" ];
-        };
-
-        Service = {
-          Type = "dbus";
-          ExecStart = "${pkgs.pass-secret-service}/bin/pass_secret_service --path \"${config.home.homeDirectory}/.local/share/password-store\"";
-          BusName = "org.freedesktop.secrets";
-        };
-
-        Install.WantedBy = [ "secrets-service.target" ];
-      };
-
-      systemd.user.targets.secrets-service.Unit = {
-        Description = "Setup of a FreeDesktop secrets management service";
-        Documentation = "man:systemd.special(7)";
-        PartOf = [ "graphical-session-pre.target" ];
-      };
-
-      services.udiskie.enable = true;
-
-      gtk = {
-        enable = true;
-
-        theme = {
-          package = pkgs.nordic;
-          name = "Nordic";
-        };
-
-        iconTheme = {
-          package = pkgs.papirus-icon-theme;
-          name = "Papirus";
-        };
-      };
-
-      qt = {
-        enable = true;
-        platformTheme = "gnome";
-
-        style = {
-          name = "adwaita-dark";
-          package = pkgs.adwaita-qt;
-        };
-      };
-
-      home = {
-        shellAliases."open" = "xdg-open";
-        sessionVariables =
-          let
-            path = lib.getExe cfg.${cfg.defaults.editor}.package;
-          in
-          {
-            EDITOR_GRAPHICAL = path;
-            VISUAL_GRAPHICAL = path;
-          };
-
-        # Reload mime type associations on activation
-        activation.reload-mimetypes = lib.hm.dag.entryAfter [ "writeBoundary" "checkLinkTargets" ] ''
-          $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p $VERBOSE_ARG ${config.xdg.dataHome}/mime/packages
-          $DRY_RUN_CMD ${pkgs.shared-mime-info}/bin/update-mime-database $VERBOSE_ARG ${config.xdg.dataHome}/mime
-        '';
-      };
-
-      xdg = {
-        dataFile."dbus-1/services/org.freedesktop.secrets.service".source = "${pkgs.pass-secret-service}/share/dbus-1/services/org.freedesktop.secrets.service";
-        mime.enable = true;
-        mimeApps.enable = true;
-      };
-    }
-
-    (lib.mkIf cfg.games.steam.enable {
-      home.packages = [ cfg.games.steam.package ] ++ cfg.games.steam.wine;
-    })
-
-    (lib.mkIf cfg.games.itch.enable {
-      home.packages = [ cfg.games.itch.package ];
-    })
-
-    (lib.mkIf cfg.games.lutris.enable {
-      home.packages = [ cfg.games.lutris.package ];
-    })
-
-    (lib.mkIf cfg.games.retroarch.enable {
-      home.packages = [ cfg.games.retroarch.package ];
-    })
-
-    (lib.mkIf cfg.games.minecraft.enable {
-      home.packages = [ cfg.games.minecraft.package ] ++ cfg.games.minecraft.extraLaunchers;
-    })
-
-    (lib.mkIf cfg.neovim-qt.enable {
-      home.packages = [ cfg.neovim-qt.package ];
-    })
-
-    (lib.mkIf cfg.vscode.enable {
-      home.packages = [ cfg.vscode.package ];
-    })
-
-    (lib.mkIf cfg.mupdf.enable {
-      home.packages = [ cfg.mupdf.package ];
-    })
-
-    (lib.mkIf cfg.libreoffice.enable {
-      home.packages = [ cfg.libreoffice.package ];
-    })
-
-    (lib.mkIf (cfg.defaults.pdf != null) {
-      xdg.mimeApps.defaultApplications =
-        let
-          app = "${cfg.defaults.pdf}.desktop";
-        in
-        {
-          "application/pdf" = app;
-          "application/x-pdf" = app;
-          "application/x-cbz" = app;
-          "application/oxps" = app;
-          "application/vnd.ms-xpsdocument" = app;
-          "application/epub+zip" = app;
-        };
-    })
-
-    (lib.mkIf cfg.ghidra.enable {
-      home.packages = [ cfg.ghidra.package ];
-    })
-
-    (lib.mkIf cfg.kitty.enable {
-      programs.kitty = {
-        inherit (cfg.kitty) enable;
-
-        settings = {
-          # Set font settings
-          font_family = "FiraCodeNerdFontCompleteMono-Retina";
-          font_size = 12;
-          font_features = "FiraCodeNerdFontCompleteMono-Retina +zero +onum";
-
-          # Set terminal bell to off
-          enable_audio_bell = false;
-          visual_bell_duration = 0;
-
-          # Fix tab bar
-          tab_bar_edge = "top";
-          tab_bar_style = "powerline";
-          tab_bar_min_tabs = 1;
-          tab_title_template = "{index}: {title}";
-          tab_bar_background = "#222";
-
-          # Set background Opacity
-          background_opacity = "0.95";
-        };
-
-        extraConfig = lib.optionalString cfg.kitty.theme.enable "include ${cfg.kitty.theme.package}/share/kitty-themes/themes/${cfg.kitty.theme.name}.conf";
-      };
-    })
-
-    (lib.mkIf (cfg.defaults.terminal != null) {
-      home.sessionVariables."TERMINAL" = lib.getExe cfg.${cfg.defaults.terminal}.package;
-    })
-
-    (lib.mkIf cfg.remmina.enable (lib.mkMerge [
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
       {
-        home.packages = [ cfg.remmina.package ];
-
-        xdg = {
-          mimeApps.defaultApplications."application/x-rdp" = "org.remmina.Remmina.desktop";
-
-          dataFile."mime/packages/application-x-rdp.xml".text = ''
-            <?xml version="1.0" encoding="UTF-8"?>
-            <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
-              <mime-type type="application/x-rdp">
-                <comment>rdp file</comment>
-                <icon name="application-x-rdp"/>
-                <glob-deleteall/>
-                <glob pattern="*.rdp"/>
-              </mime-type>
-            </mime-info>
-          '';
-        };
-      }
-
-      (lib.mkIf cfg.remmina.startService {
-        systemd.user.services.remmina = {
+        # TODO: Replace when home-manager/release-23.05
+        # services.pass-secret-service = {
+        #   enable = true;
+        #
+        #   storePath = "${config.home.homeDirectory}/.local/share/password-store";
+        # };
+        systemd.user.services.pass-secret-service = {
           Unit = {
-            Description = "Remmina remote desktop client";
-            Documentation = "man:remmina(1)";
-            Requires = [ "graphical-session-pre.target" "secrets-service.target" ];
-            After = [ "graphial-session-pre.target" "secrets-service.target" ];
+            AssertFileIsExecutable = "${pkgs.pass-secret-service}/bin/pass_secret_service";
+            Description = "Pass libsecret service";
+            Documentation = "https://github.com/mdellweg/pass_secret_service";
+            PartOf = [ "secrets-service.target" ];
           };
 
           Service = {
-            Type = "simple";
-            ExecStart = "${lib.getExe cfg.remmina.package} --icon --enable-extra-hardening";
-            Restart = "on-abort";
+            Type = "dbus";
+            ExecStart = "${pkgs.pass-secret-service}/bin/pass_secret_service --path \"${config.home.homeDirectory}/.local/share/password-store\"";
+            BusName = "org.freedesktop.secrets";
           };
 
-          Install.WantedBy = [ "graphical-session.target" ];
+          Install.WantedBy = [ "secrets-service.target" ];
+        };
+
+        systemd.user.targets.secrets-service.Unit = {
+          Description = "Setup of a FreeDesktop secrets management service";
+          Documentation = "man:systemd.special(7)";
+          PartOf = [ "graphical-session-pre.target" ];
+        };
+
+        services.udiskie.enable = true;
+
+        gtk = {
+          enable = true;
+
+          theme = {
+            package = pkgs.nordic;
+            name = "Nordic";
+          };
+
+          iconTheme = {
+            package = pkgs.papirus-icon-theme;
+            name = "Papirus";
+          };
+        };
+
+        qt = {
+          enable = true;
+          platformTheme = "gnome";
+
+          style = {
+            name = "adwaita-dark";
+            package = pkgs.adwaita-qt;
+          };
+        };
+
+        home = {
+          shellAliases."open" = "xdg-open";
+          sessionVariables =
+            let
+              path = lib.getExe cfg.${cfg.defaults.editor}.package;
+            in
+            {
+              EDITOR_GRAPHICAL = path;
+              VISUAL_GRAPHICAL = path;
+            };
+
+          # Reload mime type associations on activation
+          activation.reload-mimetypes =
+            lib.hm.dag.entryAfter
+              [
+                "writeBoundary"
+                "checkLinkTargets"
+              ]
+              ''
+                $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p $VERBOSE_ARG ${config.xdg.dataHome}/mime/packages
+                $DRY_RUN_CMD ${pkgs.shared-mime-info}/bin/update-mime-database $VERBOSE_ARG ${config.xdg.dataHome}/mime
+              '';
+        };
+
+        xdg = {
+          dataFile."dbus-1/services/org.freedesktop.secrets.service".source = "${pkgs.pass-secret-service}/share/dbus-1/services/org.freedesktop.secrets.service";
+          mime.enable = true;
+          mimeApps.enable = true;
+        };
+      }
+
+      (lib.mkIf cfg.games.steam.enable {
+        home.packages = [ cfg.games.steam.package ] ++ cfg.games.steam.wine;
+      })
+
+      (lib.mkIf cfg.games.itch.enable { home.packages = [ cfg.games.itch.package ]; })
+
+      (lib.mkIf cfg.games.lutris.enable { home.packages = [ cfg.games.lutris.package ]; })
+
+      (lib.mkIf cfg.games.retroarch.enable { home.packages = [ cfg.games.retroarch.package ]; })
+
+      (lib.mkIf cfg.games.minecraft.enable {
+        home.packages = [ cfg.games.minecraft.package ] ++ cfg.games.minecraft.extraLaunchers;
+      })
+
+      (lib.mkIf cfg.neovim-qt.enable { home.packages = [ cfg.neovim-qt.package ]; })
+
+      (lib.mkIf cfg.vscode.enable { home.packages = [ cfg.vscode.package ]; })
+
+      (lib.mkIf cfg.mupdf.enable { home.packages = [ cfg.mupdf.package ]; })
+
+      (lib.mkIf cfg.libreoffice.enable { home.packages = [ cfg.libreoffice.package ]; })
+
+      (lib.mkIf (cfg.defaults.pdf != null) {
+        xdg.mimeApps.defaultApplications =
+          let
+            app = "${cfg.defaults.pdf}.desktop";
+          in
+          {
+            "application/pdf" = app;
+            "application/x-pdf" = app;
+            "application/x-cbz" = app;
+            "application/oxps" = app;
+            "application/vnd.ms-xpsdocument" = app;
+            "application/epub+zip" = app;
+          };
+      })
+
+      (lib.mkIf cfg.ghidra.enable { home.packages = [ cfg.ghidra.package ]; })
+
+      (lib.mkIf cfg.kitty.enable {
+        programs.kitty = {
+          inherit (cfg.kitty) enable;
+
+          settings = {
+            # Set font settings
+            font_family = "FiraCodeNerdFontCompleteMono-Retina";
+            font_size = 12;
+            font_features = "FiraCodeNerdFontCompleteMono-Retina +zero +onum";
+
+            # Set terminal bell to off
+            enable_audio_bell = false;
+            visual_bell_duration = 0;
+
+            # Fix tab bar
+            tab_bar_edge = "top";
+            tab_bar_style = "powerline";
+            tab_bar_min_tabs = 1;
+            tab_title_template = "{index}: {title}";
+            tab_bar_background = "#222";
+
+            # Set background Opacity
+            background_opacity = "0.95";
+          };
+
+          extraConfig = lib.optionalString cfg.kitty.theme.enable "include ${cfg.kitty.theme.package}/share/kitty-themes/themes/${cfg.kitty.theme.name}.conf";
         };
       })
-    ]))
-  ]);
+
+      (lib.mkIf (cfg.defaults.terminal != null) {
+        home.sessionVariables."TERMINAL" = lib.getExe cfg.${cfg.defaults.terminal}.package;
+      })
+
+      (lib.mkIf cfg.remmina.enable (
+        lib.mkMerge [
+          {
+            home.packages = [ cfg.remmina.package ];
+
+            xdg = {
+              mimeApps.defaultApplications."application/x-rdp" = "org.remmina.Remmina.desktop";
+
+              dataFile."mime/packages/application-x-rdp.xml".text = ''
+                <?xml version="1.0" encoding="UTF-8"?>
+                <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+                  <mime-type type="application/x-rdp">
+                    <comment>rdp file</comment>
+                    <icon name="application-x-rdp"/>
+                    <glob-deleteall/>
+                    <glob pattern="*.rdp"/>
+                  </mime-type>
+                </mime-info>
+              '';
+            };
+          }
+
+          (lib.mkIf cfg.remmina.startService {
+            systemd.user.services.remmina = {
+              Unit = {
+                Description = "Remmina remote desktop client";
+                Documentation = "man:remmina(1)";
+                Requires = [
+                  "graphical-session-pre.target"
+                  "secrets-service.target"
+                ];
+                After = [
+                  "graphial-session-pre.target"
+                  "secrets-service.target"
+                ];
+              };
+
+              Service = {
+                Type = "simple";
+                ExecStart = "${lib.getExe cfg.remmina.package} --icon --enable-extra-hardening";
+                Restart = "on-abort";
+              };
+
+              Install.WantedBy = [ "graphical-session.target" ];
+            };
+          })
+        ]
+      ))
+    ]
+  );
 }

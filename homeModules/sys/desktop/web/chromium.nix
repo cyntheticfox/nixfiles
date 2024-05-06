@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.sys.desktop.web.chromium;
 in
@@ -8,7 +13,5 @@ in
     package = lib.mkPackageOption pkgs "chromium" { };
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
-  };
+  config = lib.mkIf cfg.enable { home.packages = [ cfg.package ]; };
 }

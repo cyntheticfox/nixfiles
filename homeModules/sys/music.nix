@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -30,10 +35,13 @@ in
       musicDir = config.xdg.userDirs.music or "$XDG_MUSIC_DIR";
     in
     {
-      home.packages = with pkgs; [
-        mpc-cli
-        vimpc
-      ] ++ cfg.desktopPackages;
+      home.packages =
+        with pkgs;
+        [
+          mpc-cli
+          vimpc
+        ]
+        ++ cfg.desktopPackages;
 
       ### Add config file for vimpc
       # Strangely, the help documentation and manpage both state that the only file

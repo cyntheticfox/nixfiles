@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -15,7 +20,10 @@ in
     swtpmPackage = mkPackageOption pkgs "swtpm" { };
 
     cpuBrand = mkOption {
-      type = types.enum [ "intel" "amd" ];
+      type = types.enum [
+        "intel"
+        "amd"
+      ];
       default = "intel";
     };
   };

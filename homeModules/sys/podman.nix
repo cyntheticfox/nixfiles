@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -61,21 +66,21 @@ in
       };
 
       "containers/policy.json".source = mkJson "policy.json" {
-        default = [{ type = "reject"; }];
+        default = [ { type = "reject"; } ];
 
         transports = {
-          dir."" = [{ type = "insecureAcceptAnything"; }];
-          oci."" = [{ type = "insecureAcceptAnything"; }];
-          tarball."" = [{ type = "insecureAcceptAnything"; }];
-          docker-daemon."" = [{ type = "insecureAcceptAnything"; }];
-          docker-archive."" = [{ type = "insecureAcceptAnything"; }];
-          oci-archive."" = [{ type = "insecureAcceptAnything"; }];
+          dir."" = [ { type = "insecureAcceptAnything"; } ];
+          oci."" = [ { type = "insecureAcceptAnything"; } ];
+          tarball."" = [ { type = "insecureAcceptAnything"; } ];
+          docker-daemon."" = [ { type = "insecureAcceptAnything"; } ];
+          docker-archive."" = [ { type = "insecureAcceptAnything"; } ];
+          oci-archive."" = [ { type = "insecureAcceptAnything"; } ];
 
           docker = {
-            "" = [{ type = "reject"; }];
-            "docker.io/library" = [{ type = "insecureAcceptAnything"; }];
-            "docker.io/nixos" = [{ type = "insecureAcceptAnything"; }];
-            "docker.io/fireflyiii" = [{ type = "insecureAcceptAnything"; }];
+            "" = [ { type = "reject"; } ];
+            "docker.io/library" = [ { type = "insecureAcceptAnything"; } ];
+            "docker.io/nixos" = [ { type = "insecureAcceptAnything"; } ];
+            "docker.io/fireflyiii" = [ { type = "insecureAcceptAnything"; } ];
           };
         };
       };

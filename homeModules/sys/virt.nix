@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   cfg = config.sys.virt;
@@ -22,7 +27,10 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.libvirt.enable {
-      home.packages = [ cfg.libvirt.managerPackage cfg.libvirt.viewerPackage ] ++ cfg.libvirt.extraPackages;
+      home.packages = [
+        cfg.libvirt.managerPackage
+        cfg.libvirt.viewerPackage
+      ] ++ cfg.libvirt.extraPackages;
     })
   ];
 }

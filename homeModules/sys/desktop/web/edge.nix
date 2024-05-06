@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.desktop.web.edge;
@@ -9,7 +14,5 @@ in
     package = lib.mkPackageOption pkgs "microsoft-edge" { };
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
-  };
+  config = lib.mkIf cfg.enable { home.packages = [ cfg.package ]; };
 }

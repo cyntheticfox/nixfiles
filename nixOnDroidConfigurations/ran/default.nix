@@ -1,4 +1,5 @@
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+{
   environment.packages = with pkgs; [
     neovim
     zsh

@@ -22,50 +22,63 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-{ pkgs ? import <nixpkgs> { }, home-manager, nmt, ... }:
+{
+  pkgs ? import <nixpkgs> { },
+  home-manager,
+  nmt,
+  ...
+}:
 
 let
-  lib = pkgs.lib.extend
-    (_: super: {
+  lib = pkgs.lib.extend (
+    _: super: {
       inherit (home-manager.lib) hm;
 
       literalExpression = super.literalExpression or super.literalExample;
       literalDocBook = super.literalDocBook or super.literalExample;
-    });
-
-  modules = (import (home-manager.outPath + "/modules/modules.nix") {
-    inherit lib pkgs;
-
-    check = false;
-    useNixpkgsModule = false;
-  }) ++
-  (import ../../homeModules/modules-list.nix) ++ [
-    {
-      # Fix impurities
-      xdg.enable = true;
-
-      home = {
-        username = "hm-user";
-        homeDirectory = "/home/hm-user";
-        stateVersion = lib.mkDefault "18.09";
-      };
-
-      # Test docs separately
-      manual.manpages.enable = false;
-
-      imports = [ (home-manager.outPath + "/tests/asserts.nix") ];
     }
-  ];
+  );
+
+  modules =
+    (import (home-manager.outPath + "/modules/modules.nix") {
+      inherit lib pkgs;
+
+      check = false;
+      useNixpkgsModule = false;
+    })
+    ++ (import ../../homeModules/modules-list.nix)
+    ++ [
+      {
+        # Fix impurities
+        xdg.enable = true;
+
+        home = {
+          username = "hm-user";
+          homeDirectory = "/home/hm-user";
+          stateVersion = lib.mkDefault "18.09";
+        };
+
+        # Test docs separately
+        manual.manpages.enable = false;
+
+        imports = [ (home-manager.outPath + "/tests/asserts.nix") ];
+      }
+    ];
 
   # inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
-  checkTest = name: test: pkgs.runCommandLocal "nmt-test-${name}" { } ''
-    grep -F 'OK' "${test}/result" >$out
-  '';
+  checkTest =
+    name: test:
+    pkgs.runCommandLocal "nmt-test-${name}" { } ''
+      grep -F 'OK' "${test}/result" >$out
+    '';
 in
 lib.mapAttrs checkTest
   (import nmt {
     inherit lib pkgs modules;
-    testedAttrPath = [ "home" "activationPackage" ];
+    testedAttrPath = [
+      "home"
+      "activationPackage"
+    ];
     tests = builtins.foldl' (a: b: a // (import b)) { } [
       ./sys
       # ./programs

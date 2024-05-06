@@ -11,17 +11,21 @@ in
 
   options.sys.desktop.web = {
     defaultBrowser = lib.mkOption {
-      type = with lib.types; nullOr (enum [
-        "chromium"
-        "edge"
-        "firefox"
-      ]);
+      type =
+        with lib.types;
+        nullOr (enum [
+          "chromium"
+          "edge"
+          "firefox"
+        ]);
 
       default = "firefox";
       description = "Browser to set as the default via desktop files.";
     };
 
-    autostartDefault = lib.mkEnableOption "Default browser on startup" // { default = true; };
+    autostartDefault = lib.mkEnableOption "Default browser on startup" // {
+      default = true;
+    };
   };
 
   config = lib.mkIf (cfg.defaultBrowser != null) (

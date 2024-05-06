@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   programs.fish.enable = true;
 
   sops.secrets.cynthia-password = {

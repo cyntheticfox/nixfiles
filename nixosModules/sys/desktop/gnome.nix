@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.desktop.gnome;
@@ -47,7 +52,11 @@ in
 
       terminateOnReset = true;
       useGlamor = true;
-      videoDrivers = [ "intel" "vmware" "modesetting" ];
+      videoDrivers = [
+        "intel"
+        "vmware"
+        "modesetting"
+      ];
     };
   };
 }

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.helix;
@@ -10,7 +15,8 @@ let
   });
 
   mkPackagesConf = builtins.map (
-    lsp-name: lib.mkIf cfg.lsp.${lsp-name}.enable {
+    lsp-name:
+    lib.mkIf cfg.lsp.${lsp-name}.enable {
       programs.helix.extraPackages = [ cfg.lsp.${lsp-name}.package ];
     }
   );
@@ -30,97 +36,102 @@ in
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge (
-      [{
-        programs.helix = {
-          inherit (cfg) enable package;
+      [
+        {
+          programs.helix = {
+            inherit (cfg) enable package;
 
-          settings = {
-            theme = "onedark";
+            settings = {
+              theme = "onedark";
 
-            editor = {
-              line-number = "relative";
-              scrolloff = 7;
-              shell = [ "fish" "-c" ];
-              cursorline = true;
-              auto-info = false;
-              true-color = true;
-              rulers = [ 80 ];
-              bufferline = "always";
-              color-modes = true;
-              # popup-border = "all"; # TODO: Undo once 24.03
-
-              statusline = {
-                left = [
-                  "mode"
-                  "version-control"
-                  "spinner"
-                  "diagnostics"
-                  "file-name"
-                  "read-only-indicator"
-                  "file-modification-indicator"
+              editor = {
+                line-number = "relative";
+                scrolloff = 7;
+                shell = [
+                  "fish"
+                  "-c"
                 ];
+                cursorline = true;
+                auto-info = false;
+                true-color = true;
+                rulers = [ 80 ];
+                bufferline = "always";
+                color-modes = true;
+                # popup-border = "all"; # TODO: Undo once 24.03
 
-                right = [
-                  "register"
-                  "file-encoding"
-                  "file-type"
-                  "file-line-ending"
-                  "position-percentage"
-                  "position"
-                ];
+                statusline = {
+                  left = [
+                    "mode"
+                    "version-control"
+                    "spinner"
+                    "diagnostics"
+                    "file-name"
+                    "read-only-indicator"
+                    "file-modification-indicator"
+                  ];
 
-                separator = "/";
+                  right = [
+                    "register"
+                    "file-encoding"
+                    "file-type"
+                    "file-line-ending"
+                    "position-percentage"
+                    "position"
+                  ];
+
+                  separator = "/";
+                };
+
+                lsp = {
+                  display-messages = true;
+                  auto-signature-help = false;
+                };
+
+                cursor-shape = {
+                  normal = "block";
+                  insert = "bar";
+                  select = "underline";
+                };
+
+                whitespace.render = {
+                  space = "none";
+                  tab = "all";
+                  nbsp = "all";
+                  nnbsp = "all";
+                  newline = "none";
+                };
+
+                indent-guides = {
+                  render = true;
+                  character = "┆";
+                };
+
+                gutters.line-numbers.min-width = 1;
               };
 
-              lsp = {
-                display-messages = true;
-                auto-signature-help = false;
-              };
+              keys = {
+                normal = {
+                  "A-," = "goto_previous_buffer";
+                  "A-." = "goto_next_buffer";
+                  "A-x" = "extend_to_line_bounds";
+                  "X" = [
+                    "extend_line_up"
+                    "extend_to_line_bounds"
+                  ];
+                };
 
-              cursor-shape = {
-                normal = "block";
-                insert = "bar";
-                select = "underline";
-              };
-
-              whitespace.render = {
-                space = "none";
-                tab = "all";
-                nbsp = "all";
-                nnbsp = "all";
-                newline = "none";
-              };
-
-              indent-guides = {
-                render = true;
-                character = "┆";
-              };
-
-              gutters.line-numbers.min-width = 1;
-            };
-
-            keys = {
-              normal = {
-                "A-," = "goto_previous_buffer";
-                "A-." = "goto_next_buffer";
-                "A-x" = "extend_to_line_bounds";
-                "X" = [
-                  "extend_line_up"
-                  "extend_to_line_bounds"
-                ];
-              };
-
-              select = {
-                "A-x" = "extend_to_line_bounds";
-                "X" = [
-                  "extend_line_up"
-                  "extend_to_line_bounds"
-                ];
+                select = {
+                  "A-x" = "extend_to_line_bounds";
+                  "X" = [
+                    "extend_line_up"
+                    "extend_to_line_bounds"
+                  ];
+                };
               };
             };
           };
-        };
-      }]
+        }
+      ]
       ++ mkPackagesConf lsps
     )
   );

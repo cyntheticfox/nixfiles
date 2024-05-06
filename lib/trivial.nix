@@ -5,10 +5,5 @@
     v:
     # Fallback value
     fallback:
-    if
-      v != null
-    then
-      v
-    else
-      fallback;
+    if v != null then v else fallback;
 }

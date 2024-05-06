@@ -1,6 +1,4 @@
-{ terranix
-, system
-}:
+{ terranix, system }:
 
 terranix.lib.terranixConfiguration {
   inherit system;

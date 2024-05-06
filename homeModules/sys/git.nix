@@ -1,8 +1,12 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.git;
-
 in
 {
   options.sys.git = {
@@ -70,8 +74,8 @@ in
         "gbd" = "git branch --delete";
         "gp" = "git push";
         "gl" = "git pull";
-        "glum" = "git pull upstream main"; #TODO: Make helper func for main branch
-        "gluc" = "git pull upstream HEAD"; #TODO: Make helper func for current branch
+        "glum" = "git pull upstream main"; # TODO: Make helper func for main branch
+        "gluc" = "git pull upstream HEAD"; # TODO: Make helper func for current branch
         "gm" = "git merge";
         "gma" = "git merge --abort";
         "gms" = "git merge --squash";
@@ -82,7 +86,7 @@ in
         "gcb" = "git checkout -b";
         "gcp" = "git cherry-pick";
         "gsw" = "git switch";
-        "gswm" = "git switch main"; #TODO: Add helper function
+        "gswm" = "git switch main"; # TODO: Add helper function
         "gswc" = "git switch --create";
         "gc" = "git commit --verbose";
         "gc!" = "git commit --verbose --amend";
@@ -99,8 +103,8 @@ in
         "grba" = "git rebase --abort";
         "grbc" = "git rebase --continue";
         "grbi" = "git rebase --interactive";
-        "grbm" = "git rebase main"; #TODO: Make use helper func
-        "grbom" = "git rebase origin/main"; #TODO: Make use helper func
+        "grbm" = "git rebase main"; # TODO: Make use helper func
+        "grbom" = "git rebase origin/main"; # TODO: Make use helper func
         "grf" = "git reflog";
         "gr" = "git remote";
         "gra" = "git remote add";

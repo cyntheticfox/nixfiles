@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.sys.print;
 in
@@ -18,12 +23,14 @@ in
       printers = {
         ensureDefaultPrinter = "cyn-print";
 
-        ensurePrinters = [{
-          description = "Canon ImageCLASS MF642CDW";
-          deviceUri = "ipp://cyn-print.gh0st.internal:631/ipp";
-          model = "everywhere";
-          name = "cyn-print";
-        }];
+        ensurePrinters = [
+          {
+            description = "Canon ImageCLASS MF642CDW";
+            deviceUri = "ipp://cyn-print.gh0st.internal:631/ipp";
+            model = "everywhere";
+            name = "cyn-print";
+          }
+        ];
       };
 
       sane = {

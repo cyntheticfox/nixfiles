@@ -1,3 +1,1 @@
-{
-  programs-neofetch-default = ./neofetch.nix;
-}
+{ programs-neofetch-default = ./neofetch.nix; }

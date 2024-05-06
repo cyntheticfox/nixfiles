@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.desktop.chat.discord;
@@ -8,7 +13,9 @@ in
     enable = lib.mkEnableOption "Discord client";
 
     package = lib.mkPackageOption pkgs "discord" { };
-    systemd-service = lib.mkEnableOption "discord Systemd user service" // { default = true; };
+    systemd-service = lib.mkEnableOption "discord Systemd user service" // {
+      default = true;
+    };
     autostart = lib.mkEnableOption "Discord client on startup";
 
     config = lib.mkOption {
@@ -36,7 +43,9 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."discord/settings.json".source = (pkgs.formats.json { }).generate "discord-settings.json" cfg.config;
+    xdg.configFile."discord/settings.json".source =
+      (pkgs.formats.json { }).generate "discord-settings.json"
+        cfg.config;
 
     systemd.user.services.discord-client = lib.mkIf cfg.systemd-service {
       Unit = {

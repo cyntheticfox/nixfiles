@@ -1,16 +1,17 @@
-{ nixpkgs
-, flake-registry
-, hostname
-, domain
-, stateVersion
-, path ? ../nixosConfigurations/${hostname}
-, nixpkgs-unstable ? null
-, cpuVendor ? "other"
-, system ? "x86_64-linux"
-, nixosModules ? import ../nixosModules
-, modules ? [ ]
-, overlays ? [ ]
-, specialArgs ? { }
+{
+  nixpkgs,
+  flake-registry,
+  hostname,
+  domain,
+  stateVersion,
+  path ? ../nixosConfigurations/${hostname},
+  nixpkgs-unstable ? null,
+  cpuVendor ? "other",
+  system ? "x86_64-linux",
+  nixosModules ? import ../nixosModules,
+  modules ? [ ],
+  overlays ? [ ],
+  specialArgs ? { },
 }:
 
 assert cpuVendor == null || builtins.isString cpuVendor;
@@ -26,52 +27,52 @@ nixpkgs.lib.nixosSystem {
   modules = [
     path
 
-    ({ config, ... }: {
-      nix = {
-        settings.flake-registry = "${flake-registry}/flake-registry.json";
+    (
+      { config, ... }:
+      {
+        nix = {
+          settings.flake-registry = "${flake-registry}/flake-registry.json";
 
-        registry = {
-          nixpkgs.to = {
-            type = "github";
-            owner = "NixOS";
-            repo = "nixpkgs";
-            ref = nixpkgs.sourceInfo.rev;
-          };
+          registry = {
+            nixpkgs.to = {
+              type = "github";
+              owner = "NixOS";
+              repo = "nixpkgs";
+              ref = nixpkgs.sourceInfo.rev;
+            };
 
-          nixpkgs-unstable.to = {
-            type = "github";
-            owner = "NixOS";
-            repo = "nixpkgs";
-            ref = (nz nixpkgs-unstable nixpkgs).sourceInfo.rev;
+            nixpkgs-unstable.to = {
+              type = "github";
+              owner = "NixOS";
+              repo = "nixpkgs";
+              ref = (nz nixpkgs-unstable nixpkgs).sourceInfo.rev;
+            };
           };
         };
-      };
 
-      nixpkgs.overlays = [
-        (_: super: {
-          nixpkgs-unstable =
-            if
-              nixpkgs-unstable != null
-            then
-              import nixpkgs-unstable
-                {
+        nixpkgs.overlays = [
+          (_: super: {
+            nixpkgs-unstable =
+              if nixpkgs-unstable != null then
+                import nixpkgs-unstable {
                   inherit system;
 
                   config.allowUnfree = config.nixpkgs.config.allowUnfree;
                 }
-            else
-              super;
-        })
-      ] ++ overlays;
+              else
+                super;
+          })
+        ] ++ overlays;
 
-      sys.hardware.cpuVendor = cpuVendor;
-      system.stateVersion = stateVersion;
+        sys.hardware.cpuVendor = cpuVendor;
+        system.stateVersion = stateVersion;
 
-      networking = {
-        inherit domain;
+        networking = {
+          inherit domain;
 
-        hostName = hostname;
-      };
-    })
+          hostName = hostname;
+        };
+      }
+    )
   ] ++ modules ++ builtins.attrValues nixosModules;
 }

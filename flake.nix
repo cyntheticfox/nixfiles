@@ -3,10 +3,8 @@
 
   nixConfig = {
     extra-experimental-features = "ca-derivations";
-    extra-substituters =
-      "https://cache.nixos.org https://nix-community.cachix.org";
-    extra-trusted-public-keys =
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
+    extra-substituters = "https://cache.nixos.org https://nix-community.cachix.org";
+    extra-trusted-public-keys = "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
     pure-eval = true;
     allow-import-from-derivation = false;
   };
@@ -154,7 +152,8 @@
     systems.url = "github:nix-systems/default-linux";
   };
 
-  outputs = { self, ... }@inputs:
+  outputs =
+    { self, ... }@inputs:
     with inputs;
     (nixpkgs-lib.lib.recursiveUpdate
       {
@@ -185,7 +184,13 @@
 
         nixosConfigurations = {
           yukari = self.lib.mkNixosWorkstation {
-            inherit (inputs) flake-registry home-manager nixpkgs nixpkgs-unstable nix-index-database;
+            inherit (inputs)
+              flake-registry
+              home-manager
+              nixpkgs
+              nixpkgs-unstable
+              nix-index-database
+              ;
             inherit (self) nixosModules;
 
             hostname = "yukari";
@@ -209,30 +214,33 @@
               sops-nix.nixosModules.sops
               impermanence.nixosModules.impermanence
 
-              ({ config, lib, ... }: {
-                nixpkgs.config.permittedInsecurePackages = [ "openssl-1.1.1u" ];
+              (
+                { config, lib, ... }:
+                {
+                  nixpkgs.config.permittedInsecurePackages = [ "openssl-1.1.1u" ];
 
-                home-manager.users."cynthia" = self.lib.mkNixosHomeConfig {
-                  inherit (self) homeModules;
-                  inherit lib;
+                  home-manager.users."cynthia" = self.lib.mkNixosHomeConfig {
+                    inherit (self) homeModules;
+                    inherit lib;
 
-                  unstableLib = nixpkgs-unstable.lib;
-                  hostname = config.networking.hostName;
+                    unstableLib = nixpkgs-unstable.lib;
+                    hostname = config.networking.hostName;
 
-                  unstablePkgs = import nixpkgs-unstable {
-                    system = "x86_64-linux";
+                    unstablePkgs = import nixpkgs-unstable {
+                      system = "x86_64-linux";
 
-                    config.allowUnfree = true;
+                      config.allowUnfree = true;
+                    };
+
+                    unstableHomeModules = [
+                      sops-nix.homeManagerModules.sops
+                      impermanence.nixosModules.home-manager.impermanence
+                    ];
+
+                    stateVersion = "23.11";
                   };
-
-                  unstableHomeModules = [
-                    sops-nix.homeManagerModules.sops
-                    impermanence.nixosModules.home-manager.impermanence
-                  ];
-
-                  stateVersion = "23.11";
-                };
-              })
+                }
+              )
             ];
           };
 
@@ -261,13 +269,19 @@
               type = "app";
 
               # FIXME: Use patchShebangs
-              program = builtins.toString (pkgs.writers.writeBash "update-flake" (builtins.readFile ./scripts/update-flake.sh));
+              program = builtins.toString (
+                pkgs.writers.writeBash "update-flake" (builtins.readFile ./scripts/update-flake.sh)
+              );
             };
 
             build-and-diff-flake-system = {
               type = "app";
 
-              program = builtins.toString (pkgs.writers.writeBash "build-and-diff-flake-system" (builtins.readFile ./scripts/build-and-diff-flake-system.sh));
+              program = builtins.toString (
+                pkgs.writers.writeBash "build-and-diff-flake-system" (
+                  builtins.readFile ./scripts/build-and-diff-flake-system.sh
+                )
+              );
             };
           };
 
@@ -281,171 +295,188 @@
         };
       }
 
-      (flake-utils.lib.eachDefaultSystem (system: {
-        checks.pre-commit-check = git-hooks.lib.${system}.run {
-          src = gitignore.lib.gitignoreSource ./.;
+      (
+        flake-utils.lib.eachDefaultSystem (system: {
+          checks.pre-commit-check =
+            let
+              pkgs = import nixpkgs {
+                inherit system;
 
-          hooks = {
-            actionlint.enable = true;
-            check-added-large-files.enable = true;
-            check-shebang-scripts-are-executable.enable = true;
-            check-symlinks.enable = true;
-            deadnix.enable = true;
-            detect-private-keys.enable = true;
-            editorconfig-checker.enable = true;
-            fix-byte-order-marker.enable = true;
-            forbid-new-submodules.enable = true;
-            mdl.enable = true;
-            nixpkgs-fmt.enable = true;
-            nil.enable = true;
-            shfmt.enable = true;
-            statix.enable = true;
+                overlays = [ (_: _: { nixpkgs-unstable = import nixpkgs-unstable { inherit system; }; }) ];
+              };
+            in
+            git-hooks.lib.${system}.run {
+              src = gitignore.lib.gitignoreSource ./.;
 
-            typos = {
-              enable = true;
+              hooks = {
+                actionlint.enable = true;
+                check-added-large-files.enable = true;
+                check-shebang-scripts-are-executable.enable = true;
+                check-symlinks.enable = true;
+                deadnix.enable = true;
+                detect-private-keys.enable = true;
+                editorconfig-checker.enable = true;
+                fix-byte-order-marker.enable = true;
+                forbid-new-submodules.enable = true;
+                mdl.enable = true;
 
-              files = "(^.asc$)";
+                nixfmt = {
+                  enable = true;
+
+                  package = pkgs.nixpkgs-unstable.nixfmt-rfc-style;
+                };
+
+                nil.enable = true;
+                shfmt.enable = true;
+                statix.enable = true;
+
+                typos = {
+                  enable = true;
+
+                  files = "(^.asc$)";
+                };
+
+                yamllint = {
+                  enable = true;
+
+                  files = "(^secrets.(yml|yaml)$)";
+                };
+              };
             };
 
-            yamllint = {
-              enable = true;
+          devShells =
+            let
+              pkgs = import nixpkgs-unstable {
+                inherit system;
 
-              files = "(^secrets.(yml|yaml)$)";
-            };
-          };
-        };
+                overlays = [
+                  devshell.overlays.default
+                  sops-nix.overlays.default
+                ];
+              };
 
-        devShells =
-          let
-            pkgs = import nixpkgs-unstable {
-              inherit system;
-
-              overlays = [
-                devshell.overlays.default
-                sops-nix.overlays.default
+              packages = with pkgs; [
+                age
+                deadnix
+                editorconfig-checker
+                hcloud
+                nixfmt-rfc-style
+                pre-commit
+                sops
+                sops-init-gpg-key
+                ssh-to-age
+                ssh-to-pgp
+                statix
+                typos
               ];
-            };
 
-            packages = with pkgs; [
-              age
-              deadnix
-              editorconfig-checker
-              hcloud
-              nixpkgs-fmt
-              pre-commit
-              sops
-              sops-init-gpg-key
-              ssh-to-age
-              ssh-to-pgp
-              statix
-              typos
-            ];
+              commands = [
+                { package = pkgs.git-crypt; }
+                { package = pkgs.gnupg; }
+                { package = pkgs.pinentry; }
+                {
+                  name = "g";
+                  package = pkgs.git;
+                }
+                {
+                  name = "ga";
+                  package = pkgs.git;
+                  command = "git add";
+                }
+                {
+                  name = "gaa";
+                  package = pkgs.git;
+                  command = "git add --all";
+                }
+                {
+                  name = "gc";
+                  package = pkgs.git;
+                  command = "git commit";
+                }
+                {
+                  name = "gca";
+                  package = pkgs.git;
+                  command = "git commit --all";
+                }
+                {
+                  name = "gcmsg";
+                  package = pkgs.git;
+                  command = "git commit -m";
+                }
+                {
+                  name = "gd";
+                  package = pkgs.git;
+                  command = "git diff";
+                }
+                {
+                  name = "gl";
+                  package = pkgs.git;
+                  command = "git pull";
+                }
+                {
+                  name = "gsb";
+                  package = pkgs.git;
+                  command = "git status -sb";
+                }
+                {
+                  name = "n";
+                  package = pkgs.nix;
+                }
+                {
+                  name = "nfu";
+                  package = pkgs.nix;
+                  command = "nix flake update";
+                }
+                {
+                  name = "nosswf";
+                  command = "nixos-rebuild switch --use-remote-sudo --flake .";
+                }
+                {
+                  name = "v";
+                  package = pkgs.neovim;
+                }
+              ];
+            in
+            {
+              default = pkgs.devshell.mkShell {
+                inherit packages;
 
-            commands = [
-              { package = pkgs.git-crypt; }
-              { package = pkgs.gnupg; }
-              { package = pkgs.pinentry; }
-              {
-                name = "g";
-                package = pkgs.git;
-              }
-              {
-                name = "ga";
-                package = pkgs.git;
-                command = "git add";
-              }
-              {
-                name = "gaa";
-                package = pkgs.git;
-                command = "git add --all";
-              }
-              {
-                name = "gc";
-                package = pkgs.git;
-                command = "git commit";
-              }
-              {
-                name = "gca";
-                package = pkgs.git;
-                command = "git commit --all";
-              }
-              {
-                name = "gcmsg";
-                package = pkgs.git;
-                command = "git commit -m";
-              }
-              {
-                name = "gd";
-                package = pkgs.git;
-                command = "git diff";
-              }
-              {
-                name = "gl";
-                package = pkgs.git;
-                command = "git pull";
-              }
-              {
-                name = "gsb";
-                package = pkgs.git;
-                command = "git status -sb";
-              }
-              {
-                name = "n";
-                package = pkgs.nix;
-              }
-              {
-                name = "nfu";
-                package = pkgs.nix;
-                command = "nix flake update";
-              }
-              {
-                name = "nosswf";
-                command = "nixos-rebuild switch --use-remote-sudo --flake .";
-              }
-              {
-                name = "v";
-                package = pkgs.neovim;
-              }
-            ];
-          in
-          {
-            default = pkgs.devshell.mkShell {
-              inherit packages;
+                devshell = {
+                  startup.pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
+                  motd = "";
+                  meta.description = ''
+                    Config for systems already set up
+                  '';
+                };
+              };
 
-              devshell = {
-                startup.pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
-                motd = "";
-                meta.description = ''
-                  Config for systems already set up
-                '';
+              no-env = pkgs.devshell.mkShell {
+                inherit commands packages;
+
+                devshell = {
+                  startup.pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
+
+                  meta.description = ''
+                    Config for systems NOT already set up
+                  '';
+                };
+              };
+
+              no-env-desktop = pkgs.devshell.mkShell {
+                inherit commands;
+
+                packages = packages ++ [ pkgs.pinentry-qt ];
+
+                devshell = {
+                  startup.pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
+
+                  meta.description = ''
+                    Config for systems NOT already set up
+                  '';
+                };
               };
             };
-
-            no-env = pkgs.devshell.mkShell {
-              inherit commands packages;
-
-              devshell = {
-                startup.pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
-
-                meta.description = ''
-                  Config for systems NOT already set up
-                '';
-              };
-            };
-
-            no-env-desktop = pkgs.devshell.mkShell {
-              inherit commands;
-
-              packages = packages ++ [ pkgs.pinentry-qt ];
-
-              devshell = {
-                startup.pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
-
-                meta.description = ''
-                  Config for systems NOT already set up
-                '';
-              };
-            };
-          };
-      })));
+        })
+      )
+    );
 }

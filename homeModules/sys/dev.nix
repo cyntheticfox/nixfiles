@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.dev;
@@ -67,91 +72,97 @@ in
       '';
     };
 
-    manageDirenvConfig = lib.mkEnableOption "Enable direnv management" // { default = true; };
+    manageDirenvConfig = lib.mkEnableOption "Enable direnv management" // {
+      default = true;
+    };
 
-    manageGhConfig = lib.mkEnableOption "Enable gh management" // { default = true; };
+    manageGhConfig = lib.mkEnableOption "Enable gh management" // {
+      default = true;
+    };
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      home = {
-        inherit (cfg) packages;
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        home = {
+          inherit (cfg) packages;
 
-        shellAliases = {
-          "gcc" = "gcc -fdiagnostics-color";
-          "clang" = "clang -fcolor-diagnostics";
+          shellAliases = {
+            "gcc" = "gcc -fdiagnostics-color";
+            "clang" = "clang -fcolor-diagnostics";
+          };
+
+          # Load editorconfig file as well
+          file.".editorconfig".text = ''
+            # .editorconfig
+            #
+            # Source for controlling tabulation and formatting of files by name
+            #
+            # https://editorconfig.org
+            #
+            # Plugins required for...
+            #
+            # Vim: https://github.com/editorconfig/editorconfig-vim
+            # Neovim: https://github.com/gpanders/editorconfig.nvim
+            # VSCode/VSCodium: https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig
+
+            root = true
+
+            # Set file defaults
+            [*]
+            charset = utf-8
+            end_of_line = lf
+            indent_size = 2
+            indent_style = space
+            insert_final_newline = true
+            trim_trailing_whitespace = true
+
+            [*.{rs,py}]
+            indent_size = 4
+
+            [*.md]
+            trim_trailing_whitespace = false
+
+            [Makefile]
+            indent_size = 8
+            indent_style = tab
+          '';
         };
+      }
 
-        # Load editorconfig file as well
-        file.".editorconfig".text = ''
-          # .editorconfig
-          #
-          # Source for controlling tabulation and formatting of files by name
-          #
-          # https://editorconfig.org
-          #
-          # Plugins required for...
-          #
-          # Vim: https://github.com/editorconfig/editorconfig-vim
-          # Neovim: https://github.com/gpanders/editorconfig.nvim
-          # VSCode/VSCodium: https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig
+      (lib.mkIf cfg.java.enable {
+        home.packages = [ cfg.java.debugPackage ];
 
-          root = true
+        programs.java = {
+          inherit (cfg.java) enable package;
+        };
+      })
 
-          # Set file defaults
-          [*]
-          charset = utf-8
-          end_of_line = lf
-          indent_size = 2
-          indent_style = space
-          insert_final_newline = true
-          trim_trailing_whitespace = true
+      (lib.mkIf cfg.manageDirenvConfig {
+        programs.direnv = {
+          enable = true;
 
-          [*.{rs,py}]
-          indent_size = 4
+          nix-direnv.enable = true;
+        };
+      })
 
-          [*.md]
-          trim_trailing_whitespace = false
+      (lib.mkIf cfg.manageGhConfig {
+        programs.gh = {
+          enable = true;
 
-          [Makefile]
-          indent_size = 8
-          indent_style = tab
-        '';
-      };
-    }
+          settings = {
+            git_protocol = "ssh";
+            prompt = "enabled";
+            pager = config.home.sessionVariables.PAGER or "less";
+            editor = config.home.sessionVariables.EDITOR or "nano";
 
-    (lib.mkIf cfg.java.enable {
-      home.packages = [ cfg.java.debugPackage ];
-
-      programs.java = {
-        inherit (cfg.java) enable package;
-      };
-    })
-
-    (lib.mkIf cfg.manageDirenvConfig {
-      programs.direnv = {
-        enable = true;
-
-        nix-direnv.enable = true;
-      };
-    })
-
-    (lib.mkIf cfg.manageGhConfig {
-      programs.gh = {
-        enable = true;
-
-        settings = {
-          git_protocol = "ssh";
-          prompt = "enabled";
-          pager = config.home.sessionVariables.PAGER or "less";
-          editor = config.home.sessionVariables.EDITOR or "nano";
-
-          aliases = {
-            co = "pr checkout";
-            pv = "pr view";
+            aliases = {
+              co = "pr checkout";
+              pv = "pr view";
+            };
           };
         };
-      };
-    })
-  ]);
+      })
+    ]
+  );
 }

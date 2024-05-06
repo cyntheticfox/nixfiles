@@ -1,11 +1,8 @@
-{ lib, modulesPath, ... }: {
-  imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
-  ];
+{ lib, modulesPath, ... }:
+{
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-  disko.devices = import ./disk-config.nix {
-    inherit lib;
-  };
+  disko.devices = import ./disk-config.nix { inherit lib; };
 
   boot.loader.grub = {
     efiSupport = true;

@@ -1,17 +1,30 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.sys.hardware;
 in
 {
   options.sys.hardware = {
-    enable = lib.mkEnableOption "hardware defaults" // { default = true; };
+    enable = lib.mkEnableOption "hardware defaults" // {
+      default = true;
+    };
 
     systemdBoot = lib.mkEnableOption "common boot config";
-    hardenKernel = lib.mkEnableOption "kernel hardening options" // { default = cfg.isWorkstation; };
+    hardenKernel = lib.mkEnableOption "kernel hardening options" // {
+      default = cfg.isWorkstation;
+    };
     enableKvm = lib.mkEnableOption "kernel hardening options";
 
     cpuVendor = lib.mkOption {
-      type = lib.types.enum [ "intel" "amd" "other" ];
+      type = lib.types.enum [
+        "intel"
+        "amd"
+        "other"
+      ];
 
       description = ''
         Vendor for the CPU, meant mostly for x86/x86_64 systems.
@@ -24,7 +37,7 @@ in
   config = lib.mkIf cfg.enable {
     boot = {
       extraModprobeConfig = lib.mkIf cfg.enableKvm ''
-        options ${lib.optionalString (cfg.cpuVendor != "other") "kvm_${cfg.cpuVendor}" } nested=1
+        options ${lib.optionalString (cfg.cpuVendor != "other") "kvm_${cfg.cpuVendor}"} nested=1
       '';
 
       kernel.sysctl = lib.mkIf cfg.hardenKernel {
@@ -63,7 +76,8 @@ in
         "net.ipv4.conf.default.log_martians" = 1;
       };
 
-      kernelParams = (lib.optional cfg.isWorkstation "quiet")
+      kernelParams =
+        (lib.optional cfg.isWorkstation "quiet")
         ++ (lib.optional (cfg.cpuVendor == "intel") "intel_iommu=on");
 
       loader = lib.mkIf cfg.systemdBoot {
@@ -80,7 +94,13 @@ in
       plymouth.enable = cfg.isWorkstation;
     };
 
-    environment.systemPackages = lib.optionals cfg.isWorkstation (with pkgs; [ usbutils pciutils ]);
+    environment.systemPackages = lib.optionals cfg.isWorkstation (
+      with pkgs;
+      [
+        usbutils
+        pciutils
+      ]
+    );
 
     hardware = {
       bluetooth = lib.mkIf cfg.isWorkstation {

@@ -1,7 +1,4 @@
-{ pkgs
-, lib
-, ...
-}:
+{ pkgs, lib, ... }:
 let
   toKiB = builtins.mul 1024;
   toMiB = i: builtins.mul 1024 (toKiB i);

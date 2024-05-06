@@ -1,4 +1,10 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   # Import other configuration files
   imports = [
     ./hardware-configuration.nix
@@ -12,13 +18,9 @@
       "/state" = {
         hideMounts = true;
 
-        directories = [
-          "/var/lib/sops"
-        ];
+        directories = [ "/var/lib/sops" ];
 
-        files = [
-          "/etc/machine-id"
-        ];
+        files = [ "/etc/machine-id" ];
       };
 
       "/persist" = {
@@ -74,14 +76,16 @@
     networkmanager = {
       enable = true;
 
-      insertNameservers = [ "9.9.9.9" "149.112.112.112" ];
+      insertNameservers = [
+        "9.9.9.9"
+        "149.112.112.112"
+      ];
       unmanaged = [ "wlp0s20f3" ];
     };
 
     nftables = {
       enable = true;
-      ruleset = ''
-      '';
+      ruleset = '''';
     };
 
     interfaces.wlp0s20f3.useDHCP = true;
@@ -147,7 +151,7 @@
     rustic-b2 = {
       enable = true;
       package = pkgs.nixpkgs-unstable.rustic-rs;
-      sources = [{ source = "/state"; }];
+      sources = [ { source = "/state"; } ];
       passwordFile = config.sops.secrets.rustic-password.path;
       environmentFile = config.sops.secrets.rustic-environment.path;
       configOverrideSource = config.sops.templates."rustic.toml".path;
@@ -240,7 +244,10 @@
       };
 
     user.services.pipewire-pulse.path = [ pkgs.pulseaudio ];
-    tmpfiles.packages = with pkgs; [ openvpn man-db ];
+    tmpfiles.packages = with pkgs; [
+      openvpn
+      man-db
+    ];
   };
 
   time.timeZone = "America/New_York";

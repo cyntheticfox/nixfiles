@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sys.desktop.sway;
@@ -150,33 +155,40 @@ let
 
   # TODO: Refactor?
   mkScreenConfig =
-    { name
-    , id ? null
-    , outputString ? null
-    , xPixels
-    , yPixels
-    , refreshRate
-    , scale ? 1.0
+    {
+      name,
+      id ? null,
+      outputString ? null,
+      xPixels,
+      yPixels,
+      refreshRate,
+      scale ? 1.0,
     }:
-      assert builtins.isString name;
-      assert id == null || builtins.isString id;
-      assert outputString == null || builtins.isString outputString;
-      assert builtins.isInt xPixels;
-      assert builtins.isInt yPixels;
-      assert builtins.isFloat refreshRate || builtins.isInt refreshRate;
-      assert builtins.isFloat scale;
-      assert xor (id != null) (outputString != null);
-      {
-        inherit name refreshRate scale xPixels yPixels;
+    assert builtins.isString name;
+    assert id == null || builtins.isString id;
+    assert outputString == null || builtins.isString outputString;
+    assert builtins.isInt xPixels;
+    assert builtins.isInt yPixels;
+    assert builtins.isFloat refreshRate || builtins.isInt refreshRate;
+    assert builtins.isFloat scale;
+    assert xor (id != null) (outputString != null);
+    {
+      inherit
+        name
+        refreshRate
+        scale
+        xPixels
+        yPixels
+        ;
 
-        mode = "${builtins.toString xPixels}x${builtins.toString yPixels}@${builtins.toString refreshRate}Hz";
+      mode = "${builtins.toString xPixels}x${builtins.toString yPixels}@${builtins.toString refreshRate}Hz";
 
-        # criteria = if id != null then id else outputString;
-        criteria = nz id outputString;
+      # criteria = if id != null then id else outputString;
+      criteria = nz id outputString;
 
-        xPixelsOut = builtins.ceil (xPixels * (1 / scale));
-        yPixelsOut = builtins.ceil (yPixels * (1 / scale));
-      };
+      xPixelsOut = builtins.ceil (xPixels * (1 / scale));
+      yPixelsOut = builtins.ceil (yPixels * (1 / scale));
+    };
 
   screens = {
     builtin = mkScreenConfig {
@@ -225,37 +237,45 @@ let
     screenOrder = builtins.map (builtins.getAttr "criteria");
   };
 
-  defaultScreenCenter = with screens; screenOrder [
-    homeDockCenter
-    homeDockLeft
-    homeDockRight
-    homeDockRightFallback
-    builtin
-  ];
+  defaultScreenCenter =
+    with screens;
+    screenOrder [
+      homeDockCenter
+      homeDockLeft
+      homeDockRight
+      homeDockRightFallback
+      builtin
+    ];
 
-  defaultScreenLeft = with screens; screenOrder [
-    homeDockLeft
-    homeDockCenter
-    homeDockRight
-    homeDockRightFallback
-    builtin
-  ];
+  defaultScreenLeft =
+    with screens;
+    screenOrder [
+      homeDockLeft
+      homeDockCenter
+      homeDockRight
+      homeDockRightFallback
+      builtin
+    ];
 
-  defaultScreenRight = with screens; screenOrder [
-    homeDockRight
-    homeDockRightFallback
-    homeDockCenter
-    homeDockLeft
-    builtin
-  ];
+  defaultScreenRight =
+    with screens;
+    screenOrder [
+      homeDockRight
+      homeDockRightFallback
+      homeDockCenter
+      homeDockLeft
+      builtin
+    ];
 
-  defaultScreenLaptop = with screens; screenOrder [
-    builtin
-    homeDockLeft
-    homeDockRight
-    homeDockRightFallback
-    homeDockCenter
-  ];
+  defaultScreenLaptop =
+    with screens;
+    screenOrder [
+      builtin
+      homeDockLeft
+      homeDockRight
+      homeDockRightFallback
+      homeDockCenter
+    ];
 in
 {
   options.sys.desktop.sway = {
@@ -267,56 +287,58 @@ in
     logoutPackage = lib.mkPackageOption pkgs "wlogout" { };
 
     workspaces = lib.mkOption {
-      type = lib.types.listOf (lib.types.submodule (_: {
-        options = {
-          index = lib.mkOption {
-            type = lib.types.ints.between 1 9;
+      type = lib.types.listOf (
+        lib.types.submodule (_: {
+          options = {
+            index = lib.mkOption {
+              type = lib.types.ints.between 1 9;
 
-            description = ''
-              Index and number key assigned to workspace (1-9)
-            '';
-          };
+              description = ''
+                Index and number key assigned to workspace (1-9)
+              '';
+            };
 
-          isDefault = lib.mkOption {
-            type = lib.types.bool;
-            default = false;
-            internal = true;
-          };
+            isDefault = lib.mkOption {
+              type = lib.types.bool;
+              default = false;
+              internal = true;
+            };
 
-          title = lib.mkOption {
-            type = with lib.types; nullOr str;
-            default = null;
-            description = "Text to display for the workspace";
-          };
+            title = lib.mkOption {
+              type = with lib.types; nullOr str;
+              default = null;
+              description = "Text to display for the workspace";
+            };
 
-          icon = lib.mkOption {
-            type = with lib.types; nullOr str;
-            default = null;
-            description = "Unicode icon to display for the workspace";
-          };
+            icon = lib.mkOption {
+              type = with lib.types; nullOr str;
+              default = null;
+              description = "Unicode icon to display for the workspace";
+            };
 
-          mappedKeys = lib.mkOption {
-            type = with lib.types; listOf str;
-            default = [ ];
-            description = ''
-              Keys to use for both selection and window moving. Always includes
-              the index by default.
-            '';
-          };
+            mappedKeys = lib.mkOption {
+              type = with lib.types; listOf str;
+              default = [ ];
+              description = ''
+                Keys to use for both selection and window moving. Always includes
+                the index by default.
+              '';
+            };
 
-          assigns = lib.mkOption {
-            type = with lib.types; listOf (attrsOf str);
-            default = [ ];
-            description = "pattern matches to use to assign windows";
-          };
+            assigns = lib.mkOption {
+              type = with lib.types; listOf (attrsOf str);
+              default = [ ];
+              description = "pattern matches to use to assign windows";
+            };
 
-          outputs = lib.mkOption {
-            type = with lib.types; listOf str;
-            default = defaultScreenLaptop;
-            description = "Where to put the workspace by default";
+            outputs = lib.mkOption {
+              type = with lib.types; listOf str;
+              default = defaultScreenLaptop;
+              description = "Where to put the workspace by default";
+            };
           };
-        };
-      }));
+        })
+      );
 
       default = [
         {
@@ -324,7 +346,7 @@ in
           icon = "󰖟 ";
           title = "Web";
           outputs = defaultScreenLeft;
-          assigns = [{ app_id = "^firefox$"; }];
+          assigns = [ { app_id = "^firefox$"; } ];
         }
         {
           index = 2;
@@ -417,7 +439,9 @@ in
     dmenu = lib.mkOption {
       type = lib.types.submodule (_: {
         options = {
-          enable = lib.mkEnableOption "dmenu system" // { default = true; };
+          enable = lib.mkEnableOption "dmenu system" // {
+            default = true;
+          };
 
           package = lib.mkPackageOption pkgs "rofi-wayland" { };
         };
@@ -429,7 +453,9 @@ in
     kanshi = lib.mkOption {
       type = lib.types.submodule (_: {
         options = {
-          enable = lib.mkEnableOption "dynamic display config" // { default = true; };
+          enable = lib.mkEnableOption "dynamic display config" // {
+            default = true;
+          };
 
           package = lib.mkPackageOption pkgs "kanshi" { };
         };
@@ -459,7 +485,9 @@ in
     };
 
     mako = {
-      enable = lib.mkEnableOption "notifications system" // { default = true; };
+      enable = lib.mkEnableOption "notifications system" // {
+        default = true;
+      };
 
       package = lib.mkPackageOption pkgs "mako" { };
       notifysendPackage = lib.mkPackageOption pkgs "libnotify" { };
@@ -468,7 +496,9 @@ in
     playerctl = lib.mkOption {
       type = lib.types.submodule (_: {
         options = {
-          enable = lib.mkEnableOption "music control" // { default = true; };
+          enable = lib.mkEnableOption "music control" // {
+            default = true;
+          };
 
           package = lib.mkPackageOption pkgs "playerctl" { };
         };
@@ -480,7 +510,9 @@ in
     screenRecording = lib.mkOption {
       type = lib.types.submodule (_: {
         options = {
-          enable = lib.mkEnableOption "screen recording software" // { default = true; };
+          enable = lib.mkEnableOption "screen recording software" // {
+            default = true;
+          };
 
           slurpPackage = lib.mkPackageOption pkgs "slurp" { };
           wf-recorderPackage = lib.mkPackageOption pkgs "wf-recorder" { };
@@ -493,7 +525,9 @@ in
     screenshots = lib.mkOption {
       type = lib.types.submodule (_: {
         options = {
-          enable = lib.mkEnableOption "screenshot software" // { default = true; };
+          enable = lib.mkEnableOption "screenshot software" // {
+            default = true;
+          };
 
           grimshotPackage = lib.mkPackageOption pkgs.sway-contrib "grimshot" { };
         };
@@ -505,7 +539,9 @@ in
     swayidle = lib.mkOption {
       type = lib.types.submodule (_: {
         options = {
-          enable = lib.mkEnableOption "idle daemon" // { default = true; };
+          enable = lib.mkEnableOption "idle daemon" // {
+            default = true;
+          };
 
           package = lib.mkPackageOption pkgs "swayidle" { };
         };
@@ -517,7 +553,9 @@ in
     waybar = lib.mkOption {
       type = lib.types.submodule (_: {
         options = {
-          enable = lib.mkEnableOption "waybar system" // { default = true; };
+          enable = lib.mkEnableOption "waybar system" // {
+            default = true;
+          };
 
           package = lib.mkPackageOption pkgs "waybar" { };
 
@@ -554,7 +592,8 @@ in
       idlelock = builtins.concatStringsSep " " swaylock;
 
       # mkDefaultWorkspace :: Int -> Int -> Workspace
-      mkDefaultWorkspace = offset: index:
+      mkDefaultWorkspace =
+        offset: index:
         assert builtins.isInt index;
         assert builtins.isInt offset;
 
@@ -567,11 +606,11 @@ in
         };
 
       # mkExpandedWorkspaces :: [Workspace] -> [Workspace]
-      mkExpandedWorkspaces = workspaces:
+      mkExpandedWorkspaces =
+        workspaces:
         let
           # mkDefaultSpaces :: Int -> Int -> [Workspace]
-          mkDefaultSpaces = len:
-            builtins.genList (mkDefaultWorkspace len);
+          mkDefaultSpaces = len: builtins.genList (mkDefaultWorkspace len);
           # len :: Int
           len = builtins.length workspaces;
         in
@@ -591,39 +630,59 @@ in
       #   in
       #   lib.zipListsWith lib.mergeAttrs attrlist equalSizedIndexList;
 
-      /* Perform final attribute cleanup to produce a final workspace for addition.
+      /*
+        Perform final attribute cleanup to produce a final workspace for addition.
 
         Type:
         mkFinalWorkspace :: { index :: Int, icon :: String, title :: String, mappedKeys :: [AttrSet]} -> FinalWorkspace
       */
-      mkFinalWorkspace = { index, icon, title, mappedKeys ? [ ], ... }@args: args // {
-        keys = lib.unique (mappedKeys ++ [ "${builtins.toString index}" ]);
-        name = "${builtins.toString index}: ${icon} ${title}";
-      };
+      mkFinalWorkspace =
+        {
+          index,
+          icon,
+          title,
+          mappedKeys ? [ ],
+          ...
+        }@args:
+        args
+        // {
+          keys = lib.unique (mappedKeys ++ [ "${builtins.toString index}" ]);
+          name = "${builtins.toString index}: ${icon} ${title}";
+        };
 
-      /* Create workspace switch key assignment
+      /*
+        Create workspace switch key assignment
 
         Type:
         mkSwitchKeyAssign :: String -> String -> String -> NameValuePair
       */
-      mkSwitchKeyAssign = modKey: name: key:
-        { name = "${modKey}+${key}"; value = "workspace \"${name}\""; };
+      mkSwitchKeyAssign = modKey: name: key: {
+        name = "${modKey}+${key}";
+        value = "workspace \"${name}\"";
+      };
 
-      /* Create workspace move key assignment
+      /*
+        Create workspace move key assignment
 
         Type:
         mkMoveKeyAssign :: String -> String -> String -> NameValuePair
       */
-      mkMoveKeyAssign = modKey: name: key:
-        { name = "${modKey}+Shift+${key}"; value = "move container to workspace \"${name}\""; };
+      mkMoveKeyAssign = modKey: name: key: {
+        name = "${modKey}+Shift+${key}";
+        value = "move container to workspace \"${name}\"";
+      };
 
-      /* Create assignments for each workspace:
+      /*
+        Create assignments for each workspace:
 
         Type:
         mkKeyAssigns :: String -> ({ keys :: [String], name :: String } -> AttrSet) -> [FinalWorkspace] -> AttrSet
       */
-      mkKeyAssigns = modKey: mkFunc: list:
-        builtins.foldl' lib.mergeAttrs { } (lib.flatten (builtins.map ({ keys, name, ... }: mapListToAttrs' (mkFunc modKey name) keys) list));
+      mkKeyAssigns =
+        modKey: mkFunc: list:
+        builtins.foldl' lib.mergeAttrs { } (
+          lib.flatten (builtins.map ({ keys, name, ... }: mapListToAttrs' (mkFunc modKey name) keys) list)
+        );
 
       # mkIndexedWorkspaces :: [Workspace] -> [IndexedWorkspace]
       # mkIndexedWorkspaces = w: addIndexToListOfAttrs (mkExpandedWorkspaces w);
@@ -656,7 +715,13 @@ in
               shutdown = "${lib.getExe cfg.logoutPackage} --buttons-per-row 3";
             in
             {
-              inherit modifier left right up down;
+              inherit
+                modifier
+                left
+                right
+                up
+                down
+                ;
 
               # Set the terminal
               terminal = config.home.sessionVariables.TERMINAL or (lib.getExe pkgs.xterm);
@@ -665,47 +730,58 @@ in
               seat.seat0.hide_cursor = "when-typing enable";
 
               # Use some of the default keybindings w/ `lib.mkOptionDefault`
-              keybindings = lib.mkOptionDefault ({
-                # Media key bindings
-                "XF86AudioMute" = "exec ${lib.getExe cfg.mixerPackage} -t";
-                "XF86AudioLowerVolume" = "exec ${lib.getExe cfg.mixerPackage} -d 2";
-                "XF86AudioRaiseVolume" = "exec ${lib.getExe cfg.mixerPackage} -i 2";
+              keybindings = lib.mkOptionDefault (
+                {
+                  # Media key bindings
+                  "XF86AudioMute" = "exec ${lib.getExe cfg.mixerPackage} -t";
+                  "XF86AudioLowerVolume" = "exec ${lib.getExe cfg.mixerPackage} -d 2";
+                  "XF86AudioRaiseVolume" = "exec ${lib.getExe cfg.mixerPackage} -i 2";
 
-                # Screen brightness bindings
-                "XF86MonBrightnessDown" = "exec '${lib.escapeShellArgs [ (lib.getExe cfg.backlight.package) cfg.backlight.decreaseCmd ]}'";
-                "XF86MonBrightnessUp" = "exec '${lib.escapeShellArgs [ (lib.getExe cfg.backlight.package) cfg.backlight.increaseCmd ]}'";
+                  # Screen brightness bindings
+                  "XF86MonBrightnessDown" = "exec '${
+                    lib.escapeShellArgs [
+                      (lib.getExe cfg.backlight.package)
+                      cfg.backlight.decreaseCmd
+                    ]
+                  }'";
+                  "XF86MonBrightnessUp" = "exec '${
+                    lib.escapeShellArgs [
+                      (lib.getExe cfg.backlight.package)
+                      cfg.backlight.increaseCmd
+                    ]
+                  }'";
 
-                # Capture PowerOff key
-                "XF86PowerOff" = "exec ${shutdown}";
+                  # Capture PowerOff key
+                  "XF86PowerOff" = "exec ${shutdown}";
 
-                # Define our own shutdown command
-                "${modifier}+Shift+e" = "exec ${shutdown}";
+                  # Define our own shutdown command
+                  "${modifier}+Shift+e" = "exec ${shutdown}";
 
-                # Move workspaces with ctrl+mod
-                "${modifier}+Ctrl+${left}" = "workspace prev";
-                "${modifier}+Ctrl+${right}" = "workspace next";
-                "${modifier}+Ctrl+Left" = "workspace prev";
-                "${modifier}+Ctrl+Right" = "workspace next";
+                  # Move workspaces with ctrl+mod
+                  "${modifier}+Ctrl+${left}" = "workspace prev";
+                  "${modifier}+Ctrl+${right}" = "workspace next";
+                  "${modifier}+Ctrl+Left" = "workspace prev";
+                  "${modifier}+Ctrl+Right" = "workspace next";
 
-                # Move focused container to workspace
-                "${modifier}+Ctrl+Shift+${left}" = "move container to workspace prev";
-                "${modifier}+Ctrl+Shift+${right}" = "move container to workspace next";
-                "${modifier}+Ctrl+Shift+Left" = "move container to workspace prev";
-                "${modifier}+Ctrl+Shift+Right" = "move container to workspace next";
+                  # Move focused container to workspace
+                  "${modifier}+Ctrl+Shift+${left}" = "move container to workspace prev";
+                  "${modifier}+Ctrl+Shift+${right}" = "move container to workspace next";
+                  "${modifier}+Ctrl+Shift+Left" = "move container to workspace prev";
+                  "${modifier}+Ctrl+Shift+Right" = "move container to workspace next";
 
-                # Allow loading web browser with $modifier+a
-                "${modifier}+a" = "exec ${config.home.sessionVariables.BROWSER or (lib.getExe pkgs.chromium)}";
+                  # Allow loading web browser with $modifier+a
+                  "${modifier}+a" = "exec ${config.home.sessionVariables.BROWSER or (lib.getExe pkgs.chromium)}";
 
-                # Create a binding for the lock screen. Something close to $modifier+l
-                "${modifier}+o" = "exec ${lockscreen}";
+                  # Create a binding for the lock screen. Something close to $modifier+l
+                  "${modifier}+o" = "exec ${lockscreen}";
 
-                # Create bindings for modes
-                "${modifier}+r" = "mode \"resize\"";
-                "${modifier}+Shift+s" = "mode \"screenshot\"";
-                "${modifier}+Shift+r" = "mode \"recording\"";
-              }
-              // mkKeyAssigns modifier mkSwitchKeyAssign finalWorkspaces
-              // mkKeyAssigns modifier mkMoveKeyAssign finalWorkspaces
+                  # Create bindings for modes
+                  "${modifier}+r" = "mode \"resize\"";
+                  "${modifier}+Shift+s" = "mode \"screenshot\"";
+                  "${modifier}+Shift+r" = "mode \"recording\"";
+                }
+                // mkKeyAssigns modifier mkSwitchKeyAssign finalWorkspaces
+                // mkKeyAssigns modifier mkMoveKeyAssign finalWorkspaces
               );
 
               input = {
@@ -739,19 +815,29 @@ in
               #
               # TODO: Replace DiscordCanary with a wayland-compatible electron app
               #
-              assigns =
-                mapListToAttrs' ({ name, assigns, ... }: { name = "\"${name}\""; value = assigns; }) (builtins.filter ({ assigns, ... }: (builtins.length assigns) > 0) finalWorkspaces);
+              assigns = mapListToAttrs' (
+                { name, assigns, ... }:
+                {
+                  name = "\"${name}\"";
+                  value = assigns;
+                }
+              ) (builtins.filter ({ assigns, ... }: (builtins.length assigns) > 0) finalWorkspaces);
 
-              bars = lib.optionals cfg.waybar.enable [{
-                fonts = {
-                  names = [ "Fira Sans" "sans-serif" ];
-                  style = "Bold Semi-Condensed";
-                  size = 14.0;
-                };
+              bars = lib.optionals cfg.waybar.enable [
+                {
+                  fonts = {
+                    names = [
+                      "Fira Sans"
+                      "sans-serif"
+                    ];
+                    style = "Bold Semi-Condensed";
+                    size = 14.0;
+                  };
 
-                position = "top";
-                command = lib.getExe cfg.waybar.package;
-              }];
+                  position = "top";
+                  command = lib.getExe cfg.waybar.package;
+                }
+              ];
 
               floating = {
                 border = 1;
@@ -760,9 +846,18 @@ in
                   { title = "^Steam - News$"; }
                   { title = "^Friends List$"; }
                   { app_id = "^pavucontrol$"; }
-                  { app_id = "^firefox$"; title = "^About Mozilla Firefox$"; }
-                  { app_id = "^firefox$"; title = "^Firefox — Sharing Indicator$"; }
-                  { app_id = "^firefox$"; title = "^Extension: (NoScript) - NoScript Settings — Mozilla Firefox$"; }
+                  {
+                    app_id = "^firefox$";
+                    title = "^About Mozilla Firefox$";
+                  }
+                  {
+                    app_id = "^firefox$";
+                    title = "^Firefox — Sharing Indicator$";
+                  }
+                  {
+                    app_id = "^firefox$";
+                    title = "^Extension: (NoScript) - NoScript Settings — Mozilla Firefox$";
+                  }
                 ];
               };
 
@@ -786,7 +881,7 @@ in
                       timestampBash = "$(${pkgs.coreutils}/bin/date +${timestampFormat})";
                     in
                     dir: prefix: type:
-                      "${dir}/${prefix}-${timestampBash}.${type}";
+                    "${dir}/${prefix}-${timestampBash}.${type}";
 
                   killRecorder = "exec ${pkgs.procps}/bin/pkill wf-recorder";
                 in
@@ -801,7 +896,8 @@ in
 
                       sizeMap = builtins.mapAttrs (_: v: "${builtins.toString v}px") sizes;
                     in
-                    with sizeMap; {
+                    with sizeMap;
+                    {
                       # left will shrink the containers width
                       # right will grow the containers width
                       # up will shrink the containers height
@@ -830,13 +926,17 @@ in
                       "plus" = "gaps inner current plus ${tiny}";
 
                       # Return to default mode
-                    } // exitModeKeys;
+                    }
+                    // exitModeKeys;
 
                   screenshot =
                     let
                       screenshot-file = outFile (config.xdg.userDirs.pictures or "$HOME/Pictures") "screenshot" "png";
-                      capture = action: area:
-                        "exec --no-startup-id ${lib.getExe cfg.screenshots.grimshotPackage} --notify ${action} ${area} ${lib.optionalString (action == "save") screenshot-file}, ${exit-mode}";
+                      capture =
+                        action: area:
+                        "exec --no-startup-id ${lib.getExe cfg.screenshots.grimshotPackage} --notify ${action} ${area} ${
+                          lib.optionalString (action == "save") screenshot-file
+                        }, ${exit-mode}";
 
                       keyMap = {
                         "f" = "screen";
@@ -874,7 +974,8 @@ in
                         "r" = "area";
                       };
 
-                      mkCapture = audio: area:
+                      mkCapture =
+                        audio: area:
                         "${killRecorder} || ${lib.getExe cfg.screenRecording.wf-recorderPackage} ${audioBln audio} ${areas.${area}.arg} ${areas.${area}.command} -f ${recording-file}, ${recording-mode}";
                     in
                     builtins.mapAttrs (_: mkCapture true) keyMap
@@ -883,8 +984,13 @@ in
                 };
 
               # Default to outputting some workspaces on other monitors if available
-              workspaceOutputAssign =
-                builtins.map ({ name, outputs, ... }: { output = outputs; workspace = name; }) finalWorkspaces;
+              workspaceOutputAssign = builtins.map (
+                { name, outputs, ... }:
+                {
+                  output = outputs;
+                  workspace = name;
+                }
+              ) finalWorkspaces;
 
               colors = with palettes.custom; {
                 background = jet;
@@ -933,7 +1039,9 @@ in
               output."*".bg = "~/wallpaper.png fill ${palettes.custom.eerie-black}";
             };
 
-          extraConfig = builtins.concatStringsSep "\n" (builtins.map ({ name, ... }: "workspace \"${name}\"") (lib.reverseList finalWorkspaces));
+          extraConfig = builtins.concatStringsSep "\n" (
+            builtins.map ({ name, ... }: "workspace \"${name}\"") (lib.reverseList finalWorkspaces)
+          );
         };
 
         ### Power Menu
@@ -1021,9 +1129,7 @@ in
             "sway/mode"
           ];
 
-          modules-center = [
-            "sway/window"
-          ];
+          modules-center = [ "sway/window" ];
 
           modules-right = [
             "network"
@@ -1062,7 +1168,11 @@ in
             interval = 60;
             format = "  {:%e %b %Y %H:%M}"; # Icon: calendar-alt
             tooltip = false;
-            on-click = lib.escapeShellArgs [ (lib.getExe cfg.logoutPackage) "--buttons-per-row" "3" ];
+            on-click = lib.escapeShellArgs [
+              (lib.getExe cfg.logoutPackage)
+              "--buttons-per-row"
+              "3"
+            ];
           };
 
           cpu = {
@@ -1111,9 +1221,25 @@ in
 
           backlight = {
             format = "{icon} {percent}%";
-            format-icons = [ "󱃓 " "󰪞 " "󰪟 " "󰪠 " "󰪡 " "󰪢 " "󰪣 " "󰪤 " "󰪥 " ];
-            on-scroll-down = lib.escapeShellArgs [ (lib.getExe cfg.backlight.package) cfg.backlight.decreaseCmd ];
-            on-scroll-up = lib.escapeShellArgs [ (lib.getExe cfg.backlight.package) cfg.backlight.increaseCmd ];
+            format-icons = [
+              "󱃓 "
+              "󰪞 "
+              "󰪟 "
+              "󰪠 "
+              "󰪡 "
+              "󰪢 "
+              "󰪣 "
+              "󰪤 "
+              "󰪥 "
+            ];
+            on-scroll-down = lib.escapeShellArgs [
+              (lib.getExe cfg.backlight.package)
+              cfg.backlight.decreaseCmd
+            ];
+            on-scroll-up = lib.escapeShellArgs [
+              (lib.getExe cfg.backlight.package)
+              cfg.backlight.increaseCmd
+            ];
           };
 
           pulseaudio = {
@@ -1128,7 +1254,11 @@ in
               phone = " ";
               portable = " ";
               car = " ";
-              default = [ "󰕿 " "󰖀 " "󰕾 " ];
+              default = [
+                "󰕿 "
+                "󰖀 "
+                "󰕾 "
+              ];
             };
 
             on-scroll-down = "${lib.getExe cfg.mixerPackage} -d 2";
@@ -1274,15 +1404,38 @@ in
           # Your preferred application launcher
           # NOTE: pass the final command to swaymsg so that the resulting window
           #   can be opened on the original workspace that the command was run on.
-          rofiDesktopMenu = lib.escapeShellArgs [ (lib.getExe cfg.dmenu.package) "-show" "drun" ];
-          rofiMenu = lib.escapeShellArgs [ (lib.getExe cfg.dmenu.package) "-show" "run" ];
-          xargsToSway = lib.escapeShellArgs [ "${pkgs.findutils}/bin/xargs" "${cfg.package}/bin/swaymsg" "exec" "--" ];
+          rofiDesktopMenu = lib.escapeShellArgs [
+            (lib.getExe cfg.dmenu.package)
+            "-show"
+            "drun"
+          ];
+          rofiMenu = lib.escapeShellArgs [
+            (lib.getExe cfg.dmenu.package)
+            "-show"
+            "run"
+          ];
+          xargsToSway = lib.escapeShellArgs [
+            "${pkgs.findutils}/bin/xargs"
+            "${cfg.package}/bin/swaymsg"
+            "exec"
+            "--"
+          ];
         in
         {
           wayland.windowManager.sway.config.keybindings = lib.mkOptionDefault {
             # Redefine menu bindings
-            "${modifier}+d" = "exec '${pipeShellCmds [ rofiDesktopMenu xargsToSway ]}'";
-            "${modifier}+Shift+d" = "exec '${pipeShellCmds [ rofiMenu xargsToSway ]}'";
+            "${modifier}+d" = "exec '${
+              pipeShellCmds [
+                rofiDesktopMenu
+                xargsToSway
+              ]
+            }'";
+            "${modifier}+Shift+d" = "exec '${
+              pipeShellCmds [
+                rofiMenu
+                xargsToSway
+              ]
+            }'";
           };
 
           programs.rofi = {
@@ -1305,11 +1458,13 @@ in
           enable = true;
 
           profiles = {
-            undocked.outputs = [{
-              inherit (screens.builtin) criteria mode scale;
+            undocked.outputs = [
+              {
+                inherit (screens.builtin) criteria mode scale;
 
-              status = "enable";
-            }];
+                status = "enable";
+              }
+            ];
 
             singleMonitor.outputs = [
               {
@@ -1343,7 +1498,9 @@ in
               {
                 inherit (screens.homeDockRight) criteria mode scale;
                 status = "enable";
-                position = "${builtins.toString (screens.homeDockLeft.xPixelsOut + screens.homeDockCenter.xPixelsOut)},0";
+                position = "${
+                  builtins.toString (screens.homeDockLeft.xPixelsOut + screens.homeDockCenter.xPixelsOut)
+                },0";
               }
             ];
 
@@ -1365,7 +1522,9 @@ in
               {
                 inherit (screens.homeDockRightFallback) criteria mode scale;
                 status = "enable";
-                position = "${builtins.toString (screens.homeDockLeft.xPixelsOut + screens.homeDockCenter.xPixelsOut)},0";
+                position = "${
+                  builtins.toString (screens.homeDockLeft.xPixelsOut + screens.homeDockCenter.xPixelsOut)
+                },0";
               }
             ];
 
@@ -1425,8 +1584,9 @@ in
         };
 
         # Have kanshi restart to ensure
-        home.activation.restart-kanshi =
-          lib.hm.dag.entryAfter [ "reloadSystemd" ] "$DRY_RUN_CMD ${pkgs.systemd}/bin/systemctl restart $VERBOSE_ARG --user kanshi.service";
+        home.activation.restart-kanshi = lib.hm.dag.entryAfter [
+          "reloadSystemd"
+        ] "$DRY_RUN_CMD ${pkgs.systemd}/bin/systemctl restart $VERBOSE_ARG --user kanshi.service";
       })
 
       (lib.mkIf cfg.playerctl.enable {
@@ -1439,10 +1599,34 @@ in
             playerctl = lib.getExe cfg.playerctl.package;
           in
           lib.mkOptionDefault {
-            "XF86AudioNext" = lib.escapeShellArgs [ "exec" (lib.escapeShellArgs [ playerctl "next" ]) ];
-            "XF86AudioPlay" = lib.escapeShellArgs [ "exec" (lib.escapeShellArgs [ playerctl "play-pause" ]) ];
-            "XF86AudioPrev" = lib.escapeShellArgs [ "exec" (lib.escapeShellArgs [ playerctl "previous" ]) ];
-            "XF86AudioStop" = lib.escapeShellArgs [ "exec" (lib.escapeShellArgs [ playerctl "stop" ]) ];
+            "XF86AudioNext" = lib.escapeShellArgs [
+              "exec"
+              (lib.escapeShellArgs [
+                playerctl
+                "next"
+              ])
+            ];
+            "XF86AudioPlay" = lib.escapeShellArgs [
+              "exec"
+              (lib.escapeShellArgs [
+                playerctl
+                "play-pause"
+              ])
+            ];
+            "XF86AudioPrev" = lib.escapeShellArgs [
+              "exec"
+              (lib.escapeShellArgs [
+                playerctl
+                "previous"
+              ])
+            ];
+            "XF86AudioStop" = lib.escapeShellArgs [
+              "exec"
+              (lib.escapeShellArgs [
+                playerctl
+                "stop"
+              ])
+            ];
           };
       })
 
@@ -1481,7 +1665,11 @@ in
 
             Service = {
               Type = "dbus";
-              ExecStart = lib.escapeShellArgs [ (lib.getExe cfg.mako.package) "--config" configFile ];
+              ExecStart = lib.escapeShellArgs [
+                (lib.getExe cfg.mako.package)
+                "--config"
+                configFile
+              ];
               # ExecStartPost =
               #   lib.optionalString (config.services.mpdris2.enable or false)
               #     (lib.escapeShellArgs [ "${pkgs.systemd}/bin/systemctl" "--user" "--" "restart" "mpdris2.service" ]);
@@ -1533,11 +1721,11 @@ in
             screensOn = on: "${cfg.package}/bin/swaymsg output '*' dpms ${if on then "on" else "off"}";
           in
           # ''
-            #   idlehint ${builtins.toString lockTimer}
-            #   lock "${idlelock}"
-            #   before-sleep "${idlelock}"
-            #   timeout ${builtins.toString screenTimer} "${screensOn false}" resume "${screensOn true}"
-            # '';
+          #   idlehint ${builtins.toString lockTimer}
+          #   lock "${idlelock}"
+          #   before-sleep "${idlelock}"
+          #   timeout ${builtins.toString screenTimer} "${screensOn false}" resume "${screensOn true}"
+          # '';
           ''
             timeout ${builtins.toString lockTimer} "${idlelock}"
             timeout ${builtins.toString screenTimer} "${screensOn false}" resume "${screensOn true}"
@@ -1558,9 +1746,7 @@ in
           Install.WantedBy = [ "graphical-session.target" ];
         };
 
-        systemd.user.targets.sway-session.Unit.Wants = [
-          "graphical-session-pre.target"
-        ];
+        systemd.user.targets.sway-session.Unit.Wants = [ "graphical-session-pre.target" ];
       })
     ]
   );

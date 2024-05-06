@@ -1,4 +1,10 @@
-{ config, lib, pkgs, utils, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  utils,
+  ...
+}:
 let
   cfg = config.sys.rustic-b2;
 in
@@ -24,7 +30,7 @@ in
 
     sources = lib.mkOption {
       type = with lib.types; listOf attrs;
-      default = [{ source = "/"; }];
+      default = [ { source = "/"; } ];
       description = ''
         The list of (absolute) paths to back up.
       '';
@@ -46,7 +52,7 @@ in
 
     bucket = lib.mkOption {
       type = lib.types.str;
-      default = "${builtins.replaceStrings ["."] ["-"] config.networking.fqdn}-backup";
+      default = "${builtins.replaceStrings [ "." ] [ "-" ] config.networking.fqdn}-backup";
     };
 
     # bucketId = lib.mkOption {
@@ -91,9 +97,7 @@ in
 
   config = lib.mkIf cfg.enable {
     environment.etc."rustic/rustic.toml".source =
-      if
-        cfg.configOverrideSource != null
-      then
+      if cfg.configOverrideSource != null then
         cfg.configOverrideSource
       else
         (pkgs.formats.toml { }).generate "rustic.toml" {
