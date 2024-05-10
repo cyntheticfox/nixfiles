@@ -29,13 +29,15 @@
     };
 
     extraModprobeConfig = "options v4l2loopback video_nr=63";
+
     extraModulePackages = with config.boot.kernelPackages; [
       acpi_call
       v4l2loopback
     ];
+
     kernel.sysctl."dev.i915.perf_stream_paranoid" = 0;
     kernelModules = [ "v4l2loopback" ];
-    # kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_latest;
   };
 
   fileSystems =
@@ -105,7 +107,6 @@
 
     opengl = {
       enable = true;
-
       driSupport32Bit = true;
 
       extraPackages = with pkgs; [
