@@ -27,7 +27,7 @@ in
     defaults = {
       pager = lib.mkOption {
         type = lib.types.str;
-        default = lib.getExe pkgs.less;
+        default = lib.getExe pkgs.moar;
 
         description = ''
           CLI pager to use for the user. This gets set to the PAGER env
@@ -37,6 +37,7 @@ in
 
       editor = lib.mkOption {
         type = lib.types.str;
+        default = lib.getExe pkgs.helix;
 
         description = ''
           CLI editor to use for the user. This gets set to the EDITOR env
@@ -46,6 +47,7 @@ in
 
       viewer = lib.mkOption {
         type = lib.types.str;
+        default = "${lib.getExe pkgs.helix} -R";
 
         description = ''
           CLI file viewer to use for the user. This gets set to the VISUAL env
@@ -184,10 +186,10 @@ in
             "v" = cfg.defaults.editor;
           };
 
-          sessionVariables = with cfg.defaults; {
-            "PAGER" = pager;
-            "EDITOR" = editor;
-            "VISUAL" = viewer;
+          sessionVariables = {
+            "PAGER" = cfg.defaults.pager;
+            "EDITOR" = cfg.defaults.editor;
+            "VISUAL" = cfg.defaults.viewer;
           };
         };
 
