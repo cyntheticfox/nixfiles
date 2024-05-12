@@ -179,7 +179,6 @@
     };
 
     helix.enable = true;
-
     keyboard.enable = true;
     music.enable = true;
     podman.enable = true;
@@ -188,6 +187,7 @@
     shell = {
       enable = true;
       defaults = {
+        pager = lib.getExe pkgs.moar;
         editor = lib.getExe config.sys.helix.package;
         viewer = "${lib.getExe config.sys.helix.package} -R";
       };

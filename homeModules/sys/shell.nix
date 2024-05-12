@@ -157,6 +157,7 @@ in
     zoxide.enable = lib.mkEnableOption "Enable zoxide" // {
       default = true;
     };
+
     z-lua.enable = lib.mkEnableOption "Enable z-lua";
     autojump.enable = lib.mkEnableOption "Enable autojump";
 
@@ -180,13 +181,13 @@ in
 
           shellAliases = cfg.aliases // {
             # Editor aliases
-            "v" = config.home.sessionVariables.EDITOR or "${lib.getExe pkgs.neovim}";
+            "v" = cfg.defaults.editor;
           };
 
-          sessionVariables = lib.mkDefault {
-            "PAGER" = cfg.pager;
-            "EDITOR" = cfg.editor;
-            "VISUAL" = cfg.viewer;
+          sessionVariables = with cfg.defaults; {
+            "PAGER" = pager;
+            "EDITOR" = editor;
+            "VISUAL" = viewer;
           };
         };
 

@@ -205,7 +205,7 @@ in
 
         core = {
           autocrlf = "input";
-          editor = config.home.sessionVariables.EDITOR or "nano";
+          editor = config.home.sessionVariables.EDITOR;
           filemode = false;
           hideDotFiles = true;
           ignoreCase = true;

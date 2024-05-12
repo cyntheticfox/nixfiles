@@ -14,9 +14,7 @@ in
 
     java = {
       enable = lib.mkEnableOption "Java user-wide";
-
       package = lib.mkPackageOption pkgs "openjdk" { };
-
       debugPackage = lib.mkPackageOption pkgs "jdb" { };
     };
 
@@ -153,8 +151,8 @@ in
           settings = {
             git_protocol = "ssh";
             prompt = "enabled";
-            pager = config.home.sessionVariables.PAGER or "less";
-            editor = config.home.sessionVariables.EDITOR or "nano";
+            pager = config.home.sessionVariables.PAGER;
+            editor = config.home.sessionVariables.EDITOR;
 
             aliases = {
               co = "pr checkout";
