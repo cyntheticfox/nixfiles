@@ -12,7 +12,7 @@ in
   options.sys.desktop.chat.msteams = {
     enable = lib.mkEnableOption "Microsoft Teams";
 
-    package = lib.mkPackageOption pkgs "teams" { };
+    package = lib.mkPackageOption pkgs "teams-for-linux" { };
     systemd-service = lib.mkEnableOption "ms-teams Systemd user service" // {
       default = true;
     };
@@ -24,7 +24,7 @@ in
 
     xdg.mimeApps.defaultApplications."x-scheme-handler/msteams" = "${cfg.package.name}.desktop";
 
-    systemd.user.services.msteams-client = lib.mkIf cfg.systemd-service {
+    systemd.user.services.msteams = lib.mkIf cfg.systemd-service {
       Unit = {
         Description = "${cfg.package.name} Microsoft Teams client";
         Requires = [

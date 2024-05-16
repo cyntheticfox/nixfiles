@@ -47,7 +47,7 @@ in
       (pkgs.formats.json { }).generate "discord-settings.json"
         cfg.config;
 
-    systemd.user.services.discord-client = lib.mkIf cfg.systemd-service {
+    systemd.user.services.discord = lib.mkIf cfg.systemd-service {
       Unit = {
         Description = "${cfg.package.name} Discord client";
 

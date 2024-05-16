@@ -21,7 +21,7 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    systemd.user.services.matrix-client = lib.mkIf cfg.systemd-service {
+    systemd.user.services.matrix = lib.mkIf cfg.systemd-service {
       Unit = {
         Description = "${cfg.package.name} Matrix client";
 
