@@ -139,7 +139,7 @@
         "nixpkgs-stable": [
           "nixpkgs"
         ],
-        "pre-commit-hooks": "pre-commit-hooks",
+        "pre-commit-hooks": [],
         "sops-nix": []
       },
       "locked": {
@@ -424,48 +424,15 @@
       "locked": {
         "lastModified": 1705307515,
         "narHash": "sha256-krVKx3/u1mDo8qe5qylYgmwAmlAPHa1BSPDzxq09FmI=",
-        "ref": "refs/heads/master",
+        "owner": "~rycee",
+        "repo": "nmt",
         "rev": "1562940b7765a32f1987bd9a3ee6a4fa034c9429",
-        "revCount": 29,
-        "type": "git",
-        "url": "https://git.sr.ht/~rycee/nmt"
+        "type": "sourcehut"
       },
       "original": {
-        "type": "git",
-        "url": "https://git.sr.ht/~rycee/nmt"
-      }
-    },
-    "pre-commit-hooks": {
-      "inputs": {
-        "flake-compat": [
-          "foosteros",
-          "flake-compat"
-        ],
-        "gitignore": [
-          "foosteros",
-          "gitignore"
-        ],
-        "nixpkgs": [
-          "foosteros",
-          "nixpkgs"
-        ],
-        "nixpkgs-stable": [
-          "foosteros",
-          "nixpkgs-stable"
-        ]
-      },
-      "locked": {
-        "lastModified": 1715870890,
-        "narHash": "sha256-nacSOeXtUEM77Gn0G4bTdEOeFIrkCBXiyyFZtdGwuH0=",
-        "owner": "cachix",
-        "repo": "git-hooks.nix",
-        "rev": "fa606cccd7b0ccebe2880051208e4a0f61bfc8c1",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cachix",
-        "repo": "git-hooks.nix",
-        "type": "github"
+        "owner": "~rycee",
+        "repo": "nmt",
+        "type": "sourcehut"
       }
     },
     "root": {

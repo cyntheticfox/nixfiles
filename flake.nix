@@ -49,7 +49,7 @@
         nix-alien.follows = "";
         nix-index-database.follows = "";
         nixos-hardware.follows = "";
-        pre-commit-hooks-nix.follows = "";
+        pre-commit-hooks.follows = "";
         sops-nix.follows = "";
       };
     };
@@ -117,7 +117,6 @@
       url = "github:cachix/git-hooks.nix";
 
       inputs = {
-        flake-utils.follows = "flake-utils";
         gitignore.follows = "gitignore";
         nixpkgs-stable.follows = "nixpkgs";
         nixpkgs.follows = "nixpkgs-unstable";
@@ -145,8 +144,8 @@
     };
 
     nmt = {
-      # url = "sourcehut:~rycee/nmt"; # TODO: fix
-      url = "git+https://git.sr.ht/~rycee/nmt";
+      url = "sourcehut:~rycee/nmt"; # TODO: fix
+      # url = "https://git.sr.ht/~rycee/nmt";
       flake = false;
     };
 
