@@ -122,13 +122,11 @@
       chat = {
         discord = {
           enable = true;
-
           autostart = true;
         };
 
         matrix = {
           enable = true;
-
           autostart = true;
           package = pkgs.nixpkgs-unstable.nheko;
         };
@@ -150,14 +148,12 @@
 
       sway = {
         enable = true;
-
         package = pkgs.nixpkgs-unstable.sway;
       };
 
       web = {
         chromium = {
           enable = true;
-
           package = pkgs.ungoogled-chromium;
         };
 
@@ -170,15 +166,17 @@
 
     git = {
       enable = true;
-
       package = pkgs.nixpkgs-unstable.git;
-
       name = "Cynthia Fox";
       email = "cyntheticfox@gh0st.sh";
       gpgkey = "5960278CE235F821!";
     };
 
-    helix.enable = true;
+    helix = {
+      enable = true;
+      package = pkgs.nixpkgs-unstable.helix;
+    };
+
     keyboard.enable = true;
     music.enable = true;
     podman.enable = true;
@@ -186,6 +184,7 @@
 
     shell = {
       enable = true;
+
       defaults = {
         pager = lib.getExe pkgs.moar;
         editor = lib.getExe config.sys.helix.package;
@@ -200,7 +199,6 @@
 
     video.ffmpeg = {
       enable = true;
-
       package = pkgs.ffmpeg-full;
     };
 
