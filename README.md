@@ -1,5 +1,8 @@
 # Personal NixOS Configuration
 
+If you're looking at this anywhere else, know I now develop this at
+[my sourcehut].
+
 A complete NixOS configuration, tailored to how I do things, usually using custom
 color scheming. I've set up with some secrets via [sops-nix][sops-nix], and I
 split out as much user configuration into home-manager configurations and
@@ -75,6 +78,7 @@ For Windows platforms, please see instead [dotfiles.ps1][dotfiles.ps1]
 [kitty]: https://sw.kovidgoyal.net/kitty/
 [mopidy]: https://mopidy.com/
 [mupdf]: https://mupdf.com/
+[my sourcehut]: https://git.sr.ht/~cyntheticfox/nixfiles
 [neovim]: https://neovim.io/
 [nerdfonts]: https://www.nerdfonts.com/
 [nheko]: https://nheko-reborn.github.io/
