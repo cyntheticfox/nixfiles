@@ -92,6 +92,7 @@ in
         "gc!" = "git commit --verbose --amend";
         "gca" = "git commit --verbose --all";
         "gca!" = "git commit --verbose --all --amend";
+        "gcl" = "git clone --recurse-submodules";
         "gd" = "git diff";
         "gds" = "git diff --staged";
         "gdup" = "git diff @{upstream}";
